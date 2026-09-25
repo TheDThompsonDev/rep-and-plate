@@ -1,0 +1,14 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.env*
+!.env.example
+*.log
+*-preview.png
+chat-reference-*.png
+.local-checks/
+.ai-*.ts
+.ai-*.mjs
+.jev-smoke.ts
+.receipt-fixture.mjs

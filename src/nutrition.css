@@ -1,0 +1,672 @@
+.fuel-logo-text {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -1.5px;
+  font-weight: 750;
+  color: #103d37;
+  display: block;
+}
+.nutrition-surface {
+  color: #132635;
+}
+.nutrition-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 10px 27px 19px;
+  scrollbar-width: thin;
+  scrollbar-color: #d5e1dd transparent;
+  overscroll-behavior: contain;
+}
+.nutrition-intro {
+  padding: 0 8px;
+  margin-bottom: 22px;
+}
+.nutrition-intro h1 {
+  font-size: 27px;
+  font-weight: 650;
+  letter-spacing: -0.8px;
+  line-height: 1.25;
+  color: #112837;
+  margin: 0 0 7px;
+}
+.nutrition-intro p {
+  font-size: 17px;
+  line-height: 1.4;
+  letter-spacing: -0.25px;
+  color: #7c889c;
+}
+.nutrition-today {
+  background: #f4fbf8;
+  border: 1px solid #e2f1eb;
+  border-radius: 21px;
+  padding: 17px 19px 18px;
+}
+.nutrition-today h2 {
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+  margin: 0 0 4px;
+}
+.nutrition-remaining {
+  font-size: 15px;
+  line-height: 1.4;
+  color: #77859b;
+  margin: 0 0 8px;
+}
+.nutrition-numbers {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.nutrition-ring {
+  width: 134px;
+  height: 134px;
+  position: relative;
+  padding: 0;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+.nutrition-ring:hover {
+  background: #ecf8f1;
+}
+.nutrition-ring svg {
+  height: 100%;
+  width: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+.nutrition-ring circle {
+  fill: none;
+  stroke-width: 11;
+  stroke-linecap: round;
+}
+.nutrition-ring-track {
+  stroke: #d2eee3;
+}
+.nutrition-ring-fill {
+  stroke: url(#nutrition-ring-gradient);
+  transition: stroke-dasharray 0.4s;
+}
+.nutrition-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: #153245;
+}
+.nutrition-ring-label strong {
+  font-size: 25px;
+  letter-spacing: -0.6px;
+  line-height: 1.1;
+  font-weight: 650;
+}
+.nutrition-ring-label > span {
+  font-size: 13px;
+  line-height: 1.4;
+}
+.nutrition-macro-list {
+  flex: 1;
+  min-width: 0;
+}
+.nutrition-macro {
+  display: grid;
+  grid-template-columns: 76px 82px minmax(32px, 1fr) 32px;
+  gap: 7px;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid #dfede6;
+  line-height: 1.25;
+}
+.nutrition-macro:last-child {
+  border: 0;
+}
+.nutrition-macro-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 550;
+  color: #152b3d;
+}
+.nutrition-macro-name i {
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+  background: #4aaa8a;
+  box-shadow: inset 0 1px 3px #164e3219;
+  flex-shrink: 0;
+}
+.nutrition-macro.carbs .nutrition-macro-name i {
+  background: #329bdf;
+}
+.nutrition-macro.fat .nutrition-macro-name i {
+  background: #ffc816;
+}
+.nutrition-macro-value {
+  font-size: 13px;
+  white-space: nowrap;
+  color: #7b869b;
+  letter-spacing: -0.3px;
+  text-align: right;
+}
+.nutrition-macro-value strong {
+  font-weight: 600;
+  color: #172e42;
+}
+.nutrition-macro-track {
+  height: 10px;
+  border-radius: 10px;
+  background: #e0e7eb;
+  overflow: hidden;
+}
+.nutrition-macro-track i {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: #60ac90;
+  transition: width 0.4s;
+}
+.nutrition-macro-percent {
+  font-size: 13px;
+  color: #7d899d;
+  text-align: right;
+}
+.nutrition-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 22px 0 12px;
+}
+.nutrition-section-heading h2 {
+  font-size: 22px;
+  letter-spacing: -0.6px;
+  font-weight: 650;
+  line-height: 1.25;
+}
+.nutrition-section-heading button,
+.nutrition-section-heading > span {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #7a879b;
+  letter-spacing: -0.2px;
+}
+.nutrition-section-heading button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 0 5px 9px;
+  min-height: 30px;
+}
+.nutrition-section-heading button:hover {
+  color: #156c50;
+}
+.nutrition-insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.nutrition-insight {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e8ebf0;
+  border-radius: 19px;
+  padding: 15px 16px;
+  box-shadow: 0 2px 9px #193b2803;
+  width: 100%;
+}
+.nutrition-insight:hover,
+.nutrition-swap:hover {
+  border-color: #bcdccd;
+  background: #fcfefc;
+}
+.nutrition-insight-icon {
+  height: 61px;
+  width: 61px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #edf7ed;
+  color: #096847;
+  flex-shrink: 0;
+  position: relative;
+}
+.nutrition-insight-icon.protein {
+  background: #e7f2ff;
+  color: #13628d;
+}
+.nutrition-insight-icon.drinks {
+  background: #e6f6ef;
+  color: #075d46;
+}
+.nutrition-insight-icon.oil i {
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background: #f8d64e;
+  position: absolute;
+  right: 19px;
+  top: 16px;
+}
+.nutrition-insight-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nutrition-insight-copy strong {
+  font-size: 17px;
+  letter-spacing: -0.45px;
+  font-weight: 600;
+  line-height: 1.28;
+  color: #11283c;
+}
+.nutrition-insight-copy > span {
+  font-size: 14px;
+  letter-spacing: -0.2px;
+  line-height: 1.4;
+  color: #7c889e;
+}
+.nutrition-chevron {
+  flex-shrink: 0;
+  color: #8591a2;
+}
+.nutrition-swaps .nutrition-section-heading {
+  margin-top: 21px;
+}
+.nutrition-swap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nutrition-swap {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1.1fr) 24px 58px minmax(0, 1fr) 14px;
+  gap: 11px;
+  align-items: center;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e8ebf0;
+  border-radius: 17px;
+  padding: 10px 11px;
+  box-shadow: 0 2px 8px #173b2903;
+  width: 100%;
+}
+.swap-photo {
+  display: block;
+  width: 58px;
+  height: 58px;
+  border-radius: 11px;
+  background-image: url("/images/nutrition-swaps.png");
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  background-color: #ede6df;
+  flex-shrink: 0;
+}
+.swap-photo.frappuccino {
+  background-position: 0 0;
+}
+.swap-photo.americano {
+  background-position: 100% 0;
+}
+.swap-photo.ranch {
+  background-position: 0 100%;
+}
+.swap-photo.salsa {
+  background-position: 100% 100%;
+}
+.swap-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.swap-copy strong {
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: -0.2px;
+  font-weight: 500;
+  color: #152b3e;
+}
+.swap-copy > span {
+  font-size: 11px;
+  line-height: 1.35;
+  color: #7d899e;
+  letter-spacing: -0.3px;
+}
+.swap-copy.swapped > span {
+  color: #078054;
+  font-weight: 500;
+}
+.swap-arrow {
+  color: #8190a3;
+}
+.nutrition-detail > p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #65776f;
+  margin-bottom: 20px;
+}
+.nutrition-evidence {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f0f6f2;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #637c6b;
+  margin: 0 0 22px;
+}
+.nutrition-evidence svg {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.nutrition-all-insight {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  justify-content: space-between;
+  text-align: left;
+  width: 100%;
+  padding: 16px 0;
+  border-top: 1px solid #e4ece5;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #284c3e;
+}
+.nutrition-meals-dialog > p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #718473;
+  padding: 10px 0 20px;
+}
+.nutrition-meals-dialog > .button {
+  margin-top: 20px;
+}
+.swap-detail-photos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  margin: 8px 0 23px;
+  color: #82998a;
+}
+.swap-detail-photos .swap-photo {
+  height: 115px;
+  width: 115px;
+  border-radius: 17px;
+}
+@media (max-width: 600px) {
+  .fuel-logo-text {
+    font-size: 29px;
+    letter-spacing: -1.1px;
+  }
+  .nutrition-scroll {
+    padding: 9px 15px 12px;
+    scrollbar-width: none;
+  }
+  .nutrition-intro {
+    padding: 0 6px;
+    margin-bottom: 14px;
+  }
+  .nutrition-intro h1 {
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+    margin-bottom: 5px;
+  }
+  .nutrition-intro p {
+    font-size: 12px;
+    letter-spacing: -0.2px;
+    line-height: 1.4;
+  }
+  .nutrition-today {
+    border-radius: 16px;
+    padding: 11px 11px 12px;
+  }
+  .nutrition-today h2 {
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    margin-bottom: 3px;
+  }
+  .nutrition-remaining {
+    font-size: 12px;
+    line-height: 1.3;
+    margin-bottom: 7px;
+  }
+  .nutrition-numbers {
+    gap: 13px;
+  }
+  .nutrition-ring {
+    width: 92px;
+    height: 92px;
+  }
+  .nutrition-ring-label strong {
+    font-size: 19px;
+    letter-spacing: -0.5px;
+  }
+  .nutrition-ring-label > span {
+    font-size: 10px;
+  }
+  .nutrition-macro {
+    grid-template-columns: 58px 59px minmax(27px, 1fr) 25px;
+    gap: 4px;
+    padding: 10px 0;
+  }
+  .nutrition-macro-name {
+    font-size: 10px;
+    gap: 5px;
+  }
+  .nutrition-macro-name i {
+    height: 10px;
+    width: 10px;
+  }
+  .nutrition-macro-value {
+    font-size: 10px;
+    letter-spacing: -0.2px;
+  }
+  .nutrition-macro-percent {
+    font-size: 10px;
+  }
+  .nutrition-macro-track {
+    height: 8px;
+  }
+  .nutrition-section-heading {
+    margin: 16px 0 9px;
+  }
+  .nutrition-section-heading h2 {
+    font-size: 16px;
+    letter-spacing: -0.4px;
+  }
+  .nutrition-section-heading button,
+  .nutrition-section-heading > span {
+    font-size: 10px;
+    letter-spacing: -0.2px;
+  }
+  .nutrition-section-heading button {
+    min-height: 25px;
+    padding: 2px 0 2px 8px;
+    gap: 4px;
+  }
+  .nutrition-section-heading button > svg {
+    height: 14px;
+    width: 14px;
+  }
+  .nutrition-insight-list {
+    gap: 10px;
+  }
+  .nutrition-insight {
+    border-radius: 15px;
+    padding: 11px 10px;
+    gap: 12px;
+  }
+  .nutrition-insight-icon {
+    height: 44px;
+    width: 44px;
+  }
+  .nutrition-insight-icon > svg {
+    height: 25px;
+    width: 25px;
+  }
+  .nutrition-insight-icon.oil i {
+    top: 10px;
+    right: 11px;
+    height: 4px;
+    width: 4px;
+  }
+  .nutrition-insight-copy {
+    gap: 3px;
+  }
+  .nutrition-insight-copy strong {
+    font-size: 12.5px;
+    letter-spacing: -0.28px;
+    line-height: 1.26;
+  }
+  .nutrition-insight-copy > span {
+    font-size: 11px;
+    line-height: 1.35;
+    letter-spacing: -0.2px;
+  }
+  .nutrition-insight > .nutrition-chevron {
+    width: 14px;
+    height: 14px;
+  }
+  .nutrition-swaps .nutrition-section-heading {
+    margin-top: 14px;
+  }
+  .nutrition-swap-list {
+    gap: 7px;
+  }
+  .nutrition-swap {
+    grid-template-columns: 40px minmax(0, 1.05fr) 16px 40px minmax(0, 1fr) 9px;
+    gap: 7px;
+    padding: 7px 8px;
+    border-radius: 13px;
+  }
+  .swap-photo {
+    height: 42px;
+    width: 40px;
+    border-radius: 8px;
+  }
+  .swap-copy {
+    gap: 2px;
+  }
+  .swap-copy strong {
+    font-size: 9px;
+    letter-spacing: -0.2px;
+    line-height: 1.35;
+  }
+  .swap-copy > span {
+    font-size: 9px;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+  }
+  .swap-arrow {
+    width: 16px;
+    height: 16px;
+  }
+  .nutrition-swap > .nutrition-chevron {
+    height: 13px;
+    width: 13px;
+    margin-left: -2px;
+  }
+}
+@media (max-width: 370px) {
+  .nutrition-scroll {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .nutrition-intro h1 {
+    font-size: 19px;
+  }
+  .nutrition-intro p {
+    font-size: 11px;
+  }
+  .nutrition-numbers {
+    gap: 9px;
+  }
+  .nutrition-ring {
+    height: 84px;
+    width: 84px;
+  }
+  .nutrition-macro {
+    grid-template-columns: 53px 55px minmax(22px, 1fr) 23px;
+    gap: 3px;
+  }
+  .nutrition-macro-name {
+    font-size: 9px;
+    gap: 4px;
+  }
+  .nutrition-macro-value {
+    font-size: 9px;
+  }
+  .nutrition-macro-percent {
+    font-size: 9px;
+  }
+  .nutrition-insight {
+    gap: 9px;
+    padding: 10px;
+  }
+  .nutrition-insight-copy strong {
+    font-size: 12px;
+  }
+  .nutrition-insight-copy > span {
+    font-size: 10.5px;
+  }
+  .nutrition-insight-icon {
+    height: 39px;
+    width: 39px;
+  }
+  .nutrition-swap {
+    grid-template-columns: 35px minmax(0, 1fr) 13px 35px minmax(0, 1fr) 8px;
+    gap: 6px;
+  }
+  .swap-photo {
+    width: 35px;
+    height: 40px;
+  }
+  .swap-copy strong,
+  .swap-copy > span {
+    font-size: 8.5px;
+  }
+}
+@media (max-width: 600px) {
+  .nutrition-today {
+    padding: 10px 11px;
+  }
+  .nutrition-remaining {
+    margin-bottom: 5px;
+  }
+  .nutrition-ring {
+    width: 88px;
+    height: 88px;
+  }
+  .nutrition-macro {
+    padding: 8px 0;
+  }
+  .swap-copy strong,
+  .swap-copy > span {
+    font-size: 9.5px;
+  }
+}
+@media (max-width: 370px) {
+  .nutrition-ring {
+    width: 84px;
+    height: 84px;
+  }
+  .swap-copy strong,
+  .swap-copy > span {
+    font-size: 8.5px;
+  }
+}

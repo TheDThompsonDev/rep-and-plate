@@ -1,0 +1,382 @@
+.fuel-ai-text p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.fuel-ai-text p + p {
+  margin-top: 10px;
+}
+.fuel-ai-text ul,
+.fuel-ai-text ol {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+.fuel-ai-text li {
+  margin: 5px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.fuel-ai-text h2,
+.fuel-ai-text h3 {
+  font: 600 16px/1.4 inherit;
+  margin: 12px 0 5px;
+}
+.fuel-ai-text a {
+  color: #176b52;
+  text-decoration: underline;
+}
+.fuel-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+.fuel-sources a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #367966;
+  background: #f0f7f3;
+  border: 1px solid #deece4;
+  border-radius: 8px;
+  padding: 5px 7px;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.fuel-sources svg {
+  flex-shrink: 0;
+}
+.fuel-grocery-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #dfebe5;
+  border-radius: 18px;
+  padding: 16px;
+  background: #fff;
+  text-align: left;
+  width: 100%;
+  color: #1b4035;
+}
+.fuel-grocery-symbol {
+  display: grid;
+  place-items: center;
+  background: #e2f3e9;
+  color: #216951;
+  width: 49px;
+  height: 49px;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+.fuel-grocery-card > span:nth-child(2) {
+  display: grid;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+.fuel-grocery-card strong {
+  font-size: 17px;
+  overflow-wrap: anywhere;
+}
+.fuel-grocery-card span span {
+  font-size: 14px;
+  color: #607a70;
+}
+.fuel-grocery-card small {
+  font-size: 12px;
+  color: #9b7944;
+}
+.fuel-grocery-card em {
+  font-size: 11px;
+  line-height: 1.4;
+  display: flex;
+  gap: 4px;
+  font-style: normal;
+  color: #368668;
+}
+.fuel-grocery-card > svg {
+  flex-shrink: 0;
+}
+.fuel-proposed-meal {
+  padding: 16px;
+  border: 1px solid #e1ebe5;
+  border-radius: 17px;
+  background: #fff;
+}
+.fuel-proposed-meal > small {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #7c9b89;
+}
+.fuel-proposed-meal h3 {
+  font-family: inherit;
+  font-size: 18px;
+  margin: 7px 0;
+}
+.fuel-proposed-meal p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #819086;
+  margin: 6px 0;
+}
+.fuel-proposed-meal > strong {
+  display: block;
+  color: #126647;
+  font-size: 19px;
+  margin: 8px 0;
+}
+.fuel-proposed-meal > span {
+  display: block;
+  font-size: 13px;
+  color: #6f8078;
+}
+.fuel-proposed-meal > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  background: #14694e;
+  color: #fff;
+  border-radius: 11px;
+  margin-top: 13px;
+}
+.fuel-ai-warning {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #8c805d;
+  margin: 8px 4px;
+}
+.fuel-ai-error {
+  padding: 12px;
+  border-radius: 14px;
+  background: #fff6eb;
+  border: 1px solid #f0dcc3;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #876444;
+  margin-top: 8px;
+}
+.fuel-ai-error button {
+  display: block;
+  color: #17674e;
+  font-weight: 600;
+  margin-top: 7px;
+  background: none;
+  padding: 3px 0;
+}
+.fuel-ai-status {
+  font-size: 12px;
+  color: #6a8a7b;
+  margin: 6px 5px;
+}
+.fuel-ai-active {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  font-size: 10px;
+  color: #478d6e;
+}
+.fuel-ai-active:before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: #4a9c77;
+  border-radius: 50%;
+}
+.fuel-capture-context {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  color: #5b7769;
+  margin: 12px 0;
+}
+.fuel-capture-context textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 75px;
+  padding: 12px;
+  border: 1px solid #dbe8df;
+  border-radius: 12px;
+  font: inherit;
+}
+.fuel-pantry > p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #74877d;
+  margin: 0 0 18px;
+}
+.fuel-pantry-empty {
+  text-align: center;
+  padding: 25px 10px;
+  color: #45886a;
+}
+.fuel-pantry-empty h3 {
+  font-family: inherit;
+  font-size: 21px;
+  margin: 15px 0;
+}
+.fuel-receipt {
+  border: 1px solid #dfebe4;
+  border-radius: 17px;
+  padding: 17px;
+  margin-bottom: 16px;
+}
+.fuel-receipt-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #28694e;
+}
+.fuel-receipt-heading h3 {
+  font-family: inherit;
+  font-size: 21px;
+  margin: 0 0 5px;
+}
+.fuel-receipt-heading small {
+  color: #8b9a91;
+  font-size: 12px;
+}
+.fuel-receipt > p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #839288;
+}
+.fuel-cart-total {
+  display: grid;
+  gap: 7px;
+  background: #edf7f0;
+  padding: 13px;
+  border-radius: 12px;
+  margin: 12px 0;
+  color: #377257;
+}
+.fuel-cart-total strong {
+  font-size: 14px;
+}
+.fuel-cart-total span {
+  font-size: 13px;
+}
+.fuel-cart-total small {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #7d9888;
+}
+.fuel-grocery-item {
+  border-top: 1px solid #e6ece8;
+}
+.fuel-grocery-item summary {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.fuel-grocery-item summary::-webkit-details-marker {
+  display: none;
+}
+.fuel-grocery-item summary > span:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.fuel-grocery-item summary strong {
+  font-size: 15px;
+  font-weight: 600;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.fuel-grocery-item summary > span:nth-child(2) {
+  text-align: right;
+  font-size: 14px;
+  color: #347752;
+}
+.fuel-grocery-item summary > span.needs-review {
+  color: #977842;
+}
+.fuel-grocery-item summary small {
+  font-size: 11px;
+  display: block;
+  line-height: 1.4;
+  color: #8a978f;
+  margin-top: 4px;
+}
+.fuel-grocery-item summary > svg {
+  color: #8aa294;
+  flex-shrink: 0;
+}
+.fuel-grocery-item[open] summary > svg {
+  transform: rotate(90deg);
+}
+.fuel-grocery-detail {
+  padding: 0 0 15px;
+}
+.fuel-grocery-detail p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #78867e;
+  margin: 7px 0;
+}
+.fuel-grocery-detail b {
+  font-weight: 600;
+}
+.fuel-grocery-detail .fuel-match-note {
+  background: #fff8ec;
+  padding: 10px;
+  border-radius: 10px;
+  color: #92754a;
+}
+.fuel-grocery-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.fuel-grocery-actions button {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #337657;
+  background: #edf7f0;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .fuel-grocery-card {
+    gap: 9px;
+    padding: 12px;
+  }
+  .fuel-grocery-symbol {
+    width: 36px;
+    height: 40px;
+  }
+  .fuel-grocery-card strong {
+    font-size: 15px;
+  }
+  .fuel-grocery-card span span {
+    font-size: 12px;
+  }
+  .fuel-grocery-card em {
+    font-size: 10px;
+  }
+  .fuel-grocery-card small {
+    font-size: 11px;
+  }
+  .fuel-ai-text li {
+    font-size: 14px;
+  }
+  .fuel-receipt {
+    padding: 12px;
+  }
+  .fuel-grocery-item summary strong {
+    font-size: 13px;
+  }
+  .fuel-grocery-item summary > span:nth-child(2) {
+    font-size: 12px;
+  }
+}

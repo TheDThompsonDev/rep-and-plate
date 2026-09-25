@@ -1,0 +1,40 @@
+{
+  "name": "fuel-prototype",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "vitest run src/domain.test.ts src/ai.test.ts server/ai.test.ts",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test:e2e": "playwright test",
+    "start": "tsx server/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Fuel: a calm, local fitness capture prototype",
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "lucide-react": "^1.48.0",
+    "openai": "^7.23.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-markdown": "^10.1.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "agent-browser": "^0.27.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.1"
+  },
+  "private": true,
+  "type": "module"
+}
