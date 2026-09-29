@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { createGenerationClient } from "./generation.ts";
 import { spotVoice } from "../src/features/spot/personality.ts";
 import { workoutCaptureSchema } from '../src/features/spot/contracts.ts';
 import { receiptPurchaseSchema, receiptLinePriceSchema } from '../src/features/shopping/contracts.ts';
@@ -60,6 +60,9 @@ export const modelAnswerSchema = z.object({
 });
 type ModelAnswer = z.infer<typeof modelAnswerSchema>;
 export type Config = {
+  provider?: "openai" | "qwen";
+  qwenKey?: string;
+  qwenBaseUrl?: string;
   openaiKey?: string;
   jevKey?: string;
   usdaKey?: string;
@@ -318,17 +321,12 @@ export async function runAI(
   progress: Progress,
   signal: AbortSignal,
 ): Promise<AIResult> {
-  if (!config.openaiKey) throw new Error("OPENAI_NOT_CONFIGURED");
   progress(
     request.image
       ? "Got it. Taking a look at your image…"
       : "Got it. Give me a second.",
   );
-  const client = new OpenAI({
-    apiKey: config.openaiKey,
-    maxRetries: 0,
-    timeout: 150000,
-  });
+  const client = createGenerationClient(config, 150000);
   const response = await client.responses.parse(
     {
       model: config.model,

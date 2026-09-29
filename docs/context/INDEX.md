@@ -2,6 +2,7 @@
 
 | Area | Covers | Document | Verification reference |
 | --- | --- | --- | --- |
+| AI providers | Qwen 3.5-Flash generation, Jev decision checks, source grounding and separate voice service | [Provider decisions](ai-providers.md) | Provider regression tests and live synthetic receipt, plan, label, workout and search checks |
 | Receipt shopping | Receipt prices, household preferences, evidence-based swaps, researched prices, private spending and persistent shopping list | [Shopping decisions](shopping.md) | CYC `9d6064db-c63e-4611-83db-f1fe2d708066`; shopping, receipt barcode and Chat browser journeys; live synthetic receipt/price checks |
 | Kitchen and profile navigation | Pantry, prepared recipes, upcoming meals, shopping needs, receipt access; Kitchen bottom destination and You profile entry | [Kitchen decisions](kitchen.md) | CYC `09b31dd1-ec2d-400b-8ed7-271ed420df33`; Kitchen, barcode and migrated profile browser journeys |
 | Personal nutrition | `src/domain.ts`, `src/useLocalDay.ts`, `src/NutritionPage.tsx`, `src/ai-client.ts`, insights and reviews | [Nutrition decisions](nutrition.md) | Working changes based on `4bd8875`; CYC run `03a46f6a-02f7-45e0-adcc-c52bdffffde3` |

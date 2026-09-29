@@ -1509,7 +1509,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                       Send to Rep & Plate <ArrowRight size={17} />
                     </button>
                     <p className="section-note">
-                      Sent to OpenAI for image reading and web research;
+                      Sent to our AI provider for image reading and web research;
                       extracted details may be checked by TypeSafe. Your saved
                       records stay in this browser.
                     </p>

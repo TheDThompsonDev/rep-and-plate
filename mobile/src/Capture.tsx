@@ -131,7 +131,7 @@ export function Capture({ receipt = false }: { receipt?: boolean }) {
             }
           />
           <Text style={s.tiny}>
-            Sent to OpenAI for image reading and research. Review uncertain
+            Sent to our AI provider, QwenCloud or OpenAI, for image reading and research. Review uncertain
             product matches and quantities.
           </Text>
           <Button

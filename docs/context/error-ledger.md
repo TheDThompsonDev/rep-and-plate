@@ -1,5 +1,12 @@
 # Error ledger
 
+## QWEN-001 — OpenAI compatibility does not guarantee structured output
+
+- QwenCloud documents that Chat Completions search omits source metadata and Responses does not promise `text.format` enforcement. Reusing OpenAI parsing options alone would weaken validation or source attribution. The adapter uses Responses plus explicit schema instructions and local Zod validation, preserving actual search metadata. No failed call falls back to a more expensive provider.
+- Verification setup initially assumed the SDK passed a Request to fetch; it actually passed URL/init. The test now constructs a Request from both arguments before inspecting it. The shared request type also explicitly retains the pre-existing OpenAI `max_tool_calls` option while omitting that undocumented setting for Qwen.
+- One initial live synthetic label request returned 503; its upstream cause was not captured. A diagnostic repeat succeeded. The failed attempt saved nothing and offered manual entry. This is a recorded reliability limit, not a diagnosed provider defect.
+- CYC startup again exceeded its source-fingerprint limit; direct checks were used (CYC-ASSETS-001).
+
 ## ONBOARDING-001 — An inline introduction was not a new-user flow
 
 - The user correctly found that the Spot slides appeared inside an already-open app, without a clear account entry flow. Replaced automatic inline onboarding with a dedicated welcome/account/setup gate in both renderers. Existing users can replay the full tour without clearing their records or draft.

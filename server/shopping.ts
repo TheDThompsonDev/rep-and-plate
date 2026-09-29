@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { createGenerationClient, generationAvailable } from "./generation.ts";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import type { IncomingMessage, ServerResponse } from "node:http";
@@ -67,11 +67,7 @@ export async function researchPrices(
   config: Config,
   signal: AbortSignal,
 ) {
-  const client = new OpenAI({
-    apiKey: config.openaiKey,
-    maxRetries: 0,
-    timeout: 100000,
-  });
+  const client = createGenerationClient(config, 100000);
   const result = await client.responses.parse(
     {
       model: config.model,
@@ -120,7 +116,7 @@ export function createShoppingApi(config: Config, research = researchPrices) {
     if (req.method !== "POST") return json(405, { error: "Use POST." });
     if (!req.headers["content-type"]?.startsWith("application/json"))
       return json(415, { error: "Send JSON." });
-    if (!config.openaiKey)
+    if (!generationAvailable(config))
       return json(503, {
         error:
           "Online price research is not configured. You can enter a price you checked in store.",

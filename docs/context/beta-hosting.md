@@ -5,7 +5,7 @@
 - Expo/React Native: native iPhone and Android app, local records and offline review.
 - Vercel: existing Vite web app and a Node 24 streaming API (`api/health.mjs`, bundled from `server/vercel-entry.ts`). No Next.js migration needed.
 - Supabase Auth: email sign-in; Postgres: snapshots, approved testers, usage and short-lived AI request results; Storage: private capture uploads.
-- Existing OpenAI/JEV/USDA integrations remain server-side.
+- Qwen/JEV/USDA integrations and OpenAI voice transcription remain server-side. See [provider configuration](ai-providers.md).
 
 ## Implemented
 

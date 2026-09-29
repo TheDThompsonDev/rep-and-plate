@@ -13,20 +13,24 @@ import { enrichReceipt } from "./products/enrich.ts";
 import { createShoppingApi } from "./shopping.ts";
 import { createHash } from "node:crypto";
 import type { ChatCache } from "./chat-cache.ts";
+import { generationAvailable, QWEN_BASE_URL, QWEN_MODEL } from "./generation.ts";
 
 export const readConfig = (
   env: Record<string, string | undefined>,
 ): Config => ({
+  provider: env.QWEN_API_KEY ? "qwen" : "openai",
+  qwenKey: env.QWEN_API_KEY,
+  qwenBaseUrl: env.QWEN_BASE_URL || QWEN_BASE_URL,
   openaiKey: env.OPENAI_API_KEY,
   jevKey: env.JEV_API_KEY,
   usdaKey: env.FOODDATA_GOV_API || env.USDA_API_KEY,
   supabaseUrl: env.SUPABASE_URL,
   supabasePublishableKey: env.SUPABASE_PUBLISHABLE_KEY,
-  model: env.OPENAI_MODEL || "gpt-5-mini",
+  model: env.QWEN_API_KEY ? env.QWEN_MODEL || QWEN_MODEL : env.OPENAI_MODEL || "gpt-5-mini",
   jevModel: env.JEV_MODEL || "jev-latest",
 });
 const errors: Record<string, string> = {
-  OPENAI_NOT_CONFIGURED:
+  AI_NOT_CONFIGURED:
     "AI isn’t configured on the server yet. Your message is still here.",
   AI_INCOMPLETE:
     "I couldn’t finish that response. Your capture is saved here; please try again.",
@@ -39,7 +43,7 @@ export function publicError(error: unknown) {
     code?: string;
   };
   if (e.status === 401 || e.status === 403)
-    return "The AI service could not authenticate. Check the server’s OpenAI key and project access.";
+    return "The AI service could not authenticate. Check the server’s provider key, endpoint and model access.";
   if (e.status === 429)
     return "The AI service is at its usage limit. Check its billing or limits, then retry.";
   if (
@@ -100,7 +104,8 @@ export function createApi(
       return json(403, { error: "Request origin is not allowed." });
     if (path === "/api/status" && req.method === "GET")
       return json(200, {
-        available: !!config.openaiKey,
+        available: generationAvailable(config),
+        provider: config.provider || "openai",
         jev: !!config.jevKey,
         model: config.model,
         usda: !!config.usdaKey,
@@ -172,8 +177,8 @@ export function createApi(
         error:
           "Rep & Plate is handling a few captures. Please try again in a moment.",
       });
-    if (!config.openaiKey)
-      return json(503, { error: errors.OPENAI_NOT_CONFIGURED });
+    if (!generationAvailable(config))
+      return json(503, { error: errors.AI_NOT_CONFIGURED });
     let lease: string | undefined;
     if (hosted) {
       const claim = await hosted.cache.claim(

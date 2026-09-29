@@ -975,7 +975,7 @@ export default function YouPage({
             </p>
             <p>
               {aiAvailable
-                ? "AI messages, images and voice recordings you submit, and relevant saved context are sent to OpenAI to answer you. Extracted details can be sent to TypeSafe for classification. Web searches use external sources. API requests ask OpenAI not to store the response; provider retention policies still apply."
+                ? "Messages, images and relevant saved context are sent to our configured AI provider, QwenCloud or OpenAI. Voice recordings are sent to OpenAI for transcription. Extracted details can be sent to TypeSafe for classification. Web searches use external sources. AI requests ask the provider not to store the response; provider retention policies still apply."
                 : "AI is currently unavailable. Saved records remain on this device."}
             </p>
             <p>

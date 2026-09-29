@@ -39,10 +39,12 @@ npm run dev
 
 Copy `.env.example` to `.env` first and configure:
 
-- `OPENAI_API_KEY` for chat, images, planning and transcription.
+- `QWEN_API_KEY` for chat, images and planning; the default model is `qwen3.5-flash`.
+- `QWEN_BASE_URL` defaults to `https://maas.qwencloudapi.com/compatible-mode/v1`. Use the endpoint associated with your key.
+- `OPENAI_API_KEY` for voice transcription. Legacy setups without Qwen also use it for generation.
 - `JEV_API_KEY` from TypeSafe for the additional intent check.
 - `FOODDATA_GOV_API` for USDA live lookup (`USDA_API_KEY` is also accepted).
-- Optional `OPENAI_MODEL=gpt-5-mini` and `JEV_MODEL=jev-latest`.
+- Optional `QWEN_MODEL=qwen3.5-flash`, legacy `OPENAI_MODEL=gpt-5-mini`, and `JEV_MODEL=jev-latest`.
 - Optional `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` for account UI. The publishable key is intentionally public; never substitute a service-role key.
 - Optional `SUPABASE_DB_URL` for local database administration scripts only. Use the session-pooler connection on IPv4-only networks.
 
@@ -61,7 +63,7 @@ npm run test:e2e    # Desktop and mobile flows with mocked providers
 
 ## What you can use
 
-1. **Receipt capture:** Attach a grocery receipt in Chat and choose Send to Rep & Plate. OpenAI reads it and researches nutrition. Rep & Plate also retrieves USDA candidates for up to three uncertain lines. In purchase details, choose **Review USDA matches** or **Find USDA product**, compare packages and confirm the product, serving and amount. Original receipt text stays intact; suggestions are not exact matches.
+1. **Receipt capture:** Attach a grocery receipt in Chat and choose Send to Rep & Plate. The configured AI provider reads it and researches nutrition. Rep & Plate also retrieves USDA candidates for up to three uncertain lines. In purchase details, choose **Review USDA matches** or **Find USDA product**, compare packages and confirm the product, serving and amount. Original receipt text stays intact; suggestions are not exact matches.
 2. **Barcode and label capture:** Scan a barcode with the camera, upload a barcode image or enter its digits. Rep & Plate checks a private confirmed correction, its USDA catalog and then the USDA API. Compare matching packages; if needed, photograph the nutrition label and review the extracted values. Choose explicitly whether you bought the item or ate it.
 3. **Pantry and consumption:** Review quantities, adjust stock and confirm ingredients used. Package and opened dates are editable; in-app reminders organize recorded dates without determining safety or discarding food. Linked consumption deducts once and supports undo. Unknown amounts stay unknown. **Purchases and plans never count as eaten food.**
 4. **Meals and drinks:** Review the estimate and **What's in this estimate** ingredient breakdown before adding intake. Milk, syrups, oil and sauces can appear separately; totals are summed by code. A logged meal offers **Which pantry ingredients did you use?** with possible matches and explicit amounts. Linking changes stock without adding calories again.
@@ -100,7 +102,7 @@ Lookups use indexed canonical GTIN, bounded candidates, a 30-day fetched-record 
 
 ## AI and data boundaries
 
-OpenAI interprets captures and returns structured proposals; JEV checks grocery/meal/conversation intent, not nutritional accuracy. Application code validates records, calculates quantities/totals and controls confirmation. Retrieved sources are evidence, not guaranteed product matches. Image, receipt and website text are untrusted data and cannot authorize writes by themselves.
+Qwen interprets captures and returns proposals that the server validates; JEV checks grocery/meal/conversation intent, not nutritional accuracy. Application code validates records, calculates quantities/totals and controls confirmation. Retrieved sources are evidence, not guaranteed product matches. Image, receipt and website text are untrusted data and cannot authorize writes by themselves. See [provider configuration and verification](docs/context/ai-providers.md) for Qwen API differences and limits.
 
 Receipt extraction is bounded to 40 items with an omission notice; check long receipts for completeness. Research uses at most eight tool calls. Chat sends bounded recent conversation and useful available pantry context, not every stored image. Whole-pantry retrieval improves on the original last-five-receipts approach, but context remains bounded. Exact-image deduplication does not recognize every different photograph of the same receipt.
 
@@ -108,7 +110,7 @@ Provider calls show errors/progress and require explicit retries. Completed chat
 
 Private records and images remain in browser `localStorage` under `fuel.prototype.v1` unless the user explicitly uploads a cloud snapshot. Clearing site data removes local records. Storage exhaustion is reported. Preferences, product corrections and pantry events persist with the local state. The shared USDA SQLite catalog contains no private label corrections or user photos.
 
-Live messages/images and relevant context are sent through the local server to OpenAI; limited extracted classification context is sent to TypeSafe. Responses requests use `store: false`, which is not a guarantee of zero provider retention. Transcription/provider account retention terms still apply. Secrets are excluded from browser bundles and version control. Loopback request boundaries, body/rate/concurrency limits and redacted errors do not replace hosted authentication and per-user budgets.
+Live messages/images and relevant context are sent through the server to QwenCloud when Qwen is configured, or OpenAI in legacy setups; limited extracted classification context is sent to TypeSafe. Voice transcription uses OpenAI separately. Responses requests use `store: false`, which is not a guarantee of zero provider retention. Transcription/provider account retention terms still apply. Secrets are excluded from browser bundles and version control. Loopback request boundaries, body/rate/concurrency limits and redacted errors do not replace hosted authentication and per-user budgets.
 
 Official references: [USDA API guide](https://fdc.nal.usda.gov/api-guide/), [OpenAI web search](https://developers.openai.com/api/docs/guides/tools-web-search), [OpenAI transcription](https://developers.openai.com/api/docs/guides/speech-to-text), [TypeSafe API](https://docs.typesafe.ai/api).
 

@@ -558,7 +558,7 @@ export default function ChatLayer({
             </button>
             <p>
               {aiAvailable
-                ? "AI connected · OpenAI & web research"
+                ? "AI connected · Image reading & web research"
                 : "Local demo · AI unavailable"}
               <br />
               Saved records stay on this device.
@@ -571,7 +571,7 @@ export default function ChatLayer({
           <div className="fuel-about">
             <p>
               {aiAvailable
-                ? "Chat and image understanding use OpenAI. Nutrition research can search the web, and TypeSafe JEV checks the type of capture. Uploaded images and the relevant conversation are sent for processing."
+                ? "Chat and images are processed by our configured AI provider, QwenCloud or OpenAI. Nutrition research can search the web, and TypeSafe JEV checks the type of capture. Uploaded images and the relevant conversation are sent for processing. Voice transcription uses OpenAI."
                 : "AI is not connected. Sample flows and local tracking still work."}
             </p>
             <p>
