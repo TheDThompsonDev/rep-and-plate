@@ -1,5 +1,13 @@
 # Error ledger
 
+## AI-FALLBACK-001 — Generation failure interrupted the user without automatic recovery
+
+- The user requested a recovery path after the initial Qwen migration deliberately disabled fallback. New failure-injection tests reproduced immediate 429/invalid-output failure, missing refusal classification, and a primary timeout consuming the full time budget.
+- Extended the existing provider boundary with one GPT-5 mini backup, identical output validation, separate credentials, and a shared overall deadline. Primary time is bounded to leave room for recovery. Caller cancellation and refusals never start another provider; failed backup results never enter records.
+- Live forced primary 503 recovered via actual OpenAI and Jev calls; cache replay did not add calls. Existing frontend failure/retry paths remain authoritative if both services fail.
+- A generated deployment snapshot under `.local-checks` was discovered by Vitest's path matching. Removed that specific verified generated snapshot before final checks, without changing test exclusions or touching source/worktrees.
+- CYC startup still exceeds its source-fingerprint limit (CYC-ASSETS-001); direct checks used without changing protected settings.
+
 ## QWEN-001 — OpenAI compatibility does not guarantee structured output
 
 - QwenCloud documents that Chat Completions search omits source metadata and Responses does not promise `text.format` enforcement. Reusing OpenAI parsing options alone would weaken validation or source attribution. The adapter uses Responses plus explicit schema instructions and local Zod validation, preserving actual search metadata. No failed call falls back to a more expensive provider.

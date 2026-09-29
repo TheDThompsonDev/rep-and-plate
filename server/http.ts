@@ -21,6 +21,8 @@ export const readConfig = (
   provider: env.QWEN_API_KEY ? "qwen" : "openai",
   qwenKey: env.QWEN_API_KEY,
   qwenBaseUrl: env.QWEN_BASE_URL || QWEN_BASE_URL,
+  fallbackEnabled: env.AI_FALLBACK_ENABLED !== "false",
+  fallbackModel: env.AI_FALLBACK_MODEL || "gpt-5-mini",
   openaiKey: env.OPENAI_API_KEY,
   jevKey: env.JEV_API_KEY,
   usdaKey: env.FOODDATA_GOV_API || env.USDA_API_KEY,

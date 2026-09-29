@@ -41,7 +41,8 @@ Copy `.env.example` to `.env` first and configure:
 
 - `QWEN_API_KEY` for chat, images and planning; the default model is `qwen3.5-flash`.
 - `QWEN_BASE_URL` defaults to `https://maas.qwencloudapi.com/compatible-mode/v1`. Use the endpoint associated with your key.
-- `OPENAI_API_KEY` for voice transcription. Legacy setups without Qwen also use it for generation.
+- `OPENAI_API_KEY` for voice transcription and one backup generation attempt if Qwen fails. Legacy setups without Qwen also use it for primary generation.
+- `AI_FALLBACK_MODEL=gpt-5-mini` selects the backup. Set `AI_FALLBACK_ENABLED=false` to disable automatic recovery. Both attempts share the original time limit and can incur usage charges.
 - `JEV_API_KEY` from TypeSafe for the additional intent check.
 - `FOODDATA_GOV_API` for USDA live lookup (`USDA_API_KEY` is also accepted).
 - Optional `QWEN_MODEL=qwen3.5-flash`, legacy `OPENAI_MODEL=gpt-5-mini`, and `JEV_MODEL=jev-latest`.

@@ -181,14 +181,152 @@ describe("Qwen generation boundary", () => {
       ).responses.parse(params, { signal: new AbortController().signal }),
     ).rejects.toThrow("AI_INCOMPLETE");
   });
-  it("does not retry or fall back to OpenAI after a Qwen error", async () => {
+  it("uses exactly one separately authenticated backup after a Qwen service error", async () => {
     const fetcher = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(new Response("{}", { status: 429 }));
+      .mockResolvedValueOnce(new Response("{}", { status: 429 }))
+      .mockResolvedValueOnce(output('{"count":3,"sources":[]}'));
+    const onFallback = vi.fn();
+    const result = await createGenerationClient(
+      readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+      30000,
+    ).responses.parse(params, {
+      signal: new AbortController().signal,
+      onFallback,
+    });
+    expect(result.output_parsed?.count).toBe(3);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(onFallback).toHaveBeenCalledTimes(1);
+    const [url, init] = fetcher.mock.calls[1];
+    const request = new Request(url, init);
+    const body = await request.json();
+    expect(request.url).toBe("https://api.openai.com/v1/responses");
+    expect(request.headers.get("authorization")).toBe("Bearer o");
+    expect(body).toMatchObject({
+      model: "gpt-5-mini",
+      store: false,
+      max_output_tokens: 100,
+      reasoning: { effort: "low" },
+      text: { format: { type: "json_schema" } },
+    });
+    expect(body.input).toEqual(params.input);
+  });
+  it.each(["not json", '{"count":-1,"sources":[]}'])(
+    "recovers invalid Qwen output without weakening validation: %s",
+    async (text) => {
+      const fetcher = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValueOnce(output(text))
+        .mockResolvedValueOnce(output('{"count":4,"sources":[]}'));
+      const result = await createGenerationClient(
+        readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+        10000,
+      ).responses.parse(params, { signal: new AbortController().signal });
+      expect(result.output_parsed?.count).toBe(4);
+      expect(fetcher).toHaveBeenCalledTimes(2);
+    },
+  );
+  it("stops after both providers fail and never accepts invalid backup output", async () => {
+    const fetcher = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response("{}", { status: 503 }))
+      .mockResolvedValueOnce(output('{"count":-1,"sources":[]}'));
     await expect(
       createGenerationClient(
         readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
-        30000,
+        10000,
+      ).responses.parse(params, { signal: new AbortController().signal }),
+    ).rejects.toThrow();
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it.each([400, 403])(
+    "does not retry rejected requests (HTTP %i)",
+    async (status) => {
+      const fetcher = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValue(new Response("{}", { status }));
+      await expect(
+        createGenerationClient(
+          readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+          10000,
+        ).responses.parse(params, { signal: new AbortController().signal }),
+      ).rejects.toThrow();
+      expect(fetcher).toHaveBeenCalledTimes(1);
+    },
+  );
+  it("never routes a provider refusal to another model", async () => {
+    const fetcher = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          status: "completed",
+          output: [
+            {
+              type: "message",
+              role: "assistant",
+              content: [{ type: "refusal", refusal: "Cannot help" }],
+            },
+          ],
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      ),
+    );
+    await expect(
+      createGenerationClient(
+        readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+        10000,
+      ).responses.parse(params, { signal: new AbortController().signal }),
+    ).rejects.toThrow("AI_REFUSED");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("reserves time for backup when the primary stalls", async () => {
+    const fetcher = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementationOnce(
+        (_url, init) =>
+          new Promise((_resolve, reject) => {
+            init?.signal?.addEventListener(
+              "abort",
+              () => reject(init.signal!.reason),
+              { once: true },
+            );
+          }),
+      )
+      .mockResolvedValueOnce(output('{"count":5,"sources":[]}'));
+    const result = await createGenerationClient(
+      readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+      300,
+    ).responses.parse(params, { signal: new AbortController().signal });
+    expect(result.output_parsed?.count).toBe(5);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it("cancellation during the primary never starts the backup", async () => {
+    const controller = new AbortController();
+    const fetcher = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementationOnce(async () => {
+        controller.abort();
+        throw new Error("connection closed");
+      });
+    await expect(
+      createGenerationClient(
+        readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+        10000,
+      ).responses.parse(params, { signal: controller.signal }),
+    ).rejects.toThrow();
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("can disable fallback explicitly without affecting the primary", async () => {
+    const fetcher = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response("{}", { status: 503 }));
+    await expect(
+      createGenerationClient(
+        readConfig({
+          QWEN_API_KEY: "q",
+          OPENAI_API_KEY: "o",
+          AI_FALLBACK_ENABLED: "false",
+        }),
+        10000,
       ).responses.parse(params, { signal: new AbortController().signal }),
     ).rejects.toThrow();
     expect(fetcher).toHaveBeenCalledTimes(1);
@@ -204,5 +342,44 @@ describe("Qwen generation boundary", () => {
       ).responses.parse(params, { signal: controller.signal }),
     ).rejects.toThrow();
     expect(fetcher).not.toHaveBeenCalled();
+  });
+  it("stops a stalled backup at the original deadline without a third attempt", async () => {
+    const fetcher = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response("{}", { status: 503 }))
+      .mockImplementationOnce(
+        (_url, init) =>
+          new Promise((_resolve, reject) => {
+            init?.signal?.addEventListener(
+              "abort",
+              () => reject(init.signal!.reason),
+              { once: true },
+            );
+          }),
+      );
+    await expect(
+      createGenerationClient(
+        readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+        200,
+      ).responses.parse(params, { signal: new AbortController().signal }),
+    ).rejects.toMatchObject({ name: "TimeoutError" });
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it("cancels an in-flight backup and does not return a late result", async () => {
+    const controller = new AbortController();
+    const fetcher = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response("{}", { status: 503 }))
+      .mockImplementationOnce(async () => {
+        controller.abort();
+        return output('{"count":5,"sources":[]}');
+      });
+    await expect(
+      createGenerationClient(
+        readConfig({ QWEN_API_KEY: "q", OPENAI_API_KEY: "o" }),
+        10000,
+      ).responses.parse(params, { signal: controller.signal }),
+    ).rejects.toThrow();
+    expect(fetcher).toHaveBeenCalledTimes(2);
   });
 });

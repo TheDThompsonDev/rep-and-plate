@@ -63,6 +63,8 @@ export type Config = {
   provider?: "openai" | "qwen";
   qwenKey?: string;
   qwenBaseUrl?: string;
+  fallbackEnabled?: boolean;
+  fallbackModel?: string;
   openaiKey?: string;
   jevKey?: string;
   usdaKey?: string;
@@ -366,7 +368,7 @@ export async function runAI(
         meal: modelAnswerSchema.shape.meal.unwrap().extend({day:z.string().nullable()}).nullable(),
       }), "fuel_answer") },
     },
-    { signal },
+    { signal, onFallback: () => progress("Taking a little longer. I’m trying another way—no need to resend.") },
   );
   if (response.status !== "completed" || !response.output_parsed)
     throw new Error("AI_INCOMPLETE");
