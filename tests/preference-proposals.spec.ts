@@ -1,4 +1,4 @@
-import { test,expect,type Page,type Route } from '@playwright/test';
+import { test,expect,type Page,type Route } from "./app-fixture";
 import type { PreferenceProposal } from '../src/features/preferences/proposals';
 
 const stored=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));

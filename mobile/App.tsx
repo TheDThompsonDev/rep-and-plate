@@ -40,6 +40,7 @@ import {
 } from "./src/KitchenTools";
 import { Shopping } from "./src/Shopping";
 import { Cloud } from "./src/Cloud";
+import { NativeOnboarding } from "./src/Onboarding";
 function HealthApp() {
   const h = useHealth();
   useEffect(() => {
@@ -250,7 +251,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <HealthProvider>
-        <HealthApp />
+        <NativeOnboarding><HealthApp /></NativeOnboarding>
       </HealthProvider>
     </SafeAreaProvider>
   );

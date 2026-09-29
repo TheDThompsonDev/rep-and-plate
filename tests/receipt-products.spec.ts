@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect, type Page } from "./app-fixture"
 import { resultFixture } from './ai-fixtures'
 import type { FoodProduct } from '../src/features/products/contracts'
 

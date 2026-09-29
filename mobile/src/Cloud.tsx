@@ -19,6 +19,8 @@ export function Cloud() {
     [client, setClient] = useState<SupabaseClient | null>(null),
     [email, setEmail] = useState(""),
     [code, setCode] = useState(""),
+    [password, setPassword] = useState(""),
+    [signingUp, setSigningUp] = useState(false),
     [user, setUser] = useState<string | null>(null),
     [revision, setRevision] = useState<number | null>(null),
     [restore, setRestore] = useState<AppState | null>(null),
@@ -108,6 +110,18 @@ export function Cloud() {
             keyboardType="email-address"
             autoCapitalize="none"
           />
+          <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" autoComplete={signingUp?"new-password":"current-password"}/>
+          <Button
+            label={signingUp ? "Create account" : "Sign in"}
+            disabled={busy || !email.trim() || password.length < (signingUp ? 8 : 1)}
+            onPress={() => void run(async () => {
+              const r = signingUp ? await client.auth.signUp({email:email.trim(),password}) : await client.auth.signInWithPassword({email:email.trim(),password});
+              if(r.error) throw new Error(signingUp ? 'Account creation didn’t complete. Try again or sign in if you have an account.' : 'Sign-in didn’t work. Check your email and password, and confirm your email first.');
+              setPassword('');
+              if(!r.data.session){setError('Check your email to confirm your account, then sign in here.');setSigningUp(false);}
+            })}
+          />
+          <Button secondary label={signingUp ? "Already have an account? Sign in" : "Create an account"} onPress={()=>{setSigningUp(!signingUp);setPassword('');}}/>
           <Button
             label="Email me a sign-in code"
             disabled={busy}
@@ -148,6 +162,20 @@ export function Cloud() {
       {client && user && (
         <>
           <Text style={s.h3}>Signed in</Text>
+          <Button
+            label="Sign out"
+            secondary
+            disabled={busy}
+            onPress={() =>
+              void run(async () => {
+                invalidateSession();
+                const r = await client.auth.signOut({scope:'local'});
+                if (r.error) throw r.error;
+                setUser(null);
+                setRestore(null);
+              })
+            }
+          />
           <Text style={s.muted}>
             This is a personal device. Confirm these local records belong to you
             before connecting them to your account. Signing out keeps them on
@@ -245,20 +273,7 @@ export function Cloud() {
               onPress={() => setConfirmDelete(false)}
             />
           )}
-          <Button
-            label="Sign out"
-            secondary
-            disabled={busy}
-            onPress={() =>
-              void run(async () => {
-                invalidateSession();
-                const r = await client.auth.signOut();
-                if (r.error) throw r.error;
-                setUser(null);
-                setRestore(null);
-              })
-            }
-          />
+
         </>
       )}
       {restore && (

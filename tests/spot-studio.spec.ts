@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 
 test("Spot Studio filters, copies captions and downloads reusable art", async ({ page, context }) => {
   const errors: string[] = [];

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 
 test("refined tabs use personal records, allow dated browsing and keep their last actions reachable", async ({
   page,

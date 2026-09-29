@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "./app-fixture";
 
 for (const [action, label, title] of [
   ['pantry', 'Open your pantry', 'Your pantry'],

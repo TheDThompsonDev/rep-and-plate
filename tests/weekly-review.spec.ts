@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 test.beforeEach(async ({ page }) => {
   await page.route("**/api/status", (route) =>
     route.fulfill({ json: { available: false, jev: false } }),

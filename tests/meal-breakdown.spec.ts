@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "./app-fixture";
 
 test('Milk, syrup and oil remain visible in a meal estimate and save only once', async ({page})=>{
   await page.route('**/api/status',route=>route.fulfill({json:{available:true,jev:true}}));

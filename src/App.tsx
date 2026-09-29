@@ -1,3 +1,4 @@
+import Onboarding from "./features/onboarding/Onboarding";
 import { SpotVisuals } from './features/spot/Spot';
 import { resolveWorkoutCapture } from './features/spot/model';
 import { apiFetch } from "./api-fetch";
@@ -161,7 +162,7 @@ const insights = [
   },
 ];
 
-export default function App() {
+function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   useLocalDay();
   const [state, setState] = useState<AppState>(readState);
   const [page, setPage] = useState<Page>(
@@ -1247,7 +1248,7 @@ export default function App() {
           {page === "Chat" && (
             <ChatLayer
               replayIntro={replaySpotIntro}
-              onReplayIntro={setReplaySpotIntro}
+              onReplayIntro={replay => replay ? onReplayOnboarding() : setReplaySpotIntro(false)}
               onDiscardMeal={messageId=>setState(s=>({...s,messages:s.messages.map(m=>m.id===messageId?{...m,mealProposal:undefined}:m)}))}
               onSpotSettings={patch=>setState(s=>({...s,spot:{...s.spot,...patch}}))}
               onWorkoutCapture={(messageId,accept)=>{try{resolveWorkoutCapture(state,messageId,accept);setState(s=>resolveWorkoutCapture(s,messageId,accept));}catch(e){notify(e instanceof Error?e.message:"Check the workout details.");}}}
@@ -1342,9 +1343,7 @@ export default function App() {
               }}
               onAccount={() => setCloudOpen(true)}
               onMeetSpot={() => {
-                setReviewMessageId(null);
-                setReplaySpotIntro(true);
-                navigate("Chat");
+                onReplayOnboarding();
               }}
               state={state}
               aiAvailable={aiStatus?.available ?? false}
@@ -2103,4 +2102,8 @@ function ProfileEditor({
       </form>
     </Modal>
   );
+}
+
+export default function OnboardedApp() {
+  return <Onboarding>{replay => <App onReplayOnboarding={replay}/>}</Onboarding>;
 }

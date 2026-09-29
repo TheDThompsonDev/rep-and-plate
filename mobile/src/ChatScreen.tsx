@@ -1,5 +1,5 @@
 import { SpotAvatar, SpotCheckHeading, SpotWelcome, SpotMoment, SpotReaction } from './Spot';
-import { hasSpotLog, messageSpot, resolveWorkoutCapture } from '../../src/features/spot/model';
+import { messageSpot, resolveWorkoutCapture } from '../../src/features/spot/model';
 import { useEffect, useRef, useState } from "react";
 import { FlatList, View, Text, Image, TextInput } from "react-native";
 import { Camera, Mic, Send, ScanBarcode } from "lucide-react-native";
@@ -177,7 +177,7 @@ export function ChatScreen() {
   useEffect(()=>{if(h.captureRequest)input.current?.focus();},[h.captureRequest]);
   const comeback=h.spotReturning;
   const [catchup,setCatchup]=useState(false);
-  const intro=h.spotIntroReplay || (!h.state!.spot?.introSeen && !hasSpotLog(h.state!) && !h.state!.messages.some(m=>m.role==='user'));
+  const intro=h.spotIntroReplay;
   useEffect(()=>{if(h.spotIntroReplay)list.current?.scrollToOffset({offset:0,animated:false});},[h.spotIntroReplay]);
   const done=()=>{h.dismissSpotIntro();h.dismissSpotReturn();h.change(s=>({...s,spot:{...s.spot,introSeen:true}}));};
   return (

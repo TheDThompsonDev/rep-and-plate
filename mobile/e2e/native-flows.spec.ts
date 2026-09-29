@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 import { resultFixture } from "../../tests/ai-fixtures";
 const key = "dannys-health.native.v1";
 test("native shell preserves chat draft, opens receipt capture and saves household settings", async ({

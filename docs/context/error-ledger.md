@@ -1,5 +1,13 @@
 # Error ledger
 
+## ONBOARDING-001 — An inline introduction was not a new-user flow
+
+- The user correctly found that the Spot slides appeared inside an already-open app, without a clear account entry flow. Replaced automatic inline onboarding with a dedicated welcome/account/setup gate in both renderers. Existing users can replay the full tour without clearing their records or draft.
+- Shared React hooks initially resolved the root web React from Metro, producing invalid hook calls. Native Metro now disables hierarchical package lookup and resolves the native dependency path first. A Metro restart was required.
+- Existing browser tests raced the new asynchronous entry check while reading device state. Returning-user fixtures now explicitly seed completion and initial records; raw first-launch tests exercise the complete gate without that fixture. No product guard was weakened.
+- Independent auth review found a sign-out/completion race and a native write that was not awaited. Completion now validates the account epoch around asynchronous operations; native profile saving awaits the serial writer. A storage-failure regression verifies the gate stays open, completion is absent, and retry saves the profile.
+- CYC startup again exceeded its source fingerprint size limit; direct project checks were used without changing protected verification configuration. See CYC-ASSETS-001.
+
 ## SPOT-SCENE-001 — Native scene retained its intrinsic image height
 
 - Status: repaired in working changes.

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 import { initialState, today } from "../../src/domain";
 test.setTimeout(60000);
 
@@ -40,6 +40,8 @@ test("native Spot intro, workout check, saved result and weekly Rep summary", as
     }),
   );
   await page.goto("/");
+  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await page.getByRole("button", { name: "Meet Spot", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Hey. I’m Spot." }),
   ).toBeVisible();
@@ -49,7 +51,8 @@ test("native Spot intro, workout check, saved result and weekly Rep summary", as
     page.getByRole("heading", { name: "Tell me what you did." }),
   ).toBeVisible();
   await page.screenshot({ path: info.outputPath("spot-native-rep.png") });
-  await page.getByRole("button", { name: "Skip intro" }).click();
+  await page.getByRole("button", { name: "Close tour", exact: true }).first().click();
+  await page.getByRole("button", { name: "Chat", exact: true }).click();
   const draft = page.getByRole("textbox", { name: "Message Rep & Plate" });
   await draft.fill("Keep my sandwich story");
   const beforeMoods = await page.evaluate(() =>

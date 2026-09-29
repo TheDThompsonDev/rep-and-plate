@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect, type Page } from "./app-fixture"
 
 type VoiceState = { requested: number; started: number; stopped: number; release?: () => void }
 async function fakeMicrophone(page: Page, mode: 'working' | 'denied' | 'unsupported' | 'pending' = 'working') {

@@ -1,5 +1,5 @@
 import { SpotAvatar, SpotCheck, SpotProcessing, SpotResult, SpotWelcome, SpotWorkoutCheck, PlateMark } from './features/spot/Spot';
-import { hasSpotLog, isComeback, messageSpot } from './features/spot/model';
+import { isComeback, messageSpot } from './features/spot/model';
 import PreferenceProposalCard from "./features/preferences/PreferenceProposalCard";
 import { defaultPreferences } from "./features/preferences/contracts";
 import type { ChatAction } from "./ai-contract";
@@ -110,7 +110,7 @@ export default function ChatLayer({
     return () => {visit();window.removeEventListener('pagehide',visit);};
   }, []);
   const [catchup, setCatchup] = useState(false);
-  const intro = replayIntro || (!state.spot?.introSeen && !hasSpotLog(state) && !state.messages.some(m => m.role === 'user'));
+  const intro = replayIntro;
   const latestSpot = messageSpot(state.messages.filter(m => m.role === 'assistant').at(-1));
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);

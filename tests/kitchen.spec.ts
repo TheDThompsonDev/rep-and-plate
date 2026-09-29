@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 
 test("Kitchen replaces the You tab and keeps profile, workouts and food tools connected", async ({
   page,

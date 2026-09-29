@@ -1,4 +1,4 @@
-import { test, expect, type Route } from "@playwright/test";
+import { test, expect, type Route } from "./app-fixture";
 import { resultFixture } from "./ai-fixtures";
 
 test("reset cancels an old reply and a new chat request works immediately", async ({

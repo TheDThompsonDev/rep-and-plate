@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 
 test("story collection supports choosing, copying and downloading a complete scene", async ({ page, context }) => {
   const errors: string[] = [];

@@ -61,6 +61,7 @@ type Store = {
   setTab: (t: Tab) => void;
   setTool: (t: Tool) => void;
   change: (update: (s: AppState) => AppState) => boolean;
+  saveOnboardingProfile: (name: string) => Promise<void>;
   send: (text: string, image?: string, retry?: string) => Promise<void>;
   cancel: () => void;
 };
@@ -130,6 +131,13 @@ export function HealthProvider({ children }: { children: ReactNode }) {
       setNotice(e instanceof Error ? e.message : "Please check those details.");
       return false;
     }
+  }
+  async function saveOnboardingProfile(name: string) {
+    if (!current.current) throw Error('Your records are still loading. Please try again.');
+    const next = stateSchema.parse({...current.current,profile:{...current.current.profile,...(name.trim()?{name:name.trim()}: {})},spot:{...current.current.spot,introSeen:true}});
+    await saveDevice(next);
+    current.current = next;
+    setState(next);
   }
   async function send(text: string, image?: string, retry?: string) {
     if (controller.current || !current.current || (!text.trim() && !image))
@@ -221,6 +229,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
         setTab,
         setTool,
         change,
+        saveOnboardingProfile,
         send,
         cancel: () => controller.current?.abort(),
       }}

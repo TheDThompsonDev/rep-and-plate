@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./app-fixture";
 import { demoState } from "../src/domain";
 
 async function seedExamples(page: Page, includePersonalDinner = false) {
@@ -167,7 +167,7 @@ test("Chat starts clean with four destinations and direct barcode scanning", asy
     page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText("Hey. I’m Spot."),
+    page.getByRole("heading", {name:"Always here.", exact:true}),
   ).toBeVisible();
   const tabs = page.getByRole("navigation", { name: "Chat navigation" });
   await expect(tabs.getByRole("button")).toHaveText([
@@ -182,7 +182,7 @@ test("Chat starts clean with four destinations and direct barcode scanning", asy
     page.getByRole("button", { name: "Use voice", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText("Part dinner plate. Part weight plate. Entirely too invested.", {
+    page.getByText("(In a supportive way.)", {
       exact: false,
     }),
   ).toBeVisible();

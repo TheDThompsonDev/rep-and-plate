@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "./app-fixture";
 import { resultFixture } from './ai-fixtures';
 
 test('Kitchen receipt capture offers camera, previews a photo and saves groceries without intake', async ({ page }, info) => {

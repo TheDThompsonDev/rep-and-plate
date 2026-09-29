@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 
 test("every page opens barcode scanning directly without changing records", async ({
   page,

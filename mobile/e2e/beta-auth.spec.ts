@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 import { resultFixture } from "../../tests/ai-fixtures";
 
 test("hosted native sign-in binds device records and blocks a different account before sending", async ({

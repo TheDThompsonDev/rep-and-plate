@@ -1,4 +1,4 @@
-import { test,expect,type Page } from '@playwright/test';
+import { test,expect,type Page } from "./app-fixture";
 const stored=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
 async function menu(page:Page,name:string){await page.getByRole('button',{name:'Open chat menu'}).click();await page.getByRole('button',{name,exact:true}).click();}
 async function seedPantry(page:Page){

@@ -16,8 +16,9 @@ weight plate behind. Food is never good or bad. A saved record earns a quiet
 - Navigation keeps existing destinations and deep links. Spot is the Chat icon;
   the central Scan action opens barcode scanning directly on every screen.
   The header uses a separate leaning pose with his elbow on the final “e”.
-- Onboarding is inline and skippable. The first real saved meal or completed
-  workout ends the introduction. Returning users see “Oh hey. Start with today.”
+- First launch uses a dedicated welcome, four-part Spot introduction, account
+  creation/sign-in, personal setup and completion before the app is mounted.
+  The tour is skippable and replayable; it is no longer an inline chat card.
 - Nutrition/workout empty states and weekly summaries use Spot selectively.
 - Character visibility is an optional saved preference. Text and actions remain
   usable when imagery is disabled or fails. Motion respects system preferences.
@@ -32,9 +33,9 @@ separate work. A model's confidence is not permission to overwrite records.
 ## Asset library
 
 The approved chaos direction now appears before the first log. Four skippable
-onboarding slides introduce Spot through a press conference, pasta investigation,
+onboarding screens introduce Spot through a press conference, pasta investigation,
 leg-day melodrama and the recovery department. Practical food/workout guidance
-stays beside the joke. Shared slide copy lives in `features/spot/model.ts`; scene
+stays beside the joke. Shared entry-flow copy lives in `features/onboarding/model.ts`; scene
 identity lives in `features/spot/scenes.ts`. Both renderers use the same five
 native-resolution assets, copied into web/public and the native bundle.
 
@@ -74,6 +75,19 @@ The exact prompt, cell map, and file paths are in
 [`public/images/spot/README.md`](../../public/images/spot/README.md).
 
 ## Verification — September 28, 2026
+
+- Dedicated entry-flow correction: 247 unit/domain/server checks and all 200 web
+  browser checks passed. Native full run passed 10 of 11 checks; the remaining
+  test expected the retired inline introduction. Updated it to open the full
+  tour from You, then both native Spot checks passed. Account creation,
+  confirmation-required sign-in, owned-record rejection, sign-out, reload,
+  replay preservation and failed-save retry have browser regressions. Web build,
+  native typecheck, native lint (zero errors, ten existing warnings) and all
+  iOS/Android/web exports passed. Inspected decoded art and layouts at web
+  320/390/1100px and native 320/390px. Supabase settings confirm email signup is
+  enabled and confirmation is required; email delivery and physical-phone
+  behavior were not exercised. CYC's source fingerprint limit still prevents
+  controller startup; direct project checks were used.
 
 - In-app personality follow-up: 246 unit/domain/server checks passed. The full
   web suite passed 190 of 192 checks; the two failures referenced retired intro
@@ -137,7 +151,7 @@ The exact prompt, cell map, and file paths are in
 - Browser screenshots were inspected. An Expo development-server bundle stall
   was resolved by restarting Metro with a clean cache; reload tests then passed.
 
-No deployment, signed store build, or physical iPhone/Android testing was done.
+Earlier checks did not include deployment, signed store builds, or physical iPhone/Android testing.
 Provider behavior is covered by schema/domain tests and mocked browser responses;
 the new model prompt has not been smoke-tested against a live provider.
 

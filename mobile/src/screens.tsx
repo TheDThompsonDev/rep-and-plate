@@ -1,3 +1,4 @@
+import { useWelcome } from "./Onboarding";
 import { SpotMoment, SpotWeeklyReview } from './Spot';
 import { useState, useRef } from "react";
 import {
@@ -554,6 +555,7 @@ export function WorkoutsScreen() {
   );
 }
 export function YouScreen() {
+  const welcome = useWelcome();
   const h = useHealth(),
     state = h.state!,
     review = weeklyReview(state);
@@ -570,7 +572,7 @@ export function YouScreen() {
         for you.
       </Text>
       <SpotWeeklyReview/>
-      <Row title="Meet Spot" detail="Small plate. Massive overreaction. Replay the introduction." onPress={h.replaySpotIntro}/>
+      <Row title="Meet Spot" detail="Replay the welcome tour. Your records stay here." onPress={welcome.replay}/>
       <Row title={state.spot?.visuals===false?"Show Spot illustrations":"Hide Spot illustrations"} detail="The same tools work either way." onPress={()=>h.change(s=>({...s,spot:{...s.spot,visuals:s.spot?.visuals===false}}))}/>
       <Card mint>
         <Text style={s.eyebrow}>THE WEEK YOU’RE BUILDING</Text>

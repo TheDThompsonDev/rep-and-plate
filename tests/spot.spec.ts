@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-fixture";
 import { initialState, today } from "../src/domain";
 
 test.beforeEach(async ({ page }) => {
@@ -12,6 +12,8 @@ test("Spot introduction pivots to Rep, capture stays universal, and visuals are 
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
+  await page.getByRole("button", {name:"Open chat menu"}).click();
+  await page.getByRole("button", {name:"Meet Spot",exact:true}).click();
   await expect(
     page.getByRole("heading", { name: "Hey. I’m Spot." }),
   ).toBeVisible();
@@ -24,13 +26,13 @@ test("Spot introduction pivots to Rep, capture stays universal, and visuals are 
     page.getByRole("heading", { name: "Tell me what you did." }),
   ).toBeVisible();
   await expect(
-    page.locator('[data-spot-scene="leg-funeral"] img'),
+    page.locator('.welcome-art img'),
   ).toBeVisible();
   await page.screenshot({ path: info.outputPath("spot-onboarding-rep.png") });
-  await page.getByRole("button", { name: "Skip intro" }).click();
+  await page.getByRole("button", { name: "Close tour",exact:true }).first().click();
   await expect(
     page.getByRole("textbox", { name: "Message Rep & Plate" }),
-  ).toBeFocused();
+  ).toBeVisible();
   const draft = page.getByRole("textbox", { name: "Message Rep & Plate" });
   await draft.fill("Keep my sandwich story");
   const beforeMoods = await page.evaluate(() =>
