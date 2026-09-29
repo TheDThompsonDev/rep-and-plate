@@ -189,19 +189,19 @@ async function verify() {
       );
       await expectError(
         "stale compare-and-swap save is rejected",
-        "40001",
+        "PT409",
         (scoped) =>
           scoped`select public.fuel_save_snapshot('{"version":1}'::jsonb, ${firstA.revision}::bigint)`,
       );
       await expectError(
         "creating over an existing snapshot is rejected",
-        "40001",
+        "PT409",
         (scoped) =>
           scoped`select public.fuel_save_snapshot('{"version":1}'::jsonb, 0)`,
       );
       await expectError(
         "stale compare-and-swap deletion is rejected",
-        "40001",
+        "PT409",
         (scoped) =>
           scoped`select public.fuel_delete_snapshot(${firstA.revision}::bigint)`,
       );
@@ -221,7 +221,7 @@ async function verify() {
       );
       await expectError(
         "old revision cannot overwrite a recreated snapshot",
-        "40001",
+        "PT409",
         (scoped) =>
           scoped`select public.fuel_save_snapshot('{"version":1}'::jsonb, ${updatedA.revision}::bigint)`,
       );

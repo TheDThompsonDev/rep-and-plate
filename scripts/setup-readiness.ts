@@ -85,7 +85,12 @@ async function main() {
           completed.push(`${item.version}: already applied`);
           continue;
         }
-        if ([objects.account, objects.operations, objects.sync][index])
+        // The initial three create new objects; corrective migrations validate
+        // their own existing-function preconditions without adopting schema.
+        if (
+          index < 3 &&
+          [objects.account, objects.operations, objects.sync][index]
+        )
           throw Error("UNTRACKED_READINESS_SCHEMA");
         await tx.unsafe(item.body);
         await tx`insert into public.health_schema_migrations(version,sha256) values(${item.version},${item.sha256})`;

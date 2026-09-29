@@ -140,7 +140,7 @@ export class SnapshotConflict extends Error {
   }
 }
 const cloudError = (error: { code?: string } | null): Error => {
-  if (error?.code === "40001") return new SnapshotConflict();
+  if (error?.code === "PT409" || error?.code === "40001") return new SnapshotConflict();
   if (["42P01", "42883", "PGRST202", "PGRST205"].includes(error?.code || ""))
     return new Error(
       "Cloud storage is not set up yet. Apply the Rep & Plate database setup, then try again.",

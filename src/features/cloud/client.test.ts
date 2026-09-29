@@ -134,13 +134,16 @@ describe("cloud configuration and snapshots", () => {
       p_expected_revision: 3,
     });
   });
-  it("exposes revision conflicts instead of retrying an overwrite", async () => {
+  it.each(["PT409", "40001"])("exposes %s revision conflicts instead of retrying an overwrite or deletion", async (code) => {
     const { client, rpc } = fakeClient({
-      error: { code: "40001", message: "private SQL details" },
+      error: { code, message: "private SQL details" },
     });
     await expect(
       saveSnapshot(client, userId, initialState(), 7),
     ).rejects.toBeInstanceOf(SnapshotConflict);
+    expect(rpc).toHaveBeenCalledOnce();
+    rpc.mockClear();
+    await expect(deleteSnapshot(client, userId, 7)).rejects.toBeInstanceOf(SnapshotConflict);
     expect(rpc).toHaveBeenCalledOnce();
   });
   it("blocks a switched account before reads or writes", async () => {

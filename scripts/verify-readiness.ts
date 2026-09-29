@@ -120,7 +120,50 @@ async function verify() {
       await tx`insert into storage.objects(bucket_id,name,owner_id,metadata,created_at) values
         ('health-captures',${oldName},${a},'{"size":128,"mimetype":"image/jpeg"}'::jsonb,now()-interval '100 years'),
         ('health-captures',${freshName},${a},'{"size":128,"mimetype":"image/jpeg"}'::jsonb,now())`;
-      await tx`select public.health_save_snapshot(${a}::uuid,'{"version":1,"fixture":"readiness"}'::jsonb,0)`;
+      const [firstSave] =
+        await tx`select public.health_save_snapshot(${a}::uuid,'{"version":1,"fixture":"readiness"}'::jsonb,0) as value`;
+      const firstRevision = firstSave.value.revision;
+      const [updatedSave] =
+        await tx`select public.health_save_snapshot(${a}::uuid,'{"version":1,"fixture":"current"}'::jsonb,${firstRevision}::bigint) as value`;
+      const currentRevision = updatedSave.value.revision;
+      check(
+        currentRevision > firstRevision,
+        "Valid snapshot update advances revision",
+      );
+      const expectSnapshotConflict = async (
+        label: string,
+        run: (scope: typeof tx) => Promise<unknown>,
+      ) => {
+        let code: string | undefined;
+        try {
+          await tx.savepoint(run);
+        } catch (error) {
+          code = (error as { code?: string }).code;
+        }
+        check(code === "PT409", label);
+        const [saved] =
+          await tx`select state,revision from public.fuel_snapshots where user_id=${a}::uuid`;
+        check(
+          saved?.state.fixture === "current" &&
+            Number(saved.revision) === Number(currentRevision),
+          `${label}: latest records unchanged`,
+        );
+      };
+      await expectSnapshotConflict(
+        "Duplicate snapshot create returns non-retriable PT409",
+        (scope) =>
+          scope`select public.health_save_snapshot(${a}::uuid,'{"version":1,"fixture":"overwrite"}'::jsonb,0)`,
+      );
+      await expectSnapshotConflict(
+        "Stale snapshot update returns non-retriable PT409",
+        (scope) =>
+          scope`select public.health_save_snapshot(${a}::uuid,'{"version":1,"fixture":"overwrite"}'::jsonb,${firstRevision}::bigint)`,
+      );
+      await expectSnapshotConflict(
+        "Stale snapshot deletion returns non-retriable PT409",
+        (scope) =>
+          scope`select public.health_delete_snapshot(${a}::uuid,${firstRevision}::bigint)`,
+      );
       await expectDenied(
         "Account A cannot write media into B's folder",
         (scope) =>

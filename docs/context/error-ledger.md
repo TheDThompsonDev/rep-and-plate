@@ -2,6 +2,7 @@
 
 ## READINESS-001 — Account continuity and interrupted persistence
 
+- Live REST conflict verification uncovered the original snapshot RPCs using SQLSTATE40001 for permanent revision mismatch. PostgREST repeatedly retried the transaction until the socket closed after60seconds. Additive20260929_snapshot_conflicts changes only those business raises toPT409; clients retain legacy40001 recognition and handlePT409. Hosted stale create/update/delete checks now return promptly without changing the saved copy; 29 readiness and19 snapshot DB checks pass. Original applied migration hashes remain unchanged.
 - A Save followed immediately by navigation could precede React's passive persistence effect. Saves now journal at the action boundary; a regression clicks Save and reloads in the same action while the durable writer is deliberately blocked.
 - Native account selection could briefly expose the previous owner's in-memory records. An epoch-bound readiness gate now clears access synchronously and rejects edits/uploads until the selected owner's records load; stale asynchronous callbacks cannot publish to the new account.
 - The production native export exposed a welcome-back timing regression: visit detection read the gated records before loading completed. It now waits for the saved visit and ready records together before choosing Spot's greeting; the existing six-day-return journey detects this case.
