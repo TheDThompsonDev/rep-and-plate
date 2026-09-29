@@ -1,5 +1,21 @@
 import { test, expect } from "@playwright/test";
 
+test("You offers the introduction without signing out or replacing saved records", async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Skip intro' }).click();
+  const draft = page.getByRole('textbox', { name: 'Message Rep & Plate' });
+  await draft.fill('Keep this draft');
+  const before = await page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+  await page.getByRole('button', { name: 'Your profile', exact: true }).click();
+  const meet = page.getByRole('button', { name: /Meet Spot/ });
+  await expect(meet).toBeInViewport();
+  await meet.click();
+  await expect(page.getByRole('heading', { name: 'Hey. I’m Spot.' })).toBeInViewport();
+  await page.getByRole('button', { name: 'Skip intro' }).click();
+  await expect(draft).toHaveValue('Keep this draft');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!))).toEqual(before);
+});
+
 test("Spot personality appears before the first log and introduction stays skippable", async ({
   page,
 }) => {

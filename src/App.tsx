@@ -200,6 +200,7 @@ export default function App() {
   const [workoutBuilderOpen, setWorkoutBuilderOpen] = useState(false);
   const [voiceOpen, setVoiceOpen] = useState(false);
   const [cloudOpen, setCloudOpen] = useState(false);
+  const [replaySpotIntro, setReplaySpotIntro] = useState(false);
   const [linkMealId,setLinkMealId] = useState<string|null>(null);
   const scanAction = useRef(crypto.randomUUID());
   function openScanner() {
@@ -1245,6 +1246,8 @@ export default function App() {
 
           {page === "Chat" && (
             <ChatLayer
+              replayIntro={replaySpotIntro}
+              onReplayIntro={setReplaySpotIntro}
               onDiscardMeal={messageId=>setState(s=>({...s,messages:s.messages.map(m=>m.id===messageId?{...m,mealProposal:undefined}:m)}))}
               onSpotSettings={patch=>setState(s=>({...s,spot:{...s.spot,...patch}}))}
               onWorkoutCapture={(messageId,accept)=>{try{resolveWorkoutCapture(state,messageId,accept);setState(s=>resolveWorkoutCapture(s,messageId,accept));}catch(e){notify(e instanceof Error?e.message:"Check the workout details.");}}}
@@ -1338,6 +1341,11 @@ export default function App() {
                 navigate("Chat");
               }}
               onAccount={() => setCloudOpen(true)}
+              onMeetSpot={() => {
+                setReviewMessageId(null);
+                setReplaySpotIntro(true);
+                navigate("Chat");
+              }}
               state={state}
               aiAvailable={aiStatus?.available ?? false}
               onGroceries={(receiptId) => setGroceriesOpen(receiptId ?? "*")}

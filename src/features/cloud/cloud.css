@@ -130,3 +130,7 @@
 .fuel-cloud .cloud-footnote {
   font-size: 12px;
 }
+.cloud-sign-out {
+  justify-self: start;
+  min-height: 44px;
+}

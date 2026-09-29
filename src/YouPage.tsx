@@ -39,6 +39,7 @@ type Props = {
   state: AppState;
   aiAvailable: boolean;
   onAccount: () => void;
+  onMeetSpot: () => void;
   onScan: () => void;
   onGroceries: (receiptId?: string) => void;
   onPreferences: () => void;
@@ -65,6 +66,7 @@ export default function YouPage({
   state,
   aiAvailable,
   onAccount,
+  onMeetSpot,
   onScan,
   onGroceries,
   onPreferences,
@@ -271,6 +273,24 @@ export default function YouPage({
             <Pencil size={17} />
           </button>
         </section>
+        <div className="you-row-group you-account-shortcuts" aria-label="Account and introduction">
+          <button className="you-row" onClick={onAccount}>
+            <span className="you-row-icon neutral"><UserRound size={23} /></span>
+            <span>
+              <strong>Account & backups</strong>
+              <small>Sign in, sign out, and manage saved records</small>
+            </span>
+            <ChevronRight size={20} />
+          </button>
+          <button className="you-row" onClick={onMeetSpot}>
+            <span className="you-row-icon neutral"><PlateMark /></span>
+            <span>
+              <strong>Meet Spot</strong>
+              <small>Replay the introduction. Keep your saved records.</small>
+            </span>
+            <ChevronRight size={20} />
+          </button>
+        </div>
         <section
           className="you-progress-hero"
           aria-label="Your recorded activity"
@@ -612,16 +632,6 @@ export default function YouPage({
             <span>
               <strong>Profile & preferences</strong>
               <small>Your name and daily targets</small>
-            </span>
-            <ChevronRight size={20} />
-          </button>
-          <button className="you-row" onClick={onAccount}>
-            <span className="you-row-icon neutral">
-              <UserRound size={23} />
-            </span>
-            <span>
-              <strong>Account & backups</strong>
-              <small>Sign in, export, or save a cloud copy</small>
             </span>
             <ChevronRight size={20} />
           </button>

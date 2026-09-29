@@ -216,6 +216,36 @@ export default function CloudAccount({
   return (
     <Modal title="Your account & saved records" onClose={onClose}>
       <div className="fuel-cloud">
+        {user && (
+          <section className="cloud-account" aria-label="Signed-in account">
+            <strong>Signed in as {user.email || 'your account'}</strong>
+            <button
+              className="button secondary cloud-sign-out"
+              disabled={busy}
+              onClick={() =>
+                void run(async () => {
+                  const response = await client!.auth.signOut({
+                    scope: "local",
+                  });
+                  if (response.error) {
+                    const remaining = await client!.auth.getSession();
+                    throw new Error(remaining.data.session
+                      ? "Sign-out could not be completed. Try again."
+                      : "Signed out on this device, but the server could not confirm sign-out. Your saved records remain here.");
+                  }
+                  if (alive.current)
+                    setNotice(
+                      "Signed out. This device's Rep & Plate records remain here.",
+                    );
+                })
+              }
+            >
+              <LogOut size={16} /> Sign out on this device
+            </button>
+            <p>Signing out keeps this browser’s records. To see the introduction again, choose Meet Spot at the top of You.</p>
+          </section>
+        )}
+        {configured && !user && <p className="cloud-feedback">You’re not signed in to an account. Your profile and records are saved in this browser.</p>}
         <div className="cloud-intro">
           <span>
             <Cloud size={24} />
@@ -489,27 +519,7 @@ export default function CloudAccount({
                 </button>
               </section>
             )}
-            <button
-              className="cloud-link"
-              disabled={busy}
-              onClick={() =>
-                void run(async () => {
-                  const response = await client!.auth.signOut({
-                    scope: "local",
-                  });
-                  if (response.error)
-                    throw new Error(
-                      "Sign-out could not be completed. Try again.",
-                    );
-                  if (alive.current)
-                    setNotice(
-                      "Signed out. This device's Rep & Plate records remain here.",
-                    );
-                })
-              }
-            >
-              <LogOut size={16} /> Sign out on this device
-            </button>
+
           </>
         )}
         <section className="cloud-local">

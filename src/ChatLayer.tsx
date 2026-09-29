@@ -27,6 +27,8 @@ import "./chat.css";
 
 
 type Props = {
+  replayIntro: boolean;
+  onReplayIntro: (replay: boolean) => void;
   onDiscardMeal: (messageId: string) => void;
   onSpotSettings: (patch: Partial<NonNullable<AppState['spot']>>) => void;
   onWorkoutCapture: (messageId: string, accept: boolean) => void;
@@ -62,6 +64,8 @@ type Props = {
 };
 
 export default function ChatLayer({
+  replayIntro,
+  onReplayIntro: setReplayIntro,
   onDiscardMeal,
   onSpotSettings,
   onWorkoutCapture,
@@ -106,7 +110,6 @@ export default function ChatLayer({
     return () => {visit();window.removeEventListener('pagehide',visit);};
   }, []);
   const [catchup, setCatchup] = useState(false);
-  const [replayIntro,setReplayIntro] = useState(false);
   const intro = replayIntro || (!state.spot?.introSeen && !hasSpotLog(state) && !state.messages.some(m => m.role === 'user'));
   const latestSpot = messageSpot(state.messages.filter(m => m.role === 'assistant').at(-1));
   const [menuOpen, setMenuOpen] = useState(false);
@@ -119,6 +122,11 @@ export default function ChatLayer({
   const totals = sumNutrition(state.meals);
   const pending = state.reviews.filter((item) => !item.resolved);
   useEffect(() => {
+    if (intro) {
+      lastCount.current = state.messages.length;
+      threadRef.current?.scrollTo({ top: 0 });
+      return;
+    }
     if (reviewMessageId) {
       lastCount.current = state.messages.length;
       return;
@@ -131,7 +139,7 @@ export default function ChatLayer({
       if (el) el.scrollTop = el.scrollHeight;
     });
     return () => cancelAnimationFrame(frame);
-  }, [state.messages.length, processing, reviewMessageId]);
+  }, [state.messages.length, processing, reviewMessageId, intro]);
 
   useEffect(() => {
     if (!reviewMessageId) return;

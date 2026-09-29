@@ -25,6 +25,8 @@ async function mockCloud(page: Page) {
     signups: 0,
     conflict: false,
     failedSave: false,
+    failedSignOut: false,
+    signouts: 0,
   };
   await page.route("**/api/status", (route) =>
     route.fulfill({ json: { available: false, jev: false } }),
@@ -74,6 +76,12 @@ async function mockCloud(page: Page) {
       return;
     }
     if (url.pathname === "/auth/v1/logout") {
+      control.signouts++;
+      expect(url.searchParams.get("scope")).toBe("local");
+      if (control.failedSignOut) {
+        await route.fulfill({ headers, status: 500, json: { message: "Unavailable" } });
+        return;
+      }
       await route.fulfill({ headers, status: 204 });
       return;
     }
@@ -153,6 +161,42 @@ async function signIn(page: Page) {
     page.getByRole("button", { name: /Upload this device/ }),
   ).toBeEnabled();
 }
+
+test("Account sign-out is visible immediately and preserves device records", async ({ page }) => {
+  const cloud = await mockCloud(page);
+  await page.goto('/#you');
+  await expect(page.getByRole('button', { name: /Account & backups/ })).toBeInViewport();
+  await page.getByRole('button', { name: /Account & backups/ }).click();
+  await signIn(page);
+  const before = await stored(page);
+  const signout = page.getByRole('button', { name: 'Sign out on this device' });
+  await expect(signout).toBeInViewport();
+  await signout.click();
+  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('You’re not signed in');
+  expect(cloud.signouts).toBe(1);
+  expect(await stored(page)).toEqual(before);
+  await page.reload();
+  await page.getByRole('button', { name: /Account & backups/ }).click();
+  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+  expect(await stored(page)).toEqual(before);
+});
+
+test("A server sign-out failure reports the actual local session state", async ({ page }) => {
+  const cloud = await mockCloud(page);
+  await openAccount(page);
+  await signIn(page);
+  const before = await stored(page);
+  cloud.failedSignOut = true;
+  await page.getByRole('button', { name: 'Sign out on this device' }).click();
+  await expect(page.getByRole('alert')).toContainText('Signed out on this device, but the server could not confirm');
+  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+  expect(await stored(page)).toEqual(before);
+  cloud.failedSignOut = false;
+  await signIn(page);
+  await page.getByRole('button', { name: 'Sign out on this device' }).click();
+  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+});
 
 test("Cloud uploads, restores, and deletes only after explicit review", async ({
   page,
