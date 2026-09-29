@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 
 const userId = "11111111-1111-4111-8111-111111111111";
@@ -15,7 +16,7 @@ const user = {
 };
 const token = `${Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url")}.${Buffer.from(JSON.stringify({ sub: userId, aud: "authenticated", role: "authenticated", exp: Math.floor(Date.now() / 1000) + 3600 })).toString("base64url")}.fixture-signature`;
 export const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+  readBrowserRecords(page);
 
 export async function mockCloud(page: Page) {
   const control = {

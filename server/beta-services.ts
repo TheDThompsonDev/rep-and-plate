@@ -3,6 +3,8 @@ import { aiResultSchema } from "../src/ai-contract.ts";
 import { validateCloudConfig } from "../src/features/cloud/client.ts";
 import { readConfig } from "./http.ts";
 import type { BetaServices } from "./beta.ts";
+import {createAccountDeletion} from './account.ts';
+import {createOperationsServices} from './operations-services.ts';
 
 export function betaServices(
   env: Record<string, string | undefined>,
@@ -11,6 +13,7 @@ export function betaServices(
   const publicConfig = validateCloudConfig({
     url: config.supabaseUrl,
     publishableKey: config.supabasePublishableKey,
+    supportUrl:env.SUPPORT_URL,
   });
   const secret = env.SUPABASE_SECRET_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
   const origin = new URL(env.APP_ORIGIN || "invalid");
@@ -41,6 +44,8 @@ export function betaServices(
   }
   return {
     config,
+    deleteAccount:createAccountDeletion(publicConfig,admin),
+    recordGeneration:createOperationsServices(env).recordGeneration,
     publicConfig,
     origin: origin.origin,
     authenticate: async (token) => {

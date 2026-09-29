@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
 test('Milk, syrup and oil remain visible in a meal estimate and save only once', async ({page})=>{
@@ -12,16 +13,16 @@ test('Milk, syrup and oil remain visible in a meal estimate and save only once',
     ]}}})+'\n'});
   });
   await page.goto('/');
-  const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+  const before=await readBrowserRecords(page);
   await page.getByRole('textbox',{name:'Message Rep & Plate'}).fill('I ate eggs in oil and drank chai with milk and syrup.');
   await page.getByRole('button',{name:'Send message',exact:true}).click();
   await page.getByText("What's in this estimate",{exact:false}).click();
   const breakdown=page.locator('.meal-proposal-breakdown');
   for(const name of ['Whole milk in chai','Syrup in chai','Olive oil','Eggs']) await expect(breakdown.getByText(name,{exact:true})).toBeVisible();
-  expect((await page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!))).meals).toEqual(before.meals);
+  expect((await readBrowserRecords(page)).meals).toEqual(before.meals);
   await page.getByRole('button',{name:'Yep, add to Breakfast',exact:true}).click();
   await page.reload();
-  const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+  const after=await readBrowserRecords(page);
   expect(after.meals).toHaveLength(before.meals.length+1);
   expect(after.meals.at(-1)).toMatchObject({calories:380,components:[{name:'Whole milk in chai'},{name:'Syrup in chai'},{name:'Olive oil'},{name:'Eggs'}]});
   expect(after.pantryEvents).toEqual(before.pantryEvents);

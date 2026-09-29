@@ -17,8 +17,11 @@ import {
   type SnapshotMetadata,
 } from "./client";
 import "./cloud.css";
-import { isHostedBrowser } from '../../api-fetch';
-import { requireBrowserOwner } from './client';
+import { isHostedBrowser } from "../../api-fetch";
+import { requireBrowserOwner } from "./client";
+import { PasswordRecovery } from "./PasswordRecovery";
+import { AccountSecurity } from "./AccountSecurity";
+import { pauseCloudSync, resumeCloudSync } from "./sync-control";
 
 type Review =
   | { kind: "upload"; state: AppState }
@@ -183,7 +186,7 @@ export default function CloudAccount({
           setMetadata(saved);
           setReview(null);
           setNotice(
-            "This device's records are saved to your account. Future changes stay on this device until you upload again.",
+            "This device's records are saved to your account. The account save status shows when later changes are saved.",
           );
         }
       } else if (review.kind === "load") {
@@ -201,13 +204,19 @@ export default function CloudAccount({
         setNotice("Your saved records replaced the records on this device.");
       } else {
         if (deleteText !== "DELETE" || !metadata) return;
-        await deleteSnapshot(client, user.id, metadata.revision);
+        pauseCloudSync();
+        try {
+          await deleteSnapshot(client, user.id, metadata.revision);
+        } catch (error) {
+          resumeCloudSync();
+          throw error;
+        }
         if (accountStillCurrent(user.id)) {
           setMetadata(null);
           setChecked(true);
           setReview(null);
           setNotice(
-            "Your cloud copy was deleted. This device and your sign-in account remain unchanged.",
+            "Your cloud copy was deleted and automatic saving is paused on this device. Other devices can still save their copies. Use Delete my account to remove the entire account.",
           );
         }
       }
@@ -218,7 +227,7 @@ export default function CloudAccount({
       <div className="fuel-cloud">
         {user && (
           <section className="cloud-account" aria-label="Signed-in account">
-            <strong>Signed in as {user.email || 'your account'}</strong>
+            <strong>Signed in as {user.email || "your account"}</strong>
             <button
               className="button secondary cloud-sign-out"
               disabled={busy}
@@ -229,9 +238,11 @@ export default function CloudAccount({
                   });
                   if (response.error) {
                     const remaining = await client!.auth.getSession();
-                    throw new Error(remaining.data.session
-                      ? "Sign-out could not be completed. Try again."
-                      : "Signed out on this device, but the server could not confirm sign-out. Your saved records remain here.");
+                    throw new Error(
+                      remaining.data.session
+                        ? "Sign-out could not be completed. Try again."
+                        : "Signed out on this device, but the server could not confirm sign-out. Your saved records remain here.",
+                    );
                   }
                   if (alive.current)
                     setNotice(
@@ -242,17 +253,28 @@ export default function CloudAccount({
             >
               <LogOut size={16} /> Sign out on this device
             </button>
-            <p>Signing out keeps this browser’s records. To see the introduction again, choose Meet Spot at the top of You.</p>
+            <p>
+              Signing out keeps this browser’s records. To see the introduction
+              again, choose Meet Spot at the top of You.
+            </p>
           </section>
         )}
-        {configured && !user && <p className="cloud-feedback">You’re not signed in to an account. Your profile and records are saved in this browser.</p>}
+        {configured && !user && (
+          <p className="cloud-feedback">
+            You’re not signed in to an account. Your profile and records are
+            saved in this browser.
+          </p>
+        )}
         <div className="cloud-intro">
           <span>
             <Cloud size={24} />
           </span>
           <div>
-            <h3>Keep a copy with you.</h3>
-            <p>Choose when to upload or restore your Rep & Plate records.</p>
+            <h3>Your records, wherever you are.</h3>
+            <p>
+              Your account saves changes automatically. You can also export or
+              review a saved copy here.
+            </p>
           </div>
         </div>
         {error && (
@@ -266,10 +288,26 @@ export default function CloudAccount({
           </p>
         )}
         {configured === null && <p role="status">Checking account settings…</p>}
-        {client && user && isHostedBrowser() && <div className="cloud-feedback">
-          <p>Link these browser records to your account before using the beta. Signing out keeps records on this personal device.</p>
-          <button type="button" disabled={busy} onClick={() => void run(async () => { await requireBrowserOwner(client, true); setNotice('Device records linked. You can now use the beta.'); })}>These device records are mine</button>
-        </div>}
+        {client && user && isHostedBrowser() && (
+          <div className="cloud-feedback">
+            <p>
+              Link these browser records to your account before using the beta.
+              Signing out keeps records on this personal device.
+            </p>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() =>
+                void run(async () => {
+                  await requireBrowserOwner(client, true);
+                  setNotice("Device records linked. You can now use the beta.");
+                })
+              }
+            >
+              These device records are mine
+            </button>
+          </div>
+        )}
         {configured === false && (
           <p>
             Cloud accounts are not connected yet. Your records are still saved
@@ -366,6 +404,7 @@ export default function CloudAccount({
         )}
         {user && (
           <>
+            {client && <AccountSecurity client={client} />}
             <section className="cloud-account">
               <strong>{user.email || "Signed-in account"}</strong>
               <span>
@@ -519,9 +558,9 @@ export default function CloudAccount({
                 </button>
               </section>
             )}
-
           </>
         )}
+        {configured && !user && <PasswordRecovery client={client} />}
         <section className="cloud-local">
           <h3>On this device</h3>
           <p>
@@ -535,9 +574,9 @@ export default function CloudAccount({
             <Download size={17} /> Export this device's records
           </button>
           <p className="cloud-footnote">
-            Uploads are manual. Photos are included only within the 4.8 MB
-            limit; a separate photo library is not connected. Signing out does
-            not erase this device's records, so use care on a shared device.
+            Changes save automatically while connected. Export a backup for your
+            own records. Signing out keeps this account’s separate local copy on
+            this device.
           </p>
         </section>
       </div>

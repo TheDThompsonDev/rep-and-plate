@@ -1,7 +1,8 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 
 const product = {id:'usda-123',gtin:'00012345678905',name:'Test oats',brand:'Oat Farm',ingredients:'Whole grain oats',serving:{label:'1/2 cup',amount:40,unit:'g'},nutrition:{calories:150,protein:5,carbs:27,fat:3},basis:'serving',source:{provider:'usda',id:'123',url:'https://fdc.nal.usda.gov/food-details/123/nutrients',fetchedAt:'2026-09-25T12:00:00Z',updatedAt:null,release:null},verification:'source',version:'2026-09'};
-const stored = (page: Page) => page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+const stored = (page: Page) => readBrowserRecords(page);
 async function openScanner(page: Page) {
   await page.getByRole('button',{name:'Open chat menu'}).click();
   await page.getByRole('dialog',{name:'Your space',exact:true}).getByRole('button',{name:'Scan a barcode',exact:true}).click();

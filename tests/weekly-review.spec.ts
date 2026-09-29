@@ -1,3 +1,4 @@
+import { commitSeededRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 test.beforeEach(async ({ page }) => {
   await page.route("**/api/status", (route) =>
@@ -64,6 +65,7 @@ test("weekly review shows real evidence and edited meals update its calculations
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
   await page.goto("/#you");
+  await commitSeededRecords(page);
   await page.reload();
   await page.getByRole("button", { name: "Open your weekly review" }).click();
   await expect(page.locator(".you-week-stats strong")).toHaveText([

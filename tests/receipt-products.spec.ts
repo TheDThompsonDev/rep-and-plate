@@ -1,3 +1,4 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture"
 import { resultFixture } from './ai-fixtures'
 import type { FoodProduct } from '../src/features/products/contracts'
@@ -9,7 +10,7 @@ const candidate = (incomplete = false): FoodProduct => ({
   source: { provider: 'usda', id: '101', url: 'https://fdc.nal.usda.gov/food-details/101/nutrients', fetchedAt: '2026-09-25T12:00:00Z', updatedAt: '2026-04-01', release: null },
   verification: 'source', version: 'fixture-version',
 })
-const stored = (page: Page) => page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!))
+const stored = (page: Page) => readBrowserRecords(page)
 async function seed(page: Page) {
   await page.goto('/')
   const receipt = resultFixture('receipt-candidates').receipt!
@@ -19,6 +20,7 @@ async function seed(page: Page) {
     state.groceries = [receipt]
     localStorage.setItem('fuel.prototype.v1', JSON.stringify(state))
   }, receipt)
+  await commitSeededRecords(page);
   await page.reload()
 }
 async function openSearch(page: Page) {
@@ -42,6 +44,7 @@ test('Automatically suggested receipt candidates remain unselected until the use
     state.groceries[0].items[0].productCandidates=[product]
     localStorage.setItem('fuel.prototype.v1',JSON.stringify(state))
   },candidate())
+  await commitSeededRecords(page);
   await page.reload()
   const before=await stored(page)
   await openSearch(page)

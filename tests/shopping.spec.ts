@@ -1,3 +1,4 @@
+import { commitSeededRecords,readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 import type { FoodProduct } from "../src/features/products/contracts";
 import { resultFixture } from "./ai-fixtures";
@@ -37,8 +38,7 @@ const alternative: FoodProduct = {
     url: "https://fdc.nal.usda.gov/food-details/200/nutrients",
   },
 };
-const saved = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+const saved = readBrowserRecords;
 async function seed(page: Page) {
   await page.route("**/api/status", (r) =>
     r.fulfill({ json: { available: true, jev: true, usda: true } }),
@@ -75,6 +75,7 @@ async function seed(page: Page) {
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   }, receipt);
   await page.goto("/#kitchen");
+  await commitSeededRecords(page);
   await page.reload();
 }
 async function open(page: Page) {
@@ -117,6 +118,9 @@ test("Shopping preferences save, survive reload and remain accessible from You",
     .getByRole("button", { name: "Save food & routine preferences" })
     .click();
   await page.reload();
+  await expect(
+    page.getByText("Shopping for 4.", { exact: false }),
+  ).toBeVisible();
   expect((await saved(page)).preferences).toMatchObject({
     householdSize: 4,
     shoppingPriority: "budget",
@@ -124,9 +128,6 @@ test("Shopping preferences save, survive reload and remain accessible from You",
     shoppingCurrency: "CAD",
     preferredStores: ["Costco", "Kroger"],
   });
-  await expect(
-    page.getByText("Shopping for 4.", { exact: false }),
-  ).toBeVisible();
   await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await expect(page).toHaveURL(/#you$/);
 });
@@ -179,7 +180,7 @@ test("Equal-quantity swaps require a household check, add once, and never alter 
   await page.getByRole("tab", { name: "Shopping list" }).click();
   await expect(page.locator(".shopping-list-row")).toHaveCount(1);
   await page.locator(".shopping-list-row input").check();
-  expect((await saved(page)).shopping.list[0].checked).toBe(true);
+  await expect.poll(async () => (await saved(page)).shopping.list[0].checked).toBe(true);
   expect((await saved(page)).groceries).toEqual(before.groceries);
   expect((await saved(page)).meals).toEqual(before.meals);
   await page.screenshot({ path: info.outputPath("shopping-list.png") });

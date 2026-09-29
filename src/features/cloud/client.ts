@@ -1,9 +1,12 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { stateSchema, type AppState } from "../../domain";
+import {switchBrowserAccount} from './account-storage';
+import {registerAccountConfig} from './account-client';
+import {validSupportUrl} from '../support/model';
 
 export const MAX_SNAPSHOT_BYTES = 4_800_000;
-export type CloudConfig = { url: string; publishableKey: string };
+export type CloudConfig = { url: string; publishableKey: string;supportUrl?:string };
 
 export function validateCloudConfig(value: unknown): CloudConfig | null {
   if (!value || typeof value !== "object") return null;
@@ -29,7 +32,8 @@ export function validateCloudConfig(value: unknown): CloudConfig | null {
       return null;
     // This initial cloud flow accepts the modern browser-safe key format only.
     if (!/^sb_publishable_[A-Za-z0-9_-]{16,}$/.test(key)) return null;
-    return { url: url.origin, publishableKey: key };
+    const supportUrl=validSupportUrl(config.supportUrl);
+    return { url: url.origin, publishableKey: key,...(supportUrl?{supportUrl}:{}) };
   } catch {
     return null;
   }
@@ -43,11 +47,12 @@ export async function requireBrowserOwner(client: SupabaseClient, bind = false) 
   if (error || !data.session || !project) throw new Error('Sign in from Your profile → Your account to continue.');
   const identity = `${project}:${data.session.user.id}`;
   const owner = localStorage.getItem('health.records.owner');
-  if (owner && owner !== identity) throw new Error('These browser records belong to another account. Sign in with the original account before sending or uploading them.');
+  if (owner && owner !== identity && !bind) throw new Error('These browser records belong to another account. Confirm opening your separate account records during setup.');
   if (!owner) {
     if (!bind) throw new Error('Open Your account and confirm these device records are yours before using the beta.');
-    localStorage.setItem('health.records.owner', identity);
+    await switchBrowserAccount(identity);
   }
+  if(owner && owner!==identity && bind)await switchBrowserAccount(identity);
   return data.session;
 }
 export async function getCloudClient(): Promise<SupabaseClient | null> {
@@ -81,6 +86,7 @@ export async function getCloudClient(): Promise<SupabaseClient | null> {
         },
       });
       projects.set(client, config.url);
+      registerAccountConfig(client,config);
       return client;
     })().catch((error) => {
       configuredClient = undefined;

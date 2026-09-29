@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -16,8 +17,13 @@ import {
   stateSchema,
 } from "../../src/domain";
 import { applyAIResult, buildAIRequest } from "../../src/ai-client";
-import { loadDevice, saveDevice, spotVisit } from "./storage";
-import { isComeback } from '../../src/features/spot/model';
+import { loadDevice, saveDevice, spotVisit, deviceOwnership } from "./storage";
+import { isComeback } from "../../src/features/spot/model";
+import {
+  cloudEpoch,
+  onAccountChange,
+} from "../../src/features/cloud/sync-control";
+import { OwnedStateGate } from "../../src/platform/owned-state";
 import { chat, loadConnection } from "./api";
 export type Tab = "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "You";
 export type Tool =
@@ -46,6 +52,9 @@ type Store = {
   replaySpotIntro: () => void;
   dismissSpotIntro: () => void;
   state: AppState | null;
+  recordsReady: boolean;
+  readyRecords: () => AppState | null;
+  waitForRecords: () => Promise<AppState>;
   error: string;
   notice: string;
   day: string;
@@ -62,15 +71,16 @@ type Store = {
   setTool: (t: Tool) => void;
   change: (update: (s: AppState) => AppState) => boolean;
   saveOnboardingProfile: (name: string) => Promise<void>;
+  restoreRecords: (state: AppState) => Promise<void>;
   send: (text: string, image?: string, retry?: string) => Promise<void>;
   cancel: () => void;
 };
 const Context = createContext<Store>(null!);
 export const useHealth = () => useContext(Context);
 export function HealthProvider({ children }: { children: ReactNode }) {
-  const [captureRequest,setCaptureRequest]=useState(0);
-  const [spotReturning,setSpotReturning]=useState(false);
-  const [spotIntroReplay,setSpotIntroReplay]=useState(false);
+  const [captureRequest, setCaptureRequest] = useState(0);
+  const [spotReturning, setSpotReturning] = useState(false);
+  const [spotIntroReplay, setSpotIntroReplay] = useState(false);
   const [state, setState] = useState<AppState | null>(null),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
@@ -81,33 +91,77 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     [progress, setProgress] = useState(""),
     [draft, setDraft] = useState("");
   const [labelBarcode, setLabelBarcode] = useState("");
+  const [recordsReady, setRecordsReady] = useState(false);
   const current = useRef<AppState | null>(null),
     controller = useRef<AbortController | null>(null);
+  const gateRef = useRef<OwnedStateGate<AppState> | null>(null);
+  if (!gateRef.current)
+    gateRef.current = new OwnedStateGate({
+      epoch: cloudEpoch,
+      owner: deviceOwnership.get,
+      load: loadDevice,
+    });
+  const gate = gateRef.current;
+  const readyRecords=useCallback(()=>gate.current,[gate]);
+  const waitForRecords=useCallback(()=>gate.wait(),[gate]);
   useEffect(() => {
     let live = true;
-    Promise.all([loadDevice(),spotVisit.get().catch(()=>null)])
-      .then(([s,lastVisit]) => {
+    const refresh = () => {
+      const previousOwner = gate.owner;
+      controller.current?.abort();
+      void gate.refresh(
+        (next, firstBinding) => {
+          if (!live) return;
+          if (!next) {
+            setRecordsReady(false);
+            return;
+          }
+          current.current = next;
+          setState(next);
+          setRecordsReady(true);
+          setError("");
+          if (previousOwner !== gate.owner) {
+            setDraft("");
+            setTool((previous) =>
+              firstBinding && previous === "cloud" ? "cloud" : null,
+            );
+          }
+        },
+        (e) => {
+          if (live) {
+            setError(
+              e instanceof Error
+                ? e.message
+                : "Your account records could not be loaded.",
+            );
+            setNotice("Your account records could not be loaded.");
+          }
+        },
+      );
+    };
+    refresh();
+    const unsubscribe = onAccountChange(refresh);
+    void Promise.all([spotVisit.get(), gate.wait()])
+      .then(([lastVisit, records]) => {
         if (live) {
-          current.current = s;
-          setState(s);
-          setSpotReturning(isComeback(lastVisit ?? s.spot?.lastVisit));
-          void spotVisit.touch().catch(()=>{});
+          setSpotReturning(isComeback(lastVisit ?? records.spot?.lastVisit));
+          void spotVisit.touch().catch(() => {});
         }
       })
-      .catch((e) => {
-        if (live) setError(String(e.message));
-      });
+      .catch(() => {});
     loadConnection().catch(() => {});
     return () => {
       live = false;
+      unsubscribe();
+      gate.close();
       controller.current?.abort();
     };
-  }, []);
+  }, [gate]);
   useEffect(() => {
     const refresh = () => setDay(today());
     const sub = Lifecycle.addEventListener("change", (v) => {
       if (v === "active") refresh();
-      void spotVisit.touch().catch(()=>{});
+      void spotVisit.touch().catch(() => {});
     });
     const timer = setInterval(refresh, 15000);
     return () => {
@@ -116,9 +170,10 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
   function change(update: (s: AppState) => AppState) {
-    if (!current.current) return false;
+    if (!gate.current || !current.current) return false;
     try {
       const next = stateSchema.parse(update(current.current));
+      gate.set(next);
       current.current = next;
       setState(next);
       void saveDevice(next).catch(() =>
@@ -133,14 +188,30 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     }
   }
   async function saveOnboardingProfile(name: string) {
-    if (!current.current) throw Error('Your records are still loading. Please try again.');
-    const next = stateSchema.parse({...current.current,profile:{...current.current.profile,...(name.trim()?{name:name.trim()}: {})},spot:{...current.current.spot,introSeen:true}});
+    const before = await gate.wait(),
+      epoch = cloudEpoch();
+    const next = stateSchema.parse({
+      ...before,
+      profile: {
+        ...before.profile,
+        ...(name.trim() ? { name: name.trim() } : {}),
+      },
+      spot: { ...before.spot, introSeen: true },
+    });
     await saveDevice(next);
+    if (epoch !== cloudEpoch() || gate.current !== before)
+      throw Error("Your account changed. Please try setup again.");
+    gate.set(next);
     current.current = next;
     setState(next);
   }
   async function send(text: string, image?: string, retry?: string) {
-    if (controller.current || !current.current || (!text.trim() && !image))
+    if (
+      controller.current ||
+      !gate.current ||
+      !current.current ||
+      (!text.trim() && !image)
+    )
       return;
     const message: Message = retry
       ? current.current.messages.find((m) => m.id === retry)!
@@ -156,6 +227,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     if (!message) return;
     const source = current.current,
       abort = new AbortController();
+    const attemptEpoch = cloudEpoch();
     controller.current = abort;
     setBusy(true);
     setProgress("Thinking through the details…");
@@ -175,45 +247,62 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     try {
       const result = await chat(
         buildAIRequest(source, message),
-        setProgress,
+        (text) => {
+          if (attemptEpoch === cloudEpoch() && controller.current === abort)
+            setProgress(text);
+        },
         abort.signal,
       );
-      if (!abort.signal.aborted) change((s) => applyAIResult(s, result));
+      if (!abort.signal.aborted && attemptEpoch === cloudEpoch())
+        change((s) => applyAIResult(s, result));
     } catch (e) {
-      change((s) => ({
-        ...s,
-        messages: s.messages.map((m) =>
-          m.id === message.id
-            ? {
-                ...m,
-                aiStatus: "error",
-                aiError: abort.signal.aborted
-                  ? "Stopped. Your capture is saved; you can retry."
-                  : e instanceof Error
-                    ? e.message
-                    : "Please retry.",
-              }
-            : m,
-        ),
-      }));
+      if (attemptEpoch === cloudEpoch() && controller.current === abort)
+        change((s) => ({
+          ...s,
+          messages: s.messages.map((m) =>
+            m.id === message.id
+              ? {
+                  ...m,
+                  aiStatus: "error",
+                  aiError: abort.signal.aborted
+                    ? "Stopped. Your capture is saved; you can retry."
+                    : e instanceof Error
+                      ? e.message
+                      : "Please retry.",
+                }
+              : m,
+          ),
+        }));
     } finally {
       clearTimeout(timeout);
-      controller.current = null;
-      setBusy(false);
-      setProgress("");
+      if (controller.current === abort) {
+        controller.current = null;
+        setBusy(false);
+        setProgress("");
+      }
     }
   }
   return (
     <Context.Provider
       value={{
         captureRequest,
-        tellSpot: () => {setTab('Chat');setCaptureRequest(n=>n+1);},
+        tellSpot: () => {
+          setTab("Chat");
+          setCaptureRequest((n) => n + 1);
+        },
         spotReturning,
         dismissSpotReturn: () => setSpotReturning(false),
         spotIntroReplay,
-        replaySpotIntro: () => {setSpotIntroReplay(true);setSpotReturning(false);setTab('Chat');},
+        replaySpotIntro: () => {
+          setSpotIntroReplay(true);
+          setSpotReturning(false);
+          setTab("Chat");
+        },
         dismissSpotIntro: () => setSpotIntroReplay(false),
         state,
+        recordsReady,
+        readyRecords,
+        waitForRecords,
         error,
         notice,
         day,
@@ -230,6 +319,19 @@ export function HealthProvider({ children }: { children: ReactNode }) {
         setTool,
         change,
         saveOnboardingProfile,
+        restoreRecords: async (next) => {
+          const before = await gate.wait(),
+            epoch = cloudEpoch();
+          await saveDevice(next);
+          if (epoch !== cloudEpoch() || gate.current !== before) {
+            throw Error(
+              "Your records changed while loading. Sync will check again.",
+            );
+          }
+          gate.set(next);
+          current.current = next;
+          setState(next);
+        },
         send,
         cancel: () => controller.current?.abort(),
       }}

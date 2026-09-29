@@ -1,3 +1,4 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 import { demoState } from "../src/domain";
 
@@ -9,6 +10,7 @@ async function blankMeals(page: Page) {
     state.messages = [];
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();
 }
 
@@ -132,6 +134,7 @@ test("Nutrition excludes persisted example meals and opens the connected plannin
     },
     { sample, real },
   );
+  await commitSeededRecords(page);
   await page.reload();
   await page.getByRole("button", { name: "Nutrition", exact: true }).click();
   await expect(
@@ -145,9 +148,7 @@ test("Nutrition excludes persisted example meals and opens the connected plannin
     page.getByRole("progressbar", { name: "protein", exact: true }),
   ).toHaveAttribute("aria-valuenow", "20");
   expect(
-    await page.evaluate(
-      () => JSON.parse(localStorage.getItem("fuel.prototype.v1")!).meals.length,
-    ),
+    (await readBrowserRecords(page)).meals.length,
   ).toBe(2);
   const tools = page.getByRole("navigation", { name: "Food planning tools" });
   for (const [name, title] of [

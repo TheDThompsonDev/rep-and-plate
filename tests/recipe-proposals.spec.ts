@@ -1,6 +1,7 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 
-const stored=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+const stored=(page:Page)=>readBrowserRecords(page);
 const card=(page:Page)=>page.getByRole('region',{name:'Review prepared meal portion'});
 async function send(page:Page,text:string) {
   await page.getByRole('textbox',{name:'Message Rep & Plate'}).fill(text);
@@ -27,6 +28,7 @@ async function setup(page:Page) {
     state.recipeBatches=[{id:'prepared-oats',name:'Prepared oatmeal',createdAt,totalPortions:4,ingredients:[{id:'recipe-ingredient',name:'Rolled oats',lotId:'recipe-shop::oats',servings:6,servingLabel:'1/2 cup',nutrition:{calories:900,protein:30,carbs:162,fat:18},sourceUrls:[]}],nutrition:{calories:900,protein:30,carbs:162,fat:18},preparationEventIds:['prepared-event'],consumptions:[]}];
     localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();
 }
 

@@ -61,6 +61,9 @@ import {
   type WorkoutProposal,
 } from "../../src/features/workout-planning/contracts";
 import { completedWorkoutContext } from "../../src/features/workout-planning/history";
+import { PlanIngredientLink } from './PlanIngredientLink';
+import { linkPlannedIngredient, unloggedPlan } from '../../src/features/planning/pantry-links';
+import { basketSummary, estimatePlanBasket } from '../../src/features/planning/basket';
 
 export function Pantry() {
   const h = useHealth(),
@@ -695,6 +698,7 @@ export function Planner() {
       startDate: start,
       mealCategories: categories,
     };
+  const basket=plan?basketSummary(estimatePlanBasket(unloggedPlan(plan,h.state!.meals.map(meal=>meal.id)),lots,h.state!.groceries??[],today()),preferences.weeklyBudget,preferences.shoppingCurrency):undefined;
   const editMeal = (
     mealId: string,
     patch: Parameters<typeof editPlannedMeal>[2],
@@ -713,7 +717,7 @@ export function Planner() {
       const checked = validateDraftPlan(plan, {
         ...context,
         startDate: plan.days[0].date,
-      });
+      }, {enforceHousehold:false,enforceCategories:false});
       if (
         h.change((s) => ({
           ...s,
@@ -829,9 +833,9 @@ export function Planner() {
                       {m.minutes ?? "?"} min
                     </Text>
                     {m.ingredients.map((x, i) => (
-                      <Text key={i} style={s.muted}>
+                      <View key={i} style={{gap:8}}><Text style={s.muted}>
                         {x.name} · {x.servings} × {x.servingLabel}
-                      </Text>
+                      </Text>{!logged&&<PlanIngredientLink ingredient={x} lots={lots} preferences={preferences} onLink={(lotId,amount)=>{try{setPlan(linkPlannedIngredient(plan,m.id,i,lotId,amount,{lots,preferences,loggedMealIds:h.state!.meals.map(meal=>meal.id),confirmed:true}));setError('');}catch(cause){setError((cause as Error).message);}}}/>}</View>
                     ))}
                     <Text style={s.muted}>
                       {estimate.known
@@ -874,6 +878,7 @@ export function Planner() {
             </View>
           ))}
           <Button label="Save draft" secondary onPress={() => save("draft")} />
+          {basket&&<Card><Text style={s.h3}>Basket cost coverage</Text><Text style={s.muted}>{basket.amount}</Text><Text style={s.muted}>{basket.coverage}{basket.budgetText}</Text><Text style={s.tiny}>{basket.note}</Text></Card>}
           <Button label="Approve plan" onPress={() => save("approved")} />
           <Button
             label="Repeat next week as draft"

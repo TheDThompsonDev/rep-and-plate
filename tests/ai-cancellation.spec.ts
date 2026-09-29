@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect, type Route } from "./app-fixture";
 import { resultFixture } from "./ai-fixtures";
 
@@ -72,9 +73,7 @@ test("reset cancels an old reply and a new chat request works immediately", asyn
   await expect(
     page.getByRole("button", { name: "Send message", exact: true }),
   ).toBeEnabled();
-  const state = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-  );
+  const state = await readBrowserRecords(page);
   expect(
     state.messages.some(
       (message: any) =>

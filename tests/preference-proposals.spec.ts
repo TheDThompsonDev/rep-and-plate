@@ -1,7 +1,8 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test,expect,type Page,type Route } from "./app-fixture";
 import type { PreferenceProposal } from '../src/features/preferences/proposals';
 
-const stored=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+const stored=(page:Page)=>readBrowserRecords(page);
 async function send(page:Page,text:string) {
   await page.getByRole('textbox',{name:'Message Rep & Plate'}).fill(text);
   await page.getByRole('button',{name:'Send message',exact:true}).click();
@@ -78,7 +79,8 @@ test('removing an exclusion is explicitly labeled and removes only the approved 
     const state=JSON.parse(localStorage.getItem('fuel.prototype.v1')!);
     state.preferences={restrictions:['dairy-free','peanuts'],dislikes:[],favorites:[],equipment:[],cookingMinutes:null,householdSize:1,budget:'unknown',workoutPreferences:'',updatedAt:new Date().toISOString()};
     localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
-  });await page.reload();
+  });await commitSeededRecords(page);
+  await page.reload();
   await send(page,text);
   const card=page.getByRole('region',{name:'Review preference changes'});
   await expect(card.locator('.fuel-preference-removal')).toContainText('Remove food exclusion');

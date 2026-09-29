@@ -1,0 +1,21 @@
+import {test,expect} from '@playwright/test';
+import {mockCloud} from '../../tests/cloud-fixture';
+import {initialState} from '../../src/domain';
+test.setTimeout(90000);
+test('native fresh account restores cloud records and saves a later change across reload',async({page})=>{
+ const cloud=await mockCloud(page);
+ const state=initialState();state.profile.name='From website';
+ cloud.remote={user_id:'11111111-1111-4111-8111-111111111111',revision:9,updated_at:new Date().toISOString(),state};
+ await page.addInitScript(()=>sessionStorage.setItem('health.connection',JSON.stringify({url:'https://health-beta.example',token:''})));
+ await page.goto('/');await page.getByRole('button',{name:'Sign in',exact:true}).click();
+ await page.getByLabel('Email',{exact:true}).fill('fixture@example.test');await page.getByLabel('Password',{exact:true}).fill('test-password-only');
+ await page.getByRole('button',{name:'Sign in',exact:true}).last().click();
+ await page.getByRole('checkbox',{name:'These device records are mine'}).click();
+ await page.getByRole('button',{name:'That’s me. Let’s go.'}).click();await page.getByRole('button',{name:'Let’s do this'}).click();
+ await expect(page.getByText('Saved to your account',{exact:true})).toBeVisible();
+ const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dannys-health.native.v1')!).profile.name);
+ await expect.poll(saved).toBe('From website');expect(cloud.saveCalls).toBe(0);
+ await page.reload();await expect(page.getByText('Saved to your account',{exact:true})).toBeVisible();
+ cloud.remote={...cloud.remote,revision:10,state:{...state,profile:{...state.profile,name:'Second device edit'}}};
+ await expect.poll(saved,{timeout:15000}).toBe('Second device edit');
+});

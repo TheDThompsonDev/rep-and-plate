@@ -41,6 +41,7 @@ import {
 import { Shopping } from "./src/Shopping";
 import { Cloud } from "./src/Cloud";
 import { NativeOnboarding } from "./src/Onboarding";
+import {AccountSync} from './src/AccountSync';
 function HealthApp() {
   const h = useHealth();
   useEffect(() => {
@@ -111,6 +112,7 @@ function HealthApp() {
             </View>
           </IconButton>
         </View>
+        <AccountSync/>
         {h.tab === "Chat" ? (
           <ChatScreen />
         ) : h.tab === "Nutrition" ? (

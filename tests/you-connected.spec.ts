@@ -1,7 +1,8 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { expect, test, type Page } from "./app-fixture";
 
 const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+  readBrowserRecords(page);
 async function prepare(page: Page) {
   await page.route("**/api/status", (route) =>
     route.fulfill({ json: { available: false, jev: false } }),
@@ -185,6 +186,7 @@ async function prepare(page: Page) {
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
   await page.goto("/#you");
+  await commitSeededRecords(page);
   await page.reload();
 }
 

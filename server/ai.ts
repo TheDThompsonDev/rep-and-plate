@@ -1,4 +1,5 @@
 import { createGenerationClient } from "./generation.ts";
+import { trackServiceAttempt } from "./operations.ts";
 import { spotVoice } from "../src/features/spot/personality.ts";
 import { workoutCaptureSchema } from '../src/features/spot/contracts.ts';
 import { receiptPurchaseSchema, receiptLinePriceSchema } from '../src/features/shopping/contracts.ts';
@@ -277,13 +278,15 @@ export async function checkIntent(
   signal: AbortSignal,
 ): Promise<{ choice: string; confidence: number } | undefined> {
   if (!config.jevKey) return;
+  const attemptSignal = AbortSignal.any([signal, AbortSignal.timeout(12000)]);
+  return trackServiceAttempt("jev", config.jevModel, attemptSignal, async (setUsage) => {
   const response = await fetch("https://api.typesafe.ai/v1/systemone", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${config.jevKey}`,
       "Content-Type": "application/json",
     },
-    signal: AbortSignal.any([signal, AbortSignal.timeout(12000)]),
+    signal: attemptSignal,
     body: JSON.stringify({
       model: config.jevModel,
       state,
@@ -305,7 +308,7 @@ export async function checkIntent(
       },
     }),
   });
-  if (!response.ok) throw new Error(`JEV_${response.status}`);
+  if (!response.ok) throw Object.assign(new Error(`JEV_${response.status}`), { status: response.status });
   const schema = z.object({
     answers: z.object({
       record_type: z.object({
@@ -314,7 +317,10 @@ export async function checkIntent(
       }),
     }),
   });
-  return schema.parse(await response.json()).answers.record_type;
+  const body = await response.json();
+  setUsage(body?.usage);
+  return schema.parse(body).answers.record_type;
+  });
 }
 
 export async function runAI(

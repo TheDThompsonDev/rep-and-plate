@@ -32,6 +32,7 @@ import { requireDeviceOwner } from "./auth";
 import { useHealth } from "./store";
 import { Button, Field, s, colors } from "./ui";
 import { SpotScene } from "./Spot";
+import { PasswordRecovery } from "./PasswordRecovery";
 
 const adapter: OnboardingAdapter = {
   read: () => AsyncStorage.getItem(ONBOARDING_KEY),
@@ -307,6 +308,9 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                           />
                         </>
                       )}
+                      {!flow.user && flow.mode === "signin" && (
+                        <PasswordRecovery client={flow.client} />
+                      )}
                       {!flow.owner && !flow.user && (
                         <>
                           {link("Try on this device first", flow.tryLocal)}
@@ -319,8 +323,8 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                       )}
                       {!!flow.owner && (
                         <Text style={s.tiny}>
-                          This device has records linked to an account. Sign in
-                          with that account to continue.
+                          Each account keeps separate records on this device.
+                          Sign in to open yours.
                         </Text>
                       )}
                       {link("Meet Spot first", flow.startTour)}
@@ -368,7 +372,11 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                         <Pressable
                           accessibilityRole="checkbox"
                           accessibilityState={{ checked: flow.confirmed }}
-                          accessibilityLabel="These device records are mine"
+                          accessibilityLabel={
+                            flow.owner
+                              ? "Open this account’s separate records"
+                              : "These device records are mine"
+                          }
                           onPress={() => flow.setConfirmed(!flow.confirmed)}
                           style={[
                             s.row,
@@ -377,14 +385,15 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                         >
                           <Text style={s.h3}>{flow.confirmed ? "☑" : "☐"}</Text>
                           <Text style={[s.muted, { flex: 1 }]}>
-                            These device records are mine. Link them to{" "}
-                            {flow.user?.email || "my account"}.
+                            {flow.owner
+                              ? "Open this account’s separate records. Existing records stay with their original account."
+                              : `These device records are mine. Link them to ${flow.user?.email || "my account"}.`}
                           </Text>
                         </Pressable>
                       )}
                       <Text style={s.tiny}>
-                        Your existing records stay here. Cloud uploads and
-                        restores are always your choice.
+                        Your account saves changes automatically. Other accounts
+                        keep separate records.
                       </Text>
                       <Button
                         label={

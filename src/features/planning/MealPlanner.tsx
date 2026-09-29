@@ -5,13 +5,17 @@ import { today, type Nutrition } from '../../domain';
 import type { PantryLot } from '../pantry/ledger';
 import { defaultPreferences, type FoodPreferences } from '../preferences/contracts';
 import type { MealCategory,MealPlan, PlannedMeal } from './contracts';
+import type { GroceryReceipt } from '../../ai-contract';
+import IngredientLink from './IngredientLink';
+import { linkPlannedIngredient, unloggedPlan } from './pantry-links';
+import { basketSummary, estimatePlanBasket } from './basket';
 import { formatIngredientAmount, mealEstimate, mealPortionSelections, planShoppingList, useUpSuggestions, validateDraftPlan, type PlanningContext } from './meal-plans';
 import { copyMealToDay,createPlanRevision,movePlannedMeal,repeatApprovedWeek,shiftPlanDate } from './recurring-plans';
 import '../scanner/scanner.css';
 import './planning.css';
 
-export type MealPlannerProps={lots:PantryLot[];preferences?:FoodPreferences;goals:Nutrition;value?:MealPlan;plans?:MealPlan[];loggedMealIds?:string[];onGenerate:(context:PlanningContext)=>Promise<MealPlan>;onSave:(plan:MealPlan)=>void;onClose:()=>void;onLog?:(meal:PlannedMeal,planId:string)=>void;onAsk?:(text:string)=>void};
-export default function MealPlanner({lots,preferences:provided,goals,value,plans=[],loggedMealIds=[],onGenerate,onSave,onClose,onLog,onAsk}:MealPlannerProps) {
+export type MealPlannerProps={lots:PantryLot[];receipts?:GroceryReceipt[];preferences?:FoodPreferences;goals:Nutrition;value?:MealPlan;plans?:MealPlan[];loggedMealIds?:string[];onGenerate:(context:PlanningContext)=>Promise<MealPlan>;onSave:(plan:MealPlan)=>void;onClose:()=>void;onLog?:(meal:PlannedMeal,planId:string)=>void;onAsk?:(text:string)=>void};
+export default function MealPlanner({lots,receipts=[],preferences:provided,goals,value,plans=[],loggedMealIds=[],onGenerate,onSave,onClose,onLog,onAsk}:MealPlannerProps) {
   const preferences=provided ?? defaultPreferences();
   const [plan,setPlan]=useState<MealPlan|undefined>(value);
   const [startDate,setStartDate]=useState(value?.days[0].date ?? today());
@@ -39,7 +43,9 @@ export default function MealPlanner({lots,preferences:provided,goals,value,plans
   const savedPlans=plans.length?plans:value?[value]:[];
   const savedPlan=plan?savedPlans.find(saved=>saved.id===plan.id):undefined;
   const isSavedApproved=!!plan&&savedPlan?.status==='approved'&&JSON.stringify(savedPlan)===JSON.stringify(plan);
-  const needs=plan ? planShoppingList(plan,lots) : [];
+  const remainingPlan=plan?unloggedPlan(plan,loggedMealIds):undefined;
+  const needs=remainingPlan ? planShoppingList(remainingPlan,lots) : [];
+  const basket=remainingPlan?basketSummary(estimatePlanBasket(remainingPlan,lots,receipts,today()),preferences.weeklyBudget,preferences.shoppingCurrency):undefined;
   const suggestions=useUpSuggestions(lots,preferences).filter(item=>!dismissed.includes(item.lotId));
   async function generate() {
     if(busy)return;
@@ -88,6 +94,7 @@ export default function MealPlanner({lots,preferences:provided,goals,value,plans
           <p className="fuel-plan-meta">{meal.category??'Dinner'} · {meal.portions} portion{meal.portions===1?'':'s'}{meal.minutes?` · ${meal.minutes} min`:''}</p>
           <ul>{meal.ingredients.map((ingredient,index)=><li key={`${ingredient.lotId ?? ingredient.name}-${index}`}><span>{ingredient.name}<small>{ingredient.servingLabel}</small></span>{edit?<label className="fuel-plan-amount">Servings<input aria-label={`${ingredient.name} recipe servings`} type="number" min="0.01" max="1000" step="any" value={ingredient.servings} onChange={event=>{const amount=Number(event.target.value);if(Number.isFinite(amount)&&amount>0)updateMeal(meal.id,current=>({...current,ingredients:current.ingredients.map((item,i)=>i===index?{...item,servings:amount}:item)}));}}/></label>:<strong>{formatIngredientAmount(ingredient.servings,ingredient.servingLabel)}</strong>}</li>)}</ul>
           <p className="fuel-plan-meta">Ingredient amounts are for the whole recipe.{edit?' Portions divide this recipe; adjust ingredient amounts separately.':''}</p>
+          {!logged&&<div className="fuel-plan-links">{meal.ingredients.map((ingredient,index)=><IngredientLink key={`${index}:${ingredient.lotId??'missing'}`} ingredient={ingredient} lots={lots} preferences={preferences} onLink={(lotId,servings)=>{try{setPlan(linkPlannedIngredient(plan,meal.id,index,lotId,servings,{lots,preferences,loggedMealIds,confirmed:true}));setError('');}catch(cause){setError(cause instanceof Error?cause.message:'Check this ingredient before connecting it.');}}}/>)}</div>}
           {estimate.known>0?<p className="fuel-plan-nutrition">{estimate.complete?'~':'At least '}{Math.round(estimate.totals.calories)} cal · {estimate.totals.protein}g protein per portion{estimate.complete?'':' · partial estimate'}</p>:<p className="fuel-plan-meta">Nutrition will be available when ingredient amounts and labels are confirmed.</p>}
           {!estimate.complete&&estimate.known>0&&<p className="fuel-plan-meta">Nutrition available for {estimate.known} of {estimate.total} ingredients. Missing ingredients are not counted as zero.</p>}
           {meal.notes&&<p className="fuel-plan-note">{meal.notes}</p>}
@@ -96,6 +103,7 @@ export default function MealPlanner({lots,preferences:provided,goals,value,plans
         </article>;
       })}{day.meals.length<4&&<><button className="fuel-plan-add-meal" onClick={()=>setAddingDay(addingDay===day.date?null:day.date)}>Add a meal to this day</button>{addingDay===day.date&&<label className="fuel-plan-swap">Use a meal from this week<select aria-label={`Meal to copy to ${day.date}`} value="" onChange={event=>{try{const copied=copyMealToDay(plan,event.target.value,day.date);setPlan(copied.plan);setEditing(copied.mealId);setAddingDay(null);setError('');}catch(cause){setError(cause instanceof Error?cause.message:'This meal could not be copied.');}}}><option value="">Choose a meal to copy</option>{plan.days.flatMap(item=>item.meals).map(item=><option key={item.id} value={item.id}>{item.category??'Dinner'} · {item.title}</option>)}</select></label>}</>}</section>)}</div>
       <section className="fuel-plan-shopping"><h3><ShoppingBasket size={21}/>Your shopping & pantry check</h3><p>Amounts below account for every meal in the week, including repeat ingredients.</p>{needs.length?<ul>{needs.map((need,index)=><li key={index}><strong>{need.name}</strong><span>{need.reason==='check-quantity'?'Check how much remains':`${need.servings} additional servings · ${need.servingLabel}`}</span></li>)}</ul>:<p>Known pantry quantities cover this plan. Check your actual stock before cooking.</p>}</section>
+      {basket&&<section className="fuel-plan-cost" aria-label="Basket cost coverage"><h3>What might the remaining ingredients cost?</h3><p>{basket.amount}</p><p>{basket.coverage}{basket.budgetText}</p><small>{basket.note}</small></section>}
       <div className="fuel-product-actions"><button onClick={()=>save('draft')}>Save draft</button><button onClick={()=>save('approved')}>Approve this plan</button></div>
       <p className="fuel-scan-footnote">Approval saves the plan. Log a portion only after eating it. Check package ingredients for your restrictions; recipe suggestions cannot verify allergen handling.</p>
     </>}

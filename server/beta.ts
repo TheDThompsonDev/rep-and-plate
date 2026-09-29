@@ -3,11 +3,13 @@ import { createApi } from "./http.ts";
 import type { Config } from "./ai.ts";
 import type { ChatCache } from "./chat-cache.ts";
 import { Readable } from "node:stream";
+import {AccountError} from './account.ts';
+import {withGenerationTelemetry,type GenerationEvent} from './operations.ts';
 
 export type BetaServices = {
   config: Config;
   origin: string;
-  publicConfig: { url: string; publishableKey: string };
+  publicConfig: { url: string; publishableKey: string;supportUrl?:string };
   authenticate: (token: string) => Promise<string | null>;
   admit: (
     user: string,
@@ -15,6 +17,8 @@ export type BetaServices = {
   ) => Promise<{ allowed: boolean; lease: string }>;
   release: (lease: string) => Promise<void>;
   chatCache: ChatCache;
+  deleteAccount?:(token:string,input:unknown)=>Promise<{deleted:true}>;
+  recordGeneration?:(events:GenerationEvent[])=>Promise<void>;
   readCapture?: (
     user: string,
     path: string,
@@ -70,7 +74,7 @@ export function betaHandler(services: BetaServices) {
     // Public bootstrap is necessary to sign in; it contains no service credentials.
     if (path === "/api/cloud/config" && req.method === "GET")
       return json(200, { available: true, ...services.publicConfig });
-    if (!routes.has(path)) return json(404, { error: "Not found." });
+    if (!routes.has(path)&&path!=='/api/account/delete') return json(404, { error: "Not found." });
     if (req.method !== (path === "/api/status" ? "GET" : "POST"))
       return json(405, { error: "Method not allowed." });
     const authorization = req.headers.authorization;
@@ -81,6 +85,13 @@ export function betaHandler(services: BetaServices) {
       const user = await services.authenticate(authorization.slice(7));
       if (!user)
         return json(401, { error: "Your session expired. Sign in again." });
+      if(path==='/api/account/delete'){
+        if(!services.deleteAccount)return json(503,{error:'Account management is unavailable. Please retry later.'});
+        const chunks:Buffer[]=[];let size=0;
+        for await(const chunk of req){const bytes=Buffer.from(chunk);size+=bytes.length;if(size>2048)return json(413,{error:'Account request is too large.'});chunks.push(bytes);}
+        let body:unknown;try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{return json(400,{error:'Check the account request.'});}
+        return json(200,await services.deleteAccount(authorization.slice(7),body));
+      }
       const admission = await services.admit(user, costly.has(path));
       if (!admission.allowed) {
         res.setHeader("Retry-After", "60");
@@ -91,6 +102,7 @@ export function betaHandler(services: BetaServices) {
       }
       lease = admission.lease;
       let input = req;
+      let requestId:string|undefined;
       if (req.method === "POST") {
         const chunks: Buffer[] = [];
         let size = 0;
@@ -111,6 +123,7 @@ export function betaHandler(services: BetaServices) {
         }
         if (!body || typeof body !== "object" || Array.isArray(body))
           return json(400, { error: "Send a JSON object." });
+        requestId=typeof body.requestId==='string'?body.requestId:undefined;
         if (body.capture) {
           const capture = body.capture as { path?: string; kind?: string };
           if (
@@ -158,8 +171,11 @@ export function betaHandler(services: BetaServices) {
       input.headers.host = "localhost";
       delete input.headers.origin;
       delete input.headers.authorization;
-      await api(input, res, () => json(404, { error: "Not found." }), user);
-    } catch {
+      const run=()=>api(input,res,()=>json(404,{error:'Not found.'}),user);
+      if(services.recordGeneration)await withGenerationTelemetry({userId:user,operation:path,requestId},services.recordGeneration,run);
+      else await run();
+    } catch(error) {
+      if(error instanceof AccountError)return json(error.status,{error:error.message});
       if (res.headersSent) res.end();
       else
         json(503, {

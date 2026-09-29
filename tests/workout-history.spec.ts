@@ -1,7 +1,8 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 
 const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+  readBrowserRecords(page);
 const proposal = {
   title: "Your strength session",
   minutes: 25,
@@ -52,7 +53,8 @@ async function openBuilder(page: Page, withHistory = true) {
       ];
       localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
     });
-    await page.reload();
+    await commitSeededRecords(page);
+  await page.reload();
   }
   await page.getByRole("button", { name: "Workouts", exact: true }).click();
   await page

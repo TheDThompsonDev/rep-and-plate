@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
 for (const [action, label, title] of [
@@ -23,11 +24,11 @@ for (const [action, label, title] of [
     const button = page.getByRole('button', { name: label, exact: true });
     await expect(button).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    const before = await page.evaluate(() => localStorage.getItem('fuel.prototype.v1'));
+    const before = JSON.stringify(await readBrowserRecords(page));
     await button.click();
     await expect(page.getByRole('dialog').getByRole('heading', { name: title, exact: true })).toBeVisible();
     await page.keyboard.press('Escape');
-    expect(await page.evaluate(() => localStorage.getItem('fuel.prototype.v1'))).toBe(before);
+    expect(JSON.stringify(await readBrowserRecords(page))).toBe(before);
     await page.reload();
     await expect(button).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveCount(0);

@@ -14,6 +14,12 @@ import {
   deleteSnapshot,
 } from "../../src/features/cloud/client";
 import { type AppState } from "../../src/domain";
+import { PasswordRecovery } from "./PasswordRecovery";
+import { AccountSecurity } from "./AccountSecurity";
+import {
+  pauseCloudSync,
+  resumeCloudSync,
+} from "../../src/features/cloud/sync-control";
 export function Cloud() {
   const h = useHealth(),
     [client, setClient] = useState<SupabaseClient | null>(null),
@@ -81,8 +87,8 @@ export function Cloud() {
   return (
     <Sheet title="Cloud & your records" onClose={() => h.setTool(null)}>
       <Text style={s.muted}>
-        Your phone keeps its own records. Import a web backup, or review a cloud
-        copy before replacing this device.
+        Your account saves changes automatically. Export a backup or review a
+        saved copy here. Other accounts keep separate records.
       </Text>
       <Button
         label="Export this device"
@@ -110,18 +116,55 @@ export function Cloud() {
             keyboardType="email-address"
             autoCapitalize="none"
           />
-          <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" autoComplete={signingUp?"new-password":"current-password"}/>
+          <Field
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            autoCapitalize="none"
+            autoComplete={signingUp ? "new-password" : "current-password"}
+          />
           <Button
             label={signingUp ? "Create account" : "Sign in"}
-            disabled={busy || !email.trim() || password.length < (signingUp ? 8 : 1)}
-            onPress={() => void run(async () => {
-              const r = signingUp ? await client.auth.signUp({email:email.trim(),password}) : await client.auth.signInWithPassword({email:email.trim(),password});
-              if(r.error) throw new Error(signingUp ? 'Account creation didn’t complete. Try again or sign in if you have an account.' : 'Sign-in didn’t work. Check your email and password, and confirm your email first.');
-              setPassword('');
-              if(!r.data.session){setError('Check your email to confirm your account, then sign in here.');setSigningUp(false);}
-            })}
+            disabled={
+              busy || !email.trim() || password.length < (signingUp ? 8 : 1)
+            }
+            onPress={() =>
+              void run(async () => {
+                const r = signingUp
+                  ? await client.auth.signUp({ email: email.trim(), password })
+                  : await client.auth.signInWithPassword({
+                      email: email.trim(),
+                      password,
+                    });
+                if (r.error)
+                  throw new Error(
+                    signingUp
+                      ? "Account creation didn’t complete. Try again or sign in if you have an account."
+                      : "Sign-in didn’t work. Check your email and password, and confirm your email first.",
+                  );
+                setPassword("");
+                if (!r.data.session) {
+                  setError(
+                    "Check your email to confirm your account, then sign in here.",
+                  );
+                  setSigningUp(false);
+                }
+              })
+            }
           />
-          <Button secondary label={signingUp ? "Already have an account? Sign in" : "Create an account"} onPress={()=>{setSigningUp(!signingUp);setPassword('');}}/>
+          <Button
+            secondary
+            label={
+              signingUp
+                ? "Already have an account? Sign in"
+                : "Create an account"
+            }
+            onPress={() => {
+              setSigningUp(!signingUp);
+              setPassword("");
+            }}
+          />
           <Button
             label="Email me a sign-in code"
             disabled={busy}
@@ -161,6 +204,7 @@ export function Cloud() {
       )}
       {client && user && (
         <>
+          <AccountSecurity client={client} />
           <Text style={s.h3}>Signed in</Text>
           <Button
             label="Sign out"
@@ -169,7 +213,7 @@ export function Cloud() {
             onPress={() =>
               void run(async () => {
                 invalidateSession();
-                const r = await client.auth.signOut({scope:'local'});
+                const r = await client.auth.signOut({ scope: "local" });
                 if (r.error) throw r.error;
                 setUser(null);
                 setRestore(null);
@@ -255,13 +299,19 @@ export function Cloud() {
                 return;
               }
               void run(async () => {
-                await deleteSnapshot(client, user, revision!);
+                pauseCloudSync();
+                try {
+                  await deleteSnapshot(client, user, revision!);
+                } catch (error) {
+                  resumeCloudSync();
+                  throw error;
+                }
                 checkIdentity(user);
                 setRevision(0);
                 setRestore(null);
                 setConfirmDelete(false);
                 setError(
-                  "Cloud copy deleted. This phone’s records remain here.",
+                  "Cloud copy deleted. Automatic saving is paused on this device. Other devices can still save their copies. Use Delete my account to remove the entire account.",
                 );
               });
             }}
@@ -273,9 +323,9 @@ export function Cloud() {
               onPress={() => setConfirmDelete(false)}
             />
           )}
-
         </>
       )}
+      {client && !user && <PasswordRecovery client={client} />}
       {restore && (
         <Card>
           <Text style={s.h3}>Replace this phone’s records?</Text>

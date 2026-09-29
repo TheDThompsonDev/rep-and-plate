@@ -1,3 +1,4 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 
 async function seedDay(page: Page) {
@@ -40,6 +41,7 @@ async function seedDay(page: Page) {
     ];
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();
   await page.getByRole("button", { name: "Nutrition", exact: true }).click();
 }
@@ -83,9 +85,7 @@ test("personal dashboard excludes examples and preserves dated history through m
   await expect(page.getByRole("dialog")).toContainText("My breakfast");
   await expect(page.getByRole("dialog")).toContainText("795");
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
-  const meals = await page.evaluate(
-    () => JSON.parse(localStorage.getItem("fuel.prototype.v1")!).meals,
-  );
+  const meals = (await readBrowserRecords(page)).meals;
   expect(meals).toHaveLength(3);
   expect(meals.find((m: { id: string }) => m.id === "real-today").day).toBe(
     "2026-09-26",

@@ -1,4 +1,5 @@
 import { clockTime, id, type AppState, type Exercise } from "./domain";
+import { setLoad } from './features/progress/set-loads';
 
 export type Workout = AppState["workout"];
 export type ExerciseAdjustment = {
@@ -73,6 +74,7 @@ export function adjustWorkoutExercise(
               { length: adjustment.setCount },
               (_, set) => exercise.sets[set] ?? null,
             ),
+            ...(exercise.setWeights?{setWeights:Array.from({length:adjustment.setCount},(_,set)=>changedIdentity?null:exercise.setWeights?.[set]??null)}:{}),
           },
     ),
   };
@@ -171,6 +173,7 @@ export function recordSet(
         ? {
             ...item,
             sets: item.sets.map((value, j) => (j === setIndex ? reps : value)),
+            setWeights: item.sets.map((value,j)=>j===setIndex?setLoad(item,j):item.setWeights?.[j]??(value===null?null:item.weight)),
           }
         : item,
     ),
@@ -180,7 +183,7 @@ export function recordSet(
       {
         id: id(),
         role: "assistant",
-        text: `${correction ? "Updated" : "Got it"}. ${ex.name}, set ${setIndex + 1}: ${ex.weight ? `${ex.weight} lb × ` : ""}${reps} reps.`,
+        text: `${correction ? "Updated" : "Got it"}. ${ex.name}, set ${setIndex + 1}: ${setLoad(ex,setIndex) ? `${setLoad(ex,setIndex)} lb × ` : ""}${reps} reps.`,
         time: clockTime(),
         exerciseIndex,
       },

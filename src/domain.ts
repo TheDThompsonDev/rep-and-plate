@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { bodyWeightEntrySchema } from './features/progress/body-weight';
 import { spotPreferencesSchema, workoutCaptureSchema } from './features/spot/contracts';
 import { shoppingStateSchema } from './features/shopping/contracts';
 import { preferenceProposalSchema } from "./features/preferences/proposals";
@@ -86,9 +87,11 @@ export const exerciseSchema = z.object({
   target: z.number().int().positive(),
   previous: z.array(z.number()),
   sets: z.array(z.number().int().min(0).max(100).nullable()),
+  setWeights: z.array(amount.nullable()).optional(),
 });
 export type Exercise = z.infer<typeof exerciseSchema>;
 export const stateSchema = z.object({
+  bodyWeights: z.array(bodyWeightEntrySchema).max(10000).optional(),
   spot: spotPreferencesSchema.optional(),
   shopping: shoppingStateSchema.optional(),
   recipeBatches: z.array(recipeBatchSchema).optional(),
@@ -319,7 +322,7 @@ export function initialState(): AppState {
 }
 export function readState(): AppState {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = currentBrowserRaw();
     if (saved) return upgradeChat(stateSchema.parse(JSON.parse(saved)));
   } catch {
     /* Invalid or outdated snapshots fall back to an empty personal state. */
@@ -508,3 +511,4 @@ export function resolveReview(
     ),
   };
 }
+import {currentBrowserRaw} from './platform/browser-records';

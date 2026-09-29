@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 import { resultFixture } from './ai-fixtures';
 
@@ -10,7 +11,7 @@ test('Kitchen receipt capture offers camera, previews a photo and saves grocerie
     await r.fulfill({ contentType: 'application/x-ndjson', body: JSON.stringify({ type: 'result', result: resultFixture(request.requestId) }) + '\n' });
   });
   await page.goto('/#kitchen');
-  const before = await page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+  const before = await readBrowserRecords(page);
   await page.getByRole('button', { name: 'Add a receipt', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText('Add a grocery receipt');
@@ -43,7 +44,7 @@ test('Kitchen receipt capture offers camera, previews a photo and saves grocerie
   expect(requests[0].image).toMatch(/^data:image\/png;base64,/);
   expect(requests[0].text).toContain('grocery receipt');
   expect(requests[0].text).toContain('For the family');
-  const after = await page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+  const after = await readBrowserRecords(page);
   expect(after.meals).toEqual(before.meals);
   expect(after.groceries).toHaveLength((before.groceries ?? []).length + 1);
 });
@@ -53,7 +54,7 @@ test('Cancelling receipt capture preserves the chat draft and records; offline c
   await page.goto('/');
   await page.getByRole('textbox', { name: 'Message Rep & Plate' }).fill('Keep my unfinished message');
   await page.getByRole('button', { name: 'Kitchen', exact: true }).click();
-  const before = await page.evaluate(() => localStorage.getItem('fuel.prototype.v1'));
+  const before = JSON.stringify(await readBrowserRecords(page));
   await page.getByRole('button', { name: 'Add a receipt', exact: true }).click();
   const photoEvent = page.waitForEvent('filechooser');
   await page.getByRole('button', { name: /^Choose a photo/ }).click();
@@ -61,7 +62,7 @@ test('Cancelling receipt capture preserves the chat draft and records; offline c
   await expect(page.getByAltText('Your grocery receipt')).toBeVisible();
   await page.getByRole('button', { name: 'Close dialog', exact: true }).click();
   await expect(page).toHaveURL(/#kitchen$/);
-  expect(await page.evaluate(() => localStorage.getItem('fuel.prototype.v1'))).toBe(before);
+  expect(JSON.stringify(await readBrowserRecords(page))).toBe(before);
   await page.getByRole('button', { name: 'Chat', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Message Rep & Plate' })).toHaveValue('Keep my unfinished message');
   await page.locator('input[type=file]').first().setInputFiles('tests/fixtures/grocery-receipt.png');
@@ -72,7 +73,7 @@ test('Cancelling receipt capture preserves the chat draft and records; offline c
   await page.locator('input[capture=environment]').setInputFiles('tests/fixtures/grocery-receipt.png');
   await expect(page.getByRole('dialog')).toContainText('AI is unavailable');
   await page.getByRole('button', { name: 'Save my image for review', exact: true }).click();
-  const after = await page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+  const after = await readBrowserRecords(page);
   expect(after.reviews.at(-1).question).toContain('grocery receipt');
   expect(after.meals).toEqual(JSON.parse(before!).meals);
   await page.getByRole('button', { name: 'Kitchen', exact: true }).click();

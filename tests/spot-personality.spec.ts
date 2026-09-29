@@ -1,8 +1,9 @@
+import { readBrowserRecords } from "./record-fixture";
 import {test,expect} from './app-fixture';
 test('full Spot tour from You preserves records and the first draft when art fails',async({page})=>{
  await page.goto('/');
  const draft=page.getByRole('textbox',{name:'Message Rep & Plate'});await draft.fill('Keep this draft');
- const before=await page.evaluate(()=>localStorage.getItem('fuel.prototype.v1'));
+ const before=JSON.stringify(await readBrowserRecords(page));
  await page.route('**/images/spot/scenes/**',route=>route.abort());
  await page.getByRole('button',{name:'Your profile',exact:true}).click();
  await page.getByRole('button',{name:/Meet Spot/}).click();
@@ -14,5 +15,5 @@ test('full Spot tour from You preserves records and the first draft when art fai
  await page.getByRole('button',{name:'Close tour',exact:true}).first().click();
  await page.getByRole('button',{name:'Rep & Plate home'}).click();
  await expect(draft).toHaveValue('Keep this draft');
- expect(await page.evaluate(()=>localStorage.getItem('fuel.prototype.v1'))).toBe(before);
+ expect(JSON.stringify(await readBrowserRecords(page))).toBe(before);
 });

@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import OpenAI, { toFile } from 'openai'
 import type { Config } from './ai.ts'
+import { trackServiceAttempt } from './operations.ts'
 
 const MAX_BODY = 8 * 1024 * 1024
 const types: Record<string, string> = { 'audio/webm': 'webm', 'audio/mp4': 'mp4', 'audio/ogg': 'ogg', 'audio/wav': 'wav' }
@@ -17,8 +18,11 @@ export function decodeAudio(value: unknown): { bytes: Buffer; mime: string; exte
 export async function transcribeAudio(audio: NonNullable<ReturnType<typeof decodeAudio>>, key: string, signal: AbortSignal): Promise<string> {
   const client = new OpenAI({ apiKey: key, maxRetries: 0, timeout: 65000 })
   const file = await toFile(audio.bytes, `recording.${audio.extension}`, { type: audio.mime })
-  const response = await client.audio.transcriptions.create({ file, model: 'gpt-4o-mini-transcribe', response_format: 'json' }, { signal })
-  return response.text
+  return trackServiceAttempt('openai', 'gpt-4o-mini-transcribe', signal, async setUsage => {
+    const response = await client.audio.transcriptions.create({ file, model: 'gpt-4o-mini-transcribe', response_format: 'json' }, { signal })
+    setUsage(response.usage)
+    return response.text
+  })
 }
 
 /** Local, short-lived transcription. Raw audio is never written to disk or logs. */

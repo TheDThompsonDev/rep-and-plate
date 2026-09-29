@@ -1,7 +1,8 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { expect, test, type Page } from "./app-fixture";
 
 const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+  readBrowserRecords(page);
 async function openRecipes(page: Page) {
   await page.getByRole("textbox", { name: "Message Rep & Plate" }).fill("recipes");
   await page.getByRole("button", { name: "Send message", exact: true }).click();
@@ -62,6 +63,7 @@ async function setup(page: Page) {
     ];
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();
   await openRecipes(page);
 }

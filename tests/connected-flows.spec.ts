@@ -1,5 +1,6 @@
 import { test,expect,type Page } from "./app-fixture";
-const stored=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+import { commitSeededRecords, readBrowserRecords } from "./record-fixture";
+const stored=readBrowserRecords;
 async function menu(page:Page,name:string){await page.getByRole('button',{name:'Open chat menu'}).click();await page.getByRole('button',{name,exact:true}).click();}
 async function seedPantry(page:Page){
   await page.goto('/');
@@ -9,7 +10,7 @@ async function seedPantry(page:Page){
       {id:'milk',receiptText:'Whole milk',name:'Whole milk',quantity:'4 cups',serving:'1 cup',servingsPurchased:4,nutrition:{calories:150,protein:8,carbs:12,fat:8},match:'exact',note:'',sources:[],needsReview:false,availability:'available'},
       {id:'oats',receiptText:'Oats',name:'Oats',quantity:'7 servings',serving:'1/2 cup',servingsPurchased:7,nutrition:{calories:150,protein:5,carbs:27,fat:3},match:'exact',note:'',sources:[],needsReview:false,availability:'available'}]}];
     localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
-  });await page.reload();
+  });await commitSeededRecords(page);await page.reload();
 }
 test.beforeEach(async({page})=>{
   await page.route('**/api/status',route=>route.fulfill({json:{available:true,jev:true}}));

@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
 test("every page opens barcode scanning directly without changing records", async ({
@@ -12,9 +13,7 @@ test("every page opens barcode scanning directly without changing records", asyn
     return route.abort();
   });
   await page.goto("/#chat");
-  const before = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-  );
+  const before = await readBrowserRecords(page);
   for (const name of ["Chat", "Nutrition", "Workouts", "Kitchen", "You"]) {
     if (name === "You")
       await page
@@ -50,9 +49,7 @@ test("every page opens barcode scanning directly without changing records", asyn
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toHaveCount(0);
     expect(
-      await page.evaluate(() =>
-        JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-      ),
+      await readBrowserRecords(page),
     ).toMatchObject({
       meals: before.meals,
       workout: before.workout,
@@ -95,9 +92,7 @@ test("chat barcode capture stays usable beside photo, attachment and voice at 32
   });
   expect((await input.boundingBox())!.width).toBeGreaterThanOrEqual(65);
   await input.fill("Keep this draft while I scan");
-  const before = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-  );
+  const before = await readBrowserRecords(page);
   await composer
     .getByRole("button", { name: "Scan a barcode in chat", exact: true })
     .click();
@@ -110,9 +105,7 @@ test("chat barcode capture stays usable beside photo, attachment and voice at 32
     composer.getByRole("button", { name: "Send message", exact: true }),
   ).toBeInViewport();
   expect(
-    await page.evaluate(() =>
-      JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-    ),
+    await readBrowserRecords(page),
   ).toEqual(before);
   expect(
     await page.evaluate(

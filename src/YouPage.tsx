@@ -1,4 +1,7 @@
 import { SpotWeeklyReview } from './features/spot/Spot';
+import SupportAndPrivacy from './features/support/SupportAndPrivacy';
+import { BodyWeightHistory } from './features/progress/BodyWeightHistory';
+import type { BodyWeightEntry } from './features/progress/body-weight';
 import { useRef, useState } from "react";
 import {
   ArrowRight,
@@ -51,6 +54,7 @@ type Props = {
   onEditMeal: (meal: Meal) => void;
   onResolve: (id: string, answer: string) => void;
   onAddMeal: (item: ReviewItem) => void;
+  onSaveBodyWeight?: (entry: BodyWeightEntry) => void;
 };
 type Panel =
   | "menu"
@@ -78,6 +82,7 @@ export default function YouPage({
   onEditMeal,
   onResolve,
   onAddMeal,
+  onSaveBodyWeight,
 }: Props) {
   const [panel, setPanel] = useState<Panel>(null);
   const [showAll, setShowAll] = useState(false);
@@ -493,7 +498,7 @@ export default function YouPage({
             </span>
             <div>
               <strong>Your saved daily targets.</strong>
-              <p>Adjust these as your needs change.</p>
+              <p>Starting targets are generic. Review and edit them for your needs; weight entries do not personalize them automatically.</p>
             </div>
           </div>
           <div className="you-goal-values">
@@ -513,6 +518,7 @@ export default function YouPage({
             ))}
           </div>
         </section>
+        {onSaveBodyWeight&&<BodyWeightHistory entries={state.bodyWeights} onSave={onSaveBodyWeight}/>}
         <button
           className="you-next-workout"
           onClick={() => onNavigate("Workouts")}
@@ -641,7 +647,7 @@ export default function YouPage({
             </span>
             <span>
               <strong>Your data & privacy</strong>
-              <small>Saved on this device</small>
+              <small>Account saving, privacy, and help</small>
             </span>
             <ChevronRight size={20} />
           </button>
@@ -966,12 +972,12 @@ export default function YouPage({
             <span className="you-row-icon">
               <ShieldCheck size={26} />
             </span>
-            <h3>Saved on this device.</h3>
+            <h3>Your records, wherever you sign in.</h3>
             <p>
               Your meals, captures, goals, and workout sessions are saved in
-              this browser. Account & backups lets you explicitly save a copy to
-              your Supabase account or restore one. Changes are not
-              automatically synced.
+              this browser. When you sign in and link your records, account
+              saving keeps a private copy updated. Check the save status before
+              changing devices. Conflicting copies wait for your review.
             </p>
             <p>
               {aiAvailable
@@ -985,6 +991,7 @@ export default function YouPage({
             <button className="you-dialog-action" onClick={closeAndEdit}>
               Open preferences <ArrowRight size={17} />
             </button>
+            <SupportAndPrivacy requestIds={state.messages.filter(m=>m.aiStatus==='error').map(m=>m.id)}/>
           </div>
         </Modal>
       )}

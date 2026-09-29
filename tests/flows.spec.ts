@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "./app-fixture";
 import { demoState } from "../src/domain";
+import { seedBrowserRecords, readBrowserRecords } from "./record-fixture";
 
 async function seedExamples(page: Page, includePersonalDinner = false) {
   const state = demoState();
@@ -10,10 +11,7 @@ async function seedExamples(page: Page, includePersonalDinner = false) {
         ? { ...meal, source: "Your confirmed dinner", example: false }
         : meal,
     );
-  await page.evaluate(
-    (state) => localStorage.setItem("fuel.prototype.v1", JSON.stringify(state)),
-    state,
-  );
+  await seedBrowserRecords(page, state);
   await page.reload();
 }
 async function seedPersonalDinner(page: Page) {
@@ -36,10 +34,7 @@ async function seedPersonalDinner(page: Page) {
       mealId: dinner.id,
     },
   ];
-  await page.evaluate(
-    (next) => localStorage.setItem("fuel.prototype.v1", JSON.stringify(next)),
-    state,
-  );
+  await seedBrowserRecords(page, state);
   await page.reload();
 }
 
@@ -54,8 +49,7 @@ async function send(page: Page, text: string) {
       .filter({ hasText: "Rep & Plate is responding" }),
   ).toHaveCount(0);
 }
-const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+const stored = readBrowserRecords;
 
 test("Workout selection becomes a persistent conversation and archives finished sessions", async ({
   page,
@@ -425,7 +419,7 @@ test("You reviews and goals update shared records and persist", async ({
   expect((await stored(page)).meals).toHaveLength(resolvedState.meals.length);
   await page.getByRole("button", { name: /Your data & privacy/ }).click();
   await expect(page.getByRole("dialog")).toContainText(
-    "Changes are not automatically synced.",
+    "Conflicting copies wait for your review.",
   );
   await page.keyboard.press("Escape");
   expect(

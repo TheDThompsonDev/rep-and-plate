@@ -78,7 +78,7 @@ test("native first launch introduces Spot, creates an account, confirms and sign
   await expect(
     page.getByRole("button", { name: "Try on this device first" }),
   ).toHaveCount(0);
-  expect(cloud.saveCalls).toBe(0);
+  await expect.poll(() => cloud.saveCalls).toBeGreaterThanOrEqual(1);
 });
 
 test("native local setup and returning launch work without an account connection", async ({

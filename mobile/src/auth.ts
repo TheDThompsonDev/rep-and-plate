@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { AppState as Lifecycle } from "react-native";
-import { credentials, deviceOwnership } from "./storage";
+import { credentials, deviceOwnership,switchNativeAccount } from "./storage";
+import {registerAccountConfig} from '../../src/features/cloud/account-client';
 import type { CloudConfig } from "../../src/features/cloud/client";
 
 let client: SupabaseClient | null = null;
@@ -35,6 +36,7 @@ export function configureAuth(config: CloudConfig): Promise<SupabaseClient> {
     },
   });
   client = c;
+  registerAccountConfig(c,config);
   const subscription = c.auth.onAuthStateChange((_event, session) => {
     const next = session?.user.id ?? null;
     if (account !== next) {
@@ -67,7 +69,7 @@ export async function requireDeviceOwner(c: SupabaseClient, bind = false) {
     );
   const identity = `${project}:${user.id}`;
   const owner = await deviceOwnership.get();
-  if (owner && owner !== identity)
+  if (owner && owner !== identity && !bind)
     throw Error(
       "These device records belong to another account. Sign in with the original account. Your records have not been sent.",
     );
@@ -76,8 +78,9 @@ export async function requireDeviceOwner(c: SupabaseClient, bind = false) {
       throw Error(
         "Open Cloud & your records and confirm that these device records are yours before using the beta.",
       );
-    await deviceOwnership.set(identity);
+    await switchNativeAccount(identity);
   }
+  if(owner&&owner!==identity&&bind)await switchNativeAccount(identity);
   if (c !== client || account !== user.id)
     throw Error("Your account changed. Please try again.");
   return data.session!;

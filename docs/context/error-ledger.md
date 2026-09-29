@@ -1,5 +1,19 @@
 # Error ledger
 
+## READINESS-001 — Account continuity and interrupted persistence
+
+- A Save followed immediately by navigation could precede React's passive persistence effect. Saves now journal at the action boundary; a regression clicks Save and reloads in the same action while the durable writer is deliberately blocked.
+- Native account selection could briefly expose the previous owner's in-memory records. An epoch-bound readiness gate now clears access synchronously and rejects edits/uploads until the selected owner's records load; stale asynchronous callbacks cannot publish to the new account.
+- The production native export exposed a welcome-back timing regression: visit detection read the gated records before loading completed. It now waits for the saved visit and ready records together before choosing Spot's greeting; the existing six-day-return journey detects this case.
+- The audit reproduced hosted mobile bootstrap rejection and unconnected purchased ingredients; focused regressions cover the repaired bearer/bootstrap boundary and reviewed ingredient mapping.
+- Automatic restore first treated equivalent objects with different key order as conflicting. Canonical field comparison fixes semantic equality without treating different inventory edits as mergeable.
+- Embedded photos exceeded localStorage's small capacity. IndexedDB and separate private cloud media now hold them; a small synchronous journal protects ordinary edits if refresh occurs before a durable write completes. Large-photo, immediate-refresh, interrupted-owner-switch and sign-out-during-download checks exercise actual browser persistence.
+- Account cleanup initially enumerated only localStorage and native deletion made a backup of the deleted records. Cleanup now enumerates durable namespaces and staged native generations while preserving other accounts and guests. Account changes and saves share serialization; account archives are the recovery source of truth.
+- Existing post-render test fixtures edited only the legacy localStorage mirror. They now install records through the actual durable writer before reload and wait for saved state instead of assuming asynchronous writes already finished.
+- Concurrent Playwright runs stopped a shared auto-managed dev server. Final verification uses independently running web/Metro servers so completion of one run cannot stop another's server.
+- Hosted database verification initially expected zero rows for prohibited Storage mutation; the deployed policy instead returned permission-denied SQLSTATE42501. Both protect records. The verifier accepts either secure result inside a rolled-back savepoint; all22 database checks passed without weakening policies.
+- CYC startup remains blocked by CYC-ASSETS-001; direct checks are used without changing protected settings.
+
 ## AI-FALLBACK-001 — Generation failure interrupted the user without automatic recovery
 
 - The user requested a recovery path after the initial Qwen migration deliberately disabled fallback. New failure-injection tests reproduced immediate 429/invalid-output failure, missing refusal classification, and a primary timeout consuming the full time budget.

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { createServer } from "node:http";
+import { createServer, request as httpRequest } from "node:http";
 import type { AddressInfo } from "node:net";
 import { betaHandler, type BetaServices } from "./beta";
 
@@ -32,6 +32,95 @@ const services = (): BetaServices => ({
   },
 });
 describe("hosted beta boundary", () => {
+  it("allows account deletion without beta membership and preserves UTF-8 across request chunks", async () => {
+    const s = services();
+    let deletions = 0;
+    s.admit = async () => {
+      throw Error("Deletion must not require beta membership");
+    };
+    const password = "pässword🔐";
+    s.deleteAccount = async (token, body) => {
+      expect(token).toBe("valid");
+      expect(body).toEqual({ confirmation: "DELETE", password });
+      deletions++;
+      return { deleted: true };
+    };
+    await serve(s, async (url) => {
+      expect(
+        (
+          await fetch(url + "/api/account/delete", {
+            method: "POST",
+            body: "{}",
+          })
+        ).status,
+      ).toBe(401);
+      const bytes = Buffer.from(
+        JSON.stringify({ confirmation: "DELETE", password }),
+      );
+      const boundary = bytes.indexOf(Buffer.from("🔐")) + 2;
+      const response = await new Promise<{ status: number; body: string }>(
+        (resolve, reject) => {
+          const request = httpRequest(
+            url + "/api/account/delete",
+            {
+              method: "POST",
+              headers: {
+                Authorization: "Bearer valid",
+                "Content-Type": "application/json",
+                "Content-Length": bytes.length,
+              },
+            },
+            (response) => {
+              let body = "";
+              response.on("data", (data) => (body += data.toString()));
+              response.on("end", () =>
+                resolve({ status: response.statusCode!, body }),
+              );
+            },
+          );
+          request.on("error", reject);
+          request.write(bytes.subarray(0, boundary));
+          setTimeout(() => request.end(bytes.subarray(boundary)), 10);
+        },
+      );
+      expect(response.status).toBe(200);
+      expect(JSON.parse(response.body)).toEqual({ deleted: true });
+      expect(deletions).toBe(1);
+    });
+  });
+  it("requires a verified session for deletion but never requires paid or beta access", async () => {
+    const s = services();
+    let deletes = 0;
+    s.admit = async () => {
+      throw Error("Deletion must not require admission");
+    };
+    s.deleteAccount = async (token, body) => {
+      expect(token).toBe("valid");
+      expect(body).toEqual({ confirmation: "DELETE", password: "test-only" });
+      deletes++;
+      return { deleted: true };
+    };
+    await serve(s, async (url) => {
+      const body = JSON.stringify({
+        confirmation: "DELETE",
+        password: "test-only",
+      });
+      expect(
+        (await fetch(url + "/api/account/delete", { method: "POST", body }))
+          .status,
+      ).toBe(401);
+      expect(
+        (
+          await fetch(url + "/api/account/delete", {
+            method: "POST",
+            body,
+            headers: { Authorization: "Bearer valid" },
+          })
+        ).status,
+      ).toBe(200);
+      expect(deletes).toBe(1);
+    });
+  });
   it("allows auth bootstrap but never trusts spoofed hosts or user headers", async () => {
     let admissions = 0;
     const s = services();

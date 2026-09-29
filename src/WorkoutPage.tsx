@@ -1,4 +1,5 @@
 import { SpotAvatar, SpotEmptyState, SpotMoment } from './features/spot/Spot';
+import { setLoad, setWorkoutLoad, recordedLoads } from './features/progress/set-loads';
 import {
   useEffect,
   useRef,
@@ -61,7 +62,7 @@ function recordedDate(value: string) {
 function previousSession(workout: Workout, name: string) {
   const evidence = lastExerciseEvidence(workout, name);
   return evidence
-    ? `Last recorded: ${evidence.weight ? `${evidence.weight} lb` : "Bodyweight"} · ${evidence.sets.join(", ")} reps · ${recordedDate(evidence.finishedAt)}`
+    ? `Last recorded: ${evidence.setWeights?recordedLoads(evidence):`${evidence.weight ? `${evidence.weight} lb` : "Bodyweight"} · ${evidence.sets.join(", ")} reps`} · ${recordedDate(evidence.finishedAt)}`
     : "No finished session recorded for this exercise yet.";
 }
 
@@ -322,7 +323,7 @@ export default function WorkoutPage({
                             <div>
                               <strong>Set {j + 1}</strong>
                               <span>
-                                {ex.weight ? `${ex.weight} lb` : "Bodyweight"}{" "}
+                                {setLoad(ex,j) ? `${setLoad(ex,j)} lb` : "Bodyweight"}{" "}
                                 {reps !== null
                                   ? `× ${reps} reps`
                                   : active && j === next
@@ -341,6 +342,7 @@ export default function WorkoutPage({
                               </button>
                             )}
                           </div>
+                          {active&&<SetWeightInput key={`${ex.name}:${j}:${setLoad(ex,j)}`} name={ex.name} index={j} value={setLoad(ex,j)} onSave={weight=>setState(current=>({...current,workout:setWorkoutLoad(current.workout,i,j,weight)}))}/>}
                           {active && i === current && j === next && (
                             <div className="workout-reps">
                               {[-2, -1, 0, 1]
@@ -530,7 +532,7 @@ export default function WorkoutPage({
           <div className="workout-history">
             {active && <section><h3>{title} · In progress</h3><p>{done} of {total} sets recorded.</p><button className="workout-start" onClick={()=>{setHistory(false);resume();}}>Resume workout <ArrowRight size={17}/></button></section>}
             {finishedSessions.length > 0 && <p>Your latest {finishedSessions.length} finished {finishedSessions.length === 1 ? "session" : "sessions"}. Unrecorded sets are not included.</p>}
-            {finishedSessions.map(item=><section key={`${item.startedAt}:${item.finishedAt}`}><h3>{item.title} · Saved</h3><p>{recordedDate(item.finishedAt)}</p>{item.exercises.map((ex,index)=><p key={`${ex.name}:${index}`}><strong>{ex.name}</strong>: {ex.weight ? `${ex.weight} lb` : "Bodyweight"} · {ex.sets.join(", ")} reps</p>)}</section>)}
+            {finishedSessions.map(item=><section key={`${item.startedAt}:${item.finishedAt}`}><h3>{item.title} · Saved</h3><p>{recordedDate(item.finishedAt)}</p>{item.exercises.map((ex,index)=><p key={`${ex.name}:${index}`}><strong>{ex.name}</strong>: {ex.setWeights?recordedLoads(ex):`${ex.weight ? `${ex.weight} lb` : "Bodyweight"} · ${ex.sets.join(", ")} reps`}</p>)}</section>)}
             {!finishedSessions.length && <p>No finished sessions with recorded sets yet. Finish your workout to start building your history.</p>}
           </div>
         </Modal>
@@ -593,6 +595,12 @@ export default function WorkoutPage({
       )}
     </section>
   );
+}
+
+function SetWeightInput({name,index,value,onSave}:{name:string;index:number;value:number;onSave:(weight:number)=>void}) {
+  const [input,setInput]=useState(String(value));
+  const number=Number(input);
+  return <div className="workout-set-load"><label>{name} set {index+1} weight (lb)<input type="number" min="0" max="2000" step="any" value={input} onChange={event=>setInput(event.target.value)}/></label><button type="button" disabled={!input.trim()||!Number.isFinite(number)||number<0||number>2000||number===value} onClick={()=>onSave(number)}>Save set weight</button><small>0 = bodyweight. Record the load you actually used.</small></div>;
 }
 
 function ExerciseAdjustmentDialog({

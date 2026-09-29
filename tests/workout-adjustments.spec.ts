@@ -1,7 +1,8 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { expect, test, type Page } from "./app-fixture";
 
 const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+  readBrowserRecords(page);
 test("Active exercise substitutions preserve recorded sets through later adjustments and reload", async ({
   page,
 }) => {
@@ -16,6 +17,7 @@ test("Active exercise substitutions preserve recorded sets through later adjustm
     state.workout.history = [];
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();
   await page.getByRole("button", { name: "Workouts", exact: true }).click();
   await page

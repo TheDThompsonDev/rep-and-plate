@@ -16,6 +16,8 @@ import {
 import { uploadCapture } from "../../src/platform/capture-upload";
 export type Connection = { url: string; token: string };
 let connection: Connection | null = null;
+let supportUrl:string|undefined;
+export const getSupportUrl=()=>supportUrl;
 const responseSignals = new WeakMap<Response, AbortSignal>();
 export function validConnection(value: Connection) {
   const url = new URL(value.url);
@@ -50,6 +52,7 @@ export async function loadConnection() {
   else if (process.env.EXPO_PUBLIC_API_URL) connection = validConnection({ url: process.env.EXPO_PUBLIC_API_URL, token: '' });
   return connection;
 }
+export async function hostedConnection(){if(!connection)await loadConnection();return !!connection&&!connection.token;}
 export async function connect(value: Connection) {
   const checked = validConnection(value);
   const result = await expoFetch(
@@ -88,6 +91,7 @@ export async function cloudClient() {
     throw Error(
       "Cloud is not configured on this server. You can still export your records.",
     );
+  supportUrl=config.supportUrl;
   return configureAuth(config);
 }
 export async function api(path: string, body?: unknown, signal?: AbortSignal) {
@@ -148,6 +152,19 @@ export async function jsonApi(
   const value = await response.json();
   responseSignals.get(response)?.throwIfAborted();
   return value;
+}
+/** Account recovery/deletion must remain available without beta approval or
+ * ownership of the currently opened local records. */
+export async function accountRequest(body:{confirmation:string;password:string},expectedUserId:string):Promise<{deleted:true}>{
+ if(!connection)await loadConnection();
+ const selected=connection;
+ if(!selected||selected.token)throw Error('Use your hosted account connection to manage your account.');
+ const c=await cloudClient();const {data,error}=await c.auth.getSession();
+ if(error||!data.session||data.session.user.id!==expectedUserId)throw Error('Your account changed. Sign in to manage your account.');
+ const response=await expoFetch(`${selected.url}/api/account/delete`,{method:'POST',headers:{Authorization:`Bearer ${data.session.access_token}`,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(60000)});
+ const value=await response.json();
+ if(!response.ok||value.deleted!==true)throw Error(value.error??'Account deletion could not finish. Please retry.');
+ return {deleted:true};
 }
 export async function chat(
   request: AIRequest,

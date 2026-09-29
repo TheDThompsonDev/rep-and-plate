@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check, LogOut } from "lucide-react";
-import { readState, STORAGE_KEY } from "../../domain";
+import { readState } from "../../domain";
+import {hydrateBrowserRecords,persistBrowserRecords} from '../../platform/browser-records';
 import { introduction, focusChoices, ONBOARDING_KEY } from "./model";
 import { useOnboarding, type OnboardingAdapter } from "./useOnboarding";
 import { spotScenes } from "../spot/scenes";
 import "./onboarding.css";
+import { PasswordRecovery } from "../cloud/PasswordRecovery";
 
 const adapter: OnboardingAdapter = {
-  read: async () => localStorage.getItem(ONBOARDING_KEY),
+  read: async () => {await hydrateBrowserRecords();return localStorage.getItem(ONBOARDING_KEY);},
   write: async (value) => {
     localStorage.setItem(ONBOARDING_KEY, value);
   },
@@ -51,7 +53,7 @@ export default function Onboarding({
         },
         spot: { ...saved.spot, introSeen: true },
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      await persistBrowserRecords(next);
       location.hash = "chat";
     });
   const show = !flow.entered || flow.replaying;
@@ -336,6 +338,9 @@ export default function Onboarding({
                           <button onClick={flow.retry}>Retry connection</button>
                         </div>
                       )}
+                      {!flow.user && flow.mode === "signin" && (
+                        <PasswordRecovery client={flow.client} />
+                      )}
                       {!flow.owner && !flow.user && (
                         <>
                           <button
@@ -353,8 +358,8 @@ export default function Onboarding({
                       )}
                       {flow.owner && (
                         <p className="welcome-fine">
-                          This device has records linked to an account. Sign in
-                          with that account to continue.
+                          Each account keeps separate records on this device.
+                          Sign in to open yours.
                         </p>
                       )}
                       <button
@@ -420,13 +425,14 @@ export default function Onboarding({
                                 flow.setConfirmed(e.target.checked)
                               }
                             />
-                            These device records are mine. Link them to{" "}
-                            {flow.user?.email || "my account"}.
+                            {flow.owner
+                              ? "Open this account’s separate records. Existing records stay with their original account."
+                              : `These device records are mine. Link them to ${flow.user?.email || "my account"}.`}
                           </label>
                         )}
                         <p className="welcome-fine">
-                          Your existing records stay here. Cloud uploads and
-                          restores are always your choice.
+                          Your account saves changes automatically. Other
+                          accounts keep separate records.
                         </p>
                         <button
                           className="welcome-primary"

@@ -3,6 +3,7 @@
   "framework": "vite",
   "buildCommand": "npm run build && node scripts/build-api.mjs",
   "outputDirectory": "dist",
+  "crons": [{ "path": "/api/maintenance", "schedule": "0 8 * * *" }],
   "functions": {
     "api/health.mjs": {
       "maxDuration": 240,

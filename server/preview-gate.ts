@@ -52,6 +52,14 @@ export async function previewGate(request: Request, env: Environment, now = Date
   const url = new URL(request.url);
   const path = url.pathname;
   const read = request.method === 'GET' || request.method === 'HEAD';
+  // Native clients do not share a browser cookie jar. Only delegate API requests:
+  // betaHandler still verifies the bearer token, origin, membership and quotas.
+  const endpoint = path === '/api/health' ? `/api/${url.searchParams.get('endpoint') ?? ''}` : path;
+  if (path.startsWith('/api/') && (
+    (endpoint === '/api/cloud/config' && request.method === 'GET') ||
+    request.method === 'OPTIONS' ||
+    /^Bearer [^\s]{1,8185}$/.test(request.headers.get('authorization') ?? '')
+  )) return null;
   if (read && (path === '/favicon.svg' || /^\/fonts\/(fonts\.css|font-[0-7]\.ttf)$/.test(path))) return null;
   if (path === '/robots.txt' && read) return new Response('User-agent: *\nDisallow: /\n', { headers: { ...headers, 'Content-Type': 'text/plain' } });
   const secure = url.protocol === 'https:';

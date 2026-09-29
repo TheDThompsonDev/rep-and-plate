@@ -1,6 +1,7 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 
-const stored=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+const stored=(page:Page)=>readBrowserRecords(page);
 test.beforeEach(async({page})=>{
   await page.route('**/api/status',route=>route.fulfill({json:{available:false,jev:false}}));
   await page.goto('/#workouts');
@@ -42,6 +43,7 @@ test('workout previews and recent history use completed recorded sets rather tha
     state.workout.history=[saved,saved,{...saved,title:'Unfinished upper body',startedAt:'2026-09-24T12:00:00Z',finishedAt:null},{...saved,title:'Sample history',startedAt:'2026-09-25T12:00:00Z',finishedAt:'2026-09-25T13:00:00Z'}];
     localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();const before=(await stored(page)).workout;
   await expect(page.locator('.workout-preview').first()).toContainText('Last recorded: 95 lb · 8, 6 reps');
   await expect(page.locator('.workout-preview').first()).not.toContainText('99');

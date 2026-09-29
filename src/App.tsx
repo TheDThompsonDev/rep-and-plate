@@ -1,4 +1,7 @@
 import Onboarding from "./features/onboarding/Onboarding";
+import {persistBrowserRecords} from './platform/browser-records';
+import {useBrowserRecords} from './platform/useBrowserRecords';
+import {saveBodyWeight} from './features/progress/body-weight';
 import { SpotVisuals } from './features/spot/Spot';
 import { resolveWorkoutCapture } from './features/spot/model';
 import { apiFetch } from "./api-fetch";
@@ -23,6 +26,7 @@ const PreferencesDialog = lazy(
   () => import("./features/preferences/PreferencesDialog"),
 );
 const MealPlanner = lazy(() => import("./features/planning/MealPlanner"));
+const AccountSync = lazy(() => import('./features/cloud/AccountSync'));
 const WorkoutBuilder = lazy(
   () => import("./features/workout-planning/WorkoutBuilder"),
 );
@@ -102,14 +106,12 @@ import {
 } from "./components";
 import {
   APP_NAME,
-  STORAGE_KEY,
   clockTime,
   id,
   initialState,
   interpretText,
   makeMeal,
   mealSchema,
-  readState,
   resolveReview,
   sumNutrition,
   personalMeals,
@@ -164,7 +166,7 @@ const insights = [
 
 function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   useLocalDay();
-  const [state, setState] = useState<AppState>(readState);
+  const [state, setState,stateForSync] = useBrowserRecords(()=>setToast('Device saving could not finish. Export your records before closing the app.'));
   const [page, setPage] = useState<Page>(
     () =>
       navigation.find((n) => n.name.toLowerCase() === location.hash.slice(1))
@@ -257,15 +259,6 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     };
   }, []);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch {
-      setToast(
-        "Your browser storage is full. Recent changes may not survive a refresh.",
-      );
-    }
-  }, [state]);
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 5500);
@@ -935,6 +928,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
         </div>
       </aside>
       <div className="workspace">
+        <Suspense fallback={null}><AccountSync state={state} onRestore={async value=>{const before=stateForSync.current;await persistBrowserRecords(value);if(stateForSync.current!==before){await persistBrowserRecords(stateForSync.current);throw Error('Your records changed while loading. Sync will check again.');}setState(value);}}/></Suspense>
         <header className="topbar">
           <div className="desktop-crumb">
             <span>Your space</span>
@@ -1306,7 +1300,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
           )}
 
           {page === "Kitchen" && (
-            <KitchenPage state={state} onNavigate={navigate} onScan={openScanner}
+            <KitchenPage state={state} onNavigate={navigate} onScan={openScanner} onTargets={()=>setProfileOpen(true)}
               onAddReceipt={() => {
                 setReceiptCapture(true);
                 setCaptureError("");
@@ -1335,6 +1329,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
 
           {(page === "You" || page === "Review") && (
             <YouPage
+              onSaveBodyWeight={entry=>setState(s=>({...s,bodyWeights:saveBodyWeight(s.bodyWeights??[],entry)}))}
               onScan={openScanner}
               onRecipes={() => setRecipesOpen(true)}
               onReviewMessage={(messageId) => {
@@ -1624,6 +1619,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
         )}
         {plannerOpen && (
           <MealPlanner
+            receipts={state.groceries ?? []}
             lots={getPantryLots(state).slice(0, 100)}
             preferences={state.preferences ?? defaultPreferences()}
             goals={state.profile}

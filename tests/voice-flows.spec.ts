@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture"
 
 type VoiceState = { requested: number; started: number; stopped: number; release?: () => void }
@@ -33,7 +34,7 @@ async function fakeMicrophone(page: Page, mode: 'working' | 'denied' | 'unsuppor
   }, mode)
 }
 const microphone = (page: Page) => page.evaluate(() => (window as typeof window & { __voice: VoiceState }).__voice)
-const stored = (page: Page) => page.evaluate(() => JSON.parse(localStorage.getItem('fuel.prototype.v1')!))
+const stored = (page: Page) => readBrowserRecords(page)
 const openVoice = async (page: Page) => {
   await page.getByRole('button', { name: 'Use voice', exact: true }).first().click()
   await expect(page.getByRole('dialog').getByRole('heading', { name: 'Tell Rep & Plate what happened' })).toBeVisible()

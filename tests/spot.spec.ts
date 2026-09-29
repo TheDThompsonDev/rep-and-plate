@@ -1,3 +1,4 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 import { initialState, today } from "../src/domain";
 
@@ -35,9 +36,7 @@ test("Spot introduction pivots to Rep, capture stays universal, and visuals are 
   ).toBeVisible();
   const draft = page.getByRole("textbox", { name: "Message Rep & Plate" });
   await draft.fill("Keep my sandwich story");
-  const beforeMoods = await page.evaluate(() =>
-    localStorage.getItem("fuel.prototype.v1"),
-  );
+  const beforeMoods = JSON.stringify(await readBrowserRecords(page));
   for (const title of [
     "Still here.",
     "Good food. Great plot.",
@@ -59,7 +58,7 @@ test("Spot introduction pivots to Rep, capture stays universal, and visuals are 
     await expect(draft).toHaveValue("Keep my sandwich story");
   }
   expect(
-    await page.evaluate(() => localStorage.getItem("fuel.prototype.v1")),
+    JSON.stringify(await readBrowserRecords(page)),
   ).toBe(beforeMoods);
   await page.getByRole("button", { name: "Open chat menu" }).click();
   await page
@@ -130,9 +129,7 @@ test("workout capture confirms once, survives reload and retains an active sessi
   await page.screenshot({ path: info.outputPath("spot-workout-check.png") });
   await page.getByRole("button", { name: "Yep, log workout" }).click();
   await expect(page.getByText("Logged.", { exact: true })).toBeVisible();
-  const saved = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-  );
+  const saved = await readBrowserRecords(page);
   expect(saved.workout.status).toBe("active");
   expect(saved.workout.history).toHaveLength(1);
   await page.addInitScript(

@@ -1,7 +1,8 @@
+import { readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 import { resultFixture } from "./ai-fixtures";
 const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+  readBrowserRecords(page);
 const send = async (page: Page, text: string) => {
   await page
     .getByRole("textbox", { name: "Message Rep & Plate" })

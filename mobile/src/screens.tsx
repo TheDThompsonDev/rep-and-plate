@@ -1,4 +1,9 @@
 import { useWelcome } from "./Onboarding";
+import { FirstWeek } from './FirstWeek';
+import { BodyWeightHistory } from './BodyWeightHistory';
+import {SupportAndPrivacy} from './SupportAndPrivacy';
+import {getSupportUrl} from './api';
+import {setLoad,setWorkoutLoad} from '../../src/features/progress/set-loads';
 import { SpotMoment, SpotWeeklyReview } from './Spot';
 import { useState, useRef } from "react";
 import {
@@ -289,6 +294,7 @@ export function KitchenScreen() {
         </View>
       </View>
       <Text style={s.h2}>What you have</Text>
+      <FirstWeek />
       <Card>
         <Text style={[s.title, { color: colors.green }]}>
           {lots.length} items on hand
@@ -448,6 +454,7 @@ export function WorkoutsScreen() {
                 {e.sets.length} × {e.target}
               </Text>
               <WeightEntry
+                key={`${e.name}:${e.weight}`}
                 name={e.name}
                 value={e.weight}
                 onSave={(weight) =>
@@ -456,7 +463,7 @@ export function WorkoutsScreen() {
                     workout: {
                       ...s.workout,
                       exercises: s.workout.exercises.map((x, j) =>
-                        j === i ? { ...x, weight } : x,
+                        j === i ? { ...x, weight, setWeights:x.sets.map((reps,k)=>x.setWeights?.[k]??(reps===null?null:x.weight)) } : x,
                       ),
                     },
                   }))
@@ -469,6 +476,7 @@ export function WorkoutsScreen() {
                     {r !== null ? ` · ✓ ${r} reps` : ""}
                   </Text>
                   <View style={{ width: 135 }}>
+                    <WeightEntry key={`${j}:${setLoad(e,j)}`} name={`${e.name} set ${j+1}`} value={setLoad(e,j)} onSave={weight=>h.change(state=>({...state,workout:setWorkoutLoad(state.workout,i,j,weight)}))}/>
                     <SetEntry
                       name={e.name}
                       index={j}
@@ -590,9 +598,10 @@ export function YouScreen() {
       </Card>
       <Row
         title="Your profile & daily targets"
-        detail="Keep your goals in your hands"
+        detail="Review generic starting targets and choose your own"
         onPress={() => h.setTool("profile")}
       />
+      <BodyWeightHistory />
       <Row
         title="Food & household preferences"
         detail="Favorites, restrictions, budget, and equipment"
@@ -613,6 +622,7 @@ export function YouScreen() {
           detail="Beta server or local development"
         onPress={() => h.setTool("connection")}
       />
+      <SupportAndPrivacy supportUrl={getSupportUrl()} requestIds={state.messages.filter(m=>m.aiStatus==='error').map(m=>m.id)}/>
     </Screen>
   );
 }
@@ -681,7 +691,7 @@ function WeightEntry({
           !text.trim() ||
           !Number.isFinite(Number(text)) ||
           Number(text) < 0 ||
-          Number(text) > 20000
+           Number(text) > 2000
         }
         onPress={() => onSave(Number(text))}
       />

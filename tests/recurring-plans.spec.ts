@@ -1,6 +1,7 @@
+import { commitSeededRecords,readBrowserRecords } from "./record-fixture";
 import { test,expect,type Page } from "./app-fixture";
 
-const stored=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('fuel.prototype.v1')!));
+const stored=readBrowserRecords;
 async function seedWeek(page:Page) {
   await page.goto('/');
   await page.evaluate(()=>{
@@ -9,7 +10,8 @@ async function seedWeek(page:Page) {
     state.pantryEvents=[{id:'stock-check',lotId:'repeat-shop::oats',kind:'adjusted',servings:-7,createdAt:'2026-09-25T12:00:00Z',note:'Counted three servings remaining.'}];
     state.mealPlans=[{id:'original-approved',createdAt:'2026-09-25T12:00:00Z',status:'approved',days:Array.from({length:7},(_,index)=>{const date=new Date('2026-09-25T12:00:00Z');date.setUTCDate(date.getUTCDate()+index);return {date:date.toISOString().slice(0,10),meals:[{id:`original-${index}`,title:`Oatmeal ${index+1}`,portions:1,minutes:10,ingredients:[{lotId:'repeat-shop::oats',name:'Oats',servingLabel:'1/2 cup',servings:1}],notes:'Prepare oats with water.'}]};})}];
     localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
-  });await page.reload();
+  });await commitSeededRecords(page);
+  await page.reload();
 }
 async function openPlan(page:Page) {
   await page.getByRole('button',{name:'Open chat menu'}).click();
@@ -33,6 +35,7 @@ test('approved weeks repeat into editable drafts with fresh shortages and no aut
   expect((await stored(page)).meals).toEqual(before.meals);
   expect((await stored(page)).pantryEvents).toEqual(before.pantryEvents);
   await page.getByRole('button',{name:'Save draft',exact:true}).click();
+  await expect.poll(async()=>(await stored(page)).mealPlans.length).toBe(2);
   let saved=await stored(page);
   expect(saved.mealPlans).toHaveLength(2);expect(saved.mealPlans[0]).toEqual(original);
   const repeatedId=saved.mealPlans[1].id;expect(repeatedId).not.toBe(original.id);
@@ -137,6 +140,7 @@ test('oversized planned portions fail visibly without crashing or changing intak
     state.mealPlans[0].days[0].meals[0].ingredients[0].servings=200;
     localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();const before=await stored(page);await openPlan(page);
   const first=page.locator('.fuel-planned-meal').first();
   await first.getByRole('button',{name:'Log one portion',exact:true}).click();

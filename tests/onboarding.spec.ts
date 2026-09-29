@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { readBrowserRecords } from "./record-fixture";
 import { mockCloud } from "./cloud-fixture";
 import { demoState } from "../src/domain";
 
@@ -68,7 +69,7 @@ test("new users meet Spot outside the app, create an account, confirm, set up an
   await expect(
     page.getByRole("textbox", { name: "Message Rep & Plate" }),
   ).toBeVisible();
-  expect(cloud.saveCalls).toBe(0);
+  await expect.poll(() => cloud.saveCalls).toBeGreaterThanOrEqual(1);
   await page.reload();
   await expect(
     page.getByRole("textbox", { name: "Message Rep & Plate" }),
@@ -110,9 +111,7 @@ test("local setup preserves records, persists completion and replay preserves th
   await page.getByRole("button", { name: "Try on this device first" }).click();
   await page.getByRole("button", { name: "That’s me. Let’s go." }).click();
   await page.getByRole("button", { name: "Let’s do this" }).click();
-  const saved = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-  );
+  const saved = await readBrowserRecords(page);
   expect(saved.meals).toEqual(state.meals);
   expect(saved.profile).toEqual(state.profile);
   const draft = page.getByRole("textbox", { name: "Message Rep & Plate" });
@@ -138,16 +137,19 @@ test("local setup preserves records, persists completion and replay preserves th
   ).toBe(true);
 });
 
-test("owned records cannot be opened through local mode or a different signed-in account", async ({
+test("signing into a different account opens separate records and preserves the original archive", async ({
   page,
 }) => {
   await mockCloud(page);
-  await page.addInitScript(() =>
+  const original = demoState();
+  original.profile.name = "Original account owner";
+  await page.addInitScript((original) => {
+    localStorage.setItem("fuel.prototype.v1", JSON.stringify(original));
     localStorage.setItem(
       "health.records.owner",
       "https://fuelcloudtest.supabase.co:other-account",
-    ),
-  );
+    );
+  }, original);
   await page.goto("/");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(
@@ -160,14 +162,29 @@ test("owned records cannot be opened through local mode or a different signed-in
     .getByRole("button", { name: "Sign in", exact: true })
     .click();
   await page
-    .getByRole("checkbox", { name: /These device records are mine/ })
+    .getByRole("checkbox", { name: /Open this account’s separate records/ })
     .check();
   await page.getByRole("button", { name: "That’s me. Let’s go." }).click();
-  await expect(page.getByRole("alert")).toContainText("another account");
+  await expect(
+    page.getByRole("heading", { name: "We’re a team." }),
+  ).toBeVisible();
   await expect(page.getByRole("navigation")).toHaveCount(0);
   expect(
     await page.evaluate(() => localStorage.getItem("health.records.owner")),
-  ).toBe("https://fuelcloudtest.supabase.co:other-account");
+  ).toBe(
+    "https://fuelcloudtest.supabase.co:11111111-1111-4111-8111-111111111111",
+  );
+  const records = await page.evaluate(() => ({
+    active: JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
+    original: JSON.parse(
+      localStorage.getItem(
+        `health.account.${encodeURIComponent("https://fuelcloudtest.supabase.co:other-account")}`,
+      )!,
+    ),
+  }));
+  expect(records.original).toEqual(original);
+  expect(records.active.profile.name).not.toBe(original.profile.name);
+  expect(records.active.meals).toEqual([]);
 });
 
 test("auth errors and unavailable artwork leave the onboarding usable", async ({

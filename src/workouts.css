@@ -770,3 +770,4 @@
     height: 73px;
   }
 }
+.workout-set-load{display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin:8px 0}.workout-set-load label{display:grid;gap:4px;font-size:11px;flex:1;min-width:150px}.workout-set-load input{width:100%;box-sizing:border-box;padding:9px;border:1px solid #cad8d0;border-radius:8px}.workout-set-load button{padding:9px;border:1px solid #cad8d0;border-radius:8px;background:white;font-size:12px}.workout-set-load button:disabled{opacity:.45}.workout-set-load small{display:block;width:100%;font-size:11px;color:#607267}

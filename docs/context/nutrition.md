@@ -27,3 +27,11 @@ Working changes based on `4bd8875`; final evidence is recorded in CYC run `03a46
 Guards: `src/day.test.ts`, `tests/nutrition-day.spec.ts`, `tests/barcode-entry.spec.ts`, existing Nutrition/AI/scanner flows. The recipe below verifies the local UI without using a person's browser storage or paid providers.
 
 Limit: this change does not implement weight measurements, weight trends, goal-weight projections, or automatic target recommendations. It provides the daily record and historical context those features can build on.
+
+## September 29 outcome tracking addition (awaiting user acceptance)
+
+`AppState.bodyWeights` optionally stores the user's dated measurements with explicit `lb`/`kg` units. Web and native You screens add/edit entries, preserve them in the normal account/local state, and show first-to-last change from actual dates with unit conversion. One measurement yields no change estimate; future/invalid entries cannot be saved through the UI, and dates are never filled with invented measurements. This is optional tracking and does not change nutrition targets. Kitchen's first-week guide links to the manual target editor and explains that starting targets are generic.
+
+`Exercise.setWeights` optionally records loads by set index, falling back to legacy `exercise.weight` where absent. Before recording or changing a load, completed legacy sets are snapshotted so later changes cannot rewrite what the user recorded. Both workout UIs offer explicit per-set loads and preserve them across reload/history. Workout context includes aligned per-set loads for actual completed sets. No automated progression or load prescription was added. The state schema retains the legacy maximum for migration compatibility; new manually entered set loads use the existing 0–2,000 lb range.
+
+Regression evidence: `src/features/progress/progress.test.ts`, `tests/outcome-tracking.spec.ts`, and `mobile/e2e/outcome-tracking.spec.ts` cover date/value rejection, mixed-unit conversion, edit/reload, unchanged nutrition targets, legacy fallback, varying/corrected set loads, and finished-session history.

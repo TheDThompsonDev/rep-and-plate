@@ -6,6 +6,7 @@ import { createApi, readConfig } from "./http";
 import { createServer } from "node:http";
 import { requestFixture, resultFixture } from "../tests/ai-fixtures";
 import { collectSources } from "./ai";
+import { withGenerationTelemetry, type GenerationEvent } from "./operations";
 
 afterEach(() => vi.restoreAllMocks());
 const schema = z.object({
@@ -42,6 +43,7 @@ const output = (text: string, status = "completed") =>
       id: "r",
       object: "response",
       status,
+      usage: { input_tokens: 100, output_tokens: 20, input_tokens_details: { cached_tokens: 10 } },
       output: [
         {
           type: "web_search_call",
@@ -62,6 +64,20 @@ const output = (text: string, status = "completed") =>
     { headers: { "Content-Type": "application/json" } },
   );
 describe("Qwen generation boundary", () => {
+  it("records each actual fallback attempt with tokens and bounded errors, never request or answer content", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify({ error: { message: "sensitive provider detail", type: "server_error" } }), { status: 503 }))
+      .mockResolvedValueOnce(output('{"count":3,"sources":[]}'));
+    const recorded: GenerationEvent[] = [];
+    const result = await withGenerationTelemetry({ userId: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", operation: "/api/chat" }, async events => { recorded.push(...events); }, () =>
+      createGenerationClient(readConfig({ QWEN_API_KEY: "secret-primary", OPENAI_API_KEY: "secret-backup" }), 30000).responses.parse(params, { signal: new AbortController().signal }));
+    expect(result.output_parsed?.count).toBe(3);
+    expect(recorded).toHaveLength(2);
+    expect(recorded[0]).toMatchObject({ provider: "qwen", fallback: false, outcome: "error", error_code: "HTTP_503", input_tokens: null });
+    expect(recorded[1]).toMatchObject({ provider: "openai", fallback: true, outcome: "success", input_tokens: 100, output_tokens: 20, cached_input_tokens: 10 });
+    expect(recorded[0].request_id).toBe(recorded[1].request_id);
+    expect(JSON.stringify(recorded)).not.toMatch(/sensitive|secret-primary|secret-backup|image_url|sources|instructions/);
+  });
   it("serves chat and status with only a Qwen key, without exposing credentials", async () => {
     const config = readConfig({ QWEN_API_KEY: "qwen-private" });
     const runner = vi.fn(async (request) => resultFixture(request.requestId));

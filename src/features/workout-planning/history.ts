@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { AppState } from "../../domain.ts";
+import { setLoad } from '../progress/set-loads.ts';
 
 export const completedWorkoutContextSchema = z.object({
   title: z.string().max(100),
@@ -11,6 +12,7 @@ export const completedWorkoutContextSchema = z.object({
         name: z.string().min(1).max(100),
         weight: z.number().finite().min(0).max(2000),
         sets: z.array(z.number().int().min(0).max(100)).min(1).max(10),
+        setWeights: z.array(z.number().finite().min(0).max(2000)).max(10).optional(),
       }),
     )
     .min(1)
@@ -72,6 +74,7 @@ export function completedWorkoutContext(
         .map((exercise) => ({
           name: exercise.name.trim().slice(0, 100),
           weight: exercise.weight,
+          ...(exercise.setWeights?{setWeights:exercise.sets.map((reps,index)=>({reps,weight:setLoad(exercise,index)})).filter(({reps})=>reps!==null&&Number.isInteger(reps)&&reps>=0&&reps<=100).slice(0,10).map(({weight})=>weight)}:{}),
           sets: exercise.sets
             .filter(
               (reps): reps is number =>

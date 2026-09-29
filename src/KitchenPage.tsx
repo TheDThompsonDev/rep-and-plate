@@ -29,6 +29,7 @@ import "./refined-tabs.css";
 import "./kitchen.css";
 import './features/shopping/shopping.css';
 import { receiptSpending, formatMoney } from './features/shopping/shopping';
+import FirstWeek from './features/planning/FirstWeek';
 
 type Props = {
   state: AppState;
@@ -42,6 +43,7 @@ type Props = {
   onAsk: (text: string) => void;
   onShopping: () => void;
   onPreferences: () => void;
+  onTargets?: () => void;
 };
 
 export default function KitchenPage({
@@ -56,6 +58,7 @@ export default function KitchenPage({
   onAsk,
   onShopping,
   onPreferences,
+  onTargets,
 }: Props) {
   const lots = getPantryLots(state);
   const stock = sortPantryByDate(lots.filter(hasPantryStock));
@@ -159,6 +162,7 @@ export default function KitchenPage({
           {budget&&currency&&<p>{spent===undefined?'No reviewed spending yet this week':`${formatMoney(spent,currency)} recorded this week`} · {formatMoney(budget,currency)} weekly budget. Uploaded receipts only; your full spending may differ.</p>}
           <div><button onClick={onShopping}>Swaps, list & spending <ArrowRight size={14}/></button><button onClick={onPreferences}>Shopping preferences</button></div>
         </section>
+        <FirstWeek state={state} onTargets={onTargets??(()=>onNavigate('You'))} onAction={action=>({preferences:onPreferences,receipt:onAddReceipt,pantry:onPantry,planner:onPlan,shopping:onShopping})[action]()}/>
         <section className="kitchen-section" aria-label="What you have">
           <div className="kitchen-heading">
             <h2>What you have</h2>

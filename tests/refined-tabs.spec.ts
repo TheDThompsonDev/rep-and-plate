@@ -1,3 +1,4 @@
+import { commitSeededRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
 test("refined tabs use personal records, allow dated browsing and keep their last actions reachable", async ({
@@ -45,6 +46,7 @@ test("refined tabs use personal records, allow dated browsing and keep their las
     state.messages = [];
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();
   await page.getByRole("button", { name: "Nutrition", exact: true }).click();
   await expect(

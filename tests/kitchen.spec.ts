@@ -1,3 +1,4 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
 test("Kitchen replaces the You tab and keeps profile, workouts and food tools connected", async ({
@@ -7,9 +8,7 @@ test("Kitchen replaces the You tab and keeps profile, workouts and food tools co
     r.fulfill({ json: { available: false, jev: false } }),
   );
   await page.goto("/");
-  const before = await page.evaluate(() =>
-    localStorage.getItem("fuel.prototype.v1"),
-  );
+  const before = JSON.stringify(await readBrowserRecords(page));
   await expect(page.locator(".fuel-tabs button")).toHaveText([
     "Chat",
     "Nutrition",
@@ -46,9 +45,7 @@ test("Kitchen replaces the You tab and keeps profile, workouts and food tools co
   await page.getByRole("button", { name: "Workouts", exact: true }).click();
   await expect(page).toHaveURL(/#workouts$/);
   expect(
-    await page.evaluate(() =>
-      JSON.parse(localStorage.getItem("fuel.prototype.v1")!),
-    ),
+    await readBrowserRecords(page),
   ).toEqual(JSON.parse(before!));
 });
 
@@ -187,6 +184,7 @@ test("Kitchen derives stock, portions, date reminders and missing ingredients wi
     state.meals = [];
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   });
+  await commitSeededRecords(page);
   await page.reload();
   await page.getByRole("button", { name: "Kitchen", exact: true }).click();
   const stock = page.getByRole("region", {

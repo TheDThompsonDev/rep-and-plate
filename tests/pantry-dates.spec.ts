@@ -1,8 +1,9 @@
+import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 import { resultFixture } from "./ai-fixtures";
 
 const stored = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
+  readBrowserRecords(page);
 async function seed(page: Page) {
   await page.clock.setFixedTime(new Date("2026-09-25T15:00:00Z"));
   await page.goto("/");
@@ -21,6 +22,7 @@ async function seed(page: Page) {
     state.pantryEvents = [];
     localStorage.setItem("fuel.prototype.v1", JSON.stringify(state));
   }, receipt);
+  await commitSeededRecords(page);
   await page.reload();
   await openPantry(page);
 }

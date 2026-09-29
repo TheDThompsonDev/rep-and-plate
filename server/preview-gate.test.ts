@@ -29,7 +29,7 @@ describe('private preview boundary', () => {
     expect(response!.headers.get('cache-control')).toContain('no-store');
     expect(response!.headers.get('x-robots-tag')).toContain('noindex');
   });
-  it.each(['/api/chat', '/api/cloud/config', '/api/health?endpoint=chat', '/assets/index.js', '/index.html', '/src/main.tsx'])('blocks direct access to %s', async path => {
+  it.each(['/api/chat', '/api/health?endpoint=chat', '/assets/index.js', '/index.html', '/src/main.tsx'])('blocks direct access to %s', async path => {
     expect((await previewGate(request(path), env))?.status).toBe(401);
   });
   it('blocks API posts and forged middleware headers', async () => {
