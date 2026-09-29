@@ -1,3 +1,9 @@
+import { SpotAvatar, SpotCheck, SpotProcessing, SpotResult, SpotWelcome, SpotWorkoutCheck, PlateMark } from './features/spot/Spot';
+import { hasSpotLog, isComeback, messageSpot } from './features/spot/model';
+import PreferenceProposalCard from "./features/preferences/PreferenceProposalCard";
+import { defaultPreferences } from "./features/preferences/contracts";
+import type { ChatAction } from "./ai-contract";
+import RecipePortionProposalCard from "./features/recipes/RecipePortionProposalCard";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowUp,
@@ -11,36 +17,21 @@ import {
   Inbox,
   Info,
   Mic,
+  ScanBarcode,
 } from "lucide-react";
 import { Modal } from "./components";
 import { FuelHeader, FuelTabs } from "./FuelNavigation";
 import { AIText, Sources, GroceryCard, ProposedMeal } from "./AICards";
-import { sumNutrition, type AppState, type Meal, type Page } from "./domain";
+import { sumNutrition, isExampleMeal, type AppState, type Meal, type Page } from "./domain";
 import "./chat.css";
 
-export function FuelLeaf({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="26"
-      height="28"
-      viewBox="0 0 32 34"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M14 25C4 25 3 15 5 7c8 2 14 6 14 13l-5 5Z" fill="#66AA91" />
-      <path d="M11 27C7 15 17 5 30 3c1 13-4 25-15 24h-4Z" fill="#246F5B" />
-      <path
-        d="M8 32 24 12"
-        stroke="#104C41"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 type Props = {
+  onDiscardMeal: (messageId: string) => void;
+  onSpotSettings: (patch: Partial<NonNullable<AppState['spot']>>) => void;
+  onWorkoutCapture: (messageId: string, accept: boolean) => void;
+  reviewMessageId?: string | null;
+  onReviewFocused?: () => void;
   state: AppState;
   composer: string;
   processing: boolean;
@@ -48,6 +39,12 @@ type Props = {
   aiStage: string;
   onRetry: (messageId: string) => void;
   onGroceries: (receiptId: string) => void;
+  onScan: () => void;
+  onPlan: () => void;
+  onPreferences: () => void;
+  onRecipes: () => void;
+  onAction: (action: ChatAction) => void;
+  onRecipePortion: (messageId:string,accept:boolean)=>void;
   onAddMeal: (messageId: string) => void;
   onComposerChange: (value: string) => void;
   onSend: (event?: FormEvent, preset?: string) => void;
@@ -57,12 +54,19 @@ type Props = {
   onProfile: () => void;
   onNavigate: (page: Page) => void;
   onEditMeal: (meal: Meal) => void;
+  onPantryLinks: (mealId: string) => void;
+  onPreferenceProposal: (messageId: string, accept: boolean) => void;
   onSample: () => void;
   onSetReps: (exercise: number, set: number, reps: number | null) => void;
   onResolve: (id: string, answer: string) => void;
 };
 
 export default function ChatLayer({
+  onDiscardMeal,
+  onSpotSettings,
+  onWorkoutCapture,
+  reviewMessageId,
+  onReviewFocused,
   state,
   composer,
   processing,
@@ -70,6 +74,12 @@ export default function ChatLayer({
   aiStage,
   onRetry,
   onGroceries,
+  onScan,
+  onPlan,
+  onPreferences,
+  onRecipes,
+  onAction,
+  onRecipePortion,
   onAddMeal,
   onComposerChange,
   onSend,
@@ -79,10 +89,26 @@ export default function ChatLayer({
   onProfile,
   onNavigate,
   onEditMeal,
+  onPantryLinks,
+  onPreferenceProposal,
   onSample,
   onSetReps,
   onResolve,
 }: Props) {
+  const [comeback, setComeback] = useState(() => {
+    try { return isComeback(localStorage.getItem('rep-and-plate.spot.last-visit') ?? state.spot?.lastVisit); }
+    catch { return isComeback(state.spot?.lastVisit); }
+  });
+  useEffect(() => {
+    const visit = () => { try { localStorage.setItem('rep-and-plate.spot.last-visit', new Date().toISOString()); } catch { /* Capture works without visit metadata. */ } };
+    visit();
+    window.addEventListener('pagehide',visit);
+    return () => {visit();window.removeEventListener('pagehide',visit);};
+  }, []);
+  const [catchup, setCatchup] = useState(false);
+  const [replayIntro,setReplayIntro] = useState(false);
+  const intro = replayIntro || (!state.spot?.introSeen && !hasSpotLog(state) && !state.messages.some(m => m.role === 'user'));
+  const latestSpot = messageSpot(state.messages.filter(m => m.role === 'assistant').at(-1));
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const threadRef = useRef<HTMLDivElement>(null);
@@ -93,6 +119,10 @@ export default function ChatLayer({
   const totals = sumNutrition(state.meals);
   const pending = state.reviews.filter((item) => !item.resolved);
   useEffect(() => {
+    if (reviewMessageId) {
+      lastCount.current = state.messages.length;
+      return;
+    }
     // Open at the start of the reference conversation; follow new captures as they arrive.
     if (state.messages.length === lastCount.current && !processing) return;
     lastCount.current = state.messages.length;
@@ -101,14 +131,29 @@ export default function ChatLayer({
       if (el) el.scrollTop = el.scrollHeight;
     });
     return () => cancelAnimationFrame(frame);
-  }, [state.messages.length, processing]);
+  }, [state.messages.length, processing, reviewMessageId]);
+
+  useEffect(() => {
+    if (!reviewMessageId) return;
+    const frame = requestAnimationFrame(() => {
+      const thread = threadRef.current;
+      const target = thread && Array.from(thread.querySelectorAll<HTMLElement>("[data-message-id]"))
+        .find(element => element.dataset.messageId === reviewMessageId);
+      if (thread && target) {
+        thread.scrollTop += target.getBoundingClientRect().top - thread.getBoundingClientRect().top - 16;
+        target.focus({ preventScroll: true });
+      }
+      onReviewFocused?.();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [reviewMessageId, onReviewFocused]);
 
   function sendFromMenu(message: string) {
     setMenuOpen(false);
     onSend(undefined, message);
   }
   return (
-    <section className="fuel-chat" aria-label="Fuel chat home">
+    <section className="fuel-chat" aria-label="Rep & Plate chat home">
       <FuelHeader
         isHome
         onHome={() => {
@@ -119,21 +164,7 @@ export default function ChatLayer({
         onNutrition={() => onSend(undefined, "How am I doing today?")}
         onProfile={onProfile}
       />
-      <div className="fuel-banner">
-        <FuelLeaf />
-        <div>
-          <strong>
-            {aiAvailable
-              ? "Just send what happened. I’ll track it."
-              : "Show me what you ate. I’ll figure it out."}
-          </strong>
-          <span>
-            {aiAvailable
-              ? "Meals, groceries, workouts. I’ve got you."
-              : "A photo, a quick question, and you’re set."}
-          </span>
-        </div>
-      </div>
+      <div className="spot-context"><PlateMark/><strong>Tell Spot.</strong><span>Your food. Your reps. Your pace.</span></div>
       <div
         className="fuel-conversation"
         ref={threadRef}
@@ -141,8 +172,11 @@ export default function ChatLayer({
         aria-label="Capture conversation"
         aria-live="polite"
       >
-        <div className="fuel-date">Today</div>
-        {state.messages.map((message, index) => {
+        <SpotWelcome key={intro ? 'intro' : 'welcome'} intro={intro} comeback={comeback} onDone={() => {setReplayIntro(false);setComeback(false);onSpotSettings({introSeen:true});}}
+          onCapture={() => inputRef.current?.focus()} onCatchup={() => {setCatchup(true);inputRef.current?.focus();}}/>
+        {catchup && <div className="spot-catchup"><strong>Catch me up.</strong> Send one moment at a time, with its date if it wasn’t today. A photo, screenshot or a few words is enough. We’ll check uncertain details before saving.<button className="spot-text-button" onClick={()=>setCatchup(false)}>Got it</button></div>}
+        <div className="fuel-date">Your conversation</div>
+        {state.messages.filter(m => m.id !== "welcome").map((message, index) => {
           if (
             processing &&
             !message.ai &&
@@ -166,6 +200,8 @@ export default function ChatLayer({
           return (
             <div
               key={message.id}
+              data-message-id={message.id}
+              tabIndex={-1}
               className={`fuel-message ${message.role} ${grouped ? "grouped" : ""} ${meal ? "with-meal" : ""} ${isInsight ? "with-insight" : ""}`}
             >
               {message.role === "assistant" && (
@@ -175,7 +211,7 @@ export default function ChatLayer({
                   {isInsight ? (
                     <BarChart3 size={23} strokeWidth={3} />
                   ) : (
-                    <FuelLeaf />
+                    <SpotAvatar {...messageSpot(message)} size={38} />
                   )}
                 </span>
               )}
@@ -191,6 +227,8 @@ export default function ChatLayer({
                     }
                   />
                 )}
+                {message.spotCheck && <SpotCheck><p>I need one detail.</p></SpotCheck>}
+                {message.workoutProposal && <SpotWorkoutCheck proposal={message.workoutProposal} status={message.workoutCaptureStatus ?? 'pending'} onResolve={accept=>onWorkoutCapture(message.id,accept)} onFix={()=>{onWorkoutCapture(message.id,false);onComposerChange('Correction to my workout: ');inputRef.current?.focus();}}/>}
                 {message.text && (
                   <div className="fuel-bubble">
                     {message.ai && message.role === "assistant" ? (
@@ -215,10 +253,14 @@ export default function ChatLayer({
                     onOpen={() => onGroceries(receipt.id)}
                   />
                 )}
+                {message.preferenceProposal && <PreferenceProposalCard proposal={message.preferenceProposal} status={message.preferenceStatus ?? "pending"} current={state.preferences ?? defaultPreferences()} onAccept={()=>onPreferenceProposal(message.id,true)} onDismiss={()=>onPreferenceProposal(message.id,false)}/>}
+                {message.recipePortionProposal && <RecipePortionProposalCard proposal={message.recipePortionProposal} batch={state.recipeBatches?.find(batch=>batch.id===message.recipePortionProposal?.batchId)} status={message.recipePortionProposalStatus??"pending"} onAccept={()=>onRecipePortion(message.id,true)} onDismiss={()=>onRecipePortion(message.id,false)}/>}
+                {message.suggestedAction && <button className="fuel-pantry-link-action" onClick={()=>onAction(message.suggestedAction!)}>{{pantry:"Open your pantry",recipes:"Open recipes & leftovers","meal-plan":"Open meal planner",preferences:"Review your preferences",workout:"Build a workout",shopping:"Open swaps, list & spending"}[message.suggestedAction]}<ChevronRight size={15}/></button>}
                 {message.mealProposal && !meal && (
                   <ProposedMeal
                     meal={message.mealProposal}
                     onAdd={() => onAddMeal(message.id)}
+                    onFix={() => {onDiscardMeal(message.id);onComposerChange(`Correction to ${message.mealProposal!.title}: `);inputRef.current?.focus();}}
                   />
                 )}
                 {message.warnings?.map((warning, i) => (
@@ -239,6 +281,7 @@ export default function ChatLayer({
                     </button>
                   </div>
                 ) : null}
+                {meal && !isExampleMeal(meal) && <SpotResult>{meal.calories} cal · {meal.protein}g protein</SpotResult>}
                 {meal && (
                   <button
                     className="fuel-meal-card"
@@ -250,17 +293,17 @@ export default function ChatLayer({
                         <img src={meal.image} alt="" />
                       ) : (
                         <span className="fuel-meal-placeholder">
-                          <FuelLeaf />
+                          <PlateMark />
                         </span>
                       )}
                       <span className="fuel-meal-details">
                         <strong>
-                          {meal.category === "Dinner"
+                          {!isExampleMeal(meal) && meal.category === "Dinner"
                             ? "Dinner added"
                             : meal.title}
                         </strong>
                         <span className="fuel-meal-description">
-                          {meal.category === "Dinner"
+                          {isExampleMeal(meal) ? "Sample capture" : meal.category === "Dinner"
                             ? meal.title
                             : meal.category === "Lunch"
                               ? "Lunch · estimated portions"
@@ -272,9 +315,9 @@ export default function ChatLayer({
                         </b>
                         <span className="fuel-meal-saved">
                           <span>
-                            <Check size={12} strokeWidth={3} />
+                            {isExampleMeal(meal) ? <Info size={12} /> : <Check size={12} strokeWidth={3} />}
                           </span>
-                          Added to {meal.category}
+                          {isExampleMeal(meal) ? "Example · not counted" : `Added to ${meal.category}`}
                         </span>
                       </span>
                     </span>
@@ -297,6 +340,8 @@ export default function ChatLayer({
                     )}
                   </button>
                 )}
+                {meal && !isExampleMeal(meal) && !meal.recipeBatchId && (state.groceries?.length ?? 0) > 0 && <button className="fuel-pantry-link-action" onClick={()=>onPantryLinks(meal.id)}>{meal.components?.some(component=>component.lotId) ? "Review pantry links" : "Which pantry ingredients did you use?"}<ChevronRight size={15}/></button>}
+                {meal?.recipeBatchId && <button className="fuel-pantry-link-action" onClick={onRecipes}>Review recipe portions<ChevronRight size={15}/></button>}
                 {message.kind === "summary" && (
                   <div className="fuel-inline-summary">
                     <span>
@@ -388,23 +433,19 @@ export default function ChatLayer({
             </div>
           );
         })}
-        {processing && (
-          <div className="fuel-typing" role="status">
-            <span className="fuel-assistant-avatar">
-              <FuelLeaf />
-            </span>
-            <span>
-              <i />
-              <i />
-              <i />
-            </span>
-            <span className="sr-only">Fuel is responding</span>
-            {aiStage && <small className="fuel-ai-status">{aiStage}</small>}
-          </div>
-        )}
+        {processing && <SpotProcessing side={latestSpot.side} detail={aiStage}/>}
+
       </div>
       <div className="fuel-compose-wrap">
         <form className="fuel-composer" onSubmit={onSend}>
+          <button
+            type="button"
+            className="fuel-icon fuel-composer-scan"
+            aria-label="Scan a barcode in chat"
+            onClick={onScan}
+          >
+            <ScanBarcode size={24} strokeWidth={1.9}/>
+          </button>
           <button
             type="button"
             className="fuel-icon"
@@ -423,8 +464,8 @@ export default function ChatLayer({
           </button>
           <input
             ref={inputRef}
-            aria-label="Message Fuel"
-            placeholder="Send a photo, screenshot, or message…"
+            aria-label="Message Rep & Plate"
+            placeholder="What happened?"
             maxLength={2000}
             value={composer}
             onChange={(event) => onComposerChange(event.target.value)}
@@ -450,10 +491,18 @@ export default function ChatLayer({
           )}
         </form>
       </div>
-      <FuelTabs active="Chat" onNavigate={onNavigate} onProfile={onProfile} />
+      <FuelTabs active="Chat" onNavigate={onNavigate} onScan={onScan} onCapture={() => inputRef.current?.focus()} />
       {menuOpen && (
-        <Modal title="Your Fuel" onClose={() => setMenuOpen(false)}>
+        <Modal title="Your space" onClose={() => setMenuOpen(false)}>
           <div className="fuel-menu">
+            <label className="spot-settings"><input type="checkbox" checked={state.spot?.visuals !== false} onChange={e=>onSpotSettings({visuals:e.target.checked})}/>Show Spot illustrations</label>
+            <button onClick={()=>{setReplayIntro(true);setComeback(false);setMenuOpen(false);threadRef.current?.scrollTo({top:0});}}>Meet Spot</button>
+            <button onClick={() => {setMenuOpen(false);onPlan();}}><PlateMark/><span>Plan my week</span><ChevronRight size={17}/></button>
+            <button onClick={() => {setMenuOpen(false);onRecipes();}}><PlateMark/><span>Recipes & leftovers</span><ChevronRight size={17}/></button>
+            <button onClick={() => {setMenuOpen(false);onPreferences();}}><Info size={21}/><span>Food & routine preferences</span><ChevronRight size={17}/></button>
+            <button onClick={() => {setMenuOpen(false);onScan();}}>
+              <ScanBarcode size={21}/><span>Scan a barcode</span><ChevronRight size={17}/>
+            </button>
             <button onClick={() => sendFromMenu("How am I doing today?")}>
               <BarChart3 size={21} />
               <span>Today’s nutrition</span>
@@ -510,7 +559,7 @@ export default function ChatLayer({
         </Modal>
       )}
       {aboutOpen && (
-        <Modal title="A preview of Fuel" onClose={() => setAboutOpen(false)}>
+        <Modal title="A preview of Rep & Plate" onClose={() => setAboutOpen(false)}>
           <div className="fuel-about">
             <p>
               {aiAvailable
@@ -519,9 +568,8 @@ export default function ChatLayer({
             </p>
             <p>
               Save groceries from a receipt, ask for meal ideas, or estimate a
-              meal or drink. Nutrition estimates are editable. Voice
-              transcription and device connections aren’t connected yet. The
-              opening conversation is a sample.
+              meal or drink. Nutrition estimates are editable. Voice recordings can be transcribed and reviewed before sending. Device connections aren’t connected yet. The
+              sample captures are excluded from your daily totals.
             </p>
             <button onClick={() => setAboutOpen(false)}>
               <Check size={17} />

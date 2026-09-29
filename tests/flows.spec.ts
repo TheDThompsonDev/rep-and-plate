@@ -1,10 +1,57 @@
 import { test, expect, type Page } from "@playwright/test";
+import { demoState } from "../src/domain";
+
+async function seedExamples(page: Page, includePersonalDinner = false) {
+  const state = demoState();
+  await page.clock.setFixedTime(new Date(`${state.meals[0].day}T12:00:00`));
+  if (includePersonalDinner)
+    state.meals = state.meals.map((meal) =>
+      meal.id === "chat-demo-dinner"
+        ? { ...meal, source: "Your confirmed dinner", example: false }
+        : meal,
+    );
+  await page.evaluate(
+    (state) => localStorage.setItem("fuel.prototype.v1", JSON.stringify(state)),
+    state,
+  );
+  await page.reload();
+}
+async function seedPersonalDinner(page: Page) {
+  const state = demoState();
+  const dinner = {
+    ...state.meals.find((meal) => meal.id === "chat-demo-dinner")!,
+    id: "personal-dinner",
+    source: "Your logged dinner",
+    example: false,
+  };
+  await page.clock.setFixedTime(new Date(`${dinner.day}T12:00:00`));
+  state.meals = [dinner];
+  state.reviews = [];
+  state.messages = [
+    {
+      id: "personal-dinner-card",
+      role: "assistant",
+      text: "Your saved dinner.",
+      time: dinner.time,
+      mealId: dinner.id,
+    },
+  ];
+  await page.evaluate(
+    (next) => localStorage.setItem("fuel.prototype.v1", JSON.stringify(next)),
+    state,
+  );
+  await page.reload();
+}
 
 async function send(page: Page, text: string) {
-  await page.getByRole("textbox", { name: "Message Fuel" }).fill(text);
+  await page
+    .getByRole("textbox", { name: "Message Rep & Plate" })
+    .fill(text);
   await page.getByRole("button", { name: "Send message", exact: true }).click();
   await expect(
-    page.getByRole("status").filter({ hasText: "Fuel is responding" }),
+    page
+      .getByRole("status")
+      .filter({ hasText: "Rep & Plate is responding" }),
   ).toHaveCount(0);
 }
 const stored = (page: Page) =>
@@ -111,40 +158,37 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-test("Chat is the default home with the reference layout and four destinations", async ({
+test("Chat starts clean with four destinations and direct barcode scanning", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await expect(
-    page.getByRole("heading", { name: "Fuel", exact: true }),
+    page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText("Show me what you ate. I’ll figure it out."),
+    page.getByText("Hey. I’m Spot."),
   ).toBeVisible();
   const tabs = page.getByRole("navigation", { name: "Chat navigation" });
   await expect(tabs.getByRole("button")).toHaveText([
     "Chat",
     "Nutrition",
+    "Scan",
     "Workouts",
-    "You",
+    "Kitchen",
   ]);
   await expect(page.locator(".sidebar")).toBeHidden();
   await expect(
     page.getByRole("button", { name: "Use voice", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("img", {
-      name: "Grilled chicken, rice, and broccoli dinner",
+    page.getByText("Part dinner plate. Part weight plate. Entirely too invested.", {
+      exact: false,
     }),
   ).toBeVisible();
-  expect(
-    await page
-      .locator(".fuel-message-photo")
-      .evaluate(
-        (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
-      ),
-  ).toBe(true);
+  await expect(page.locator(".fuel-message-photo")).toHaveCount(0);
+  expect((await stored(page)).meals).toEqual([]);
+  expect((await stored(page)).reviews).toEqual([]);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -157,7 +201,7 @@ test("Chat is the default home with the reference layout and four destinations",
   ).toBe(true);
   await page.goto("/#not-a-page");
   await expect(
-    page.getByRole("heading", { name: "Fuel", exact: true }),
+    page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
   expect(errors).toEqual([]);
 });
@@ -165,6 +209,7 @@ test("Chat is the default home with the reference layout and four destinations",
 test("chat meal corrections recalculate nutrition and survive refresh", async ({
   page,
 }) => {
+  await seedPersonalDinner(page);
   await page
     .getByRole("button", {
       name: "Edit Grilled Chicken, Rice, Broccoli",
@@ -179,19 +224,19 @@ test("chat meal corrections recalculate nutrition and survive refresh", async ({
   );
   await send(page, "How am I doing today?");
   await expect(page.locator(".fuel-inline-summary").last()).toContainText(
-    "2,060",
+    "700",
   );
   await expect(page.locator(".fuel-inline-summary").last()).toContainText(
-    "113g",
+    "55g",
   );
   await page.reload();
   expect(
     (await stored(page)).meals.find(
-      (m: { id: string }) => m.id === "chat-demo-dinner",
+      (m: { id: string }) => m.id === "personal-dinner",
     ).calories,
   ).toBe(700);
   await expect(
-    page.getByRole("heading", { name: "Fuel", exact: true }),
+    page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
 });
 
@@ -201,22 +246,32 @@ test("sample photo asks one portion question before adding a meal, including aft
   await page.getByRole("button", { name: "Open chat menu" }).click();
   await page.getByRole("button", { name: "Try a sample capture" }).click();
   await page.getByRole("button", { name: /A home-cooked dinner/ }).click();
-  expect((await stored(page)).meals).toHaveLength(4);
+  expect((await stored(page)).meals).toHaveLength(0);
   await expect(
     page.getByText("Was that about 1 cup of rice?", { exact: true }).last(),
   ).toBeVisible();
   await page.reload();
   await send(page, "2 cups");
   const state = await stored(page);
-  expect(state.meals).toHaveLength(5);
+  expect(state.meals).toHaveLength(1);
   expect(state.meals.at(-1).calories).toBe(815);
+  expect(state.meals.at(-1).example).toBe(true);
   expect(state.pendingMeal).toBeUndefined();
   await expect(page.locator(".fuel-meal-card").last()).toBeInViewport();
+  await expect(page.locator(".fuel-meal-card").last()).toContainText(
+    "Example · not counted",
+  );
+  await page.getByRole("button", { name: "Nutrition", exact: true }).click();
+  await expect(page.locator(".nutrition-ring-label strong")).toHaveText("0");
+  await expect(
+    page.getByRole("region", { name: "Today's logged meals" }),
+  ).toContainText("Nothing here yet.");
 });
 
 test("unknown text can be reviewed and resolved without leaving chat", async ({
   page,
 }) => {
+  await seedExamples(page);
   await send(page, "Something unfamiliar for lunch");
   await expect(
     page.getByText("Saved your words for review.", { exact: false }),
@@ -240,7 +295,7 @@ test("unknown text can be reviewed and resolved without leaving chat", async ({
     page.getByText("Everything is taken care of.", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Fuel", exact: true }),
+    page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
 });
 
@@ -279,16 +334,16 @@ test("uploaded image stays in chat and persists without guessed nutrition", asyn
   ).toBeVisible();
   await page.getByRole("button", { name: "Save my image for review" }).click();
   await expect(
-    page.getByRole("heading", { name: "Fuel", exact: true }),
+    page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("img", { name: "Your captured photo or screenshot" }),
   ).toBeVisible();
-  expect((await stored(page)).meals).toHaveLength(4);
+  expect((await stored(page)).meals).toHaveLength(0);
   await page.reload();
   const state = await stored(page);
   expect(state.reviews.at(-1).image).toMatch(/^data:image\/jpeg;base64,/);
-  expect(state.meals).toHaveLength(4);
+  expect(state.meals).toHaveLength(0);
 });
 
 test("secondary screens return home to Chat and profile is keyboard accessible", async ({
@@ -298,20 +353,15 @@ test("secondary screens return home to Chat and profile is keyboard accessible",
     .getByRole("navigation", { name: "Chat navigation" })
     .getByRole("button", { name: "Nutrition", exact: true })
     .click();
-  await expect(page.locator(".nutrition-ring-label strong")).toHaveText(
-    "1,970",
-  );
+  await expect(page.locator(".nutrition-ring-label strong")).toHaveText("0");
   const navName = "Nutrition navigation";
   await page
     .getByRole("navigation", { name: navName, exact: true })
     .getByRole("button", { name: "Chat", exact: true })
     .click();
-  await page
-    .getByRole("navigation", { name: "Chat navigation" })
-    .getByRole("button", { name: "You", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Your space, your pace.", exact: true }),
+    page.getByRole("heading", { name: /^Looking ahead, / }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Edit your profile", exact: true })
@@ -327,15 +377,11 @@ test("secondary screens return home to Chat and profile is keyboard accessible",
 test("You reviews and goals update shared records and persist", async ({
   page,
 }) => {
-  await page
-    .getByRole("navigation", { name: "Chat navigation" })
-    .getByRole("button", { name: "You", exact: true })
-    .click();
+  await seedExamples(page);
+  await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await expect(page).toHaveURL(/#you$/);
   await expect(
-    page
-      .getByRole("navigation", { name: "You navigation" })
-      .getByRole("button", { name: "You", exact: true }),
+    page.getByRole("button", { name: "Your profile", exact: true }),
   ).toHaveAttribute("aria-current", "page");
   await expect(
     page.getByText("2 little things to review", { exact: true }),
@@ -367,19 +413,19 @@ test("You reviews and goals update shared records and persist", async ({
     .getByRole("button", { name: "Save preferences", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Alex", exact: true }),
+    page.getByRole("heading", { name: "Looking ahead, Alex.", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("region", { name: "Your daily goals" }),
   ).toContainText("2,200");
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "Alex", exact: true }),
+    page.getByRole("heading", { name: "Looking ahead, Alex.", exact: true }),
   ).toBeVisible();
   expect((await stored(page)).meals).toHaveLength(resolvedState.meals.length);
   await page.getByRole("button", { name: /Your data & privacy/ }).click();
   await expect(page.getByRole("dialog")).toContainText(
-    "There’s no account or cloud sync",
+    "Changes are not automatically synced.",
   );
   await page.keyboard.press("Escape");
   expect(
@@ -391,18 +437,18 @@ test("You reviews and goals update shared records and persist", async ({
   await expect(
     page.getByRole("navigation", { name: "You navigation" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Fuel home", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Rep & Plate home", exact: true })
+    .click();
   await expect(page).toHaveURL(/#chat$/);
 });
 
 test("You shows captured notes, editable meals, and real workout history", async ({
   page,
 }) => {
+  await seedExamples(page, true);
   await send(page, "A note about my walk today");
-  await page
-    .getByRole("navigation", { name: "Chat navigation" })
-    .getByRole("button", { name: "You", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await page
     .getByRole("button", { name: "See all 3 reviews", exact: true })
     .click();
@@ -410,6 +456,9 @@ test("You shows captured notes, editable meals, and real workout history", async
     .getByRole("button", { name: "Keep as a note", exact: true })
     .click();
   await page.getByRole("button", { name: /Meals & captures/ }).click();
+  await expect(page.getByRole("dialog")).not.toContainText(
+    "Avocado toast & eggs",
+  );
   await expect(page.getByRole("dialog")).toContainText(
     "A note about my walk today",
   );
@@ -444,10 +493,7 @@ test("You shows captured notes, editable meals, and real workout history", async
   await page
     .getByRole("button", { name: "Bench Press set 1: 8 reps", exact: true })
     .click();
-  await page
-    .getByRole("navigation", { name: "Workouts navigation" })
-    .getByRole("button", { name: "You", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await page.getByRole("button", { name: /Workout history/ }).click();
   await expect(page.getByRole("dialog")).toContainText("1 sets recorded");
   await expect(page.getByRole("dialog")).toContainText("In progress");
@@ -459,7 +505,7 @@ test("You shows captured notes, editable meals, and real workout history", async
   ).toBeVisible();
 });
 
-test("nutrition matches the reference sections and opens insight and swap context", async ({
+test("nutrition uses personal evidence and opens pantry comparisons without sample claims", async ({
   page,
 }) => {
   await page
@@ -467,10 +513,15 @@ test("nutrition matches the reference sections and opens insight and swap contex
     .getByRole("button", { name: "Nutrition", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: /Here’s what we’re learning/ }),
+    page.getByRole("heading", {
+      name: "Your day is coming together.",
+      exact: true,
+    }),
   ).toBeVisible();
-  await expect(page.locator(".nutrition-insight")).toHaveCount(3);
-  await expect(page.locator(".nutrition-swap")).toHaveCount(2);
+  await expect(page.locator(".nutrition-insight")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: /Compare foods in your pantry/ }),
+  ).toBeVisible();
   await expect(
     page
       .getByRole("navigation", { name: "Nutrition navigation" })
@@ -486,40 +537,36 @@ test("nutrition matches the reference sections and opens insight and swap contex
       .locator(".nutrition-scroll")
       .evaluate((el) => el.scrollWidth <= el.clientWidth),
   ).toBe(true);
-  await page.locator(".nutrition-insight").first().click();
-  await expect(page.getByRole("dialog")).toContainText("Sample history");
-  await page.getByRole("button", { name: "Got it", exact: true }).click();
-  await page.getByRole("button", { name: "See all", exact: true }).click();
-  await expect(page.locator(".nutrition-all-insight")).toHaveCount(3);
+  await page
+    .getByRole("button", { name: "Open nutrition menu", exact: true })
+    .click();
+  await page.getByRole("button", { name: "All insights", exact: true }).click();
+  await expect(page.locator(".nutrition-all-insight")).toHaveCount(1);
+  await page.locator(".nutrition-all-insight").first().click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "Example meals don't establish a pattern",
+  );
   await page.keyboard.press("Escape");
   await page
-    .getByRole("button", {
-      name: "Starbucks Frappuccino to Iced Americano",
-      exact: true,
-    })
+    .getByRole("button", { name: /Compare foods in your pantry/ })
     .click();
   await expect(page.getByRole("dialog")).toContainText(
-    "About 390 fewer calories",
+    "There aren’t two ready-to-compare foods yet",
   );
-  await page.getByRole("button", { name: "Got it", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Ranch Dressing to Salsa", exact: true })
-    .click();
-  await expect(page.getByRole("dialog")).toContainText(
-    "About 130 fewer calories",
+  await expect(page.getByRole("dialog")).not.toContainText(
+    "390 fewer calories",
   );
 });
 
 test("nutrition ring opens editable records and macro percentages follow actual totals", async ({
   page,
 }) => {
+  await seedPersonalDinner(page);
   await page.goto("/#nutrition");
-  await expect(page.locator(".nutrition-ring-label strong")).toHaveText(
-    "1,970",
-  );
+  await expect(page.locator(".nutrition-ring-label strong")).toHaveText("610");
   await expect(
     page.locator(".nutrition-macro.protein .nutrition-macro-percent"),
-  ).toHaveText("97%");
+  ).toHaveText("45%");
   await page
     .getByRole("button", { name: "View and edit today’s meals" })
     .click();
@@ -532,21 +579,19 @@ test("nutrition ring opens editable records and macro percentages follow actual 
   await page.getByLabel("Calories", { exact: true }).fill("100");
   await page.getByLabel("Protein (g)", { exact: true }).fill("0");
   await page.getByRole("button", { name: "Save changes" }).click();
-  await expect(page.locator(".nutrition-ring-label strong")).toHaveText(
-    "1,460",
-  );
+  await expect(page.locator(".nutrition-ring-label strong")).toHaveText("100");
   await expect(page.locator(".nutrition-remaining")).toHaveText(
-    "540 calories left",
+    "1,900 calories left",
   );
   await expect(
     page.locator(".nutrition-macro.protein .nutrition-macro-percent"),
-  ).toHaveText("53%");
+  ).toHaveText("0%");
   await page.reload();
-  await expect(page.locator(".nutrition-ring-label strong")).toHaveText(
-    "1,460",
-  );
-  await page.getByRole("button", { name: "Fuel home", exact: true }).click();
+  await expect(page.locator(".nutrition-ring-label strong")).toHaveText("100");
+  await page
+    .getByRole("button", { name: "Rep & Plate home", exact: true })
+    .click();
   await expect(
-    page.getByRole("heading", { name: "Fuel", exact: true }),
+    page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
 });

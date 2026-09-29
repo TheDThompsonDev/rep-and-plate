@@ -1,0 +1,75 @@
+.meal-proposal-breakdown {
+  border: 1px solid #dcebe3;
+  border-radius: 15px;
+  padding: 13px;
+  background: #f8fcfa;
+  margin-top: 12px;
+  color: #284b40;
+}
+.meal-proposal-breakdown summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+.meal-proposal-breakdown summary::-webkit-details-marker {
+  display: none;
+}
+.meal-proposal-breakdown summary small {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #75877d;
+}
+.meal-proposal-breakdown[open] summary > svg {
+  transform: rotate(180deg);
+}
+.meal-proposal-breakdown > p {
+  color: #71847b;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+.meal-proposal-breakdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.meal-proposal-breakdown li {
+  display: grid;
+  gap: 7px;
+  padding: 12px 0;
+  border-top: 1px solid #e3ece7;
+}
+.meal-proposal-breakdown li > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.meal-proposal-breakdown li strong {
+  font-size: 13px;
+}
+.meal-proposal-breakdown li span {
+  color: #71847b;
+  font-size: 12px;
+}
+.meal-proposal-component-total {
+  display: grid;
+  gap: 5px;
+  padding-top: 12px;
+  border-top: 1px solid #d5e6dc;
+  color: #17634f;
+  font-size: 13px;
+}
+.meal-proposal-breakdown summary:focus-visible {
+  outline: 2px solid #218263;
+  outline-offset: 4px;
+  border-radius: 4px;
+}

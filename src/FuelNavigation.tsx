@@ -1,8 +1,17 @@
-import { BarChart3, Dumbbell, Home, Menu, UserRound } from "lucide-react";
+import { SpotAvatar, SpotLean } from "./features/spot/Spot";
+import {
+  BarChart3,
+  Dumbbell,
+  ScanBarcode,
+  CookingPot,
+  Menu,
+  UserRound,
+} from "lucide-react";
 import { APP_NAME, type Page } from "./domain";
 
 export function FuelHeader({
   isHome = false,
+  profileActive = false,
   menuLabel,
   onHome,
   onMenu,
@@ -10,6 +19,7 @@ export function FuelHeader({
   onProfile,
 }: {
   isHome?: boolean;
+  profileActive?: boolean;
   menuLabel?: string;
   onHome: () => void;
   onMenu: () => void;
@@ -27,11 +37,25 @@ export function FuelHeader({
       >
         <Menu size={27} strokeWidth={1.8} />
       </button>
-      <button className="fuel-wordmark" aria-label="Fuel home" onClick={onHome}>
+      <button
+        className="fuel-wordmark"
+        aria-label="Rep & Plate home"
+        onClick={onHome}
+      >
         {isHome ? (
-          <h1>{APP_NAME}</h1>
+          <h1>
+            <span className="spot-wordmark-text">
+              {APP_NAME}
+              <SpotLean />
+            </span>
+          </h1>
         ) : (
-          <span className="fuel-logo-text">{APP_NAME}</span>
+          <span className="fuel-logo-text">
+            <span className="spot-wordmark-text">
+              {APP_NAME}
+              <SpotLean />
+            </span>
+          </span>
         )}
       </button>
       <div className="fuel-header-actions">
@@ -45,6 +69,7 @@ export function FuelHeader({
         <button
           className="fuel-profile"
           aria-label="Your profile"
+          aria-current={profileActive ? "page" : undefined}
           onClick={onProfile}
         >
           <UserRound size={21} strokeWidth={2.5} />
@@ -57,41 +82,61 @@ export function FuelHeader({
 export function FuelTabs({
   active,
   onNavigate,
-  onProfile,
+  onScan,
+  onCapture,
 }: {
-  active: "Chat" | "Nutrition" | "Workouts" | "You";
+  active: "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "You";
   onNavigate: (page: Page) => void;
-  onProfile: () => void;
+  onScan: () => void;
+  onCapture?: () => void;
 }) {
   return (
     <nav className="fuel-tabs" aria-label={`${active} navigation`}>
       {[
-        { name: "Chat" as const, icon: Home },
+        { name: "Chat" as const, icon: ScanBarcode },
         { name: "Nutrition" as const, icon: BarChart3 },
+        { name: "Scan" as const, icon: ScanBarcode },
         { name: "Workouts" as const, icon: Dumbbell },
-      ].map(({ name, icon: Icon }) => (
-        <button
-          key={name}
-          className={name === active ? "selected" : ""}
-          aria-current={name === active ? "page" : undefined}
-          onClick={() => onNavigate(name)}
-        >
-          <Icon
-            size={25}
-            fill={name === "Chat" ? "currentColor" : "none"}
-            strokeWidth={name === "Nutrition" ? 3 : name === "Chat" ? 1.5 : 2.4}
-          />
-          <span>{name}</span>
-        </button>
-      ))}
-      <button
-        onClick={onProfile}
-        className={active === "You" ? "selected" : ""}
-        aria-current={active === "You" ? "page" : undefined}
-      >
-        <UserRound size={25} fill="currentColor" strokeWidth={1.5} />
-        <span>You</span>
-      </button>
+        { name: "Kitchen" as const, icon: CookingPot },
+      ].map(({ name, icon: Icon }) =>
+        name === "Scan" ? (
+          <button
+            key={name}
+            type="button"
+            className="fuel-tab-scan"
+            aria-label="Scan a barcode"
+            onClick={onScan}
+          >
+            <span className="fuel-tab-scan-icon">
+              <ScanBarcode size={25} aria-hidden="true" />
+            </span>
+            <span>Scan</span>
+          </button>
+        ) : (
+          <button
+            key={name}
+            className={name === active ? "selected" : ""}
+            aria-current={name === active ? "page" : undefined}
+            onClick={() => {
+              if (name === "Chat" && onCapture) onCapture();
+              else onNavigate(name);
+            }}
+          >
+            {name === "Chat" ? (
+              <span className="fuel-chat-spot-icon">
+                <SpotAvatar size={34} expression="welcome" />
+              </span>
+            ) : (
+              <Icon
+                size={25}
+                strokeWidth={name === "Nutrition" ? 3 : 2.4}
+                aria-hidden="true"
+              />
+            )}
+            <span>{name}</span>
+          </button>
+        ),
+      )}
     </nav>
   );
 }

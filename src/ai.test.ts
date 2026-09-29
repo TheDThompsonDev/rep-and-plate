@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { initialState, sumNutrition, stateSchema } from "./domain";
-import { addProposedMeal, applyAIResult, buildAIRequest } from "./ai-client";
+import { addProposedMeal, applyAIResult, buildAIRequest, resolvePreferenceProposal } from "./ai-client";
 import { safeUrl } from "./ai-contract";
 import { resultFixture } from "../tests/ai-fixtures";
 function stateWithRequest() {
@@ -74,6 +74,19 @@ describe("AI record transitions", () => {
       saved.meals.length,
     );
   });
+  it("saves the reviewed breakdown once without consuming pantry stock", () => {
+    const {state,id}=stateWithRequest();
+    const components=[{name:"Whole milk",portion:"1 cup",nutrition:{calories:150,protein:8,carbs:12,fat:8}},{name:"Syrup",portion:"1 tbsp",nutrition:{calories:50,protein:0,carbs:13,fat:0}}];
+    const result={...resultFixture(id),decision:"meal" as const,receipt:null,meal:{title:"Chai",category:"Snack" as const,portion:"1 mug",note:"Includes milk and syrup.",sources:[],calories:1,protein:1,carbs:1,fat:1,components}};
+    const proposed=applyAIResult(state,result);
+    expect(proposed.meals).toEqual(state.meals);
+    const saved=addProposedMeal(proposed,`answer-${id}`);
+    expect(saved.meals.at(-1)).toMatchObject({calories:200,protein:8,carbs:25,fat:8,components:components.map(component=>({name:component.name,servings:1,servingLabel:component.portion,nutrition:component.nutrition}))});
+    expect(saved.meals.at(-1)?.components?.every(component=>!component.lotId)).toBe(true);
+    expect(saved.pantryEvents).toEqual(state.pantryEvents);
+    expect(stateSchema.parse(saved).meals.at(-1)?.components).toHaveLength(2);
+    expect(addProposedMeal(saved,`answer-${id}`)).toBe(saved);
+  });
   it("sends bounded AI history and excludes used groceries and sample chat", () => {
     const { state, id } = stateWithRequest();
     const next = applyAIResult(state, resultFixture(id));
@@ -97,4 +110,14 @@ describe("AI record transitions", () => {
     expect(safeUrl("https://user:password@example.com")).toBe(false);
     expect(safeUrl("https://www.kroger.com/product")).toBe(true);
   });
+});
+
+
+describe("preference confirmation lifecycle",()=>{
+ it("persists a proposal without applying it, then accepts once without duplicate values",()=>{
+  const {state,id}=stateWithRequest();const result={...resultFixture(id),receipt:null,decision:"conversation" as const,preferenceProposal:{evidence:"I dislike mushrooms",description:"Skip mushrooms",changes:[{field:"dislikes" as const,operation:"add" as const,value:"mushrooms"}]}};
+  const proposed=applyAIResult(state,result);expect(proposed.preferences).toEqual(state.preferences);const messageId=proposed.messages.at(-1)!.id;
+  const accepted=resolvePreferenceProposal(proposed,messageId,true);expect(accepted.preferences?.dislikes).toEqual(["mushrooms"]);expect(resolvePreferenceProposal(accepted,messageId,true)).toBe(accepted);expect(stateSchema.parse(accepted).messages.at(-1)?.preferenceStatus).toBe("accepted");
+  const dismissed=resolvePreferenceProposal(proposed,messageId,false);expect(dismissed.preferences).toEqual(state.preferences);expect(resolvePreferenceProposal(dismissed,messageId,true)).toBe(dismissed);
+ });
 });

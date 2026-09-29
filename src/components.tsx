@@ -4,7 +4,7 @@ import {
   Check,
   ChevronRight,
   Coffee,
-  Leaf,
+  CircleDot,
   Pencil,
   X,
   type LucideIcon,
@@ -15,7 +15,7 @@ export function Brand({ small = false }: { small?: boolean }) {
   return (
     <span className={`brand ${small ? "small" : ""}`}>
       <span className="brand-symbol">
-        <Leaf size={small ? 20 : 25} strokeWidth={1.7} />
+        <CircleDot size={small ? 20 : 25} strokeWidth={1.7} />
       </span>
       {APP_NAME}
       <span className="brand-dot">.</span>
@@ -191,6 +191,7 @@ export function Modal({
   }, []);
   return (
     <dialog
+      aria-label={title}
       ref={ref}
       className={`modal ${wide ? "wide" : ""}`}
       onCancel={(e) => {

@@ -1,0 +1,230 @@
+.recipe-dialog {
+  display: grid;
+  gap: 18px;
+  color: #132b32;
+}
+.recipe-dialog h3,
+.recipe-dialog h4,
+.recipe-dialog p {
+  margin: 0;
+}
+.recipe-dialog p {
+  line-height: 1.5;
+  color: #73818c;
+  font-size: 14px;
+}
+.recipe-intro {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 18px;
+  background: #e9f7f1;
+  border-radius: 20px;
+}
+.recipe-intro > span {
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  height: 48px;
+  background: #d7eee4;
+  border-radius: 50%;
+  color: #146850;
+}
+.recipe-intro h3 {
+  margin-bottom: 5px;
+}
+.recipe-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.recipe-text {
+  border: 0;
+  background: transparent;
+  color: #15664f;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.recipe-text:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.recipe-prepare,
+.recipe-batch {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid #e0e7e4;
+  border-radius: 20px;
+  background: #fff;
+}
+.recipe-dialog label:not(.recipe-check) {
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.recipe-dialog input:not([type="checkbox"]),
+.recipe-dialog select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dce4e1;
+  border-radius: 11px;
+  background: #fafcfb;
+  padding: 12px;
+  font-size: 16px;
+  color: #173b31;
+  min-height: 45px;
+}
+.recipe-dialog input:focus,
+.recipe-dialog select:focus {
+  outline: 2px solid #48a386;
+  outline-offset: 2px;
+}
+.recipe-ingredient {
+  padding: 14px;
+  background: #f8faf9;
+  border-radius: 14px;
+  display: grid;
+  gap: 9px;
+}
+.recipe-check {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+}
+.recipe-check input {
+  accent-color: #146850;
+  width: 18px;
+  height: 18px;
+}
+.recipe-check span {
+  display: grid;
+  gap: 4px;
+}
+.recipe-check small {
+  color: #73818c;
+  font-weight: 400;
+}
+.recipe-blocked {
+  color: #8b6835;
+  line-height: 1.5;
+}
+.recipe-review {
+  display: grid;
+  gap: 9px;
+  background: #edf8f2;
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 14px;
+}
+.recipe-error,
+.recipe-notice {
+  padding: 13px;
+  border-radius: 12px;
+}
+.recipe-error {
+  background: #fff0ec;
+  color: #963d29 !important;
+}
+.recipe-notice {
+  background: #e8f7ee;
+  color: #176246 !important;
+}
+.recipe-empty {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  text-align: center;
+  padding: 30px 20px;
+  background: #f7faf8;
+  border-radius: 18px;
+  color: #34856c;
+}
+.recipe-badge {
+  background: #e6f4ed;
+  color: #17624d;
+  border-radius: 12px;
+  padding: 8px 10px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.recipe-macros {
+  color: #15684e !important;
+  font-size: 18px !important;
+  font-weight: 650;
+}
+.recipe-macros small {
+  font-size: 12px;
+  font-weight: 400;
+}
+.recipe-batch details {
+  font-size: 13px;
+  color: #55716a;
+}
+.recipe-batch summary {
+  cursor: pointer;
+  min-height: 30px;
+}
+.recipe-snapshot {
+  display: grid;
+  gap: 4px;
+  padding: 12px 0;
+  border-top: 1px solid #edf1ef;
+}
+.recipe-snapshot a {
+  color: #17664e;
+}
+.recipe-portion {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+.recipe-portion button {
+  grid-column: 1/-1;
+}
+.recipe-history {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid #e7eee9;
+  padding-top: 15px;
+}
+.recipe-history h4 {
+  font-size: 14px;
+}
+.recipe-footnote {
+  font-size: 12px !important;
+}
+.recipe-dialog .button {
+  min-height: 45px;
+}
+@media (max-width: 600px) {
+  .recipe-prepare,
+  .recipe-batch {
+    padding: 15px;
+  }
+  .recipe-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .recipe-portion {
+    grid-template-columns: 1fr;
+  }
+  .recipe-badge {
+    white-space: normal;
+  }
+  .recipe-intro {
+    padding: 14px;
+  }
+  .recipe-dialog {
+    gap: 15px;
+  }
+}

@@ -48,15 +48,18 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  padding: 4px 12px;
+  padding: 4px 0;
+  max-width: calc(100% - 172px);
+  white-space: nowrap;
 }
 .fuel-wordmark:active:not(:disabled) {
   transform: translateX(-50%);
 }
-.fuel-wordmark h1 {
-  font-size: 34px;
+.fuel-wordmark h1,
+.fuel-wordmark .fuel-logo-text {
+  font-size: clamp(18px, 5vw, 28px);
   line-height: 1;
-  letter-spacing: -1.5px;
+  letter-spacing: -0.8px;
   font-weight: 750;
   margin: 0;
   color: #103d37;
@@ -393,7 +396,9 @@
   width: 32px;
   height: 39px;
   color: #687580;
+  flex-shrink: 0;
 }
+.fuel-composer > .fuel-composer-scan { color: #14654f; background: #eaf6ef; border-radius: 12px; }
 .fuel-composer input {
   height: 43px;
   flex: 1;
@@ -473,6 +478,10 @@
   height: 25px;
   width: 25px;
 }
+.fuel-tabs > .fuel-tab-scan { color: #14654f; font-weight: 650; gap: 3px; height: 62px; transform: translateY(-5px); }
+.fuel-tab-scan-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; background: #17674f; color: white; box-shadow: 0 3px 8px #12503c20; flex-shrink: 0; }
+.fuel-tabs > .fuel-tab-scan:hover .fuel-tab-scan-icon { background: #104e3c; }
+.fuel-tabs > button:focus-visible, .fuel-composer > button:focus-visible { outline: 2px solid #277c62; outline-offset: 2px; }
 .fuel-menu {
   display: flex;
   flex-direction: column;
@@ -707,8 +716,8 @@
     padding: 0 20px;
   }
   .fuel-wordmark h1 {
-    font-size: 29px;
-    letter-spacing: -1.1px;
+    font-size: clamp(18px, 5vw, 28px);
+    letter-spacing: -0.8px;
   }
   .fuel-header-actions {
     gap: 13px;
@@ -897,8 +906,8 @@
     gap: 6px;
   }
   .fuel-composer > .fuel-icon {
-    width: 26px;
-    height: 34px;
+    width: 38px;
+    height: 40px;
   }
   .fuel-composer > .fuel-icon > svg {
     width: 23px;
@@ -931,6 +940,8 @@
     gap: 5px;
     font-size: 11px;
   }
+  .fuel-tabs > .fuel-tab-scan { height: 58px; gap: 2px; transform: translateY(-4px); }
+  .fuel-tab-scan-icon { width: 37px; height: 37px; border-radius: 13px; }
   .fuel-tabs svg {
     height: 24px;
     width: 24px;
@@ -1102,3 +1113,6 @@
     margin-top: 5px;
   }
 }
+
+.fuel-pantry-link-action{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:5px 0 0 42px;padding:10px 13px;max-width:calc(100% - 42px);border:1px solid #d5e9df;border-radius:14px;background:#eff8f3;color:#17634e;font:inherit;font-size:13px;text-align:left;}
+.fuel-pantry-link-action:focus-visible{outline:2px solid #19785b;outline-offset:3px;}

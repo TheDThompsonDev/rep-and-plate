@@ -1,4 +1,15 @@
 import { z } from "zod";
+import { workoutCaptureSchema } from './features/spot/contracts.ts';
+import { receiptPurchaseSchema, receiptLinePriceSchema } from './features/shopping/contracts.ts';
+import { preferenceProposalSchema } from "./features/preferences/proposals.ts";
+import { preferencesSchema } from "./features/preferences/contracts.ts";
+import { productSchema } from "./features/products/contracts.ts";
+import { pantryDatesSchema } from "./features/pantry/date-contract.ts";
+import { proposalComponentsSchema } from "./features/meals/proposals.ts";
+import { recipePortionProposalSchema } from "./features/recipes/proposal-contract.ts";
+
+export const chatActionSchema = z.enum(["pantry", "recipes", "meal-plan", "preferences", "workout", "shopping"]);
+export type ChatAction = z.infer<typeof chatActionSchema>;
 
 export const safeUrl = (value: string) => {
   try {
@@ -26,6 +37,10 @@ export const aiNutritionSchema = z.object({
   fat: z.number().min(0).max(2000),
 });
 export const groceryItemSchema = z.object({
+  price: receiptLinePriceSchema.optional(),
+  productCandidates: z.array(productSchema).max(3).optional(),
+  pantryDates: pantryDatesSchema.optional(),
+  productSnapshot: productSchema.optional(),
   id: z.string(),
   receiptText: z.string().max(300),
   name: z.string().max(200),
@@ -41,6 +56,7 @@ export const groceryItemSchema = z.object({
 });
 export type GroceryItem = z.infer<typeof groceryItemSchema>;
 export const groceryReceiptSchema = z.object({
+  purchase: receiptPurchaseSchema.optional(),
   id: z.string(),
   fingerprint: z.string(),
   store: z.string(),
@@ -51,6 +67,8 @@ export const groceryReceiptSchema = z.object({
 });
 export type GroceryReceipt = z.infer<typeof groceryReceiptSchema>;
 export const mealProposalSchema = aiNutritionSchema.extend({
+  day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  components: proposalComponentsSchema.optional(),
   title: z.string().max(200),
   category: z.enum(["Breakfast", "Lunch", "Dinner", "Snack"]),
   portion: z.string().max(300),
@@ -59,6 +77,10 @@ export const mealProposalSchema = aiNutritionSchema.extend({
 });
 export type MealProposal = z.infer<typeof mealProposalSchema>;
 export const aiResultSchema = z.object({
+  workout: workoutCaptureSchema.nullable().optional(),
+  recipePortionProposal: recipePortionProposalSchema.nullable().optional(),
+  suggestedAction: chatActionSchema.nullable().optional(),
+  preferenceProposal: preferenceProposalSchema.nullable().optional(),
   requestId: z.string(),
   reply: z.string().max(16000),
   sources: z.array(sourceSchema).max(30),
@@ -87,6 +109,20 @@ export const aiRequestSchema = z.object({
     )
     .max(20),
   context: z.object({
+    shopping: z.object({
+      totals: z.record(z.string().regex(/^[A-Z]{3}$/),z.number().nonnegative()),
+      recordedReceipts: z.number().int().nonnegative(), reviewedReceipts:z.number().int().nonnegative(),
+      missingOrUncheckedTotals:z.number().int().nonnegative(),
+      list:z.array(z.object({name:z.string().max(300),quantity:z.string().max(150),checked:z.boolean()})).max(50),
+    }).optional(),
+    preparedRecipes: z.array(z.object({
+      id: z.string().max(200),
+      name: z.string().max(200),
+      preparedAt: z.string().max(40),
+      remainingPortions: z.number().finite().positive().max(10000),
+      nutritionPerPortion: aiNutritionSchema,
+    })).max(30).optional(),
+    preferences: preferencesSchema.optional(),
     goals: z.object({
       calories: z.number(),
       protein: z.number(),

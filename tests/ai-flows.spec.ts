@@ -3,7 +3,9 @@ import { resultFixture } from "./ai-fixtures";
 const stored = (page: Page) =>
   page.evaluate(() => JSON.parse(localStorage.getItem("fuel.prototype.v1")!));
 const send = async (page: Page, text: string) => {
-  await page.getByRole("textbox", { name: "Message Fuel" }).fill(text);
+  await page
+    .getByRole("textbox", { name: "Message Rep & Plate" })
+    .fill(text);
   await page.getByRole("button", { name: "Send message", exact: true }).click();
 };
 test.beforeEach(async ({ page }) => {
@@ -42,11 +44,14 @@ test("Receipt capture researches groceries, persists edits, and does not change 
   await page
     .getByRole("textbox", { name: "Anything to add? (optional)" })
     .fill("My grocery receipt");
-  await page.getByRole("button", { name: "Send to Fuel", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Send to Rep & Plate", exact: true })
+    .click();
   await expect(page.locator(".fuel-grocery-card")).toBeVisible();
   expect(requests[0].image).toMatch(/^data:image\/png;base64,/);
   expect((await stored(page)).meals).toEqual(before.meals);
   await page.locator(".fuel-grocery-card").click();
+  await page.getByRole("button", { name: "Check purchase details" }).click();
   await expect(page.getByRole("dialog")).toContainText(
     "Estimated purchase total · partial",
   );
@@ -85,11 +90,9 @@ test("Receipt capture researches groceries, persists edits, and does not change 
   ).toBeVisible();
   expect((await stored(page)).groceries).toHaveLength(1);
   expect((await stored(page)).groceries[0].items[0].name).toBe("My whole milk");
-  await page
-    .getByRole("navigation", { name: "Chat navigation" })
-    .getByRole("button", { name: "You", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await page.getByRole("button", { name: /Groceries & pantry/ }).click();
+  await page.getByRole("button", { name: "Check purchase details" }).click();
   await page
     .locator(".fuel-grocery-item")
     .filter({ hasText: "My whole milk" })
@@ -137,10 +140,10 @@ test("An AI drink estimate is added to nutrition only when accepted", async ({
   const before = (await stored(page)).meals.length;
   await send(page, "I drank a 12 oz chai with whole milk.");
   await expect(
-    page.getByRole("button", { name: "Add to Snack", exact: true }),
+    page.getByRole("button", { name: "Yep, add to Snack", exact: true }),
   ).toBeVisible();
   expect((await stored(page)).meals).toHaveLength(before);
-  await page.getByRole("button", { name: "Add to Snack", exact: true }).click();
+  await page.getByRole("button", { name: "Yep, add to Snack", exact: true }).click();
   await expect(
     page.getByRole("button", {
       name: "Edit Chai with whole milk",

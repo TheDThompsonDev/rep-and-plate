@@ -1,0 +1,71 @@
+.fuel-plan-generate { display:flex; align-items:end; gap:12px; margin:18px 0; }
+.fuel-plan-history { display:grid; gap:7px; margin:18px 0; color:#597964; font-size:13px; }
+.fuel-plan-history small { color:#93a397; font-size:11px; }
+.fuel-plan-repeat { border:1px solid #cfe6d7; border-radius:15px; padding:16px; margin:18px 0; background:#f1f9f4; }
+.fuel-plan-repeat > div { display:flex; align-items:center; gap:8px; color:#256643; }
+.fuel-plan-repeat p { margin:8px 0 13px; color:#829784; font-size:13px; }
+.fuel-plan-repeat label { display:grid; gap:6px; color:#5d7b65; font-size:12px; }
+.fuel-plan-repeat button { display:block; background:#246e4d; color:white; border-radius:10px; padding:10px 13px; margin-top:11px; font-size:13px; }
+.fuel-plan-repeat small { display:block; color:#8da492; font-size:11px; margin-top:10px; line-height:1.5; }
+.fuel-plan-edit-fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+.fuel-plan-edit-fields label { display:grid; gap:5px; min-width:0; font-size:12px; color:#738d79; }
+.fuel-plan-edit-fields input,.fuel-plan-edit-fields select { width:100%; }
+.fuel-plan-add-meal { font-size:12px!important; background:#edf7f0; color:#4b845e; padding:9px 13px; border-radius:10px; }
+.fuel-plan-categories { border:0; padding:0; margin:18px 0; }
+.fuel-plan-categories legend { padding:0; font-size:13px; color:#5a7c66; margin-bottom:9px; }
+.fuel-plan-categories > div { display:flex; flex-wrap:wrap; gap:8px; }
+.fuel-plan-categories label { display:flex; align-items:center; gap:6px; background:#eef7f1; border:1px solid #dcece1; border-radius:9px; padding:8px 10px; font-size:12px; color:#397753; }
+.fuel-plan-categories input { margin:0; accent-color:#277b52; }
+.fuel-plan-categories small { display:block; font-size:11px; color:#8aa190; margin-top:8px; }
+.fuel-plan-generate label { display:grid; gap:5px; color:#647d6e; font-size:13px; }
+.fuel-plan-generate button { display:flex; align-items:center; justify-content:center; gap:8px; min-height:45px; }
+.fuel-plan-status { display:grid; gap:5px; padding:14px; background:#e5f4eb; border-radius:12px; margin:18px 0; color:#2c7152; }
+.fuel-plan-status span { font-size:12px; color:#729180; }
+.fuel-plan-days { display:grid; gap:18px; }
+.fuel-plan-day h3,.fuel-plan-shopping h3,.fuel-plan-useup h3 { font-family:inherit; font-size:18px; margin:0 0 10px; }
+.fuel-planned-meal { padding:15px; border:1px solid #e1eae4; border-radius:14px; margin-bottom:10px; background:#fff; }
+.fuel-planned-meal h4 { font-size:17px; margin:0 0 4px; }
+.fuel-plan-meta { font-size:12px; color:#829085; margin:5px 0; }
+.fuel-planned-meal ul,.fuel-plan-shopping ul { list-style:none; padding:0; margin:12px 0; }
+.fuel-planned-meal li { display:flex; align-items:center; justify-content:space-between; gap:10px; border-top:1px solid #f0f3f0; padding:8px 0; font-size:13px; }
+.fuel-planned-meal li span { min-width:0; overflow-wrap:anywhere; }
+.fuel-planned-meal li small { display:block; font-size:11px; color:#8b978d; }
+.fuel-planned-meal li strong { font-size:12px; white-space:nowrap; font-weight:500; color:#56836a; }
+.fuel-plan-nutrition { color:#21714d; font-weight:600; font-size:14px; }
+.fuel-plan-note { font-size:13px; color:#788b7d; }
+.fuel-plan-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.fuel-plan-actions button { background:#eaf5ee; color:#3b7855; border-radius:8px; padding:8px 11px; font-size:12px; }
+.fuel-plan-shopping { margin-top:20px; padding:17px; background:#f4f9f5; border:1px solid #e1ece4; border-radius:15px; }
+.fuel-plan-shopping h3 { display:flex; align-items:center; gap:8px; }
+.fuel-plan-shopping > p { color:#7b8d7e; font-size:13px; }
+.fuel-plan-shopping li { display:grid; gap:3px; padding:9px 0; border-top:1px solid #e3ece5; font-size:13px; }
+.fuel-plan-shopping li span { color:#7c9180; font-size:12px; }
+.fuel-plan-amount { width:90px; flex-shrink:0; font-size:10px; color:#809583; }
+.fuel-plan-amount input { display:block; width:100%; padding:7px!important; }
+.fuel-plan-swap { display:grid; gap:6px; font-size:12px; color:#6b8775; margin-top:12px; }
+.fuel-plan-useup { margin-top:24px; }
+.fuel-plan-useup article { border:1px solid #e2ebe5; padding:14px; margin:9px 0; border-radius:13px; }
+.fuel-plan-useup article p { margin:5px 0; color:#79917f; font-size:13px; }
+@media(max-width:450px) { .fuel-plan-generate { align-items:stretch; flex-direction:column; }.fuel-plan-generate label input { width:100%; } }
+.fuel-swaps-entry { display:flex; align-items:center; gap:12px; width:100%; text-align:left; padding:17px 14px; background:white; border:1px solid #e2eae5; border-radius:17px; color:#17392b; }
+.fuel-swaps-icon { display:grid; place-items:center; width:44px; height:44px; flex-shrink:0; border-radius:50%; color:#287150; background:#e7f5ed; }
+.fuel-swaps-entry > span:nth-child(2) { flex:1; }
+.fuel-swaps-entry strong { display:block; font-size:15px; font-weight:600; }
+.fuel-swaps-entry small { display:block; margin-top:4px; font-size:12px; color:#829487; line-height:1.5; }
+.fuel-swaps-entry > svg { flex-shrink:0; color:#869d8d; }
+.fuel-swap-pickers { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:17px 0; }
+.fuel-swap-pickers section { min-width:0; border:1px solid #e2ece5; border-radius:12px; padding:12px; background:#f8fcf9; }
+.fuel-swap-pickers label { display:grid; gap:6px; color:#56745f; font-size:13px; }
+.fuel-swap-pickers input,.fuel-swap-pickers select { width:100%; }
+.fuel-swap-pickers p { color:#6b8372; font-size:12px; }
+.fuel-swap-pickers small { display:block; color:#92a294; font-size:11px; margin-top:8px; }
+.fuel-swap-table-wrap { overflow-x:auto; }
+.fuel-swap-table { width:100%; border-collapse:collapse; font-size:12px; }
+.fuel-swap-table caption { text-align:left; font-weight:600; font-size:13px; padding:8px 0 12px; }
+.fuel-swap-table th,.fuel-swap-table td { padding:9px 5px; border-bottom:1px solid #e7eee8; text-align:right; }
+.fuel-swap-table th:first-child { text-align:left; }
+.fuel-swap-table thead { color:#77927e; font-size:11px; }
+.fuel-swap-table td:last-child { color:#306c48; font-weight:600; }
+.fuel-swap-notes { padding-left:18px; color:#8e815f; font-size:12px; }
+.fuel-swap-notes li { margin-bottom:8px; }
+@media(max-width:450px) { .fuel-swap-pickers { grid-template-columns:1fr; } }

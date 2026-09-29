@@ -1,0 +1,107 @@
+# Error ledger
+
+## SPOT-SCENE-001 — Native scene retained its intrinsic image height
+
+- Status: repaired in working changes.
+- Reproduction: the first 320px Expo-web screenshot showed a tall green frame and the artwork below the fold. Image visibility alone did not detect it.
+- Cause: percentage width plus maxWidth and aspectRatio did not override the native Image source's intrinsic height in Expo web.
+- Fix: explicit matching width and height for hero and compact scene images; contain preserves the full composition. Added square/bounded scene assertions to the native first-use test.
+- Native development reload can wait on unrelated resources after the page is ready. Use DOM content loaded plus visible app assertions, as in existing native reload journeys; keep image decoding as an explicit visual check.
+- Follow-up: DOM-ready navigation also stalled. A diagnostic showed HTML returned 200 while the bundle response never arrived. Restarting the existing Expo preview on 8081 with a clean Metro cache fixed it: reload 880ms and all three native Spot journeys passed in 7.7s. Do not treat relaxed navigation waits alone as the fix for a stalled bundle server.
+
+## SPOT-INTRO-001 — Replaying an introduction resumed the previous slide
+
+- Status: repaired in working changes; regression verification recorded in the Spot implementation notes.
+- Reproduction: skip at food slide, type a draft, choose Chat menu → Meet Spot. The new browser check expected the opening press conference but the existing step state stayed at food.
+- Cause: SpotWelcome stayed mounted as its intro prop changed, retaining its local step.
+- Fix: key SpotWelcome by introduction versus ordinary welcome in both platform consumers. This resets presentation only; the parent still owns the draft and saved records.
+- Guard: `tests/spot-personality.spec.ts` replays with missing art, verifies the first slide and unchanged draft. No records or preferences are reset.
+
+## CYC-ASSETS-001 — Run startup exceeds source fingerprint size
+
+- Status: tooling limitation observed during Spot app onboarding work.
+- CYC run start refused before creating a run: selected source exceeds 20,000 files or 128 MiB after the image packs were added. Verification configuration was not weakened or changed.
+- This task uses direct project unit/build/browser checks and native lint/typecheck; no controller-managed run completion is claimed.
+
+## NATIVE-LINT-001 — Expo lint tooling and shared parent imports
+
+- Status: resolved in working changes.
+- TypeScript 7 no longer exposes the compiler API expected by Expo ESLint's parser. Preserve TypeScript 7 under the `typescript-compiler` alias for the shared Zod type check, and use TypeScript 6 for tooling.
+- Parser resolution from imported parent-directory files failed; configure the import plugin with the mobile parser's absolute resolved path. Installing the parser alone did not fix cached/import resolution.
+- Global flat-config ignores must be a separate object; combining ignores with settings caused generated Metro bundles to be linted. Exclude generated dist/android/ios/.expo/test-results globally.
+- Guard: mobile ESLint with cache disabled reports zero errors; normal type checking still uses compiler 7.
+
+## RECEIPT-001 — Kitchen receipt button only navigated to Chat
+
+- Status: resolved in working changes, CYC `00214788-79d7-4f9e-ad37-509eab8eda8f`.
+- Reproduction: clicking Add a receipt changed the route without opening a capture dialog; the new browser test failed on the missing dialog before the fix.
+- Fix: both Kitchen receipt invitations use an explicit capture callback. Camera (rear-facing hint) and library choices stay on Kitchen through preview; only sending or saving navigates to Chat. Receipt context is kept separate from meals, with no demo choices in this flow. Cancel resets the capture intent and leaves the Chat draft and saved records intact.
+- Guards: `tests/receipt-capture.spec.ts` covers camera input, picker cancellation, invalid type recovery, same-file retake, preview, mocked AI submission, unchanged intake, draft preservation, and offline review. Physical phone camera behavior still requires a real-device check.
+
+## SHOPPING-001 — Live price research returns an incomplete structured answer
+
+- Status: resolved in working changes, CYC `9d6064db-c63e-4611-83db-f1fe2d708066`.
+- Reproduction: the live two-product price research returned `status: incomplete`, `incomplete_details.reason: max_output_tokens` with a 3,500-token ceiling. Browser mocks did not expose it.
+- Fix: a 7,000-token response budget and low reasoning effort for GPT-5 models. Preserve bounded request/tool limits and unknown-price fallback. The follow-up live call completed with one source-linked quote and no invented second price.
+- Evidence: ignored `.local-checks/prices-live-result.json`; source and normalization guards in `server/shopping.ts` and `server/shopping.test.ts`. Provider-generated prose cannot bypass arithmetic evidence gates; the displayed research status is deterministic.
+
+## NUTRITION-001 — Example calories appear as personal daily intake
+
+- Status: resolved in working changes (not committed), based on `4bd8875`.
+- Signature: nonzero `sumNutrition(initialState().meals)` on a fresh account; example meal buttons in the personal diary.
+- Root cause: startup seeded example meals dated today; totals filtered only by day. Insights independently used broader source/ID filters, causing inconsistent consumers.
+- Reproduction: the fresh-state test returned 1,970 calories instead of zero. After the domain fix, the browser still displayed the sample meal in the diary; the browser exclusion test failed correctly.
+- Fix: clean fresh state, non-destructive revision migration, centralized `isExampleMeal`/`personalMeals`, shared totals and consumer filters. New capture examples are explicitly marked. A targeted test also caught legacy local-parser samples identified only in their note; their specific demo-estimate notes are now recognized.
+- Attempts: the first browser fixture omitted required `note`, triggering validation fallback and a false zero; fixed the fixture before implementing UI changes. The note-provenance regression failed before its fix and passed afterward. A test literal with an extra `title` field caused a TypeScript excess-property error; using the typed meal variable fixed the test without broadening the production API.
+- Guards: `src/day.test.ts`, `tests/nutrition-day.spec.ts`, AI context and insight/review unit tests. Records are preserved byte-equivalent through upgrade; examples are excluded, not deleted.
+
+## NUTRITION-002 — Open Nutrition page keeps yesterday's totals
+
+- Status: resolved in working changes (not committed), based on `4bd8875`.
+- Signature: date-sensitive selectors only update after another application render.
+- Root cause: local date was read during render without a midnight timer or wake event subscription.
+- Fix: `useLocalDay` in App schedules actual next local midnight and refreshes on focus/visibility/pageshow. No stored meal dates change.
+- Guards: local-midnight and wake browser journeys; timer cleanup, 23-hour and 25-hour days in `src/day.test.ts`.
+
+## VERIFY-001 — Tests assumed automatic demo state and a single Scan button
+
+- Status: resolved in working changes; full-suite evidence recorded by CYC.
+- Cause: removal of seeded records invalidates sample-based fixtures; new direct scan action makes global menu button locators ambiguous.
+- Fix approach: use explicit demo fixtures only for sample journeys, explicit personal fixtures for intake tests, and scope menu locators to their dialog. Keep new-user assertions genuinely empty. Do not restore automatic fake intake to satisfy old tests.
+- Another test locator used `Calories` where the target form uses `Daily calories`; the 30-second timeout disappeared after matching the actual accessible label. No product change was needed for that failure.
+
+## PANTRY-001 — Excluded example meal can still consume real pantry stock
+
+- Status: resolved in working changes (not committed), based on `4bd8875`.
+- Root cause: the chooser excluded sources containing `sample`, while the reconciliation mutation did not check provenance. Legacy demo notes and explicit example flags passed through.
+- Reproduction: linking a legacy demo shake consumed one real milk serving, leaving 15 of 16 while the personal total stayed zero. The new rejection regression failed before the fix.
+- Fix: shared personal-meal chooser and mutation-level example rejection before events or inventory changes.
+- Guards: `src/features/pantry/ledger.test.ts`; 21 pantry tests and type checking passed after the focused fix. Real personal reconciliation remains covered.
+
+## VERIFY-002 — Calendar fixtures cross midnight during UI checks
+
+- Status: resolved in working changes (not committed); focused and full checks required after repair.
+- Signature: seeded 700-calorie dinner reports zero for today; September 20 history button disappears in a September 26 fixture.
+- Cause: live Date advanced across midnight between seeding and assertions. The rollover fixture also started only ten seconds before midnight with a running fake clock, so a slow build could advance it before its explicit fast-forward.
+- Attempts: separating heavy native compilation from browser verification removed contention but a different existing test still crossed real midnight. No product rollover change was appropriate.
+- Fix: freeze seeded meal journeys at noon on the fixture day; pause the rollover fixture's clock until its deliberate fast-forward. This preserves the midnight behavior assertions instead of increasing timeouts.
+- Follow-up: keeping timers paused after the wake assertion prevented the lazy scanner from mounting. Resume the clock after asserting the new day and before opening that tool; date rollover assertions remain paused and deterministic.
+- Guards: `tests/flows.spec.ts` and `tests/nutrition-day.spec.ts`.
+
+
+## REBRAND-001 — Local verification shell and hosted origin update
+
+- Status: resolved tooling obstacles in working changes.
+- PowerShell startup stalled even for an explicit no-profile Get-Location. The same build passed through cmd.exe. CYC now invokes the identical npm run build through cmd.exe with exit propagation; no checks were removed.
+- The first rebrand run halted because its protected configuration changed. The user explicitly approved retaining the equivalent runner fix and starting fresh verification; the halted run remains as history.
+- The initial wildcard www redirect handled non-root paths but the homepage still returned 200. Added an explicit root redirect ahead of the wildcard and redeployed; verify apex and www independently.
+- Vercel CLI 48.5 env update rejected updating the existing sensitive APP_ORIGIN with "You cannot change the key of a Sensitive Environment Variable." Retrying with --sensitive did not resolve it. Recreated only this public origin value using env rm/add; existing deployments are unaffected until redeploy. Provider credentials were not changed.
+- Domain attachment initially used the reference's outdated two-argument command. The installed CLI accepts only the domain and uses the linked project; both apex and www were attached successfully that way.
+
+## VERCEL-001 — Deployed API cannot resolve shared module
+
+- Status: resolved in working changes and production deployment.
+- Reproduction: deployed public config returned FUNCTION_INVOCATION_FAILED; runtime logs reported ERR_MODULE_NOT_FOUND for src/domain imported by the cloud client.
+- Cause: the Vercel TypeScript output preserved extensionless imports across shared modules; local tsx and Vite checks did not expose this Node ESM packaging issue.
+- Fix: bundle local TypeScript dependencies with esbuild into .generated/health.mjs and export it from api/health.mjs; external packages remain runtime dependencies.
+- Guards: production config 200, unauthenticated status 401, approved synthetic account streamed a real AI response and replayed it; private capture access checks passed. Synthetic account and image removed afterward.

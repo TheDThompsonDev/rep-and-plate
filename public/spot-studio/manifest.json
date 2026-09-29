@@ -1,0 +1,122 @@
+[
+  {
+    "id": "coffee",
+    "title": "Booting up.",
+    "caption": "Please allow one coffee.",
+    "category": "Everyday",
+    "use": "Morning greeting; social reaction.",
+    "alt": "Spot clutching a small ivory coffee mug in both gloves against his belly, sleepy half-lidded eyes, one eyebrow barely awake, soft tiny steam curl above mug, knees slightly bent. Charming not distressed.",
+    "asset": "../images/spot/expansion/coffee.png",
+    "meme": "memes/coffee.png"
+  },
+  {
+    "id": "detective",
+    "title": "One tiny detail.",
+    "caption": "Putting on my detective face.",
+    "category": "Logging",
+    "use": "Clarification and Spot Check.",
+    "alt": "Spot holding a small magnifying glass up to ONE eye, that eye hilariously enlarged through the lens, other eyebrow raised, other hand on hip, curious detective pose. No hat.",
+    "asset": "../images/spot/expansion/detective.png",
+    "meme": "memes/detective.png"
+  },
+  {
+    "id": "chef",
+    "title": "Chef-ish.",
+    "caption": "Confidence: high. Apron: tiny.",
+    "category": "Food",
+    "use": "Recipes and meal ideas.",
+    "alt": "Spot in a small ivory chef hat and a very small ivory waist apron, holding a wooden cooking spoon upright, amused proudly raised eyebrow and little smile. The plate face remains completely visible.",
+    "asset": "../images/spot/expansion/chef.png",
+    "meme": "memes/chef.png"
+  },
+  {
+    "id": "blanket",
+    "title": "Rest is a plan.",
+    "caption": "A very cozy plan.",
+    "category": "Recovery",
+    "use": "Rest-day content and downtime.",
+    "alt": "Spot seated on the ground, wrapped snugly in an ivory blanket below his face, green sneaker toes protruding, serene closed eyes, little content smile. Blanket fabric smooth and soft, no bed or chair.",
+    "asset": "../images/spot/expansion/blanket.png",
+    "meme": "memes/blanket.png"
+  },
+  {
+    "id": "calculator",
+    "title": "Tiny plate. Big math.",
+    "caption": "The eyebrows are concentrating.",
+    "category": "Logging",
+    "use": "Calculating estimates and summaries.",
+    "alt": "Spot concentrating over a small plain pocket calculator held in one hand, other hand tapping a button, deep cute furrowed brows and tiny pursed mouth. Calculator screen blank and button grid without legible text.",
+    "asset": "../images/spot/expansion/calculator.png",
+    "meme": "memes/calculator.png"
+  },
+  {
+    "id": "groceries",
+    "title": "Bag secured.",
+    "caption": "Plot twist: we bought ingredients.",
+    "category": "Food",
+    "use": "Shopping lists and pantry arrivals.",
+    "alt": "Spot proudly carrying one kraft paper grocery bag with a baguette, leafy greens and tomato peeking out, bag held to his side, other hand on hip, cheerful little smile, slightly leaning to balance bag.",
+    "asset": "../images/spot/expansion/groceries.png",
+    "meme": "memes/groceries.png"
+  },
+  {
+    "id": "stretch",
+    "title": "Loading flexibility…",
+    "caption": "Please enjoy this small wobble.",
+    "category": "Training",
+    "use": "Warmups and gentle movement.",
+    "alt": "Spot doing a funny gentle side stretch: one green arm raised overhead bending sideways, other glove on hip, feet apart, body tilted, wobbly but determined eyebrow and tiny smile. Only two arms.",
+    "asset": "../images/spot/expansion/stretch.png",
+    "meme": "memes/stretch.png"
+  },
+  {
+    "id": "proud",
+    "title": "A small win.",
+    "caption": "I made a whole face about it.",
+    "category": "Wins",
+    "use": "User-chosen milestones and celebration.",
+    "alt": "Spot beaming with joyful closed crescent eyes, both fists drawn close to cheeks in a tiny contained proud celebration, one heel lifted, several small mint star sparkles immediately around rim. No confetti storm.",
+    "asset": "../images/spot/expansion/proud.png",
+    "meme": "memes/proud.png"
+  },
+  {
+    "id": "water",
+    "title": "Emotional support water.",
+    "caption": "Comes with a tiny hype plate.",
+    "category": "Everyday",
+    "use": "Hydration-themed social posts.",
+    "alt": "Spot hugging a clear reusable water bottle almost as tall as his plate body, bottle has forest-green lid and visible clean blue-tinted water, wide affectionate eyes and little happy smile. Both hands around bottle.",
+    "asset": "../images/spot/expansion/water.png",
+    "meme": "memes/water.png"
+  },
+  {
+    "id": "dumbbell",
+    "title": "Here for the heavy stuff.",
+    "caption": "Mostly the moral support.",
+    "category": "Training",
+    "use": "Workout intro and training content.",
+    "alt": "Spot holding a single small dark-green dumbbell with both gloves at belly height, determined squint and funny tight-lipped smile as if this tiny weight needs concentration, grounded feet, no sweat drops.",
+    "asset": "../images/spot/expansion/dumbbell.png",
+    "meme": "memes/dumbbell.png"
+  },
+  {
+    "id": "shrug",
+    "title": "We can work with that.",
+    "caption": "Professional figuring-it-out energy.",
+    "category": "Everyday",
+    "use": "Flexible plans and conversational replies.",
+    "alt": "Spot giving a small friendly shrug, both hands palms up out to either side, shoulders raised, one eyebrow up, crooked warm smile, slightly pigeon-toed feet. No symbols above head.",
+    "asset": "../images/spot/expansion/shrug.png",
+    "meme": "memes/shrug.png"
+  },
+  {
+    "id": "planner",
+    "title": "Look at us planning.",
+    "caption": "Very official. Tiny clipboard.",
+    "category": "Planning",
+    "use": "Meal planning and weekly organization.",
+    "alt": "Spot holding a small kraft clipboard with a blank cream sheet and a few green checkmarks only, other hand holding a short pencil, serious cute focused expression with one proud eyebrow. No letters or numbers.",
+    "asset": "../images/spot/expansion/planner.png",
+    "meme": "memes/planner.png"
+  }
+]

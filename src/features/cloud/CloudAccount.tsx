@@ -1,0 +1,551 @@
+import { useEffect, useRef, useState } from "react";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { Cloud, Download, Upload, LogOut, Trash2, Check } from "lucide-react";
+import { Modal } from "../../components";
+import type { AppState } from "../../domain";
+import {
+  deleteSnapshot,
+  exportDevice,
+  getCloudClient,
+  loadSnapshot,
+  prepareSnapshot,
+  readSnapshotMetadata,
+  saveSnapshot,
+  snapshotSummary,
+  SnapshotConflict,
+  type SavedSnapshot,
+  type SnapshotMetadata,
+} from "./client";
+import "./cloud.css";
+import { isHostedBrowser } from '../../api-fetch';
+import { requireBrowserOwner } from './client';
+
+type Review =
+  | { kind: "upload"; state: AppState }
+  | { kind: "load"; snapshot: SavedSnapshot }
+  | { kind: "delete" }
+  | null;
+
+export default function CloudAccount({
+  state,
+  onRestore,
+  onClose,
+}: {
+  state: AppState;
+  onRestore: (state: AppState) => void;
+  onClose: () => void;
+}) {
+  const [client, setClient] = useState<SupabaseClient | null>(null);
+  const [configured, setConfigured] = useState<boolean | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [signingUp, setSigningUp] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [metadata, setMetadata] = useState<SnapshotMetadata | null>(null);
+  const [checked, setChecked] = useState(false);
+  const [conflict, setConflict] = useState(false);
+  const [review, setReview] = useState<Review>(null);
+  const [acknowledged, setAcknowledged] = useState(false);
+  const [deleteText, setDeleteText] = useState("");
+  const alive = useRef(true);
+  const currentUser = useRef<string | null>(null);
+  const busyRef = useRef(false);
+  const local = snapshotSummary(state);
+
+  useEffect(() => {
+    alive.current = true;
+    let active = true;
+    let unsubscribe: (() => void) | undefined;
+    getCloudClient()
+      .then(async (connection) => {
+        if (!active) return;
+        setConfigured(!!connection);
+        setClient(connection);
+        if (!connection) return;
+        const update = (next: User | null) => {
+          currentUser.current = next?.id ?? null;
+          setUser(next);
+        };
+        const { data } = connection.auth.onAuthStateChange(
+          (_event, session) => {
+            if (active) update(session?.user ?? null);
+          },
+        );
+        unsubscribe = () => data.subscription.unsubscribe();
+        const session = await connection.auth.getSession();
+        if (active) update(session.data.session?.user ?? null);
+      })
+      .catch(() => {
+        if (active) {
+          setConfigured(false);
+          setError(
+            "Account settings could not be loaded. Close this window and try again.",
+          );
+        }
+      });
+    return () => {
+      active = false;
+      alive.current = false;
+      unsubscribe?.();
+    };
+  }, []);
+
+  useEffect(() => {
+    setMetadata(null);
+    setChecked(false);
+    setReview(null);
+    setConflict(false);
+    if (!client || !user) return;
+    let cancelled = false;
+    readSnapshotMetadata(client, user.id)
+      .then((saved) => {
+        if (!cancelled) {
+          setMetadata(saved);
+          setChecked(true);
+        }
+      })
+      .catch((caught) => {
+        if (!cancelled)
+          setError(
+            caught instanceof Error
+              ? caught.message
+              : "Your saved copy could not be checked.",
+          );
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [client, user?.id]);
+
+  const run = async (action: () => Promise<void>) => {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      await action();
+    } catch (caught) {
+      if (alive.current) {
+        setError(
+          caught instanceof Error
+            ? caught.message
+            : "That request could not be completed.",
+        );
+        if (caught instanceof SnapshotConflict) setConflict(true);
+      }
+    } finally {
+      busyRef.current = false;
+      if (alive.current) setBusy(false);
+    }
+  };
+  const accountStillCurrent = (id: string) =>
+    alive.current && currentUser.current === id;
+  const checkSaved = () =>
+    run(async () => {
+      if (!client || !user) return;
+      const saved = await readSnapshotMetadata(client, user.id);
+      if (accountStillCurrent(user.id)) {
+        setMetadata(saved);
+        setChecked(true);
+      }
+    });
+  const requestLoad = () =>
+    run(async () => {
+      if (!client || !user) return;
+      if (isHostedBrowser()) await requireBrowserOwner(client);
+      const saved = await loadSnapshot(client, user.id);
+      if (!accountStillCurrent(user.id)) return;
+      if (!saved) {
+        setNotice("This account does not have a saved copy yet.");
+        setMetadata(null);
+        setChecked(true);
+        setConflict(false);
+        return;
+      }
+      setReview({ kind: "load", snapshot: saved });
+      setAcknowledged(false);
+    });
+  const confirm = () =>
+    run(async () => {
+      if (!client || !user || !review) return;
+      if (review.kind === "upload") {
+        if (!acknowledged || !checked || conflict) return;
+        if (isHostedBrowser()) await requireBrowserOwner(client);
+        const saved = await saveSnapshot(
+          client,
+          user.id,
+          review.state,
+          metadata?.revision ?? 0,
+        );
+        if (accountStillCurrent(user.id)) {
+          setMetadata(saved);
+          setReview(null);
+          setNotice(
+            "This device's records are saved to your account. Future changes stay on this device until you upload again.",
+          );
+        }
+      } else if (review.kind === "load") {
+        if (
+          !acknowledged ||
+          !accountStillCurrent(user.id) ||
+          review.snapshot.user_id !== user.id
+        )
+          return;
+        onRestore(review.snapshot.state);
+        setMetadata(review.snapshot);
+        setChecked(true);
+        setConflict(false);
+        setReview(null);
+        setNotice("Your saved records replaced the records on this device.");
+      } else {
+        if (deleteText !== "DELETE" || !metadata) return;
+        await deleteSnapshot(client, user.id, metadata.revision);
+        if (accountStillCurrent(user.id)) {
+          setMetadata(null);
+          setChecked(true);
+          setReview(null);
+          setNotice(
+            "Your cloud copy was deleted. This device and your sign-in account remain unchanged.",
+          );
+        }
+      }
+    });
+
+  return (
+    <Modal title="Your account & saved records" onClose={onClose}>
+      <div className="fuel-cloud">
+        <div className="cloud-intro">
+          <span>
+            <Cloud size={24} />
+          </span>
+          <div>
+            <h3>Keep a copy with you.</h3>
+            <p>Choose when to upload or restore your Rep & Plate records.</p>
+          </div>
+        </div>
+        {error && (
+          <p role="alert" className="cloud-feedback cloud-error">
+            {error}
+          </p>
+        )}
+        {notice && (
+          <p role="status" className="cloud-feedback">
+            {notice}
+          </p>
+        )}
+        {configured === null && <p role="status">Checking account settings…</p>}
+        {client && user && isHostedBrowser() && <div className="cloud-feedback">
+          <p>Link these browser records to your account before using the beta. Signing out keeps records on this personal device.</p>
+          <button type="button" disabled={busy} onClick={() => void run(async () => { await requireBrowserOwner(client, true); setNotice('Device records linked. You can now use the beta.'); })}>These device records are mine</button>
+        </div>}
+        {configured === false && (
+          <p>
+            Cloud accounts are not connected yet. Your records are still saved
+            on this device, and you can export a copy below.
+          </p>
+        )}
+        {configured && !user && (
+          <form
+            className="edit-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const form = event.currentTarget;
+              const values = new FormData(form);
+              void run(async () => {
+                if (!client) return;
+                const email = String(values.get("email")).trim();
+                const password = String(values.get("password"));
+                const response = signingUp
+                  ? await client.auth.signUp({ email, password })
+                  : await client.auth.signInWithPassword({ email, password });
+                if (response.error) {
+                  const code = response.error.code;
+                  if (code === "email_not_confirmed")
+                    throw new Error("Confirm your email first, then sign in.");
+                  if (
+                    [
+                      "over_email_send_rate_limit",
+                      "over_request_rate_limit",
+                    ].includes(code || "")
+                  )
+                    throw new Error(
+                      "Too many attempts. Wait a little before trying again.",
+                    );
+                  if (code === "weak_password")
+                    throw new Error(
+                      "Choose a stronger password that meets your account's password rules.",
+                    );
+                  throw new Error(
+                    signingUp
+                      ? "The account could not be created. Check your email and password, or try signing in if you already have an account."
+                      : "Sign-in did not work. Check your email and password, and confirm your email if needed.",
+                  );
+                }
+                if (!alive.current) return;
+                form.reset();
+                setNotice(
+                  signingUp && !response.data.session
+                    ? "Check your email for the confirmation link, then return here and sign in."
+                    : "Signed in. Nothing was uploaded or replaced automatically.",
+                );
+              });
+            }}
+          >
+            <h3>{signingUp ? "Create your account" : "Sign in"}</h3>
+            <label>
+              Email
+              <input
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                maxLength={254}
+                disabled={busy}
+              />
+            </label>
+            <label>
+              Password
+              <input
+                name="password"
+                type="password"
+                autoComplete={signingUp ? "new-password" : "current-password"}
+                minLength={signingUp ? 8 : 1}
+                required
+                disabled={busy}
+              />
+            </label>
+            <button className="button primary full-width" disabled={busy}>
+              {busy ? "Please wait…" : signingUp ? "Create account" : "Sign in"}
+            </button>
+            <button
+              type="button"
+              className="cloud-link"
+              disabled={busy}
+              onClick={() => {
+                setSigningUp(!signingUp);
+                setError("");
+              }}
+            >
+              {signingUp
+                ? "Already have an account? Sign in"
+                : "Create an account"}
+            </button>
+          </form>
+        )}
+        {user && (
+          <>
+            <section className="cloud-account">
+              <strong>{user.email || "Signed-in account"}</strong>
+              <span>
+                {metadata
+                  ? `Saved revision ${metadata.revision} · ${new Date(metadata.updated_at).toLocaleString()}`
+                  : checked
+                    ? "No saved copy yet"
+                    : "Checking your saved copy…"}
+              </span>
+              <button
+                className="cloud-link"
+                disabled={busy}
+                onClick={checkSaved}
+              >
+                Check saved copy
+              </button>
+            </section>
+            {!review && (
+              <div className="cloud-actions">
+                <button
+                  disabled={busy || !checked || conflict}
+                  onClick={() => {
+                    try {
+                      setReview({
+                        kind: "upload",
+                        state: prepareSnapshot(state),
+                      });
+                      setAcknowledged(false);
+                      setError("");
+                    } catch (caught) {
+                      setError(
+                        caught instanceof Error
+                          ? caught.message
+                          : "These records need a check.",
+                      );
+                    }
+                  }}
+                >
+                  <Upload size={18} />
+                  <span>
+                    <strong>Upload this device's records</strong>
+                    <small>
+                      {metadata
+                        ? "Replace the saved copy after review"
+                        : "Create your first saved copy"}
+                    </small>
+                  </span>
+                </button>
+                <button disabled={busy} onClick={requestLoad}>
+                  <Download size={18} />
+                  <span>
+                    <strong>Load my saved records</strong>
+                    <small>Review before replacing this device</small>
+                  </span>
+                </button>
+                <button
+                  disabled={busy || !metadata}
+                  onClick={() => {
+                    setReview({ kind: "delete" });
+                    setDeleteText("");
+                  }}
+                >
+                  <Trash2 size={18} />
+                  <span>
+                    <strong>Delete my cloud copy</strong>
+                    <small>Your device records will remain</small>
+                  </span>
+                </button>
+              </div>
+            )}
+            {review && (
+              <section className="cloud-review">
+                <h3>
+                  {review.kind === "upload"
+                    ? "Review your upload"
+                    : review.kind === "load"
+                      ? "Replace this device's records?"
+                      : "Delete your cloud copy?"}
+                </h3>
+                {review.kind !== "delete" && (
+                  <>
+                    <p>
+                      {review.kind === "upload"
+                        ? "These device records will be sent to your Supabase account. This includes conversations, nutrition records, pantry, preferences, plans, workouts, and any photos stored with them."
+                        : "The saved copy will replace the meals, conversations, pantry, preferences, plans, and workouts on this device. Device-only changes will be lost unless you export them first."}
+                    </p>
+                    <RecordCounts
+                      state={
+                        review.kind === "upload"
+                          ? review.state
+                          : review.snapshot.state
+                      }
+                    />
+                    <label className="cloud-ack">
+                      <input
+                        type="checkbox"
+                        checked={acknowledged}
+                        onChange={(event) =>
+                          setAcknowledged(event.target.checked)
+                        }
+                      />
+                      {review.kind === "upload"
+                        ? "I want these records saved to this account."
+                        : "I understand this replaces this device's records."}
+                    </label>
+                  </>
+                )}
+                {review.kind === "delete" && (
+                  <>
+                    <p>
+                      This deletes the saved Rep & Plate data for{" "}
+                      {user.email || "your account"}. It does not delete your
+                      sign-in account or the copy on this device.
+                    </p>
+                    <label>
+                      Type DELETE to confirm
+                      <input
+                        value={deleteText}
+                        onChange={(event) => setDeleteText(event.target.value)}
+                        autoComplete="off"
+                      />
+                    </label>
+                  </>
+                )}
+                <button
+                  className="button primary full-width"
+                  disabled={
+                    busy ||
+                    (review.kind === "upload" && (conflict || !checked)) ||
+                    (review.kind === "delete"
+                      ? deleteText !== "DELETE"
+                      : !acknowledged)
+                  }
+                  onClick={confirm}
+                >
+                  <Check size={17} />
+                  {busy
+                    ? "Please wait…"
+                    : review.kind === "upload"
+                      ? "Upload reviewed records"
+                      : review.kind === "load"
+                        ? "Replace this device"
+                        : "Delete cloud copy"}
+                </button>
+                <button
+                  className="cloud-link"
+                  disabled={busy}
+                  onClick={() => setReview(null)}
+                >
+                  Cancel
+                </button>
+              </section>
+            )}
+            <button
+              className="cloud-link"
+              disabled={busy}
+              onClick={() =>
+                void run(async () => {
+                  const response = await client!.auth.signOut({
+                    scope: "local",
+                  });
+                  if (response.error)
+                    throw new Error(
+                      "Sign-out could not be completed. Try again.",
+                    );
+                  if (alive.current)
+                    setNotice(
+                      "Signed out. This device's Rep & Plate records remain here.",
+                    );
+                })
+              }
+            >
+              <LogOut size={16} /> Sign out on this device
+            </button>
+          </>
+        )}
+        <section className="cloud-local">
+          <h3>On this device</h3>
+          <p>
+            {local.meals} meals · {local.groceries} grocery trips ·{" "}
+            {local.messages} messages · {local.recipeBatches} prepared batches
+          </p>
+          <button
+            className="you-dialog-action"
+            onClick={() => exportDevice(state)}
+          >
+            <Download size={17} /> Export this device's records
+          </button>
+          <p className="cloud-footnote">
+            Uploads are manual. Photos are included only within the 4.8 MB
+            limit; a separate photo library is not connected. Signing out does
+            not erase this device's records, so use care on a shared device.
+          </p>
+        </section>
+      </div>
+    </Modal>
+  );
+}
+
+function RecordCounts({ state }: { state: AppState }) {
+  const summary = snapshotSummary(state);
+  return (
+    <div className="cloud-counts">
+      <span>{summary.meals} meals</span>
+      <span>{summary.groceries} grocery trips</span>
+      <span>{summary.messages} messages</span>
+      <span>{summary.plans} plans</span>
+      <span>{summary.recipeBatches} prepared batches</span>
+      <span>{summary.embeddedPhotos} embedded photos</span>
+      <span>{(summary.bytes / 1000000).toFixed(2)} MB</span>
+    </div>
+  );
+}

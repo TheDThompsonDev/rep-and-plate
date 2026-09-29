@@ -5,12 +5,23 @@ import {
   type AIResult,
 } from "../src/ai-contract.ts";
 import { runAI, type Config } from "./ai.ts";
+import { createProductSearchApi } from "./products/search.ts";
+import { createProductApi } from "./products/http.ts";
+import { createPlanApi } from "./plans.ts";
+import { createVoiceApi } from "./voice.ts";
+import { enrichReceipt } from "./products/enrich.ts";
+import { createShoppingApi } from "./shopping.ts";
+import { createHash } from "node:crypto";
+import type { ChatCache } from "./chat-cache.ts";
 
 export const readConfig = (
   env: Record<string, string | undefined>,
 ): Config => ({
   openaiKey: env.OPENAI_API_KEY,
   jevKey: env.JEV_API_KEY,
+  usdaKey: env.FOODDATA_GOV_API || env.USDA_API_KEY,
+  supabaseUrl: env.SUPABASE_URL,
+  supabasePublishableKey: env.SUPABASE_PUBLISHABLE_KEY,
   model: env.OPENAI_MODEL || "gpt-5-mini",
   jevModel: env.JEV_MODEL || "jev-latest",
 });
@@ -42,7 +53,16 @@ export function publicError(error: unknown) {
     "I couldn’t reach the AI service or read its response. Your capture is still here; please retry."
   );
 }
-export function createApi(config: Config, runner = runAI) {
+export function createApi(
+  config: Config,
+  runner = runAI,
+  hosted?: { cache: ChatCache },
+) {
+  const productApi = createProductApi(config);
+  const productSearchApi = createProductSearchApi(config);
+  const planApi = createPlanApi(config);
+  const voiceApi = createVoiceApi(config);
+  const shoppingApi = createShoppingApi(config);
   const completed = new Map<string, { at: number; result: AIResult }>();
   const running = new Set<string>();
   let active = 0;
@@ -51,6 +71,7 @@ export function createApi(config: Config, runner = runAI) {
     req: IncomingMessage,
     res: ServerResponse,
     next: () => void,
+    user = "local",
   ) {
     const path = (req.url ?? "").split("?")[0];
     if (!path.startsWith("/api/")) return next();
@@ -61,6 +82,16 @@ export function createApi(config: Config, runner = runAI) {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(body));
     };
+    try {
+      if (
+        !["localhost", "127.0.0.1", "[::1]"].includes(
+          new URL(`http://${req.headers.host}`).hostname,
+        )
+      )
+        return json(403, { error: "This server accepts local requests only." });
+    } catch {
+      return json(403, { error: "Invalid host." });
+    }
     // This local server is deliberately loopback-only; reject cross-origin browser calls.
     if (
       req.headers.origin &&
@@ -72,7 +103,25 @@ export function createApi(config: Config, runner = runAI) {
         available: !!config.openaiKey,
         jev: !!config.jevKey,
         model: config.model,
+        usda: !!config.usdaKey,
       });
+    if (path === "/api/cloud/config" && req.method === "GET") {
+      const key = config.supabasePublishableKey;
+      // This response intentionally excludes all service-role/secret credentials.
+      if (!config.supabaseUrl || !key?.startsWith("sb_publishable_"))
+        return json(200, { available: false });
+      return json(200, {
+        available: true,
+        url: config.supabaseUrl,
+        publishableKey: key,
+      });
+    }
+    if (path === "/api/products/search") return productSearchApi(req, res);
+    if (path.startsWith("/api/products/")) return productApi(req, res);
+    if (path === "/api/plans/workout" || path === "/api/plans/meals")
+      return planApi(req, res);
+    if (path === "/api/voice") return voiceApi(req, res);
+    if (path === "/api/shopping/prices") return shoppingApi(req, res);
     if (path !== "/api/chat" || req.method !== "POST")
       return json(404, { error: "Not found." });
     if (!req.headers["content-type"]?.startsWith("application/json"))
@@ -104,28 +153,52 @@ export function createApi(config: Config, runner = runAI) {
     const now = Date.now();
     for (const [key, value] of completed)
       if (now - value.at > 600000) completed.delete(key);
-    const cached = completed.get(request.requestId);
+    const cacheKey = `${user}:${request.requestId}`;
+    const cached = !hosted && completed.get(cacheKey);
     if (cached) {
       res.setHeader("Content-Type", "application/x-ndjson");
       return res.end(
         JSON.stringify({ type: "result", result: cached.result }) + "\n",
       );
     }
-    if (running.has(request.requestId))
+    if (running.has(cacheKey))
       return json(409, {
         error:
           "This capture is already being processed. Wait a moment before retrying.",
       });
     attempts = attempts.filter((t) => now - t < 60000);
-    if (active >= 2 || attempts.length >= 12)
+    if (!hosted && (active >= 2 || attempts.length >= 12))
       return json(429, {
-        error: "Fuel is handling a few captures. Please try again in a moment.",
+        error:
+          "Rep & Plate is handling a few captures. Please try again in a moment.",
       });
     if (!config.openaiKey)
       return json(503, { error: errors.OPENAI_NOT_CONFIGURED });
+    let lease: string | undefined;
+    if (hosted) {
+      const claim = await hosted.cache.claim(
+        user,
+        request.requestId,
+        createHash("sha256").update(JSON.stringify(request)).digest("hex"),
+      );
+      if (claim.status === "cached") {
+        res.setHeader("Content-Type", "application/x-ndjson");
+        return res.end(
+          JSON.stringify({ type: "result", result: claim.result }) + "\n",
+        );
+      }
+      if (claim.status !== "new")
+        return json(409, {
+          error:
+            claim.status === "mismatch"
+              ? "This capture changed. Send it as a new message."
+              : "This capture is already being processed. Retry in a moment.",
+        });
+      lease = claim.lease;
+    }
     active++;
     attempts.push(now);
-    running.add(request.requestId);
+    running.add(cacheKey);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 180000);
     res.on("close", () => {
@@ -140,23 +213,31 @@ export function createApi(config: Config, runner = runAI) {
     };
     try {
       const result = aiResultSchema.parse(
-        await runner(
-          request,
-          config,
-          (text) => emit({ type: "progress", text }),
+        await enrichReceipt(
+          await runner(
+            request,
+            config,
+            (text) => emit({ type: "progress", text }),
+            controller.signal,
+          ),
+          config.usdaKey,
           controller.signal,
         ),
       );
       if (completed.size >= 100)
         completed.delete(completed.keys().next().value!);
-      completed.set(request.requestId, { at: Date.now(), result });
+      if (hosted && lease)
+        await hosted.cache.finish(user, request.requestId, lease, result);
+      else completed.set(cacheKey, { at: Date.now(), result });
       emit({ type: "result", result });
     } catch (error) {
       emit({ type: "error", error: publicError(error) });
     } finally {
       clearTimeout(timeout);
       active--;
-      running.delete(request.requestId);
+      running.delete(cacheKey);
+      if (hosted && lease)
+        await hosted.cache.fail(user, request.requestId, lease).catch(() => {});
       res.end();
     }
   };

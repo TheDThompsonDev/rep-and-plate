@@ -1,0 +1,59 @@
+.workout-history-context {
+  border-radius: 13px;
+  padding: 13px;
+  background: #eef8f2;
+  color: #496c5d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.workout-proposal-exercise {
+  margin: 15px 0;
+  padding: 13px;
+  border: 1px solid #dce9e1;
+  border-radius: 15px;
+  min-width: 0;
+}
+.workout-proposal-exercise legend {
+  color: #17634f;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 6px;
+}
+.workout-proposal-exercise label {
+  display: grid;
+  gap: 7px;
+  color: #4b6559;
+  font-size: 13px;
+}
+.workout-proposal-exercise input {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dce6e0;
+  border-radius: 10px;
+  padding: 10px;
+  color: #163e2e;
+  background: #fff;
+}
+.workout-proposal-dose {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.workout-proposal-exercise p {
+  font-size: 13px;
+  color: #728276;
+}
+.workout-previous-evidence {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border-radius: 12px;
+  background: #eef8f2;
+  color: #496c5d;
+  font-size: 12px;
+}
+.workout-previous-evidence strong {
+  color: #17634f;
+}

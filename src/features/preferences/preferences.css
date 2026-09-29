@@ -1,0 +1,23 @@
+.fuel-preference-proposal { border:1px solid #dce9e1; border-radius:17px; padding:16px; background:#fff; color:#203d2c; }
+.fuel-preference-eyebrow { display:flex; align-items:center; gap:6px; font-size:11px; color:#5d9275; }
+.fuel-preference-proposal h3 { font-family:inherit; font-weight:600; font-size:17px; line-height:1.35; margin:9px 0 6px; }
+.fuel-preference-proposal > p { color:#778c7d; font-size:13px; line-height:1.5; margin:8px 0; }
+.fuel-preference-proposal blockquote { margin:12px 0; padding:11px 12px; border-left:3px solid #a7d6ba; background:#f2f8f4; border-radius:0 8px 8px 0; font-size:13px; line-height:1.45; overflow-wrap:anywhere; color:#4c705a; }
+.fuel-preference-proposal blockquote small { display:block; color:#90a694; font-size:10px; margin-bottom:4px; }
+.fuel-preference-changes { list-style:none; padding:0; margin:12px 0; }
+.fuel-preference-changes li { padding:9px 0; border-top:1px solid #edf2ee; display:grid; gap:4px; font-size:13px; }
+.fuel-preference-changes li strong { color:#486f55; font-size:11px; font-weight:500; }
+.fuel-preference-changes li span { overflow-wrap:anywhere; }
+.fuel-preference-changes li.fuel-preference-removal { padding:10px; background:#fff7e9; border-radius:9px; border:1px solid #f1e1c6; margin:7px 0; }
+.fuel-preference-changes li.fuel-preference-removal strong { color:#96703f; }
+.fuel-preference-preview { font-size:12px; margin:10px 0; }
+.fuel-preference-preview summary { cursor:pointer; color:#4b8864; }
+.fuel-preference-preview div { display:grid; gap:4px; padding:9px 0; color:#869b8b; }
+.fuel-preference-preview strong { color:#426f51; font-size:11px; }
+.fuel-preference-buttons { display:flex; flex-wrap:wrap; gap:7px; margin-top:13px; }
+.fuel-preference-buttons button { display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px; padding:10px 12px; font-size:12px; background:#17674c; color:white; }
+.fuel-preference-buttons button + button { background:#edf5ef; color:#508362; }
+.fuel-preference-buttons button:disabled { opacity:.5; cursor:not-allowed; }
+.fuel-preference-footnote { display:block; font-size:10px; line-height:1.5; color:#94a398; margin-top:10px; }
+.fuel-preference-proposal .fuel-preference-status { display:flex; align-items:center; gap:6px; color:#4a8967; font-size:12px; }
+.fuel-preference-proposal .fuel-preference-error { color:#99713f; font-size:12px; background:#fff7e9; padding:10px; border-radius:9px; }

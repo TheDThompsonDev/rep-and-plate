@@ -1,133 +1,202 @@
+import { SpotEmptyState } from './features/spot/Spot';
 import { useState } from "react";
 import {
-  ArrowRight,
   BarChart3,
   ChevronRight,
-  CupSoda,
-  Droplet,
+  ChevronLeft,
+  ArrowRight,
   Info,
   MessageCircle,
+  Plus,
+  ShoppingBasket,
+  CalendarDays,
+  CookingPot,
+  Pencil,
   Utensils,
+  ScanBarcode,
 } from "lucide-react";
 import { FuelHeader, FuelTabs } from "./FuelNavigation";
 import { MealRow, Modal } from "./components";
 import {
   sumNutrition,
   today,
+  personalMeals,
+  isExampleMeal,
   type AppState,
   type Meal,
   type Page,
 } from "./domain";
 import "./nutrition.css";
-
-const insightCards = [
-  {
-    icon: Droplet,
-    tone: "oil",
-    title:
-      "Cooking oil added more calories than the chicken in 2 meals this week.",
-    description: "2 tbsp of oil is about 240 calories.",
-    detail:
-      "This sample insight compares the estimated oil and chicken portions in two example meals. Oil quantity is difficult to infer from a photo, so both records would remain editable. The comparison illustrates the product’s design; it has not been calculated from your own history.",
-    evidence: "Sample history · 2 home-cooked meals · estimated portions",
-  },
-  {
-    icon: BarChart3,
-    tone: "protein",
-    title: "Your highest-protein days start with breakfast.",
-    description:
-      "When breakfast has 30g+ protein, you average 41g more protein by the end of the day.",
-    detail:
-      "In this illustrative history, days with at least 30g of protein at breakfast averaged 41g more protein overall. This describes a sample association, not a proven cause or a finding about your actual meals.",
-    evidence: "Sample history · 14 days · breakfast and daily protein totals",
-  },
-  {
-    icon: CupSoda,
-    tone: "drinks",
-    title: "Most of your extra calories this week came from drinks.",
-    description:
-      "Meals were close to target. Drinks added about 420 extra calories.",
-    detail:
-      "The example week includes around 420 calories from drinks above the sample target. This is meant to show how Fuel can put a pattern into context, without assigning a score to your food. Your own captures are not yet analyzed for weekly insights.",
-    evidence: "Sample history · 7 days · drink captures",
-  },
-];
-const swaps = [
-  {
-    from: "Starbucks Frappuccino",
-    fromNote: "420 calories",
-    to: "Iced Americano",
-    toNote: "(with splash of milk)",
-    calories: "~30 calories",
-    sourceClass: "frappuccino",
-    targetClass: "americano",
-    detail:
-      "An illustrative drink swap: a sweet blended coffee at about 420 calories for an iced Americano with a splash of milk at about 30 calories. Cup size, recipe, and milk change the estimate. This comparison uses the reference design’s sample values, not a live restaurant lookup.",
-    difference: "About 390 fewer calories in this sample comparison.",
-  },
-  {
-    from: "Ranch Dressing",
-    fromNote: "140 calories (2 tbsp)",
-    to: "Salsa",
-    toNote: "",
-    calories: "10 calories (2 tbsp)",
-    sourceClass: "ranch",
-    targetClass: "salsa",
-    detail:
-      "An illustrative dressing swap using a 2-tablespoon serving of each: ranch at about 140 calories and salsa at about 10 calories. Brands and recipes vary. Use the values on your own label when you need a more precise estimate.",
-    difference: "About 130 fewer calories for the same sample serving size.",
-  },
-];
+import "./refined-tabs.css";
+import { PlateMark } from "./features/spot/Spot";
+import SmartSwaps from "./features/planning/SmartSwaps";
+import { getPantryLots } from "./features/pantry/ledger";
+import { defaultPreferences } from "./features/preferences/contracts";
+import { nutritionInsights } from "./features/insights/insights";
 
 type Props = {
   state: AppState;
   onNavigate: (page: Page) => void;
   onProfile: () => void;
+  onScan: () => void;
+  onEditGoals: () => void;
   onEditMeal: (meal: Meal) => void;
   onChatSummary: () => void;
+  onAsk: (text: string) => void;
+  onOpenPantry?: () => void;
+  onOpenPlan?: () => void;
+  onOpenRecipes?: () => void;
 };
 
 export default function NutritionPage({
   state,
   onNavigate,
   onProfile,
+  onScan,
+  onEditGoals,
   onEditMeal,
   onChatSummary,
+  onAsk,
+  onOpenPantry,
+  onOpenPlan,
+  onOpenRecipes,
 }: Props) {
   const [dialog, setDialog] = useState<"menu" | "meals" | "all" | null>(null);
   const [insight, setInsight] = useState<number | null>(null);
-  const [swap, setSwap] = useState<number | null>(null);
-  const totals = sumNutrition(state.meals);
+  const [historyDay, setHistoryDay] = useState<string | null>(null);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [view, setView] = useState<"day" | "week">("day");
+  const currentDay = today();
+  const day = selectedDay ?? currentDay;
+  const moveDay = (offset: number) => {
+    const date = new Date(`${day}T12:00:00`);
+    date.setDate(date.getDate() + offset);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    setSelectedDay(key === currentDay ? null : key);
+    setView("day");
+  };
+  const insightCards = nutritionInsights(state);
+  const totals = sumNutrition(state.meals, day);
   const remaining = state.profile.calories - totals.calories;
   const progress = Math.min(1, totals.calories / state.profile.calories);
-  const meals = state.meals.filter((m) => m.day === today());
+  const meals = personalMeals(state.meals, day);
+  const hasExamples = state.meals.some(isExampleMeal);
+  const dateLabel = (value: string) =>
+    new Date(`${value}T12:00:00`).toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  const week = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(`${currentDay}T12:00:00`);
+    date.setDate(date.getDate() - 6 + index);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    const entries = personalMeals(state.meals, key);
+    return {
+      day: key,
+      label: date.toLocaleDateString(undefined, { weekday: "short" }),
+      date: date.getDate(),
+      count: entries.length,
+      totals: sumNutrition(entries, key),
+    };
+  });
+  const loggedDays = week.filter((entry) => entry.count > 0).length;
+  const selectedInsight = insight === null ? undefined : insightCards[insight];
+  const modalOpen = dialog !== null || !!selectedInsight || historyDay !== null;
+  const mealGroups = (["Breakfast", "Lunch", "Dinner", "Snack"] as const)
+    .map((category) => ({
+      category,
+      meals: meals.filter((meal) => meal.category === category),
+    }))
+    .filter((group) => group.meals.length > 0);
   return (
-    <section className="fuel-chat nutrition-surface" aria-label="Nutrition">
+    <section
+      className="fuel-chat nutrition-surface refined-surface"
+      aria-label="Nutrition"
+    >
       <FuelHeader
         onHome={() => onNavigate("Chat")}
         onMenu={() => setDialog("menu")}
         onNutrition={onChatSummary}
         onProfile={onProfile}
       />
-      <div className="nutrition-scroll">
+      <div
+        className="nutrition-scroll"
+        inert={modalOpen}
+        aria-hidden={modalOpen}
+      >
         <div className="nutrition-intro">
           <h1>
-            Here’s what we’re learning
-            <br className="nutrition-title-break" /> about your nutrition.
+            Your day is
+            <br /> coming together.
           </h1>
-          <p>Real insights from your meals, habits, and progress.</p>
+          <p>A clear picture of what fuels you.</p>
         </div>
+        <div className="nutrition-date-controls">
+          <button onClick={() => moveDay(-1)} aria-label="Previous day">
+            <ChevronLeft size={18} />
+          </button>
+          <span className="nutrition-date">
+            {day === currentDay ? "Today · " : ""}
+            {new Date(`${day}T12:00:00`).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              ...(day !== currentDay ? { weekday: "short" as const } : {}),
+            })}
+          </span>
+          <button
+            onClick={() => moveDay(1)}
+            disabled={day >= currentDay}
+            aria-label="Next day"
+          >
+            <ChevronRight size={18} />
+          </button>
+          <div className="refined-segment" aria-label="Food log view">
+            <button
+              aria-pressed={view === "day"}
+              onClick={() => setView("day")}
+            >
+              Day
+            </button>
+            <button
+              aria-pressed={view === "week"}
+              onClick={() => setView("week")}
+            >
+              Week
+            </button>
+          </div>
+        </div>
+        {selectedDay && (
+          <button
+            className="nutrition-return-today"
+            onClick={() => {
+              setSelectedDay(null);
+              setView("day");
+            }}
+          >
+            Return to today
+          </button>
+        )}
         <section className="nutrition-today" aria-label="Today’s nutrition">
-          <h2>Today’s nutrition</h2>
+          <h2>
+            {day === currentDay
+              ? "Today’s nutrition"
+              : "Your recorded nutrition"}
+          </h2>
           <p className="nutrition-remaining">
-            {Math.abs(remaining).toLocaleString()} calories{" "}
-            {remaining >= 0 ? "left" : "above target"}
+            {meals.length
+              ? `${Math.abs(remaining).toLocaleString()} calories ${remaining >= 0 ? "left" : "above target"}`
+              : "Nothing logged for this day yet"}
           </p>
           <div className="nutrition-numbers">
             <button
               className="nutrition-ring"
               onClick={() => setDialog("meals")}
-              aria-label="View and edit today’s meals"
+              aria-label={
+                day === currentDay
+                  ? "View and edit today’s meals"
+                  : "View and edit this day’s meals"
+              }
             >
               <svg viewBox="0 0 110 110" aria-hidden="true">
                 <defs>
@@ -188,96 +257,250 @@ export default function NutritionPage({
               })}
             </div>
           </div>
-        </section>
-        <section className="nutrition-insights">
-          <div className="nutrition-section-heading">
-            <h2>Your insights</h2>
-            <button onClick={() => setDialog("all")}>
-              See all
-              <ChevronRight size={17} />
+          <div className="nutrition-target-context">
+            <span>
+              {meals.length
+                ? `From ${meals.length} ${meals.length === 1 ? "meal" : "meals"} you logged`
+                : "Based on your saved daily targets."}
+            </span>
+            <button onClick={onEditGoals} aria-label="Edit daily targets">
+              Edit targets <Pencil size={13} />
             </button>
           </div>
-          <div className="nutrition-insight-list">
-            {insightCards.map(({ icon: Icon, ...card }, index) => (
-              <button
-                className="nutrition-insight"
-                key={card.title}
-                onClick={() => setInsight(index)}
-              >
-                <span className={`nutrition-insight-icon ${card.tone}`}>
-                  <Icon
-                    size={27}
-                    strokeWidth={card.tone === "protein" ? 3 : 2.1}
-                    fill={card.tone === "oil" ? "#178463" : "none"}
-                  />
-                  {card.tone === "oil" && <i />}
-                </span>
-                <span className="nutrition-insight-copy">
-                  <strong>{card.title}</strong>
-                  <span>{card.description}</span>
-                </span>
-                <ChevronRight className="nutrition-chevron" size={19} />
-              </button>
-            ))}
-          </div>
         </section>
-        <section className="nutrition-swaps">
+        <button
+          className="nutrition-scan"
+          onClick={onScan}
+          aria-label="Scan a food barcode"
+        >
+          <span className="nutrition-scan-icon">
+            <ScanBarcode size={24} />
+          </span>
+          <span>
+            <strong>Have a label? Scan it.</strong>
+            <small>Check the portion, then add it to your day.</small>
+          </span>
+          <ChevronRight size={18} />
+        </button>
+        <section
+          className="nutrition-diary"
+          aria-label={
+            day === currentDay
+              ? "Today's logged meals"
+              : "Selected day’s logged meals"
+          }
+          hidden={view !== "day"}
+        >
           <div className="nutrition-section-heading">
-            <h2>Smart swaps</h2>
-            <span>Simple changes. A big difference.</span>
-          </div>
-          <div className="nutrition-swap-list">
-            {swaps.map((item, index) => (
+            <h2>What you’ve had</h2>
+            {meals.length > 0 && (
               <button
-                className="nutrition-swap"
-                key={item.from}
-                onClick={() => setSwap(index)}
-                aria-label={`${item.from} to ${item.to}`}
+                className="nutrition-log-action"
+                onClick={() => onNavigate("Chat")}
               >
-                <span
-                  className={`swap-photo ${item.sourceClass}`}
-                  role="img"
-                  aria-label={item.from}
-                />
-                <span className="swap-copy">
-                  <strong>{item.from}</strong>
-                  <span>{item.fromNote}</span>
-                </span>
-                <ArrowRight className="swap-arrow" size={21} />
-                <span
-                  className={`swap-photo ${item.targetClass}`}
-                  role="img"
-                  aria-label={item.to}
-                />
-                <span className="swap-copy swapped">
-                  <strong>
-                    {item.to}
-                    {item.toNote && (
-                      <>
-                        <br />
-                        {item.toNote}
-                      </>
-                    )}
-                  </strong>
-                  <span>{item.calories}</span>
-                </span>
-                <ChevronRight className="nutrition-chevron" size={18} />
+                <Plus size={16} /> Log a meal
+              </button>
+            )}
+          </div>
+          {hasExamples && (
+            <p className="nutrition-example-note">
+              Example meals are excluded from your totals and food log.
+            </p>
+          )}
+          {meals.length ? (
+            <div className="nutrition-meal-groups">
+              {mealGroups.map((group) => (
+                <section
+                  className="nutrition-meal-group"
+                  key={group.category}
+                  aria-label={`${group.category} meals`}
+                >
+                  <div className="nutrition-meal-group-heading">
+                    <h3>
+                      {group.category === "Snack"
+                        ? "Snacks & drinks"
+                        : group.category}
+                    </h3>
+                    <span>
+                      {group.meals
+                        .reduce((sum, meal) => sum + meal.calories, 0)
+                        .toLocaleString()}{" "}
+                      cal
+                    </span>
+                  </div>
+                  {group.meals.map((meal) => (
+                    <button
+                      key={meal.id}
+                      className="nutrition-logged-meal"
+                      onClick={() => onEditMeal(meal)}
+                      aria-label={`Edit ${meal.title}`}
+                    >
+                      {meal.image ? (
+                        <img src={meal.image} alt="" loading="lazy" />
+                      ) : (
+                        <span className="nutrition-meal-placeholder">
+                          <Utensils size={21} />
+                        </span>
+                      )}
+                      <span className="nutrition-logged-meal-copy">
+                        <strong>{meal.title}</strong>
+                        <span className="nutrition-meal-metadata">
+                          {meal.time} ·{" "}
+                          {meal.confidence === "estimated"
+                            ? "Estimated"
+                            : "Confirmed"}
+                        </span>
+                        <span className="nutrition-meal-nutrients">
+                          <b>{meal.calories.toLocaleString()} cal</b>
+                          <span>{meal.protein}g protein</span>
+                          <span>{meal.carbs}g carbs</span>
+                          <span>{meal.fat}g fat</span>
+                        </span>
+                      </span>
+                      <span className="nutrition-meal-edit">
+                        <Pencil size={15} />
+                        <span>Edit</span>
+                      </span>
+                    </button>
+                  ))}
+                </section>
+              ))}
+            </div>
+          ) : (
+            <SpotEmptyState side="plate" onCapture={()=>onNavigate('Chat')}/>
+          )}
+        </section>
+        <section
+          className="nutrition-week"
+          aria-label="Your last seven days"
+          hidden={view !== "week"}
+        >
+          <div className="nutrition-section-heading">
+            <h2>Your last seven days</h2>
+            <span>{loggedDays} of 7 days have logs</span>
+          </div>
+          <div className="nutrition-week-days">
+            {week.map((entry) => (
+              <button
+                key={entry.day}
+                onClick={() => setHistoryDay(entry.day)}
+                aria-label={`View ${dateLabel(entry.day)}`}
+                className={entry.day === currentDay ? "is-today" : ""}
+              >
+                <span>{entry.label}</span>
+                <b>{entry.date}</b>
+                <strong>
+                  {entry.count
+                    ? `${entry.totals.calories.toLocaleString()}`
+                    : "—"}
+                </strong>
+                <small>{entry.count ? "cal logged" : "Not logged"}</small>
               </button>
             ))}
           </div>
+          <p>
+            Logged calories may be a partial day. No log means unknown intake,
+            not zero.
+          </p>
         </section>
+        {onOpenPlan && (
+          <section className="nutrition-inspiration">
+            <div className="nutrition-section-heading">
+              <h2>A little inspiration for later</h2>
+            </div>
+            <p>Make room for something you’ll enjoy.</p>
+            <button className="refined-meal-inspiration" onClick={onOpenPlan}>
+              <img src="/images/bowl.jpg" alt="" loading="lazy" />
+              <span>
+                <small>MEALS AHEAD</small>
+                <strong>
+                  What sounds good
+                  <br /> for your next meal?
+                </strong>
+                <b>
+                  Explore your meal plan <ArrowRight size={17} />
+                </b>
+              </span>
+            </button>
+          </section>
+        )}
+        {loggedDays > 0 && (
+          <section className="nutrition-insights">
+            <div className="nutrition-section-heading">
+              <h2>Your insights</h2>
+              <button onClick={() => setDialog("all")}>
+                See all
+                <ChevronRight size={17} />
+              </button>
+            </div>
+            <div className="nutrition-insight-list">
+              {insightCards.slice(0, 1).map((card, index) => (
+                <button
+                  className="nutrition-insight"
+                  key={card.title}
+                  onClick={() => setInsight(index)}
+                >
+                  <span className={`nutrition-insight-icon ${card.tone}`}>
+                    <PlateMark />
+                    {card.tone === "oil" && <i />}
+                  </span>
+                  <span className="nutrition-insight-copy">
+                    <strong>{card.title}</strong>
+                    <span>{card.description}</span>
+                  </span>
+                  <ChevronRight className="nutrition-chevron" size={19} />
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+        <div className="nutrition-section-heading">
+          <h2>Your food, organized</h2>
+        </div>
+        {(onOpenPantry || onOpenPlan || onOpenRecipes) && (
+          <nav className="nutrition-tools" aria-label="Food planning tools">
+            {onOpenPantry && (
+              <button onClick={onOpenPantry}>
+                <ShoppingBasket size={20} />
+                <strong>Pantry</strong>
+                <span>What you have</span>
+              </button>
+            )}
+            {onOpenPlan && (
+              <button onClick={onOpenPlan}>
+                <CalendarDays size={20} />
+                <strong>Meal plan</strong>
+                <span>Your week</span>
+              </button>
+            )}
+            {onOpenRecipes && (
+              <button onClick={onOpenRecipes}>
+                <CookingPot size={20} />
+                <strong>Recipes</strong>
+                <span>Meals & leftovers</span>
+              </button>
+            )}
+          </nav>
+        )}
+        <SmartSwaps
+          lots={getPantryLots(state)}
+          preferences={state.preferences ?? defaultPreferences()}
+          onAsk={onAsk}
+        />
       </div>
       <FuelTabs
+        onScan={onScan}
         active="Nutrition"
         onNavigate={onNavigate}
-        onProfile={onProfile}
       />
       {dialog === "menu" && (
         <Modal title="Your nutrition" onClose={() => setDialog(null)}>
           <div className="fuel-menu">
             <button onClick={() => setDialog("meals")}>
               <Utensils size={21} />
-              <span>Today’s meals</span>
+              <span>
+                {day === currentDay ? "Today’s meals" : "Selected day’s meals"}
+              </span>
               <ChevronRight size={17} />
             </button>
             <button
@@ -298,13 +521,16 @@ export default function NutritionPage({
             <p>
               Live totals from your captured meals.
               <br />
-              Insights and swaps use sample history.
+              Insights and comparisons use your saved records.
             </p>
           </div>
         </Modal>
       )}
       {dialog === "meals" && (
-        <Modal title="Today’s meals" onClose={() => setDialog(null)}>
+        <Modal
+          title={day === currentDay ? "Today’s meals" : dateLabel(day)}
+          onClose={() => setDialog(null)}
+        >
           <div className="nutrition-meals-dialog">
             {meals.length ? (
               meals.map((meal) => (
@@ -339,8 +565,8 @@ export default function NutritionPage({
         <Modal title="Your insights" onClose={() => setDialog(null)}>
           <div className="nutrition-detail">
             <p>
-              These examples show the kinds of patterns Fuel will surface. They
-              use sample history, not an analysis of your current meal records.
+              These observations summarize your saved meals over the last seven
+              days. Missing logs are not treated as zero intake.
             </p>
             {insightCards.map((card, index) => (
               <button
@@ -358,53 +584,52 @@ export default function NutritionPage({
           </div>
         </Modal>
       )}
-      {insight !== null && (
+      {historyDay !== null && (
         <Modal
-          title={insightCards[insight].title}
-          onClose={() => setInsight(null)}
+          title={dateLabel(historyDay)}
+          onClose={() => setHistoryDay(null)}
         >
+          <div className="nutrition-meals-dialog">
+            {personalMeals(state.meals, historyDay).length ? (
+              <>
+                <p>
+                  {sumNutrition(
+                    state.meals,
+                    historyDay,
+                  ).calories.toLocaleString()}{" "}
+                  calories logged · This may be a partial day.
+                </p>
+                {personalMeals(state.meals, historyDay).map((meal) => (
+                  <MealRow
+                    key={meal.id}
+                    meal={meal}
+                    onEdit={(selected) => {
+                      setHistoryDay(null);
+                      onEditMeal(selected);
+                    }}
+                  />
+                ))}
+              </>
+            ) : (
+              <p>
+                No meals logged for this day. That doesn’t tell us how much you
+                ate.
+              </p>
+            )}
+          </div>
+        </Modal>
+      )}
+      {selectedInsight && (
+        <Modal title={selectedInsight.title} onClose={() => setInsight(null)}>
           <div className="nutrition-detail">
-            <p>{insightCards[insight].detail}</p>
+            <p>{selectedInsight.detail}</p>
             <span className="nutrition-evidence">
               <Info size={17} />
-              {insightCards[insight].evidence}
+              {selectedInsight.evidence}
             </span>
             <button
               className="button primary full-width"
               onClick={() => setInsight(null)}
-            >
-              Got it
-            </button>
-          </div>
-        </Modal>
-      )}
-      {swap !== null && (
-        <Modal
-          title={`${swaps[swap].from} → ${swaps[swap].to}`}
-          onClose={() => setSwap(null)}
-        >
-          <div className="nutrition-detail">
-            <div className="swap-detail-photos">
-              <span
-                className={`swap-photo ${swaps[swap].sourceClass}`}
-                role="img"
-                aria-label={swaps[swap].from}
-              />
-              <ArrowRight size={25} />
-              <span
-                className={`swap-photo ${swaps[swap].targetClass}`}
-                role="img"
-                aria-label={swaps[swap].to}
-              />
-            </div>
-            <p>{swaps[swap].detail}</p>
-            <span className="nutrition-evidence">
-              <Info size={17} />
-              {swaps[swap].difference}
-            </span>
-            <button
-              className="button primary full-width"
-              onClick={() => setSwap(null)}
             >
               Got it
             </button>

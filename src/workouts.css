@@ -583,6 +583,18 @@
   color: #748493;
   line-height: 1.6;
 }
+.workout-heading > button { margin-top: 14px; }
+.workout-heading > button:disabled { opacity: .5; cursor: default; }
+.workout-resume { border: 1px solid #c9e6d9; background: #eff9f4; border-radius: 17px; padding: 16px; margin-bottom: 16px; }
+.workout-resume strong { display: block; font-size: 17px; color: #115d48; }
+.workout-resume p { color: #647e75; font-size: 14px; line-height: 1.5; margin: 5px 0 12px; }
+.workout-resume button, .workout-browse { display: inline-flex; align-items: center; gap: 8px; color: #11624c; background: transparent; padding: 7px 0; font-weight: 600; }
+.workout-browse { margin: -3px 0 8px; }
+.fuel-workout-hero .workout-target-note { color: #506f63; font-size: 12px; }
+.workout-history-empty { display: flex; align-items: flex-start; gap: 14px; padding: 18px; border-radius: 17px; border: 1px solid #e2ebe7; background: #f7fbf9; }
+.workout-history-empty > svg { flex-shrink: 0; color: #4b927a; }
+.workout-history-empty strong { font-size: 16px; line-height: 1.35; }
+.workout-history-empty p { font-size: 14px; color: #748493; line-height: 1.5; margin: 6px 0 0; }
 @media (max-width: 600px) {
   .workout-scroll {
     padding: 8px 14px 16px;

@@ -1,17 +1,66 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { SpotVisuals } from './features/spot/Spot';
+import { resolveWorkoutCapture } from './features/spot/model';
+import { apiFetch } from "./api-fetch";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+const PantryLinkReview = lazy(() => import("./features/pantry/PantryLinkReview"));
+const RecipeDialog = lazy(() => import("./features/recipes/RecipeDialog"));
+const ProductScanner = lazy(() => import("./features/scanner/ProductScanner"));
+const LabelCapture = lazy(() => import("./features/labels/LabelCapture"));
+const PantryDialog = lazy(() =>
+  import("./features/pantry/PantryDialog").then((module) => ({
+    default: module.PantryDialog,
+  })),
+);
+const PreferencesDialog = lazy(
+  () => import("./features/preferences/PreferencesDialog"),
+);
+const MealPlanner = lazy(() => import("./features/planning/MealPlanner"));
+const WorkoutBuilder = lazy(
+  () => import("./features/workout-planning/WorkoutBuilder"),
+);
+const CloudAccount = lazy(() => import("./features/cloud/CloudAccount"));
+const VoiceCapture = lazy(() =>
+  import("./features/voice/VoiceCapture").then((module) => ({
+    default: module.VoiceCapture,
+  })),
+);
+import { defaultPreferences } from "./features/preferences/contracts";
+import { mealPlanSchema } from "./features/planning/contracts";
+import {
+  getPantryLots,
+  detachMealFromPantry,
+  deleteMealWithPantry,
+  mealFromPantry,
+} from "./features/pantry/ledger";
+import { mealPortionSelections } from "./features/planning/meal-plans";
+import { resolveRecipePortionProposal } from "./features/recipes/proposals";
+import { productSchema, type FoodProduct } from "./features/products/contracts";
+import {
+  captureProduct,
+  savePrivateProduct,
+} from "./features/products/actions";
 import ChatLayer from "./ChatLayer";
 import NutritionPage from "./NutritionPage";
 import WorkoutPage from "./WorkoutPage";
 import YouPage from "./YouPage";
-import { GroceriesDialog } from "./AICards";
+import KitchenPage from "./KitchenPage";
+const ShoppingDialog = lazy(() => import('./features/shopping/ShoppingDialog'));
 import {
   buildAIRequest,
   requestAI,
   applyAIResult,
   addProposedMeal,
+  resolvePreferenceProposal,
 } from "./ai-client";
-import { type AIStatus } from "./ai-contract";
-import { startPlan } from "./workouts";
+import { type AIStatus, type ChatAction } from "./ai-contract";
+import { startPlan, replyToWorkout } from "./workouts";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -21,13 +70,14 @@ import {
   ChevronRight,
   Clock3,
   Coffee,
+  CookingPot,
   Dumbbell,
   Flame,
   Footprints,
   ImagePlus,
   Inbox,
   Info,
-  Leaf,
+  CircleDot,
   MessageCircle,
   Mic,
   Moon,
@@ -61,18 +111,21 @@ import {
   readState,
   resolveReview,
   sumNutrition,
+  personalMeals,
   today,
   upgradeChat,
   type AppState,
   type Meal,
   type Page,
 } from "./domain";
+import { useLocalDay } from "./useLocalDay";
 
 const navigation = [
   { name: "Today" as const, icon: Sun },
   { name: "Chat" as const, icon: MessageCircle },
   { name: "Nutrition" as const, icon: BarChart3 },
   { name: "Workouts" as const, icon: Dumbbell },
+  { name: "Kitchen" as const, icon: CookingPot },
   { name: "Review" as const, icon: Inbox },
   { name: "You" as const, icon: UserRound },
 ];
@@ -84,7 +137,7 @@ const insights = [
     description:
       "Your higher-protein days tend to start with a proper breakfast.",
     detail:
-      "In the sample history, days with at least 30g of protein at breakfast averaged 38g more protein overall. This is an example of how Fuel could explain a pattern — it is not a conclusion about your actual health data.",
+      "In the sample history, days with at least 30g of protein at breakfast averaged 38g more protein overall. This is an example of how Rep & Plate could explain a pattern — it is not a conclusion about your actual health data.",
     evidence: "Sample history · 14 days · 6 higher-protein breakfasts",
   },
   {
@@ -103,12 +156,13 @@ const insights = [
     title: "A splash is hard to estimate.",
     description: "Cooking oil is the biggest uncertainty in two of your meals.",
     detail:
-      "Oil and sauce can be hard to see in a photo. Fuel should show that uncertainty and let you correct it without requiring a full meal re-entry. This prototype uses sample estimates, not image recognition.",
+      "Oil and sauce can be hard to see in a photo. Rep & Plate should show that uncertainty and let you correct it without requiring a full meal re-entry. This prototype uses sample estimates, not image recognition.",
     evidence: "Sample history · 2 home-cooked meals",
   },
 ];
 
 export default function App() {
+  useLocalDay();
   const [state, setState] = useState<AppState>(readState);
   const [page, setPage] = useState<Page>(
     () =>
@@ -124,22 +178,54 @@ export default function App() {
     evidence?: string;
   } | null>(null);
   const [captureOpen, setCaptureOpen] = useState(false);
+  const [receiptCapture, setReceiptCapture] = useState(false);
+  const [captureError, setCaptureError] = useState("");
   const [upload, setUpload] = useState<{ name: string; image: string } | null>(
     null,
   );
   const [composer, setComposer] = useState("");
+  const [reviewMessageId, setReviewMessageId] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const [aiStatus, setAIStatus] = useState<AIStatus | null>(null);
   const [aiStage, setAIStage] = useState("");
   const [captureContext, setCaptureContext] = useState("");
   const [groceriesOpen, setGroceriesOpen] = useState<string | null>(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [labelGTIN, setLabelGTIN] = useState<string | null>(null);
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const [shoppingOpen, setShoppingOpen] = useState(false);
+  const [shoppingTab,setShoppingTab]=useState<'swaps'|'list'|'spending'>('swaps');
+  const [recipesOpen, setRecipesOpen] = useState(false);
+  const [plannerOpen, setPlannerOpen] = useState(false);
+  const [workoutBuilderOpen, setWorkoutBuilderOpen] = useState(false);
+  const [voiceOpen, setVoiceOpen] = useState(false);
+  const [cloudOpen, setCloudOpen] = useState(false);
+  const [linkMealId,setLinkMealId] = useState<string|null>(null);
+  const scanAction = useRef(crypto.randomUUID());
+  function openScanner() {
+    scanAction.current = crypto.randomUUID();
+    setScannerOpen(true);
+  }
+  function addScannedProduct(
+    product: FoodProduct,
+    action: "grocery" | "meal",
+    servings: number,
+  ) {
+    const actionId = scanAction.current;
+    setState((s) => captureProduct(s, product, action, servings, actionId));
+    setScannerOpen(false);
+    navigate("Chat");
+  }
   const aiBusy = useRef(false);
+  const aiGeneration = useRef(0);
+  const aiRequestController = useRef<AbortController | null>(null);
+  useEffect(()=>()=>{aiGeneration.current++;aiRequestController.current?.abort();},[]);
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pending = state.reviews.filter((r) => !r.resolved);
   const totals = sumNutrition(state.meals);
-  const todayMeals = state.meals.filter((m) => m.day === today());
+  const todayMeals = personalMeals(state.meals, today());
   const dateLabel = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -151,7 +237,7 @@ export default function App() {
   }, []);
   useEffect(() => {
     let live = true;
-    fetch("/api/status")
+    apiFetch("/api/status")
       .then((r) => r.json())
       .then((value) => {
         if (live)
@@ -283,6 +369,14 @@ export default function App() {
     setUpload(null);
     navigate("Chat");
   }
+  function cancelPendingAI() {
+    aiGeneration.current++;
+    aiRequestController.current?.abort();
+    aiRequestController.current = null;
+    aiBusy.current = false;
+    setProcessing(false);
+    setAIStage("");
+  }
   async function sendAI(text: string, image?: string, retryId?: string) {
     if (aiBusy.current) return;
     if (!aiStatus?.available) {
@@ -303,9 +397,12 @@ export default function App() {
           aiStatus: "pending" as const,
         };
     if (!message) return;
+    const generation = ++aiGeneration.current;
+    const controller = new AbortController();
+    aiRequestController.current = controller;
     aiBusy.current = true;
     setProcessing(true);
-    setAIStage("Connecting to Fuel…");
+    setAIStage("Connecting to Rep & Plate…");
     setState((s) => ({
       ...s,
       messages: retryId
@@ -319,10 +416,13 @@ export default function App() {
     try {
       const result = await requestAI(
         buildAIRequest(state, message),
-        setAIStage,
+        stage=>{if(generation===aiGeneration.current)setAIStage(stage);},
+        controller.signal,
       );
-      setState((s) => applyAIResult(s, result));
+      if (generation !== aiGeneration.current) return;
+      setState((s) => generation===aiGeneration.current ? applyAIResult(s, result) : s);
     } catch (error) {
+      if (generation !== aiGeneration.current) return;
       const messageText =
         error instanceof Error && error.name === "TimeoutError"
           ? "That took longer than expected. Your capture is still here; please retry."
@@ -338,17 +438,63 @@ export default function App() {
         ),
       }));
     } finally {
-      aiBusy.current = false;
-      setProcessing(false);
-      setAIStage("");
+      if (generation === aiGeneration.current) {
+        aiRequestController.current = null;
+        aiBusy.current = false;
+        setProcessing(false);
+        setAIStage("");
+      }
+    }
+  }
+  function openChatAction(action: ChatAction) {
+    switch (action) {
+      case "pantry": setGroceriesOpen("*"); break;
+      case "recipes": setRecipesOpen(true); break;
+      case "meal-plan": setPlannerOpen(true); break;
+      case "preferences": setPreferencesOpen(true); break;
+      case "workout": setWorkoutBuilderOpen(true); break;
+      case "shopping": setShoppingTab('swaps');setShoppingOpen(true); break;
     }
   }
   function submitText(e?: FormEvent, preset?: string) {
     e?.preventDefault();
     const text = (preset ?? composer).trim();
     if (!text || processing) return;
+    if (/^(?:my |open )?(?:shopping list|smart swaps|shopping|grocery spending)[?!.]*$/i.test(text)) {
+      setComposer('');setShoppingTab(/list/i.test(text)?'list':/spending/i.test(text)?'spending':'swaps');setShoppingOpen(true);return;
+    }
+    if (/^(?:my |open )?(?:recipes|leftovers|recipes (?:and|&) leftovers)[?!.]*$/i.test(text)) {
+      setComposer("");
+      setRecipesOpen(true);
+      return;
+    }
+    if (/^(?:my |open )?(?:pantry|groceries)[?!.]*$/i.test(text)) {
+      setComposer("");
+      setGroceriesOpen("*");
+      return;
+    }
+    if (/^(scan(?: a barcode)?|barcode)$/i.test(text)) {
+      setComposer("");
+      openScanner();
+      return;
+    }
+    if (/^(?:plan (?:my |a )?week|weekly meal plan|meal plan)$/i.test(text)) {
+      setComposer("");
+      setPlannerOpen(true);
+      return;
+    }
+    if (/^(?:my preferences|food preferences)$/i.test(text)) {
+      setComposer("");
+      setPreferencesOpen(true);
+      return;
+    }
+    if (/^(?:create|build|generate) (?:my |a )?workout$/i.test(text)) {
+      setComposer("");
+      setWorkoutBuilderOpen(true);
+      return;
+    }
     if (aiStatus === null) {
-      notify("Connecting to Fuel. Please try again in a moment.");
+      notify("Connecting to Rep & Plate. Please try again in a moment.");
       return;
     }
     const localCommand =
@@ -487,7 +633,7 @@ export default function App() {
                 id: id(),
                 role: "assistant" as const,
                 kind: "insight" as const,
-                text: "Dinner’s in. You can tap the meal to adjust any of the details.",
+                text: "That’s the sample dinner. It isn’t counted in your daily totals.",
                 time: clockTime(),
               },
             ],
@@ -511,9 +657,9 @@ export default function App() {
         mealId = meal.id;
         next = { ...next, meals: [...next.meals, meal] };
         response =
-          "Added using a sample estimate. You can tap the meal to adjust the portions or nutrition.";
+          "This is a sample estimate, so it isn’t counted in your daily totals. Scan a product or use connected Chat to log your own food.";
       } else if (result.kind === "repeat") {
-        const previous = [...s.meals]
+        const previous = [...personalMeals(s.meals)]
           .reverse()
           .find((m) => m.category === "Breakfast" && m.day < today());
         if (previous) {
@@ -591,12 +737,17 @@ export default function App() {
   }
   async function onFile(file?: File) {
     if (!file) return;
+    setCaptureError("");
+    const reportError = (message: string) => {
+      setCaptureError(message);
+      notify(message);
+    };
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-      notify("Choose a JPG, PNG, or WebP image.");
+      reportError("Choose a JPG, PNG, or WebP image.");
       return;
     }
     if (file.size > 12000000) {
-      notify("Choose an image smaller than 12 MB.");
+      reportError("Choose an image smaller than 12 MB.");
       return;
     }
     try {
@@ -625,16 +776,16 @@ export default function App() {
         image = canvas.toDataURL("image/jpeg", 0.85);
       }
       if (image.length > 4400000) {
-        notify(
+        reportError(
           "This image is still too large. Please crop the receipt or choose a smaller photo.",
         );
         return;
       }
-      setCaptureContext("");
+      if (!captureOpen) setCaptureContext("");
       setUpload({ name: file.name, image });
       setCaptureOpen(true);
     } catch {
-      notify("That image couldn’t be opened. Please try another.");
+      reportError("That image couldn’t be opened. Please try another.");
     }
   }
   function saveUploadForReview() {
@@ -646,8 +797,9 @@ export default function App() {
         {
           id: id(),
           title: upload.name,
-          question:
-            "Your image is saved. Add a meal estimate or keep it as a note.",
+          question: receiptCapture
+            ? "Your grocery receipt is saved for review. These purchases have not been added to meals or pantry stock."
+            : "Your image is saved. Add a meal estimate or keep it as a note.",
           source: `Image · ${clockTime()}`,
           image: upload.image,
           options: ["Keep as a note"],
@@ -674,6 +826,7 @@ export default function App() {
     }));
     setCaptureOpen(false);
     setUpload(null);
+    setReceiptCapture(false);
     navigate("Chat");
     notify("Image saved. You can review it here in chat.");
   }
@@ -713,15 +866,13 @@ export default function App() {
     });
   }
   function voice() {
-    setInfo({
-      title: "A few words are all it takes.",
-      text: "Voice capture is planned for the native app. In this browser prototype, use the microphone on your phone’s keyboard to dictate into Chat, or try “Bench was 185 for 8, 8, 7.”",
-    });
+    setVoiceOpen(true);
   }
 
   return (
+    <SpotVisuals value={state.spot?.visuals !== false}>
     <div
-      className={`app-shell ${page === "Chat" || page === "Nutrition" || page === "Workouts" || page === "You" || page === "Review" ? "chat-home" : ""}`}
+      className={`app-shell ${page === "Chat" || page === "Nutrition" || page === "Kitchen" || page === "Workouts" || page === "You" || page === "Review" ? "chat-home" : ""}`}
     >
       <a className="skip-link" href="#main">
         Skip to content
@@ -791,7 +942,7 @@ export default function App() {
           <button
             className="mobile-brand brand-button"
             onClick={() => navigate("Chat")}
-            aria-label="Fuel home"
+            aria-label="Rep & Plate home"
           >
             <Brand small />
           </button>
@@ -819,7 +970,7 @@ export default function App() {
         </header>
         <main
           id="main"
-          className={`main-content ${page === "Chat" || page === "Nutrition" || page === "Workouts" || page === "You" || page === "Review" ? "chat-main" : ""}`}
+          className={`main-content ${page === "Chat" || page === "Nutrition" || page === "Kitchen" || page === "Workouts" || page === "You" || page === "Review" ? "chat-main" : ""}`}
         >
           {page === "Today" && (
             <div className="page-enter">
@@ -861,7 +1012,7 @@ export default function App() {
                   <NutritionSummary totals={totals} goals={state.profile} />
                   <div className="card-footnote">
                     <span className="tiny-leaf">
-                      <Leaf size={15} />
+                      <CircleDot size={15} />
                     </span>
                     {totals.protein < state.profile.protein
                       ? "A little more protein will round out your day."
@@ -940,7 +1091,7 @@ export default function App() {
                   onClick={() =>
                     setInfo({
                       title: "Room to rest and recover.",
-                      text: "7 hours and 12 minutes of sleep is a sample recovery record, close to the demo’s 7-hour average. Fuel is not currently connected to a wearable.",
+                      text: "7 hours and 12 minutes of sleep is a sample recovery record, close to the demo’s 7-hour average. Rep & Plate is not currently connected to a wearable.",
                       evidence: "Sample recovery · not synced to a device",
                     })
                   }
@@ -1037,7 +1188,7 @@ export default function App() {
                 </section>
               </div>
               <section className="capture-strip">
-                <IconTile icon={Leaf} />
+                <IconTile icon={CircleDot} />
                 <div>
                   <h3>Anything else happen today?</h3>
                   <p>A photo, a quick message. Leave the rest to us.</p>
@@ -1064,7 +1215,7 @@ export default function App() {
                 </div>
               </section>
               <p className="page-note">
-                <Leaf size={13} /> Less bookkeeping. More living.{" "}
+                <CircleDot size={13} /> Less bookkeeping. More living.{" "}
                 <span>Sample data · saved on this device</span>
               </p>
             </div>
@@ -1072,6 +1223,15 @@ export default function App() {
 
           {page === "Nutrition" && (
             <NutritionPage
+              onScan={openScanner}
+              onEditGoals={() => setProfileOpen(true)}
+              onOpenPantry={() => setGroceriesOpen("*")}
+              onOpenPlan={() => setPlannerOpen(true)}
+              onOpenRecipes={() => setRecipesOpen(true)}
+              onAsk={(text) => {
+                navigate("Chat");
+                submitText(undefined, text);
+              }}
               state={state}
               onNavigate={navigate}
               onProfile={() => navigate("You")}
@@ -1085,6 +1245,16 @@ export default function App() {
 
           {page === "Chat" && (
             <ChatLayer
+              onDiscardMeal={messageId=>setState(s=>({...s,messages:s.messages.map(m=>m.id===messageId?{...m,mealProposal:undefined}:m)}))}
+              onSpotSettings={patch=>setState(s=>({...s,spot:{...s.spot,...patch}}))}
+              onWorkoutCapture={(messageId,accept)=>{try{resolveWorkoutCapture(state,messageId,accept);setState(s=>resolveWorkoutCapture(s,messageId,accept));}catch(e){notify(e instanceof Error?e.message:"Check the workout details.");}}}
+              reviewMessageId={reviewMessageId}
+              onReviewFocused={() => setReviewMessageId(null)}
+              onPantryLinks={setLinkMealId}
+              onPreferenceProposal={(messageId,accept)=>{
+                try {resolvePreferenceProposal(state,messageId,accept);setState(current=>resolvePreferenceProposal(current,messageId,accept));notify(accept ? "Preferences saved." : "Your preferences are unchanged.");}
+                catch(error){notify(error instanceof Error ? error.message : "These preferences need a check.");}
+              }}
               state={state}
               composer={composer}
               processing={processing}
@@ -1094,18 +1264,30 @@ export default function App() {
                 void sendAI("", undefined, messageId);
               }}
               onGroceries={setGroceriesOpen}
+              onScan={openScanner}
+              onPlan={() => setPlannerOpen(true)}
+              onPreferences={() => setPreferencesOpen(true)}
+              onRecipes={() => setRecipesOpen(true)}
+              onAction={openChatAction}
+              onRecipePortion={(messageId,accept)=>{
+                try {
+                  resolveRecipePortionProposal(state,messageId,accept);
+                  setState(current=>{try{return resolveRecipePortionProposal(current,messageId,accept);}catch{return current;}});
+                } catch(error){notify(error instanceof Error ? error.message : "Review the remaining portions before logging.");}
+              }}
               onAddMeal={(messageId) =>
                 setState((s) => addProposedMeal(s, messageId))
               }
               onComposerChange={setComposer}
               onSend={submitText}
-              onCamera={() => cameraRef.current?.click()}
-              onAttach={() => fileRef.current?.click()}
+              onCamera={() => { setReceiptCapture(false); cameraRef.current?.click(); }}
+              onAttach={() => { setReceiptCapture(false); fileRef.current?.click(); }}
               onVoice={voice}
               onProfile={() => navigate("You")}
               onNavigate={navigate}
               onEditMeal={setEditMeal}
               onSample={() => {
+                setReceiptCapture(false);
                 setUpload(null);
                 setCaptureOpen(true);
               }}
@@ -1119,21 +1301,48 @@ export default function App() {
             />
           )}
 
+          {page === "Kitchen" && (
+            <KitchenPage state={state} onNavigate={navigate} onScan={openScanner}
+              onAddReceipt={() => {
+                setReceiptCapture(true);
+                setCaptureError("");
+                setUpload(null);
+                setCaptureContext("");
+                setCaptureOpen(true);
+              }}
+              onShopping={() => {setShoppingTab('swaps');setShoppingOpen(true);}} onPreferences={() => setPreferencesOpen(true)}
+              onPantry={() => setGroceriesOpen("*")}
+              onReceipt={(receiptId) => setGroceriesOpen(receiptId)}
+              onPlan={() => setPlannerOpen(true)} onRecipes={() => setRecipesOpen(true)}
+              onAsk={(text) => { navigate("Chat"); submitText(undefined, text); }} />
+          )}
+
           {page === "Workouts" && (
             <WorkoutPage
+              onScan={openScanner}
               state={state}
               setState={setState}
               onNavigate={navigate}
               onProfile={() => navigate("You")}
               onVoice={voice}
+              onBuild={() => setWorkoutBuilderOpen(true)}
             />
           )}
 
           {(page === "You" || page === "Review") && (
             <YouPage
+              onScan={openScanner}
+              onRecipes={() => setRecipesOpen(true)}
+              onReviewMessage={(messageId) => {
+                setReviewMessageId(messageId);
+                navigate("Chat");
+              }}
+              onAccount={() => setCloudOpen(true)}
               state={state}
               aiAvailable={aiStatus?.available ?? false}
-              onGroceries={() => setGroceriesOpen("*")}
+              onGroceries={(receiptId) => setGroceriesOpen(receiptId ?? "*")}
+              onPreferences={() => setPreferencesOpen(true)}
+              onPlan={() => setPlannerOpen(true)}
               onNavigate={navigate}
               onEditProfile={() => setProfileOpen(true)}
               onEditMeal={setEditMeal}
@@ -1221,7 +1430,7 @@ export default function App() {
       {info && (
         <Modal title={info.title} onClose={() => setInfo(null)}>
           <div className="info-content">
-            <IconTile icon={Leaf} />
+            <IconTile icon={CircleDot} />
             <p>{info.text}</p>
             {info.evidence && (
               <div className="evidence">
@@ -1241,23 +1450,27 @@ export default function App() {
       )}
       {captureOpen && (
         <Modal
-          title={upload ? "A moment, captured." : "Show me what happened."}
+          title={receiptCapture ? (upload ? "Your receipt, ready to read." : "Add a grocery receipt") : (upload ? "A moment, captured." : "Show me what happened.")}
           onClose={() => {
             setCaptureOpen(false);
             setUpload(null);
+            setReceiptCapture(false);
           }}
         >
           <div className="capture-modal">
+            {captureError && <p role="alert">{captureError}</p>}
             {upload ? (
               <>
                 <img
                   className="upload-preview"
                   src={upload.image}
-                  alt="Your uploaded capture"
+                  alt={receiptCapture ? "Your grocery receipt" : "Your uploaded capture"}
                 />
                 <p>
                   {aiStatus?.available
-                    ? "Send a meal photo, grocery receipt, or order screenshot. Fuel will read it and look for useful nutrition sources."
+                    ? receiptCapture
+                      ? "Check that the store, items, and prices are readable. We’ll identify your groceries and research their nutrition, keeping purchases separate from meals you ate."
+                      : "Send a meal photo, grocery receipt, or order screenshot. Rep & Plate will read it and look for useful nutrition sources."
                     : "AI is unavailable. You can still save this image for review."}
                 </p>
                 {aiStatus?.available && (
@@ -1276,16 +1489,17 @@ export default function App() {
                       disabled={processing}
                       onClick={() => {
                         const image = upload.image;
-                        const text =
-                          captureContext.trim() ||
-                          "Please help me understand this photo or receipt. If these are groceries I purchased, research their nutrition and save the grocery list separately from meals I ate.";
+                        const text = receiptCapture
+                          ? "This is a grocery receipt for items I purchased. Identify the store and items, research their nutrition, and save the grocery list separately from meals I ate. Do not log these purchases as food eaten." + (captureContext.trim() ? `\n\nAdditional context: ${captureContext.trim()}` : "")
+                          : captureContext.trim() || "Please help me understand this photo or receipt. If these are groceries I purchased, research their nutrition and save the grocery list separately from meals I ate.";
                         setCaptureOpen(false);
                         setUpload(null);
+                        setReceiptCapture(false);
                         navigate("Chat");
                         void sendAI(text, image);
                       }}
                     >
-                      Send to Fuel <ArrowRight size={17} />
+                      Send to Rep & Plate <ArrowRight size={17} />
                     </button>
                     <p className="section-note">
                       Sent to OpenAI for image reading and web research;
@@ -1295,30 +1509,41 @@ export default function App() {
                   </>
                 )}
                 <button
-                  className="button primary full-width"
+                  className={`button ${aiStatus?.available ? "" : "primary"} full-width`}
                   onClick={saveUploadForReview}
                 >
                   Save my image for review
                   <Inbox size={17} />
                 </button>
+                {receiptCapture && (
+                  <button className="button full-width" onClick={() => setUpload(null)}>
+                    Retake or choose another photo
+                  </button>
+                )}
               </>
             ) : (
               <>
                 <p>
-                  A photo, an order screenshot, or a few words. Start wherever
-                  is easiest.
+                  {receiptCapture
+                    ? "Lay your receipt flat in good light. Include the store name, items, and total in the photo."
+                    : "A photo, an order screenshot, or a few words. Start wherever is easiest."}
                 </p>
+                {receiptCapture && (
+                  <button className="button primary full-width" onClick={() => cameraRef.current?.click()}>
+                    <Camera size={20} /> Take a photo
+                  </button>
+                )}
                 <button
                   className="upload-zone"
                   onClick={() => fileRef.current?.click()}
                 >
                   <ImagePlus size={31} />
-                  <strong>Choose a photo or screenshot</strong>
+                  <strong>{receiptCapture ? "Choose a photo" : "Choose a photo or screenshot"}</strong>
                   <span>JPG, PNG, WebP · up to 12 MB</span>
                 </button>
               </>
             )}
-            <div className="modal-divider">
+            {!receiptCapture && <><div className="modal-divider">
               <span>OR EXPLORE A DEMO</span>
             </div>
             <button
@@ -1344,74 +1569,255 @@ export default function App() {
               <ChevronRight size={18} />
             </button>
             <p className="section-note">
-              Demo flows use preset meals. Use “Send to Fuel” above for real
+              Demo flows use preset meals. Use “Send to Rep & Plate” above for real
               image reading and nutrition research.
             </p>
+            </>}
           </div>
         </Modal>
       )}
-      {groceriesOpen && (
-        <GroceriesDialog
-          receipts={(state.groceries ?? []).filter(
-            (g) => groceriesOpen === "*" || g.id === groceriesOpen,
-          )}
-          onClose={() => setGroceriesOpen(null)}
-          onUpdate={(receiptId, item) =>
-            setState((s) => ({
-              ...s,
-              groceries: (s.groceries ?? []).map((g) =>
-                g.id === receiptId
-                  ? {
-                      ...g,
-                      items: g.items.map((old) =>
-                        old.id === item.id ? item : old,
-                      ),
-                    }
-                  : g,
-              ),
-            }))
-          }
-          onAsk={(text) => {
-            navigate("Chat");
-            void sendAI(text);
-          }}
-        />
-      )}
+      <Suspense fallback={null}>
+        {linkMealId && <PantryLinkReview state={state} mealId={linkMealId} onChange={setState} onClose={()=>setLinkMealId(null)}/>}
+        {cloudOpen && (
+          <CloudAccount
+            state={state}
+            onClose={() => setCloudOpen(false)}
+            onRestore={(restored) => {
+              cancelPendingAI();
+              setState(restored);
+              notify("Cloud records loaded onto this device.");
+            }}
+          />
+        )}
+        {voiceOpen && (
+          <VoiceCapture
+            onClose={() => setVoiceOpen(false)}
+            onSend={(text) => {
+              setVoiceOpen(false);
+              if (page === "Workouts" && state.workout.status === "active")
+                setState((s) => ({
+                  ...s,
+                  workout: replyToWorkout(s.workout, text),
+                }));
+              else submitText(undefined, text);
+            }}
+          />
+        )}
+        {shoppingOpen && <ShoppingDialog initialTab={shoppingTab} state={state} onChange={setState} onClose={()=>setShoppingOpen(false)} onPreferences={()=>{setShoppingOpen(false);setPreferencesOpen(true);}} onPantry={()=>{setShoppingOpen(false);setGroceriesOpen('*');}}/>}
+        {preferencesOpen && (
+          <PreferencesDialog
+            value={state.preferences}
+            onClose={() => setPreferencesOpen(false)}
+            onSave={(preferences) => {
+              setState((s) => ({ ...s, preferences }));
+              setPreferencesOpen(false);
+              notify("Your preferences are saved.");
+            }}
+          />
+        )}
+        {plannerOpen && (
+          <MealPlanner
+            lots={getPantryLots(state).slice(0, 100)}
+            preferences={state.preferences ?? defaultPreferences()}
+            goals={state.profile}
+            value={state.mealPlans?.at(-1)}
+            plans={state.mealPlans}
+            loggedMealIds={state.meals.map(meal=>meal.id)}
+            onClose={() => setPlannerOpen(false)}
+            onGenerate={async (context) => {
+              const response = await apiFetch("/api/plans/meals", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  ...context,
+                  goals: {
+                    calories: state.profile.calories,
+                    protein: state.profile.protein,
+                    carbs: state.profile.carbs,
+                    fat: state.profile.fat,
+                  },
+                }),
+                signal: AbortSignal.timeout(125000),
+              });
+              const result = await response.json();
+              if (!response.ok)
+                throw new Error(result.error ?? "Planning couldn't finish.");
+              return mealPlanSchema.parse(result);
+            }}
+            onSave={(plan) => {
+              setState((s) => ({
+                ...s,
+                mealPlans: [
+                  ...(s.mealPlans ?? []).filter((p) => p.id !== plan.id),
+                  plan,
+                ],
+              }));
+              notify(plan.status === "draft" ? "Draft saved. Nothing has been logged as eaten." : "Meal plan saved. Nothing has been logged as eaten.");
+            }}
+            onAsk={(text) => {
+              setPlannerOpen(false);
+              navigate("Chat");
+              void sendAI(text);
+            }}
+            onLog={(meal, planId) => {
+              const selections = mealPortionSelections(
+                meal,
+                getPantryLots(state),
+              );
+              if (!selections)
+                throw new Error(
+                  "Check ingredient availability before logging.",
+                );
+              const operation = `plan:${planId}:${meal.id}`;
+              const apply = (current: AppState) => mealFromPantry(current, selections, operation, meal.category ?? "Dinner", meal.title);
+              apply(state);
+              // The planner acknowledges the persisted meal; a concurrent stock change stays recoverable.
+              setState(current=>{try{return apply(current);}catch{return current;}});
+            }}
+          />
+        )}
+        {workoutBuilderOpen && (
+          <WorkoutBuilder
+            state={state}
+            onClose={() => setWorkoutBuilderOpen(false)}
+            onStart={(plan) => {
+              setState((s) => {
+                if (s.workout.status === "active") return s;
+                return {
+                  ...s,
+                  workout: {
+                    status: "active",
+                    planId: "personalized",
+                    title: plan.title,
+                    startedAt: new Date().toISOString(),
+                    finishedAt: null,
+                    history: [
+                      ...(s.workout.history ?? []),
+                      ...(s.workout.startedAt
+                        ? [
+                            {
+                              title: s.workout.title ?? "Workout",
+                              exercises: s.workout.exercises,
+                              startedAt: s.workout.startedAt,
+                              finishedAt: s.workout.finishedAt,
+                            },
+                          ]
+                        : []),
+                    ],
+                    exercises: plan.exercises.map((ex) => ({
+                      name: ex.name,
+                      weight: 0,
+                      target: ex.reps,
+                      previous: [],
+                      sets: Array(ex.sets).fill(null),
+                    })),
+                    conversation: [
+                      {
+                        id: id(),
+                        role: "assistant",
+                        time: clockTime(),
+                        text:
+                          plan.reason +
+                          " Choose comfortable weights before logging your sets.",
+                      },
+                    ],
+                  },
+                };
+              });
+              setWorkoutBuilderOpen(false);
+              navigate("Workouts");
+            }}
+          />
+        )}
+        {groceriesOpen && (
+          <PantryDialog
+            state={state}
+            receiptId={groceriesOpen === "*" ? undefined : groceriesOpen}
+            onChange={setState}
+            onClose={() => setGroceriesOpen(null)}
+            onAsk={(text) => {
+              navigate("Chat");
+              void sendAI(text);
+            }}
+          />
+        )}
+        {recipesOpen && <RecipeDialog state={state} onChange={setState} onClose={()=>setRecipesOpen(false)}/>}
+        {scannerOpen && (
+          <ProductScanner
+            onClose={() => setScannerOpen(false)}
+            onProduct={addScannedProduct}
+            lookupOverride={(gtin) =>
+              (state.products ?? []).find((p) => p.gtin === gtin)
+            }
+            onLabel={(gtin) => {
+              setScannerOpen(false);
+              setLabelGTIN(gtin);
+            }}
+          />
+        )}
+        {labelGTIN && (
+          <LabelCapture
+            gtin={labelGTIN}
+            onClose={() => setLabelGTIN(null)}
+            onExtract={async (image) => {
+              const response = await apiFetch("/api/products/label", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ barcode: labelGTIN, image }),
+                signal: AbortSignal.timeout(125000),
+              });
+              const value = await response.json();
+              if (!response.ok)
+                throw new Error(value.error ?? "This label couldn't be read.");
+              return productSchema.parse(value);
+            }}
+            onConfirm={(product) => {
+              setState((s) => savePrivateProduct(s, product));
+              setLabelGTIN(null);
+              openScanner();
+              notify("Label saved for your next scan.");
+            }}
+          />
+        )}
+      </Suspense>
       {editMeal && (
         <MealEditor
+          onPantryLinks={!editMeal.recipeBatchId && state.meals.some(meal=>meal.id===editMeal.id) && (state.groceries?.length ?? 0)>0 ? ()=>{setLinkMealId(editMeal.id);setEditMeal(null);} : undefined}
           meal={editMeal}
           onClose={() => setEditMeal(null)}
           onSave={(meal) => {
-            setState((s) => ({
-              ...s,
-              meals: s.meals.some((m) => m.id === meal.id)
-                ? s.meals.map((m) => (m.id === meal.id ? meal : m))
-                : [...s.meals, meal],
-              reviews: s.reviews.map((r) =>
-                `review-meal-${r.id}` === meal.id
-                  ? { ...r, resolved: true, answer: "Meal added by you" }
-                  : r,
-              ),
-            }));
+            setState((previous) => {
+              const old = previous.meals.find((m) => m.id === meal.id);
+              const changed =
+                old &&
+                (["calories", "protein", "carbs", "fat"] as const).some(
+                  (k) => old[k] !== meal[k],
+                );
+              const s = changed
+                ? detachMealFromPantry(previous, meal.id)
+                : previous;
+              const savedMeal = changed
+                ? { ...meal, components: undefined }
+                : meal;
+              return {
+                ...s,
+                meals: old
+                  ? s.meals.map((m) => (m.id === meal.id ? savedMeal : m))
+                  : [...s.meals, savedMeal],
+                reviews: s.reviews.map((r) =>
+                  `review-meal-${r.id}` === meal.id
+                    ? { ...r, resolved: true, answer: "Meal added by you" }
+                    : r,
+                ),
+              };
+            });
             setEditMeal(null);
             notify("Meal updated. Your day is up to date.");
           }}
           onDelete={
             state.meals.some((m) => m.id === editMeal.id)
               ? () => {
-                  setState((s) => ({
-                    ...s,
-                    meals: s.meals.filter((m) => m.id !== editMeal.id),
-                    messages: s.messages.map((m) =>
-                      m.mealId === editMeal.id
-                        ? {
-                            ...m,
-                            mealId: undefined,
-                            text: "This meal was removed from your day.",
-                          }
-                        : m,
-                    ),
-                  }));
+                  setState((s) => deleteMealWithPantry(s, editMeal.id));
                   setEditMeal(null);
                   notify("Meal removed from your day.");
                 }
@@ -1429,24 +1835,28 @@ export default function App() {
             notify("Your preferences are saved.");
           }}
           onReset={() => {
+            cancelPendingAI();
             setState(initialState());
             setProfileOpen(false);
             navigate("Chat");
-            notify("Fresh start. The sample day is restored.");
+            notify("Fresh start. Your food log is empty.");
           }}
         />
       )}
     </div>
+    </SpotVisuals>
   );
 }
 
 function MealEditor({
+  onPantryLinks,
   meal,
   onClose,
   onSave,
   onDelete,
 }: {
   meal: Meal;
+  onPantryLinks?: () => void;
   onClose: () => void;
   onSave: (meal: Meal) => void;
   onDelete?: () => void;
@@ -1547,6 +1957,7 @@ function MealEditor({
           Save changes
           <Check size={18} />
         </button>
+        {onPantryLinks && <button className="button secondary full-width" type="button" onClick={onPantryLinks}>Review pantry ingredients<ChevronRight size={17}/></button>}
         {onDelete && (
           <div className="delete-area">
             {deleting ? (
@@ -1651,8 +2062,8 @@ function ProfileEditor({
           <div>
             <strong>Just on this device.</strong>
             <p>
-              No account or cloud sync. This demo saves your changes in your
-              browser.
+              Changes are saved locally. Optional account backups are in You.
+              This app saves your changes in your browser.
             </p>
           </div>
         </div>
@@ -1661,7 +2072,7 @@ function ProfileEditor({
             <>
               <span>This clears your edits and captures.</span>
               <button className="text-button" type="button" onClick={onReset}>
-                Reset demo
+                Clear my records
               </button>
               <button
                 className="text-button"
@@ -1677,7 +2088,7 @@ function ProfileEditor({
               className="text-button"
               onClick={() => setResetting(true)}
             >
-              Start over with sample data
+              Start fresh
             </button>
           )}
         </div>

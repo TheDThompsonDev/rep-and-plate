@@ -1,11 +1,22 @@
 import { z } from "zod";
+import { spotPreferencesSchema, workoutCaptureSchema } from './features/spot/contracts';
+import { shoppingStateSchema } from './features/shopping/contracts';
+import { preferenceProposalSchema } from "./features/preferences/proposals";
+import { productSchema } from "./features/products/contracts";
+import { pantryEventSchema } from "./features/pantry/contracts";
+import { mealComponentSchema } from "./features/meals/contracts";
+import { preferencesSchema } from "./features/preferences/contracts";
+import { mealPlanSchema } from "./features/planning/contracts";
+import { recipeBatchSchema } from "./features/recipes/contracts";
+import { recipePortionProposalSchema } from "./features/recipes/proposal-contract";
 import {
   groceryReceiptSchema,
   mealProposalSchema,
   sourceSchema,
+  chatActionSchema,
 } from "./ai-contract";
 
-export const APP_NAME = "Fuel";
+export const APP_NAME = "Rep & Plate";
 export const STORAGE_KEY = "fuel.prototype.v1";
 const amount = z.number().finite().min(0).max(20000);
 export const nutritionSchema = z.object({
@@ -16,6 +27,10 @@ export const nutritionSchema = z.object({
 });
 export type Nutrition = z.infer<typeof nutritionSchema>;
 export const mealSchema = nutritionSchema.extend({
+  example: z.boolean().optional(),
+  recipeBatchId: z.string().optional(),
+  recipePortions: z.number().positive().max(10000).optional(),
+  components: z.array(mealComponentSchema).optional(),
   id: z.string(),
   title: z.string(),
   category: z.enum(["Breakfast", "Lunch", "Dinner", "Snack"]),
@@ -40,6 +55,12 @@ const reviewSchema = z.object({
 });
 export type ReviewItem = z.infer<typeof reviewSchema>;
 const messageSchema = z.object({
+  spotCheck: z.boolean().optional(),
+  workoutProposal: workoutCaptureSchema.optional(),
+  workoutCaptureStatus: z.enum(['pending', 'accepted', 'dismissed']).optional(),
+  recipePortionProposal: recipePortionProposalSchema.optional(),
+  recipePortionProposalStatus: z.enum(["pending","accepted","dismissed"]).optional(),
+  suggestedAction: chatActionSchema.optional(),
   id: z.string(),
   role: z.enum(["user", "assistant"]),
   text: z.string(),
@@ -52,6 +73,8 @@ const messageSchema = z.object({
   requestId: z.string().optional(),
   receiptId: z.string().optional(),
   mealProposal: mealProposalSchema.optional(),
+  preferenceProposal: preferenceProposalSchema.optional(),
+  preferenceStatus: z.enum(["pending","accepted","dismissed"]).optional(),
   sources: z.array(sourceSchema).optional(),
   warnings: z.array(z.string()).optional(),
   kind: z.enum(["insight", "summary", "workout", "review"]).optional(),
@@ -66,7 +89,14 @@ export const exerciseSchema = z.object({
 });
 export type Exercise = z.infer<typeof exerciseSchema>;
 export const stateSchema = z.object({
+  spot: spotPreferencesSchema.optional(),
+  shopping: shoppingStateSchema.optional(),
+  recipeBatches: z.array(recipeBatchSchema).optional(),
   version: z.literal(1),
+  products: z.array(productSchema).optional(),
+  pantryEvents: z.array(pantryEventSchema).optional(),
+  preferences: preferencesSchema.optional(),
+  mealPlans: z.array(mealPlanSchema).optional(),
   groceries: z.array(groceryReceiptSchema).optional(),
   chatRevision: z.number().optional(),
   pendingMeal: z
@@ -110,7 +140,7 @@ export const stateSchema = z.object({
 });
 export type AppState = z.infer<typeof stateSchema>;
 export type Page =
-  "Today" | "Chat" | "Nutrition" | "Workouts" | "Review" | "You";
+  "Today" | "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "Review" | "You";
 export const id = () => crypto.randomUUID();
 export const today = () => {
   const d = new Date();
@@ -122,8 +152,7 @@ export const clockTime = () =>
     minute: "2-digit",
   });
 export function sumNutrition(meals: Meal[], day = today()): Nutrition {
-  return meals
-    .filter((m) => m.day === day)
+  return personalMeals(meals, day)
     .reduce(
       (s, m) => ({
         calories: s.calories + m.calories,
@@ -134,7 +163,8 @@ export function sumNutrition(meals: Meal[], day = today()): Nutrition {
       { calories: 0, protein: 0, carbs: 0, fat: 0 },
     );
 }
-export function initialState(): AppState {
+/** Explicit design/test fixture; examples are never installed into a fresh account. */
+export function demoState(): AppState {
   return {
     version: 1,
     chatRevision: 2,
@@ -258,12 +288,40 @@ export function initialState(): AppState {
     },
   };
 }
+/** Source metadata identifies examples; a meal's name or built-in-looking ID alone does not. */
+export function isExampleMeal(meal: Pick<Meal, "id" | "source" | "example"> & { note?: string }): boolean {
+  if (meal.example === true) return true;
+  // Older local-parser captures have user text as their source, but retain an explicit demo estimate note.
+  if (/^Demo (?:photo estimate\.|order estimate:|estimate for one scoop with water\.)/.test(meal.note ?? "")) return true;
+  const source = meal.source.trim();
+  if (/^(?:sample|demo)(?:\s+(?:meal|conversation|photo|order|estimate|nutrition|data|record|capture)\b|\s*$|\s*[·:—-])/i.test(source)) return true;
+  // Legacy review examples used a timestamp before their explicit source marker.
+  return /^(?:yesterday|today)\s*·\s*\d{1,2}:\d{2}\s*(?:AM|PM)\s*·\s*(?:sample|demo)\s+(?:photo|order)\s*$/i.test(source);
+}
+export function personalMeals(meals: Meal[], day?: string): Meal[] {
+  return meals.filter((meal) => !isExampleMeal(meal) && (day === undefined || meal.day === day));
+}
+export function initialState(): AppState {
+  const state = demoState();
+  return {
+    ...state,
+    chatRevision: 3,
+    meals: [],
+    reviews: [],
+    messages: [{
+      id: "welcome",
+      role: "assistant",
+      text: "I’m Spot. Tell me what you ate or what you did. Photo, text, voice, screenshot — start anywhere.",
+      time: clockTime(),
+    }],
+  };
+}
 export function readState(): AppState {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) return upgradeChat(stateSchema.parse(JSON.parse(saved)));
   } catch {
-    /* Invalid or outdated snapshots fall back to a fresh demo. */
+    /* Invalid or outdated snapshots fall back to an empty personal state. */
   }
   return initialState();
 }
@@ -322,23 +380,9 @@ function referenceConversation(): Message[] {
     },
   ];
 }
-// Refresh only the old built-in conversation; retain every user-created capture and edit.
+// A migration records its version only. Never replace old conversations or add meals.
 export function upgradeChat(state: AppState): AppState {
-  if (state.chatRevision === 2) return state;
-  const oldIds = new Set(["intro", "user-lunch", "assistant-lunch"]);
-  if (!state.messages.some((m) => oldIds.has(m.id)))
-    return { ...state, chatRevision: 2 };
-  return {
-    ...state,
-    chatRevision: 2,
-    meals: state.meals.some((m) => m.id === "chat-demo-dinner")
-      ? state.meals
-      : [...state.meals, referenceDinner()],
-    messages: [
-      ...referenceConversation(),
-      ...state.messages.filter((m) => !oldIds.has(m.id)),
-    ],
-  };
+  return state.chatRevision === 3 ? state : { ...state, chatRevision: 3 };
 }
 export const demoMeals = {
   dinner: {
@@ -376,6 +420,7 @@ export function makeMeal(
 ): Meal {
   return {
     ...demoMeals[key],
+    example: true,
     id: id(),
     source,
     image,

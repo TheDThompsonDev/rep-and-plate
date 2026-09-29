@@ -1,3 +1,4 @@
+import { SpotAvatar, SpotEmptyState, SpotMoment } from './features/spot/Spot';
 import {
   useEffect,
   useRef,
@@ -14,18 +15,21 @@ import {
   ChevronRight,
   Dumbbell,
   Mic,
-  Moon,
 } from "lucide-react";
 import { FuelHeader, FuelTabs } from "./FuelNavigation";
-import { FuelLeaf } from "./ChatLayer";
+import { PlateMark } from "./features/spot/Spot";
 import { Modal } from "./components";
 import { type AppState, type Exercise, type Page } from "./domain";
+import { completedWorkoutContext, lastExerciseEvidence } from "./features/workout-planning/history";
 import {
   recordSet,
   replyToWorkout,
   startPlan,
   workoutPhoto,
   workoutPlans,
+  adjustWorkoutExercise,
+  type ExerciseAdjustment,
+  type Workout,
 } from "./workouts";
 import "./workouts.css";
 
@@ -51,18 +55,32 @@ function Prescription({ ex }: { ex: Exercise }) {
   );
 }
 
+function recordedDate(value: string) {
+  return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+function previousSession(workout: Workout, name: string) {
+  const evidence = lastExerciseEvidence(workout, name);
+  return evidence
+    ? `Last recorded: ${evidence.weight ? `${evidence.weight} lb` : "Bodyweight"} · ${evidence.sets.join(", ")} reps · ${recordedDate(evidence.finishedAt)}`
+    : "No finished session recorded for this exercise yet.";
+}
+
 export default function WorkoutPage({
   state,
   setState,
   onNavigate,
   onProfile,
   onVoice,
+  onBuild,
+  onScan,
 }: {
   state: AppState;
   setState: Dispatch<SetStateAction<AppState>>;
   onNavigate: (page: Page) => void;
   onProfile: () => void;
   onVoice: () => void;
+  onBuild: () => void;
+  onScan: () => void;
 }) {
   const workout = state.workout;
   const [selected, setSelected] = useState(workout.planId ?? "upper");
@@ -72,6 +90,7 @@ export default function WorkoutPage({
     null,
   );
   const [history, setHistory] = useState(false);
+  const [adjust, setAdjust] = useState<number | null>(null);
   const [edit, setEdit] = useState<{
     exercise: number;
     set: number;
@@ -82,6 +101,9 @@ export default function WorkoutPage({
   const plan = workoutPlans.find((p) => p.id === selected) ?? workoutPlans[0];
   const session = workout.status !== "ready" && !browse;
   const active = workout.status === "active";
+  const finishedSessions = completedWorkoutContext(workout);
+  const recentSets = finishedSessions.reduce((count, item) => count + item.exercises.reduce((sets, exercise) => sets + exercise.sets.length, 0), 0);
+  const latestSession = finishedSessions[0];
   const title = workout.title ?? "Upper Body";
   const done = workout.exercises.reduce(
     (n, e) => n + e.sets.filter((r) => r !== null).length,
@@ -108,6 +130,10 @@ export default function WorkoutPage({
   }
   function start() {
     setState((s) => ({ ...s, workout: startPlan(s.workout, selected) }));
+    setBrowse(false);
+    scroll.current?.scrollTo(0, 0);
+  }
+  function resume() {
     setBrowse(false);
     scroll.current?.scrollTo(0, 0);
   }
@@ -140,10 +166,10 @@ export default function WorkoutPage({
       />
       {session && (
         <div className="fuel-banner workout-banner">
-          <FuelLeaf />
+          <SpotAvatar side="rep" expression={active ? 'default' : 'tired'} size={48}/>
           <div>
-            <strong>Don’t log your workout. Tell us what happened.</strong>
-            <span>Just talk, type, or tap. We’ll track the details.</span>
+            <strong>Tell Spot what you did.</strong>
+            <span>Workout · Talk, type, or tap your sets.</span>
           </div>
         </div>
       )}
@@ -153,7 +179,11 @@ export default function WorkoutPage({
             <div className="workout-heading">
               <h1>What should you do today?</h1>
               <p>Your next workout, with room for how you feel today.</p>
+              <button className="button secondary" disabled={active} onClick={onBuild}>
+                Create a workout for me
+              </button>
             </div>
+            {active && <section className="workout-resume" aria-label="Your active workout"><div><strong>{title} is still in progress</strong><p>{done} of {total} sets recorded. Continue this session before starting another.</p></div><button onClick={resume}>Resume workout <ArrowRight size={18}/></button></section>}
             <div className="workout-choices" aria-label="Choose a workout">
               {workoutPlans.map((p) => (
                 <button
@@ -168,13 +198,14 @@ export default function WorkoutPage({
             </div>
             <section className="fuel-workout-hero">
               <div>
-                <span>Today’s workout</span>
+                <span>Workout option</span>
                 <h2>
                   {plan.title} · ~{plan.minutes} min
                 </h2>
                 <p>{plan.description}</p>
-                <button className="workout-start" onClick={start}>
-                  Start workout <ArrowRight size={21} />
+                <p className="workout-target-note">Example targets. Adjust the weights and reps to suit you before logging.</p>
+                <button className="workout-start" onClick={active ? resume : start}>
+                  {active ? "Continue current workout" : "Start workout"} <ArrowRight size={21} />
                 </button>
               </div>
               <Photo hero />
@@ -193,7 +224,7 @@ export default function WorkoutPage({
                   onClick={() =>
                     setDetail({
                       title: ex.name,
-                      text: `${ex.weight ? `${ex.weight} lb. ` : "Bodyweight. "}${ex.sets.length} sets of ${ex.target} reps. These are sample starting targets. Once you start, tap the exercise details to adjust the weight and target reps to suit you.`,
+                      text: `${ex.weight ? `${ex.weight} lb. ` : "Bodyweight. "}${ex.sets.length} sets of ${ex.target} reps. These are sample starting targets. Once you start, tap the exercise details to swap the exercise or adjust its weight, sets, and target reps.`,
                     })
                   }
                 >
@@ -205,69 +236,23 @@ export default function WorkoutPage({
                       <Prescription ex={ex} />
                     </span>
                     <small>
-                      {ex.previous.length
-                        ? `Last time: ${ex.previous.join(", ")} reps`
-                        : "A fresh start. Find your rhythm."}
+                      {previousSession(workout, ex.name)}
                     </small>
-                    {i === 0 && selected === "upper" && (
-                      <em>
-                        <Dumbbell size={16} /> Try to get all 3 sets of 8 today.
-                      </em>
-                    )}
                   </span>
                   <ChevronRight size={20} />
                 </button>
               ))}
             </div>
             <div className="workout-section-title">
-              <h2>What we’re learning</h2>
-              <button
-                onClick={() =>
-                  setDetail({
-                    title: "Learning from your workouts",
-                    text: "These are sample insights showing how Fuel could connect training, recovery, and progress. Your sessions are saved on this device. Personalized analysis is not connected yet.",
-                  })
-                }
-              >
-                See all <ChevronRight size={17} />
+              <h2>Your recent training</h2>
+              <button onClick={() => setHistory(true)}>
+                View history <ChevronRight size={17} />
               </button>
             </div>
-            <button
-              className="workout-insight"
-              onClick={() =>
-                setDetail({
-                  title: "Your strength, over time",
-                  text: "Sample insight: bench press increased from 170 lb to 185 lb over seven weeks. This illustrates a future progress insight, not an analysis of your saved workouts.",
-                })
-              }
-            >
-              <span>
-                <BarChart3 />
-              </span>
-              <div>
-                <strong>Your bench has increased 15 lb in 7 weeks.</strong>
-                <p>You’re getting stronger. Keep it up.</p>
-              </div>
-              <ChevronRight size={20} />
-            </button>
-            <button
-              className="workout-insight"
-              onClick={() =>
-                setDetail({
-                  title: "Recovery and your routine",
-                  text: "This is an example of a recovery insight. Sleep tracking and personalized recovery recommendations are not connected in this prototype.",
-                })
-              }
-            >
-              <span>
-                <Moon />
-              </span>
-              <div>
-                <strong>A little recovery goes a long way.</strong>
-                <p>Make space for rest between your sessions.</p>
-              </div>
-              <ChevronRight size={20} />
-            </button>
+            {latestSession ? <>
+              <button className="workout-insight" onClick={()=>setHistory(true)}><span><BarChart3/></span><div><strong>{recentSets} sets across {finishedSessions.length === 1 ? "your latest finished session" : `your latest ${finishedSessions.length} finished sessions`}.</strong><p>Only the sets you recorded are counted.</p></div><ChevronRight size={20}/></button>
+              <button className="workout-insight" onClick={()=>setHistory(true)}><span><Dumbbell/></span><div><strong>Last finished: {latestSession.title}</strong><p>{recordedDate(latestSession.finishedAt)} · {latestSession.exercises.length} {latestSession.exercises.length === 1 ? "exercise" : "exercises"} with recorded sets.</p></div><ChevronRight size={20}/></button>
+            </> : <SpotEmptyState side="rep" onCapture={()=>onNavigate('Chat')}/>}
           </>
         ) : (
           <>
@@ -292,12 +277,14 @@ export default function WorkoutPage({
                 </div>
               </div>
             </section>
+            {!active && <SpotMoment moment="workoutSaved" />}
+            {active && <button className="workout-browse" onClick={()=>{setBrowse(true);scroll.current?.scrollTo(0,0);}}>Browse workout options <ChevronRight size={17}/></button>}
             {workout.exercises.map((ex, i) => {
               const next = ex.sets.indexOf(null);
               const shown = !active || current === -1 || i <= current;
               if (!shown) return null;
               return (
-                <div className="workout-thread-step" key={ex.name}>
+                <div className="workout-thread-step" key={i}>
                   <section
                     className={`workout-exercise ${i === current ? "current-exercise" : ""}`}
                     aria-label={ex.name}
@@ -308,20 +295,14 @@ export default function WorkoutPage({
                         <h2>{ex.name}</h2>
                         <button
                           className="workout-prescription"
-                          disabled={!active || ex.sets.some((r) => r !== null)}
-                          onClick={() =>
-                            setDetail({
-                              title: `Adjust ${ex.name}`,
-                              text: String(i),
-                            })
-                          }
+                          aria-label={`Adjust ${ex.name}`}
+                          disabled={!active}
+                          onClick={() => setAdjust(i)}
                         >
                           <Prescription ex={ex} />
                         </button>
                         <p>
-                          {ex.previous.length
-                            ? `Last time: ${ex.previous.join(", ")} reps`
-                            : "Your first recorded session"}
+                          {previousSession({...workout, status: "ready"}, ex.name)}
                         </p>
                       </div>
                       <span className="workout-count">
@@ -363,7 +344,9 @@ export default function WorkoutPage({
                           {active && i === current && j === next && (
                             <div className="workout-reps">
                               {[-2, -1, 0, 1]
-                                .map((delta) => Math.max(1, ex.target + delta))
+                                .map((delta) =>
+                                  Math.min(100, Math.max(1, ex.target + delta)),
+                                )
                                 .filter((v, k, a) => a.indexOf(v) === k)
                                 .map((rep) => (
                                   <button
@@ -393,7 +376,7 @@ export default function WorkoutPage({
                       <div className={`workout-message ${m.role}`} key={m.id}>
                         {m.role === "assistant" && (
                           <span className="workout-avatar">
-                            <FuelLeaf />
+                            <PlateMark />
                           </span>
                         )}
                         <div>
@@ -414,7 +397,7 @@ export default function WorkoutPage({
                 <div className={`workout-message ${m.role}`} key={m.id}>
                   {m.role === "assistant" && (
                     <span className="workout-avatar">
-                      <FuelLeaf />
+                      <PlateMark />
                     </span>
                   )}
                   <div>
@@ -442,7 +425,7 @@ export default function WorkoutPage({
               <div>
                 <strong>
                   {!active
-                    ? "A little stronger. One session at a time."
+                    ? "Session saved. Every recorded set is here."
                     : current === -1
                       ? "Every set is in. Nice work."
                       : "One set at a time. You’ve got this."}
@@ -511,8 +494,8 @@ export default function WorkoutPage({
       )}
       <FuelTabs
         active="Workouts"
+        onScan={onScan}
         onNavigate={onNavigate}
-        onProfile={onProfile}
       />
       {menu && (
         <Modal title="Your workouts" onClose={() => setMenu(false)}>
@@ -530,7 +513,7 @@ export default function WorkoutPage({
                 setMenu(false);
                 setDetail({
                   title: "About these workouts",
-                  text: "Choose from sample workout plans and track sets in a conversation. Plan suggestions and past-performance insights use example data. Your logged sets, corrections, and completed sessions are saved on this device.",
+                  text: "Choose a starter workout or create one with your preferences. Starter weights and reps are example targets you can adjust. Exercise history and recent training use your recorded, finished sessions. Your sets, corrections, and completed sessions are saved on this device.",
                 });
               }}
             >
@@ -545,39 +528,10 @@ export default function WorkoutPage({
       {history && (
         <Modal title="Session history" onClose={() => setHistory(false)}>
           <div className="workout-history">
-            {[
-              ...(workout.history ?? []),
-              ...(workout.startedAt
-                ? [
-                    {
-                      title,
-                      exercises: workout.exercises,
-                      startedAt: workout.startedAt,
-                      finishedAt: workout.finishedAt,
-                    },
-                  ]
-                : []),
-            ]
-              .reverse()
-              .map((item, i) => (
-                <section key={i}>
-                  <h3>
-                    {item.title} · {item.finishedAt ? "Saved" : "In progress"}
-                  </h3>
-                  <p>
-                    {item.startedAt &&
-                      new Date(item.startedAt).toLocaleDateString()}
-                  </p>
-                  {item.exercises.map((ex) => (
-                    <p key={ex.name}>
-                      {ex.name}: {ex.sets.map((r) => r ?? "—").join(", ")} reps
-                    </p>
-                  ))}
-                </section>
-              ))}
-            {!workout.startedAt && !workout.history?.length && (
-              <p>Your sessions will appear here after you start a workout.</p>
-            )}
+            {active && <section><h3>{title} · In progress</h3><p>{done} of {total} sets recorded.</p><button className="workout-start" onClick={()=>{setHistory(false);resume();}}>Resume workout <ArrowRight size={17}/></button></section>}
+            {finishedSessions.length > 0 && <p>Your latest {finishedSessions.length} finished {finishedSessions.length === 1 ? "session" : "sessions"}. Unrecorded sets are not included.</p>}
+            {finishedSessions.map(item=><section key={`${item.startedAt}:${item.finishedAt}`}><h3>{item.title} · Saved</h3><p>{recordedDate(item.finishedAt)}</p>{item.exercises.map((ex,index)=><p key={`${ex.name}:${index}`}><strong>{ex.name}</strong>: {ex.weight ? `${ex.weight} lb` : "Bodyweight"} · {ex.sets.join(", ")} reps</p>)}</section>)}
+            {!finishedSessions.length && <p>No finished sessions with recorded sets yet. Finish your workout to start building your history.</p>}
           </div>
         </Modal>
       )}
@@ -609,62 +563,194 @@ export default function WorkoutPage({
           </form>
         </Modal>
       )}
+      {adjust !== null && (
+        <ExerciseAdjustmentDialog
+          workout={workout}
+          index={adjust}
+          onClose={() => setAdjust(null)}
+          onSave={(change) =>
+            setState((latest) => {
+              try {
+                return {
+                  ...latest,
+                  workout: adjustWorkoutExercise(
+                    latest.workout,
+                    adjust,
+                    change,
+                  ),
+                };
+              } catch {
+                return latest;
+              }
+            })
+          }
+        />
+      )}
       {detail && (
         <Modal title={detail.title} onClose={() => setDetail(null)}>
-          {detail.title.startsWith("Adjust ") ? (
-            <form
-              className="workout-edit"
-              onSubmit={(e) => {
-                e.preventDefault();
-                const data = new FormData(e.currentTarget);
-                setState((s) => ({
-                  ...s,
-                  workout: {
-                    ...s.workout,
-                    exercises: s.workout.exercises.map((ex, i) =>
-                      i === Number(detail.text)
-                        ? {
-                            ...ex,
-                            weight: Number(data.get("weight")),
-                            target: Number(data.get("target")),
-                          }
-                        : ex,
-                    ),
-                  },
-                }));
-                setDetail(null);
-              }}
-            >
-              <label>
-                Weight (lb)
-                <input
-                  name="weight"
-                  type="number"
-                  min="0"
-                  max="2000"
-                  step="0.5"
-                  defaultValue={workout.exercises[Number(detail.text)].weight}
-                  required
-                />
-              </label>
-              <label>
-                Target reps
-                <input
-                  name="target"
-                  type="number"
-                  min="1"
-                  max="100"
-                  defaultValue={workout.exercises[Number(detail.text)].target}
-                  required
-                />
-              </label>
-              <button className="workout-start">Save exercise</button>
-            </form>
-          ) : (
-            <p className="workout-detail">{detail.text}</p>
-          )}
+          <p className="workout-detail">{detail.text}</p>
         </Modal>
       )}
     </section>
+  );
+}
+
+function ExerciseAdjustmentDialog({
+  workout,
+  index,
+  onSave,
+  onClose,
+}: {
+  workout: Workout;
+  index: number;
+  onSave: (change: ExerciseAdjustment) => void;
+  onClose: () => void;
+}) {
+  const exercise = workout.exercises[index];
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState<ExerciseAdjustment | null>(null);
+  const hasRecorded = exercise?.sets.some((reps) => reps !== null) ?? false;
+  const minimumSets = exercise
+    ? Math.max(
+        1,
+        exercise.sets.reduce<number>(
+          (last, reps, set) => (reps !== null ? set + 1 : last),
+          0,
+        ),
+      )
+    : 1;
+
+  useEffect(() => {
+    if (!attempt) return;
+    if (
+      exercise &&
+      exercise.name === attempt.name.trim() &&
+      exercise.weight === attempt.weight &&
+      exercise.target === attempt.target &&
+      exercise.sets.length === attempt.setCount
+    ) {
+      onClose();
+      return;
+    }
+    try {
+      adjustWorkoutExercise(workout, index, attempt);
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : "Your workout changed. Check it again.",
+      );
+      setAttempt(null);
+      return;
+    }
+    const timeout = setTimeout(() => {
+      setError(
+        "The update has not been confirmed. Check your workout and try again.",
+      );
+      setAttempt(null);
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, [workout, index, attempt, onClose]);
+
+  return (
+    <Modal
+      title={exercise ? `Adjust ${exercise.name}` : "Adjust exercise"}
+      onClose={onClose}
+    >
+      {!exercise ? (
+        <p>This exercise is no longer available.</p>
+      ) : (
+        <form
+          className="workout-edit"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (attempt) return;
+            const data = new FormData(event.currentTarget);
+            const change = {
+              name: hasRecorded
+                ? exercise.name
+                : String(data.get("name") || ""),
+              weight: hasRecorded
+                ? exercise.weight
+                : Number(data.get("weight")),
+              target: Number(data.get("target")),
+              setCount: Number(data.get("setCount")),
+            };
+            try {
+              adjustWorkoutExercise(workout, index, change);
+              setError("");
+              setAttempt(change);
+              onSave(change);
+            } catch (caught) {
+              setError(
+                caught instanceof Error
+                  ? caught.message
+                  : "Check the exercise details.",
+              );
+            }
+          }}
+        >
+          {error && <p role="alert">{error}</p>}
+          <label>
+            Exercise name or substitution
+            <input
+              name="name"
+              defaultValue={exercise.name}
+              maxLength={100}
+              required
+              disabled={hasRecorded || !!attempt}
+            />
+          </label>
+          <label>
+            Weight (lb)
+            <input
+              name="weight"
+              type="number"
+              min="0"
+              max="2000"
+              step="any"
+              defaultValue={exercise.weight}
+              required
+              disabled={hasRecorded || !!attempt}
+            />
+          </label>
+          {hasRecorded && (
+            <p className="workout-detail">
+              Name and weight stay fixed after a set is logged. Your recorded
+              reps stay as they are; targets apply to your remaining sets.
+            </p>
+          )}
+          <label>
+            Number of sets
+            <input
+              name="setCount"
+              type="number"
+              min={minimumSets}
+              max="10"
+              step="1"
+              defaultValue={exercise.sets.length}
+              required
+              disabled={!!attempt}
+            />
+          </label>
+          <label>
+            Target reps
+            <input
+              name="target"
+              type="number"
+              min="1"
+              max="100"
+              step="1"
+              defaultValue={exercise.target}
+              required
+              disabled={!!attempt}
+            />
+          </label>
+          <button className="workout-start" disabled={!!attempt}>
+            {attempt ? "Saving exercise…" : "Save exercise"}
+          </button>
+        </form>
+      )}
+    </Modal>
   );
 }

@@ -1,0 +1,58 @@
+{
+  "name": "rep-and-plate-mobile",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@expo/metro-runtime": "~57.0.16",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@supabase/supabase-js": "^2.117.2",
+    "eslint-config-expo": "~57.0.2",
+    "expo": "~57.0.25",
+    "expo-asset": "~57.0.18",
+    "expo-audio": "~57.0.5",
+    "expo-camera": "~57.0.5",
+    "expo-crypto": "~57.0.3",
+    "expo-document-picker": "~57.0.2",
+    "expo-file-system": "~57.0.7",
+    "expo-image-manipulator": "~57.0.20",
+    "expo-image-picker": "~57.0.20",
+    "expo-secure-store": "~57.0.4",
+    "expo-sharing": "~57.0.22",
+    "expo-status-bar": "~57.0.1",
+    "lucide-react-native": "^1.48.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-svg": "15.15.4",
+    "react-native-web": "^0.21.2",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "@types/react": "~19.2.2",
+    "@typescript-eslint/parser": "^8.71.0",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
+    "typescript": "~6.0.3",
+    "typescript-compiler": "npm:typescript@~7.0.2"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "check": "node node_modules/typescript-compiler/bin/tsc --noEmit",
+    "export": "expo export --platform all",
+    "doctor": "npx expo-doctor",
+    "lint": "expo lint"
+  },
+  "private": true,
+  "expo": {
+    "install": {
+      "exclude": [
+        "typescript"
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "cli": { "appVersionSource": "local" },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "env": { "EXPO_PUBLIC_API_URL": "https://repandplate.com" },
+      "android": { "buildType": "apk" }
+    },
+    "production": { "env": { "EXPO_PUBLIC_API_URL": "https://repandplate.com" } }
+  }
+}

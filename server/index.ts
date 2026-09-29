@@ -4,6 +4,7 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { resolve, extname, sep } from "node:path";
 import { createApi, readConfig } from "./http.ts";
+import { handlePreview } from "./preview-node.ts";
 
 const api = createApi(readConfig(process.env));
 const root = resolve("dist");
@@ -17,7 +18,8 @@ const types: Record<string, string> = {
   ".svg": "image/svg+xml",
   ".woff2": "font/woff2",
 };
-createServer((req, res) => {
+createServer(async (req, res) => {
+  if (await handlePreview(req, res, process.env)) return;
   void api(req, res, () => {
     void (async () => {
       try {
@@ -57,5 +59,5 @@ createServer((req, res) => {
     })();
   });
 }).listen(Number(process.env.PORT ?? 5173), "127.0.0.1", () =>
-  console.log("Fuel server ready on the local loopback interface."),
+  console.log("Rep & Plate server ready on the local loopback interface."),
 );

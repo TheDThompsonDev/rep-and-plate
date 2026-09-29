@@ -1,0 +1,607 @@
+.spot-scene {
+  overflow: hidden;
+  border-radius: 18px;
+  flex-shrink: 0;
+  background: #173e30;
+}
+.spot-scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.spot-scene--hero {
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 1;
+}
+.spot-scene--compact {
+  width: 96px;
+  height: 96px;
+}
+.spot-onboarding {
+  margin: 8px 0 24px;
+  padding: 14px 20px 22px;
+  border: 1px solid #d9e3d6;
+  border-radius: 24px;
+  background: #f7f5eb;
+  color: #153e31;
+}
+.spot-onboarding-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.spot-onboarding-top .spot-text-button {
+  font-size: 12px;
+}
+.spot-onboarding-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 22px;
+}
+.spot-onboarding-body:not(:has(.spot-scene)) {
+  grid-template-columns: 1fr;
+}
+.spot-onboarding-copy {
+  min-width: 0;
+}
+.spot-onboarding h2 {
+  font-family: "Lora", Georgia, serif;
+  font-size: 29px;
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+  margin: 0 0 14px;
+}
+.spot-onboarding p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #516c5d;
+  margin: 10px 0;
+}
+.spot-onboarding .spot-onboarding-punchline {
+  color: #174831;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.spot-onboarding-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.spot-onboarding .spot-steps {
+  margin-top: 12px;
+}
+.spot-welcome-scene {
+  flex-direction: column-reverse;
+  align-items: flex-start;
+}
+.spot-welcome-scene > .spot-scene {
+  max-width: 230px;
+  align-self: center;
+}
+.spot-saved .spot-scene--compact {
+  width: 76px;
+  height: 76px;
+}
+@media (max-width: 600px) {
+  .spot-onboarding {
+    padding: 8px 14px 18px;
+  }
+  .spot-onboarding-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .spot-onboarding .spot-scene {
+    width: min(100%, 220px);
+    justify-self: center;
+  }
+  .spot-onboarding h2 {
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+  .spot-onboarding p {
+    margin: 8px 0;
+  }
+  .spot-onboarding-actions {
+    margin-top: 10px;
+  }
+  .spot-onboarding .spot-primary {
+    flex: 1;
+  }
+  .spot-scene--compact {
+    width: 82px;
+    height: 82px;
+  }
+}
+.spot-reaction {
+  display: inline-grid;
+  place-items: center;
+  position: relative;
+  width: var(--spot-size);
+  height: var(--spot-size);
+  flex: 0 0 var(--spot-size);
+  overflow: hidden;
+}
+.spot-reaction-frame {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.spot-reaction img {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  max-width: none;
+  pointer-events: none;
+}
+.spot-moment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 14px 16px 14px 6px;
+  border-radius: 20px;
+  background: #eaf4ed;
+  color: #164b3e;
+}
+.spot-moment > div {
+  min-width: 0;
+}
+.spot-moment strong {
+  display: block;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  margin: 6px 0;
+}
+.spot-moment p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+  color: #4d6d60;
+}
+.spot-moment .spot-eyebrow {
+  font-size: 8px;
+  letter-spacing: 1.2px;
+}
+.spot-saved .spot-moment {
+  padding: 6px 12px 6px 2px;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.spot-saved .spot-reaction {
+  --spot-size: 72px !important;
+}
+.spot-saved .spot-moment strong {
+  font-size: 17px;
+}
+.spot-saved .spot-eyebrow {
+  display: none;
+}
+.spot-welcome .spot-punchline {
+  font-size: 12px;
+  font-style: italic;
+  color: #527167;
+}
+.spot-welcome .spot-mood-button {
+  font-size: 10px;
+  gap: 5px;
+  padding: 4px 0;
+  text-decoration: none;
+}
+.spot-avatar {
+  display: inline-block;
+  width: var(--spot-size);
+  height: var(--spot-size);
+  flex: 0 0 var(--spot-size);
+  position: relative;
+  vertical-align: middle;
+  overflow: hidden;
+  border-radius: 24%;
+  isolation: isolate;
+}
+.spot-pivot {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  animation: spot-turn 0.38s ease-out;
+}
+.spot-avatar img {
+  position: absolute;
+  width: 300%;
+  height: 200%;
+  max-width: none;
+  object-fit: fill;
+  pointer-events: none;
+}
+.spot-fallback {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #124e40;
+  background: #e5f2eb;
+}
+.spot-fallback svg {
+  width: 48%;
+  height: 48%;
+}
+@keyframes spot-turn {
+  from {
+    transform: perspective(500px) rotateY(-75deg);
+    opacity: 0.4;
+  }
+  to {
+    transform: perspective(500px) rotateY(0);
+    opacity: 1;
+  }
+}
+.spot-welcome {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 24px;
+  padding: 28px 24px;
+  border-radius: 24px;
+  background: #f5f4ed;
+  color: #123f35;
+  position: relative;
+  overflow: hidden;
+}
+.spot-welcome-copy {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+.spot-eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  font-weight: 750;
+  color: #527167;
+}
+.spot-welcome h2 {
+  font-family: "Lora", Georgia, serif;
+  font-size: 34px;
+  letter-spacing: -1.1px;
+  line-height: 1.16;
+  margin: 12px 0;
+}
+.spot-welcome p {
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 10px;
+  max-width: 310px;
+}
+.spot-welcome small {
+  font-size: 12px;
+  color: #526b61;
+}
+.spot-welcome-actions,
+.spot-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.spot-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  background: #0d493d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 650;
+  border: 0;
+}
+.spot-primary:hover {
+  background: #06372d;
+}
+.spot-text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #285b4e;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.spot-steps {
+  display: flex;
+  gap: 5px;
+  margin-top: 18px;
+}
+.spot-steps i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #bccbc3;
+}
+.spot-steps .active {
+  width: 18px;
+  border-radius: 5px;
+  background: #215e4c;
+}
+.spot-check {
+  border: 1px solid #d7e3da;
+  border-radius: 19px;
+  padding: 16px;
+  background: #fffdf6;
+  width: 100%;
+  color: #254b40;
+}
+.spot-check-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.spot-check-heading small {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  color: #62766c;
+}
+.spot-check h3 {
+  margin: 1px 0;
+  font-size: 19px;
+  font-weight: 650;
+}
+.spot-check h4 {
+  margin: 8px 0;
+  font-size: 16px;
+}
+.spot-check p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+.spot-processing {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: #214f41;
+}
+.spot-processing strong {
+  font-size: 14px;
+}
+.spot-processing p {
+  font-size: 12px;
+  margin: 5px 0;
+  color: #596f65;
+}
+.spot-result {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  font-size: 13px;
+  color: #16543f;
+}
+.spot-result span {
+  color: #567065;
+}
+.spot-caption {
+  font-size: 12px;
+  color: #65766d;
+  line-height: 1.6;
+}
+.spot-empty {
+  text-align: center;
+  padding: 18px 16px;
+}
+.spot-empty h3 {
+  font-size: 20px;
+  margin: 10px 0;
+}
+.spot-empty p {
+  font-size: 14px;
+  color: #60766c;
+}
+.spot-exercises {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+.spot-exercises li {
+  display: grid;
+  gap: 5px;
+  border-bottom: 1px solid #e0e7df;
+  padding: 10px 0;
+  font-size: 13px;
+}
+.spot-weekly {
+  padding: 20px;
+  border-radius: 22px;
+  background: #f5f4ed;
+  color: #204c3e;
+  margin-bottom: 20px;
+}
+.spot-weekly-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.spot-weekly h3 {
+  font-family: "Lora", Georgia, serif;
+  font-size: 24px;
+  margin: 10px 0;
+}
+.spot-weekly p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.spot-side-tabs {
+  display: flex;
+  gap: 7px;
+  margin: 14px 0;
+}
+.spot-side-tabs button {
+  min-height: 44px;
+  padding: 9px 16px;
+  border: 1px solid #c8d8cf;
+  border-radius: 999px;
+  font-size: 13px;
+}
+.spot-side-tabs [aria-pressed="true"] {
+  background: #164e3d;
+  color: white;
+  border-color: #164e3d;
+}
+.spot-week-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 0;
+}
+.spot-week-numbers > div {
+  display: grid;
+  gap: 6px;
+}
+.spot-week-numbers strong {
+  font-size: 29px;
+  font-weight: 600;
+}
+.spot-week-numbers span {
+  font-size: 12px;
+  color: #5d746a;
+}
+.spot-settings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: 14px;
+}
+.spot-settings input {
+  width: 18px;
+  height: 18px;
+}
+.spot-context {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 22px;
+  color: #315e4e;
+  font-size: 12px;
+}
+.spot-context strong {
+  font-size: 13px;
+}
+.fuel-chat-spot-icon {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+}
+.fuel-chat-spot-icon .spot-avatar {
+  margin-top: -4px;
+}
+.spot-wordmark-text {
+  position: relative;
+  display: inline-block;
+  margin-right: 36px;
+  top: 7px;
+}
+.spot-wordmark-text:not(:has(.spot-wordmark-lean)) {
+  margin-right: 0;
+  top: 0;
+}
+.spot-wordmark-lean {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  max-width: none;
+  left: calc(100% - 16px);
+  top: calc(0.35em - 32px);
+  pointer-events: none;
+}
+.spot-catchup {
+  padding: 14px;
+  border-radius: 14px;
+  background: #eef6f0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #3f6454;
+}
+.spot-check .fuel-proposed-meal {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  background: transparent;
+}
+.spot-check:focus-within {
+  border-color: #689782;
+}
+@media (max-width: 600px) {
+  .spot-welcome {
+    padding: 22px 17px;
+    gap: 3px;
+    min-height: 205px;
+  }
+  .spot-welcome > .spot-avatar,
+  .spot-welcome > .spot-reaction {
+    --spot-size: 125px !important;
+    align-self: center;
+  }
+  .spot-welcome h2 {
+    font-size: 27px;
+  }
+  .spot-welcome p {
+    font-size: 13px;
+  }
+  .spot-eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.15px;
+  }
+  .spot-welcome-actions {
+    gap: 3px;
+    margin-top: 12px;
+  }
+  .spot-primary {
+    font-size: 12px;
+    padding: 10px 13px;
+  }
+  .spot-weekly {
+    padding: 16px;
+  }
+  .spot-weekly-heading > .spot-avatar {
+    --spot-size: 85px !important;
+  }
+  .spot-weekly h3 {
+    font-size: 21px;
+  }
+  .spot-welcome small {
+    font-size: 10px;
+  }
+}
+@media (max-width: 350px) {
+  .spot-welcome > .spot-avatar,
+  .spot-welcome > .spot-reaction {
+    --spot-size: 90px !important;
+  }
+  .spot-welcome h2 {
+    font-size: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spot-pivot {
+    animation: none;
+  }
+}

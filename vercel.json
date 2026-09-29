@@ -1,0 +1,37 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build && node scripts/build-api.mjs",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/health.mjs": {
+      "maxDuration": 240,
+      "excludeFiles": "{mobile/**,.fuel-data/**,.local-checks/**,.cyc/**,tests/**,docs/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/health?endpoint=:path*"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.repandplate.com" }],
+      "destination": "https://repandplate.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.repandplate.com"
+        }
+      ],
+      "destination": "https://repandplate.com/:path*",
+      "permanent": true
+    }
+  ]
+}

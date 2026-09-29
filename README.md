@@ -1,89 +1,146 @@
-# Fuel
+# Rep & Plate
 
-A local fitness application with **Chat as the homepage**. Meals, groceries, and questions share the same conversation. The four tabs are **Chat, Nutrition, Workouts, and You**, following the supplied mobile references.
+## Private preview
+
+[repandplate.com](https://repandplate.com) is behind a server-side invitation-code
+gate. Visitors see a coming-soon page; app assets and hosted API access require
+the preview cookie. Existing account and beta-membership checks still apply.
+See [private preview setup and access](docs/PRIVATE_PREVIEW.md) for code rotation,
+local testing, and the explicit public-launch switch.
+
+## Spot
+
+Spot is the shared food-and-training companion in the web and native apps.
+The **Chat** tab uses Spot's icon; the central **Scan** button opens barcode scanning directly. Text, photos, screenshots,
+voice, and barcode tools remain available. Reviewed meal/workout proposals use
+**Spot Check**, and successful saves use a quiet **Logged.** confirmation.
+
+The integration includes a skippable character introduction, Plate/Rep poses,
+comeback greeting, empty states, weekly summaries, reduced motion, and optional
+illustrations. Workout captures are confirmed into history without replacing an
+active session. Past meal dates are preserved when explicitly reviewed. Catch-up
+currently handles one capture at a time, not bulk historical reconstruction.
+
+See the [implementation and verification notes](docs/design/SPOT.md) and
+[six-pose asset library with its generation prompt](public/images/spot/README.md).
+
+A local fitness application with **Chat as the homepage**. Meals, groceries, planning, questions and workout logging share the same conversation. The four tabs are **Chat, Nutrition, Workouts, and You**, following the supplied mobile references.
+
+See [Agent execution status](docs/AGENT_EXECUTION_STATUS.md) for the honest, per-ticket implementation record and remaining work from the [24-ticket backlog](docs/AGENT_BACKLOG.md).
 
 ## Run locally
 
-Requires Node.js 22.12+.
+Requires Node.js 22.14+ (the catalog uses built-in SQLite).
 
 ```sh
 npm install
-```
-
-Copy `.env.example` to `.env` and set `OPENAI_API_KEY` and `JEV_API_KEY`. JEV keys come from the TypeSafe console. Optional `OPENAI_MODEL` and `JEV_MODEL` default to `gpt-5-mini` and `jev-latest`. Keys are read by the server only; never use a `VITE_` prefix for secrets. Restart the server after changing `.env`.
-
-```sh
 npm run dev
 ```
 
-Open **http://127.0.0.1:5173**. Without an OpenAI key, the existing manual and sample flows remain available. JEV supplies an additional classification check; a missing or failed check leaves grocery items needing review.
+Copy `.env.example` to `.env` first and configure:
+
+- `OPENAI_API_KEY` for chat, images, planning and transcription.
+- `JEV_API_KEY` from TypeSafe for the additional intent check.
+- `FOODDATA_GOV_API` for USDA live lookup (`USDA_API_KEY` is also accepted).
+- Optional `OPENAI_MODEL=gpt-5-mini` and `JEV_MODEL=jev-latest`.
+- Optional `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` for account UI. The publishable key is intentionally public; never substitute a service-role key.
+- Optional `SUPABASE_DB_URL` for local database administration scripts only. Use the session-pooler connection on IPv4-only networks.
+
+Provider and database secrets stay server-side. Never give them a `VITE_` prefix. Restart the server after changing `.env`. Open **http://127.0.0.1:5173**.
 
 ```sh
-npm run build      # Type-check and create dist/
-npm start          # Serve the build and API on local port 5173
-npm run preview    # Alternative build preview, also includes the API
-npm test           # Domain, AI state, grounding, and HTTP tests
+npm run build       # Type-check and create dist/
+npm start           # Serve build and API on loopback port 5173
+npm run preview     # Build preview with API
+npm test            # Unit/domain/provider tests
 npx playwright install chromium
-npm run test:e2e   # Desktop and mobile interaction tests
+npm run test:e2e    # Desktop and mobile flows with mocked providers
 ```
 
-`PORT` overrides the standalone server port. The browser application is not a native mobile build.
+`PORT` overrides the standalone port. This remains a browser application, not a native mobile build. No public deployment has been performed.
 
-## Try the core loop
+## What you can use
 
-1. **Receipt capture:** In Chat, attach a JPG, PNG, or WebP grocery receipt and choose **Send to Fuel**. Add optional context such as the store or an unclear product name. Fuel reads the receipt, searches for product nutrition, and returns a grocery card with sources and uncertainties. Images up to 12 MB are accepted; larger uploads are compressed before sending and must fit the final request limit.
-2. **Groceries and pantry:** Open the card, Chat menu → Your groceries, or You → Groceries & pantry. Review quantities, serving sizes, and macros; correct details and mark ingredients used. Cart totals include only items with supported serving counts and details that do not need review. Unknown values stay blank. **Purchases never add calories to daily intake.**
-3. **Meal ideas:** Ask “What can I make with these?” for suggestions using available saved ingredients. Suggestions do not log a meal or silently consume pantry stock.
-4. **Meal capture:** Describe or photograph food or drinks you consumed, including milk, syrups, oil, and sauces. Fuel may ask about portions or show an estimate. Tap **Add to Breakfast/Lunch/Dinner/Snack** to count it. Saved meals remain editable.
-5. **Nutrition:** The calorie ring and macro totals reflect saved meals. Insight cards and smart swaps are still labeled illustrative examples, not learned conclusions about your real history.
-6. **Workouts:** Choose Upper Body, Lower Body, or Full Body, then start its workout conversation. Tap reps, type “Got 8,” correct a set, and finish the session. “Bench was 185 for 8, 8, 7” also uses the existing local parser. General AI workout advice does not automatically alter a plan.
-7. **You:** Review pending captures, edit targets and profile preferences, and inspect saved meals and workout history. Resetting local data requires confirmation.
+1. **Receipt capture:** Attach a grocery receipt in Chat and choose Send to Rep & Plate. OpenAI reads it and researches nutrition. Rep & Plate also retrieves USDA candidates for up to three uncertain lines. In purchase details, choose **Review USDA matches** or **Find USDA product**, compare packages and confirm the product, serving and amount. Original receipt text stays intact; suggestions are not exact matches.
+2. **Barcode and label capture:** Scan a barcode with the camera, upload a barcode image or enter its digits. Rep & Plate checks a private confirmed correction, its USDA catalog and then the USDA API. Compare matching packages; if needed, photograph the nutrition label and review the extracted values. Choose explicitly whether you bought the item or ate it.
+3. **Pantry and consumption:** Review quantities, adjust stock and confirm ingredients used. Package and opened dates are editable; in-app reminders organize recorded dates without determining safety or discarding food. Linked consumption deducts once and supports undo. Unknown amounts stay unknown. **Purchases and plans never count as eaten food.**
+4. **Meals and drinks:** Review the estimate and **What's in this estimate** ingredient breakdown before adding intake. Milk, syrups, oil and sauces can appear separately; totals are summed by code. A logged meal offers **Which pantry ingredients did you use?** with possible matches and explicit amounts. Linking changes stock without adding calories again.
+5. **Preferences and weekly meals:** Chat proposes preference changes with quoted evidence and explicit Save/Not now. Generate seven days of any selected breakfast/lunch/dinner/snack slots, review shortages, edit meals, and save. Repeat an approved week as a new draft without rewriting history or logging food. Logged portions remain protected against duplicate retries after refresh. There is no background recurring scheduler.
+6. **Nutrition and review:** Daily totals, insights and weekly review use saved records. Clearly identified drink/oil/sauce/syrup components support recorded-calorie summaries with meal/portion evidence. Insufficient or inconsistent data is qualified; sample records do not establish personal patterns.
+7. **Workouts:** Request an AI proposal using completed recorded history, review previous loads/reps, and edit exercise names, sets and targets. In an active session, logged work is protected: name/weight lock once sets are recorded, and logged sets cannot be truncated. No automatic load increases or unconnected recovery claims.
+8. **Voice:** Start recording explicitly, stop within a minute, review/edit the transcript and press Send. The same reviewed text enters Chat or the active workout logger. Rep & Plate does not save the raw audio; transcription sends it to OpenAI.
+9. **Account and backup:** You includes account access, explicit reviewed snapshot upload/restore, local export and deletion controls. This is manual snapshot transfer, not automatic synchronization. The hosted database setup and 19 ownership/conflict checks passed; real password sign-in and reviewed backup/restore/deletion passed using a cleaned-up synthetic account. Real-user confirmation-email delivery remains unverified.
+10. **Recipes and leftovers:** Open **Recipes & leftovers** from Chat or type “recipes.” Confirm ingredients actually used and the batch yield. Preparation moves raw ingredients out of the pantry without logging intake. Record fractional portions when eaten; undo restores prepared portions, and undoing preparation restores raw ingredients only after logged portions are reversed. Nutrition stays tied to preparation snapshots. Tell Chat how many portions of a saved batch you ate to review a confirmation card; acceptance logs once and updates leftovers without deducting raw ingredients again.
 
-Chat opens by default. The sample dinner and takeout conversations remain available in the Chat menu and are distinct from live AI processing.
+Chat opens by default. AI replies can offer buttons to open the pantry, recipes, meal planner, preferences or workout builder. These buttons only open review tools. Resetting or restoring records cancels pending AI so late results cannot repopulate old data or keep Chat waiting. Existing demos remain separate from real processing; camera/voice have permission and unsupported-browser fallbacks.
 
-## AI processing and boundaries
+## Connected tabs
 
-- **OpenAI** reads text/images, researches the web, and returns validated structured data. Retrieved source links are shown in chat and product details. Model-written URLs without retrieval evidence are excluded. A retrieved URL is evidence of a lookup, not a guarantee that the product or nutrition matches; package labels and user corrections take precedence.
-- **JEV / TypeSafe** checks whether the current evidence describes groceries, a consumed meal, ordinary conversation, or ambiguity. It receives the message, limited recent context, and extracted item names rather than the image. The integration uses `https://api.typesafe.ai/v1/systemone` with Bearer authentication. Its classification confidence does not verify nutritional accuracy.
-- **Application code** validates results, separates purchases from consumption, computes totals, and requires confirmation before adding an AI meal. A confident conversation classification suppresses record creation. Other confident classification conflicts hold records for clarification.
-- Nutrition is per serving. Whole-purchase totals require a known number of servings. Nonfood lines have no nutrition. Generic estimates and uncertain matches need review; missing values are never replaced with zero.
-- Receipt and website text are treated as untrusted data. The AI has no account, device, filesystem, or arbitrary execution tools.
+Nutrition shows today’s saved meals inline with editable records, shared calorie/macro totals, and direct pantry, meal-plan, and recipe tools. Pending Chat estimates do not count until accepted. Existing example meals are labeled and can be removed through the meal editor.
 
-The current capture limit is 40 receipt items, with a notice when additional extracted lines are omitted. The model is instructed to flag unreadable or additional lines; check long receipts for completeness and split them into sections. Research is limited to eight tool calls per request. Context includes up to 12 preceding AI messages and the five most recent grocery captures, with used items excluded from meal ideas. These limits mean a large pantry or receipt may require a follow-up.
+Workouts shows recorded prior sets and recent finished sessions instead of sample personal progress claims. Browsing other plans preserves the active session and provides a resume action. Starter plan loads remain explicitly labeled example targets.
 
-Requests show progress, time out after approximately three minutes, and can be retried explicitly. Completed request IDs are cached in server memory for ten minutes to avoid repeating provider calls on a retry. Client updates and meal acceptance are idempotent. Identical uploaded image bytes are fingerprinted to avoid duplicate grocery records; a different photograph of the same receipt is not automatically recognized as a duplicate.
+You brings together pending meal estimates, preference changes, prepared portions, receipt checks, and saved-note reviews. Review actions open the original Chat message or receipt without accepting it. Confirmed/dismissed reviews, available pantry quantities, and recipes/leftovers remain accessible from the same page.
 
-Official references: [OpenAI web search](https://developers.openai.com/api/docs/guides/tools-web-search), [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [image inputs](https://developers.openai.com/api/docs/guides/images-vision), and [TypeSafe API](https://docs.typesafe.ai/api).
+## USDA catalog
 
-## Local data and privacy
+USDA is the only external structured food database. Open Food Facts is not used. Source nutrition retains its per-serving, per-100 g or per-100 mL basis; missing nutrients remain null. Conversions do not invent density. Exact barcode matches can still have multiple package/formulation records requiring review.
 
-Saved records and images live in this browser's `localStorage` under `fuel.prototype.v1`, validated by Zod. They do not sync across browsers, ports, or devices. Clearing site data removes them. If storage fills, the app warns that changes may not survive refresh. Existing user records are preserved by the chat migration.
+The local April 2026 release import processed 455,458 records: 441,554 imported, 13,904 skipped and zero malformed. The SQLite database lives in ignored `.fuel-data/catalog.sqlite`; it is local generated data, not a checked-in asset. A fresh checkout needs an import or API lookup to populate its own catalog.
 
-Sending a live AI message transmits its content, optional image, and relevant saved context through the local server to OpenAI, with the limited classification context sent to TypeSafe. OpenAI requests use `store: false`; this is not a claim of zero provider retention. Provider account terms and retention settings still apply. The server keeps completed results in memory for the short retry window, and does not write application conversations to a database.
+```sh
+npm run catalog:import -- --file /path/to/unzipped-official.json --release 2026-04 --dry-run
+npm run catalog:import -- --file /path/to/unzipped-official.json --release 2026-04
+npm run catalog:benchmark
+```
 
-API keys remain server-side and are excluded from browser bundles and `.env` version control. The server binds to `127.0.0.1`, rejects cross-origin browser API requests, limits request size and concurrency, and returns redacted provider errors. This is a local prototype without user authentication. Public deployment needs authentication, per-user authorization/storage, persistent usage controls, and a deployment-specific privacy design.
+Download the official Branded Foods JSON from [USDA downloads](https://fdc.nal.usda.gov/download-datasets/) and unzip it first. The importer streams `BrandedFoods`, commits bounded batches, tracks content/release checkpoints and preserves historical versions. Repeating the same input resumes or returns the completed report. `--batch`, `--limit` and `--catalog` are available; `--help` explains them. No API key is needed for import. A limit processes only that many additional rows and leaves the release incomplete.
 
-Daily totals follow the device's local calendar date. Initial sample meals are seeded on first use; they remain on their original date as the calendar advances. Active workouts persist across refresh; completed sessions are archived when starting another plan.
+Lookups use indexed canonical GTIN, bounded candidates, a 30-day fetched-record freshness window, shared in-flight calls and a short miss cache. Stale saved data is labeled when refresh fails. Catalog updates do not change previously saved meal snapshots. A representative target-market coverage study remains outstanding; no coverage percentage is promised.
 
-## What is still a prototype?
+## AI and data boundaries
 
-Historical nutrition insights, smart swaps, starting meal examples, and suggested workout plans are illustrative. AI estimates are editable and may need clarification. Voice transcription, wearable connections, retailer account imports, cloud synchronization, notifications, native share sheets, and automatic pantry depletion are not connected. Missing meal logs do not imply food was wasted. Future integrations should use supported provider APIs and explicit user connections.
+OpenAI interprets captures and returns structured proposals; JEV checks grocery/meal/conversation intent, not nutritional accuracy. Application code validates records, calculates quantities/totals and controls confirmation. Retrieved sources are evidence, not guaranteed product matches. Image, receipt and website text are untrusted data and cannot authorize writes by themselves.
 
-## Validation and code map
+Receipt extraction is bounded to 40 items with an omission notice; check long receipts for completeness. Research uses at most eight tool calls. Chat sends bounded recent conversation and useful available pantry context, not every stored image. Whole-pantry retrieval improves on the original last-five-receipts approach, but context remains bounded. Exact-image deduplication does not recognize every different photograph of the same receipt.
 
-Automated browser tests mock AI endpoints so they do not spend API credits or send test data to providers. Live smoke checks used a synthetic grocery receipt to exercise actual OpenAI image reading, web research, TypeSafe classification, browser persistence, and pantry-based meal suggestions. The receipt fixture contains no personal purchase data.
+Provider calls show errors/progress and require explicit retries. Completed chat request IDs have a ten-minute in-memory retry cache; confirmed record actions are idempotent. Audio transcription has separate size, rate, concurrency and timeout limits. Browser recording stops at 60 seconds.
 
-- `server/ai.ts` — provider calls, receipt research, structured output, source filtering, intent checks.
-- `server/http.ts`, `server/index.ts`, `vite.config.ts` — local API, limits, retry cache, development/build serving.
-- `src/ai-contract.ts`, `src/ai-client.ts` — shared schemas, bounded context, streamed progress, idempotent state updates.
-- `src/AICards.tsx`, `src/ai.css` — sources, grocery review and correction, meal confirmation, Markdown rendering.
-- `src/domain.ts`, `src/App.tsx` — persisted state, deterministic totals, capture and review workflows.
-- `src/ChatLayer.tsx`, `src/chat.css` — chat homepage and composer.
-- `src/NutritionPage.tsx`, `src/WorkoutPage.tsx`, `src/YouPage.tsx` — nutrition, workout conversation, profile and history.
-- `src/FuelNavigation.tsx`, `src/components.tsx` — shared navigation, dialogs, and cards.
-- `src/domain.test.ts`, `src/ai.test.ts`, `server/ai.test.ts`, `tests/*.spec.ts` — domain, provider boundaries, and browser flows.
+Private records and images remain in browser `localStorage` under `fuel.prototype.v1` unless the user explicitly uploads a cloud snapshot. Clearing site data removes local records. Storage exhaustion is reported. Preferences, product corrections and pantry events persist with the local state. The shared USDA SQLite catalog contains no private label corrections or user photos.
 
-The working brand name is centralized as `APP_NAME` in the domain module. Display assets and document metadata also contain the current name.
+Live messages/images and relevant context are sent through the local server to OpenAI; limited extracted classification context is sent to TypeSafe. Responses requests use `store: false`, which is not a guarantee of zero provider retention. Transcription/provider account retention terms still apply. Secrets are excluded from browser bundles and version control. Loopback request boundaries, body/rate/concurrency limits and redacted errors do not replace hosted authentication and per-user budgets.
+
+Official references: [USDA API guide](https://fdc.nal.usda.gov/api-guide/), [OpenAI web search](https://developers.openai.com/api/docs/guides/tools-web-search), [OpenAI transcription](https://developers.openai.com/api/docs/guides/speech-to-text), [TypeSafe API](https://docs.typesafe.ai/api).
+
+## Cloud setup status
+
+The account UI, reviewed snapshots, optimistic version checks and migration are implemented. **The hosted migration is applied and all 19 database ownership/conflict checks passed.** Verification used actual database roles and temporary fixtures that were rolled back; no emails were sent or test accounts retained. Real password sign-in, upload, restore, cloud deletion and sign-out also passed through the browser with synthetic recipe/date records. Real-user confirmation-email delivery remains.
+
+Once a working administration connection is configured:
+
+```sh
+npm run db:setup
+npm run db:verify
+```
+
+The setup script applies `supabase/migrations/20260925_fuel.sql`. The verification script performs 19 transactional checks and rolls them back. An SQL-editor route can apply the same migration when direct database connectivity is unavailable. Database ownership checks passed against the configured project. Recurring account UI tests mock Supabase; `npx tsx scripts/verify-cloud-browser.ts --run` separately creates and cleans up one synthetic account for a real browser check, with no emails. Continuous sync, conflict merging across individual records, richer media storage and full account lifecycle remain follow-ups. See [storage architecture](docs/research/storage-architecture.md).
+
+## Verification and remaining scope
+
+Latest evidence: all 188 unit tests and all 140 desktop/mobile browser tests passed. Production build passed. Earlier standalone API/static smoke checks, OpenAI meal-plan, workout and synthetic label checks succeeded. New live checks covered OpenAI/JEV preference proposals, a 21-meal full-day week, complete meal components including drinks and oil, saved-batch portion proposals, tool suggestions, USDA product-name searches and automatic receipt candidates. Real Supabase browser upload/restore/deletion preserved recipes and pantry dates. Local USDA cached examples returned found/ambiguous outcomes. No configured secret-key values were found in the earlier browser bundle scan. See [execution status](docs/AGENT_EXECUTION_STATUS.md) for limits and exact interpretation.
+
+External retailer histories, trackers, native health stores, Meta glasses and Muse/grokbot connections are **not implemented**. Their [research reports](docs/research/) identify supported directions, access requirements and unanswered questions. Remaining food work includes measured receipt/USDA coverage, richer ingredient matching and raw/cooked conversions, background reminders and unattended recurring schedules. Missing meal logs never imply waste.
+
+## Code map
+
+- `server/ai.ts`, `src/ai-contract.ts`, `src/ai-client.ts`: AI capture, grounding and validated state transitions.
+- `server/products/`, `scripts/import-usda.ts`: USDA adapter, versioned SQLite catalog, resolver and import.
+- `src/features/scanner/`, `labels/`, `products/`: barcode, label review and explicit purchase/meal actions.
+- `src/features/pantry/`, `meals/`: quantities, events, components and reconciliation.
+- `src/features/preferences/`, `planning/`, `insights/`, `reviews/`: preferences, full-day/repeated plans, comparisons and real-record summaries.
+- `src/features/workout-planning/`, `voice/`, `server/plans.ts`, `server/voice.ts`: proposed workouts, planning and reviewed transcription.
+- `src/features/cloud/`, `supabase/migrations/`, `scripts/setup-supabase.ts`, `scripts/verify-supabase.ts`: optional account/snapshot workflow with verified database ownership rules.
+- `src/App.tsx`, `ChatLayer.tsx`, `NutritionPage.tsx`, `WorkoutPage.tsx`, `YouPage.tsx`: existing UI and feature integration.
 
 ## Assets
 
@@ -109,10 +166,10 @@ Generation prompt: “Create a perfectly aligned 2 by 2 photographic contact she
 
 ### Workout selection and conversation
 
-`src/WorkoutPage.tsx`, `src/workouts.ts`, and `src/workouts.css` implement the plan selector and active workout conversation. Upper Body, Lower Body, and Full Body are sample plans. Start a plan to track real set counts, tap reps, send “Got 8,” correct the most recently logged exercise with “Set 2 was 7,” or edit a recorded set. Complete the session to save it; previous sessions remain available from the workout menu. Weight and target adjustments are available before the first set of an exercise is recorded. Voice uses the existing prototype explanation; transcription is not connected.
+`src/WorkoutPage.tsx`, `src/workouts.ts`, and `src/workouts.css` implement the plan selector and active workout conversation. Upper Body, Lower Body, and Full Body are sample plans. Start a plan to track real set counts, tap reps, send “Got 8,” correct the most recently logged exercise with “Set 2 was 7,” or edit a recorded set. Complete the session to save it; previous sessions remain available from the workout menu. Weight and target adjustments are available before the first set of an exercise is recorded. Voice opens the reviewed transcription flow and applies confirmed text to the active workout logger.
 
 `public/images/workout-atlas.png` is an illustrative six-tile photographic atlas generated with the built-in image-generation tool. CSS selects individual tiles without editing the image. Prompt: “Create a single photographic contact sheet asset for a polished mobile fitness application. Exactly 2 columns and 3 rows, six equal square tiles touching edge to edge, no gutters, no text or graphics. Overall 2:3 aspect ratio. Muted neutral gym photography, natural daylight, realistic anatomy and equipment, premium editorial style. Top left: close-up black hex dumbbells on a padded bench with towel and blurred water bottle. Top right: adult athletic man doing barbell bench press on flat bench, side view, full arms visible. Middle left: adult athletic man doing incline dumbbell press on inclined bench. Middle right: adult athletic man seated at cable row machine pulling handle toward torso. Bottom left: adult athletic man doing standing cable triceps pushdown. Bottom right: adult athletic woman doing goblet squat holding single dumbbell. Each tile independently composed with subject centrally located to remain readable as small square crop. No logos or text.”
 
 ### Your space
 
-The fourth tab opens `#you`, a full page using the same Fuel header, navigation, colors, and card styling. `src/YouPage.tsx` and `src/you.css` bring together pending and completed reviews, editable daily goals, meals and captures, actual workout history, profile preferences, and data/privacy information. Existing `#review` links open the same page. Reviews and meal corrections use the existing shared state; revisiting or refreshing does not duplicate resolved records. Chat remains the default homepage. The history panels include saved records only; no fictional wearable activity is added.
+The fourth tab opens `#you`, a full page using the same Rep & Plate header, navigation, colors, and card styling. `src/YouPage.tsx` and `src/you.css` bring together pending and completed reviews, editable daily goals, meals and captures, actual workout history, profile preferences, and data/privacy information. Existing `#review` links open the same page. Reviews and meal corrections use the existing shared state; revisiting or refreshing does not duplicate resolved records. Chat remains the default homepage. The history panels include saved records only; no fictional wearable activity is added.

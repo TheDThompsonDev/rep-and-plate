@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Rep & Plate",
+    "slug": "rep-and-plate",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dannyshealth.app",
+      "infoPlist": {
+        "NSLocalNetworkUsageDescription": "Connect to your private development server."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.dannyshealth.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-sharing",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Record a message for Rep & Plate.",
+          "enableBackgroundPlayback": false,
+          "enableBackgroundRecording": false
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Scan food barcodes with Rep & Plate.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose a meal or receipt photo.",
+          "cameraPermission": "Photograph meals and grocery receipts.",
+          "microphonePermission": "Record a message for Rep & Plate."
+        }
+      ],
+      "expo-asset"
+    ],
+    "scheme": [
+      "repandplate",
+      "dannyshealth"
+    ]
+  }
+}

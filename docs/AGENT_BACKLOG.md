@@ -1,10 +1,10 @@
-# Fuel: agent execution backlog
+# Rep & Plate: agent execution backlog
 
-Prepared September 25, 2026. Revised to USDA-only food-data scope. Status: proposed work, not dispatched.
+Prepared September 25, 2026. Revised to USDA-only food-data scope. Status: dispatched. See [the execution status](AGENT_EXECUTION_STATUS.md) for delivered increments, partial tickets, verification, and remaining work.
 
 ## Outcome
 
-Make Fuel a chat-first assistant that connects what someone buys, what they eat, what remains in their kitchen, and what they should consider cooking or doing next. Preserve the accepted mobile design, Chat as the homepage, and the Nutrition, Workouts, and You tabs.
+Make Rep & Plate a chat-first assistant that connects what someone buys, what they eat, what remains in their kitchen, and what they should consider cooking or doing next. Preserve the accepted mobile design, Chat as the homepage, and the Nutrition, Workouts, and You tabs.
 
 This backlog includes the feature requests in the screenshots and the pasted barcode/database conversation. The pasted conversation is a proposal to evaluate, not an implementation specification to follow unquestioningly. “Macros and colors” is interpreted as “macros and calories.”
 
@@ -21,11 +21,11 @@ This backlog includes the feature requests in the screenshots and the pasted bar
 
 Build a product resolver, not a manually curated global food database. A barcode identifies a product; nutrition comes from a corresponding data source. GS1 documents this distinction. [GS1 barcode explanation](https://support.gs1.org/support/solutions/articles/43000734095-how-do-gs1-gtins-and-barcodes-work-)
 
-USDA is the only external structured food database in the current scope. Keep a provider-neutral Fuel catalog, populated from USDA and supplemented by private user-confirmed labels. Other food-data providers and paid adapters are deferred. This decision changes the backlog; it does not mean the catalog or importer already exists.
+USDA is the only external structured food database in the current scope. Keep a provider-neutral Rep & Plate catalog, populated from USDA and supplemented by private user-confirmed labels. Other food-data providers and paid adapters are deferred. This decision changes the backlog; it does not mean the catalog or importer already exists.
 
 Initial path for US packaged foods:
 
-`scan or type barcode → validate identifier → user's confirmed correction / Fuel catalog seeded from USDA → USDA API on a miss or refresh → nutrition-label photo + review`
+`scan or type barcode → validate identifier → user's confirmed correction / Rep & Plate catalog seeded from USDA → USDA API on a miss or refresh → nutrition-label photo + review`
 
 Ticket 02 measures USDA coverage, freshness, and lookup latency. Ticket 04 imports USDA releases into the catalog so ordinary scans do not require a live external call. Incomplete or conflicting data leads to review or label capture. Loose ingredients and restaurant dishes need separate search/estimation paths. Keep the existing web-search fallback for receipt abbreviations and restaurants, with visible uncertainty; web estimates do not become verified catalog records automatically.
 
@@ -112,7 +112,7 @@ Implement server-side branded candidate search and food-detail retrieval using a
 
 **Accept when:** tests cover leading-zero identifiers, wrong candidate rejection, stale/conflicting versions, missing macros, and 100 g versus serving conversion. Keys never reach client bundles or logs. Provide an opt-in live smoke command; absent keys do not block mocked tests, imported catalog lookups, or label capture. The API adapter and importer use the same normalization rules.
 
-### 04 — USDA bulk importer and versioned Fuel catalog
+### 04 — USDA bulk importer and versioned Rep & Plate catalog
 
 **Priority:** P0. **Depends on:** 01, 02. **Owns:** `server/products/importers/usda.*`, catalog repository/indexes, fixtures, and tests. Coordinate shared USDA normalization with 03.
 
@@ -124,7 +124,7 @@ Implement a repeatable importer for the selected official USDA Branded Foods dow
 
 **Priority:** P0. **Depends on:** 01–04. **Owns:** `server/products/resolver.*`, cache module, product-result UI model.
 
-Implement the provider interface and a lookup policy that checks private confirmed corrections and the imported Fuel catalog before calling USDA's API on a miss or needed refresh. Persist successful USDA resolutions as versioned catalog observations. Add deduplicated in-flight lookups, freshness rules, and short negative caching; keep private user corrections separate. Unresolved or conflicting matches go to label capture/review, not a second external database. Ask for clarification on incompatible brand, market, package, or serving evidence; a confident identity does not make incomplete macros complete. Version nutrition snapshots instead of overwriting history.
+Implement the provider interface and a lookup policy that checks private confirmed corrections and the imported Rep & Plate catalog before calling USDA's API on a miss or needed refresh. Persist successful USDA resolutions as versioned catalog observations. Add deduplicated in-flight lookups, freshness rules, and short negative caching; keep private user corrections separate. Unresolved or conflicting matches go to label capture/review, not a second external database. Ask for clarification on incompatible brand, market, package, or serving evidence; a confident identity does not make incomplete macros complete. Version nutrition snapshots instead of overwriting history.
 
 **Accept when:** catalog hits and repeated valid scans require no AI or external API; refresh failure can show a dated catalog result; USDA outages are not permanently cached as misses; conflicting records are inspectable. Freshness behavior follows 02. Changing a current product never changes yesterday's logged meal. All capture channels use the same canonical product identity, and private label corrections cannot silently become shared catalog truth.
 
@@ -246,15 +246,15 @@ Evaluate official routes for Apple Health/HealthKit, Android Health Connect, and
 
 Verify current official developer support for the relevant device generation, camera/photo/audio capture, phone companion requirements, supported platforms, developer access, and distribution restrictions. Investigate user-initiated photo sharing as a fallback if direct capture is unavailable. No unsupported always-on recording claims.
 
-**Accept when:** document what is demonstrably possible, what requires access/hardware, and what is blocked. Provide a minimal “capture → phone → Fuel chat” prototype plan or a clearly stated unsupported conclusion with official evidence.
+**Accept when:** document what is demonstrably possible, what requires access/hardware, and what is blocked. Provide a minimal “capture → phone → Rep & Plate chat” prototype plan or a clearly stated unsupported conclusion with official evidence.
 
 ### 21 — Other-agent interoperability: Muse and grokbot
 
 **Priority:** P2 research. **Depends on:** 01; 22 before multi-user writes. **Owns:** `docs/research/agent-integrations.md`, proposed action adapter contract.
 
-First establish the exact products/repositories meant by Muse and grokbot; do not substitute similarly named services. Investigate their supported APIs/protocols. Independently define scoped read access and explicit write actions for Fuel, with authentication, consent, idempotency, audit events, and minimal data sharing. Consider MCP only if it fits verified capabilities.
+First establish the exact products/repositories meant by Muse and grokbot; do not substitute similarly named services. Investigate their supported APIs/protocols. Independently define scoped read access and explicit write actions for Rep & Plate, with authentication, consent, idempotency, audit events, and minimal data sharing. Consider MCP only if it fits verified capabilities.
 
-**Accept when:** supported operations are documented per identified agent, ambiguities are listed for the owner, and a follow-up connector ticket is ready. Demonstration fixtures must show a proposed meal or workout cannot bypass Fuel's confirmation and validation rules. Research can progress without guessing product identity.
+**Accept when:** supported operations are documented per identified agent, ambiguities are listed for the owner, and a follow-up connector ticket is ready. Demonstration fixtures must show a proposed meal or workout cannot bypass Rep & Plate's confirmation and validation rules. Research can progress without guessing product identity.
 
 ### 22 — Accounts, durable storage, export, and deletion
 
@@ -284,7 +284,7 @@ Build reusable fixtures and end-to-end journeys for scan → groceries → meal 
 
 ### Milestone 1: identify food reliably
 
-Tickets 01–07, plus the relevant parts of 23–24. A user scans a package, sees the product, serving and source, fixes a missing label if needed, and chooses whether it was purchased or eaten. Scans first use the USDA-seeded Fuel catalog; unresolved products use USDA API fallback or label capture. All existing chat behavior still works.
+Tickets 01–07, plus the relevant parts of 23–24. A user scans a package, sees the product, serving and source, fixes a missing label if needed, and chooses whether it was purchased or eaten. Scans first use the USDA-seeded Rep & Plate catalog; unresolved products use USDA API fallback or label capture. All existing chat behavior still works.
 
 ### Milestone 2: connect purchases and eating
 

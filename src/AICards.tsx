@@ -1,5 +1,11 @@
+import { SpotCheck } from './features/spot/Spot';
 import { lazy, Suspense, useState } from "react";
 const Markdown = lazy(() => import("react-markdown"));
+const ReceiptProductReview = lazy(() => import("./features/products/ReceiptProductReview"));
+const ReceiptReview = lazy(() => import('./features/shopping/ReceiptReview'));
+import { applyReceiptProduct } from "./features/products/receipt-match";
+import ProposalBreakdown from "./features/meals/ProposalBreakdown";
+import { sumProposalComponents } from "./features/meals/proposals";
 import {
   ArrowRight,
   Check,
@@ -8,6 +14,7 @@ import {
   PackageCheck,
   Pencil,
   ShoppingBasket,
+  Search,
 } from "lucide-react";
 import { Modal } from "./components";
 import {
@@ -119,27 +126,33 @@ export function GroceryCard({
 export function ProposedMeal({
   meal,
   onAdd,
+  onFix,
 }: {
   meal: MealProposal;
   onAdd: () => void;
+  onFix?: () => void;
 }) {
+  const totals = meal.components ? sumProposalComponents(meal.components) : meal;
   return (
-    <section className="fuel-proposed-meal">
-      <small>MEAL ESTIMATE</small>
+    <SpotCheck><section className="fuel-proposed-meal">
+      <small>MEAL ESTIMATE · CHECK THE PORTION</small>
       <h3>{meal.title}</h3>
       <p>{meal.portion}</p>
+      {meal.day && <p>For {meal.day}</p>}
       <strong>
-        ~{meal.calories} cal · {meal.protein}g protein
+        ~{totals.calories} cal · {totals.protein}g protein
       </strong>
       <span>
-        {meal.carbs}g carbs · {meal.fat}g fat
+        {totals.carbs}g carbs · {totals.fat}g fat
       </span>
       <p className="fuel-estimate-note">{meal.note}</p>
+      {meal.components && <ProposalBreakdown components={meal.components}/>}
       <Sources sources={meal.sources} />
       <button onClick={onAdd}>
-        <Check size={17} /> Add to {meal.category}
+        <Check size={17} /> Yep, add to {meal.category}
       </button>
-    </section>
+      {onFix && <button className="spot-text-button" onClick={onFix}>Fix it</button>}
+    </section></SpotCheck>
   );
 }
 export function groceryTotals(receipt: GroceryReceipt) {
@@ -166,16 +179,27 @@ export function GroceriesDialog({
   onClose,
   onUpdate,
   onAsk,
+  onReceiptUpdate,
 }: {
   receipts: GroceryReceipt[];
   onClose: () => void;
   onUpdate: (receiptId: string, item: GroceryItem) => void;
   onAsk: (text: string) => void;
+  onReceiptUpdate?: (receipt: GroceryReceipt) => void;
 }) {
   const [editing, setEditing] = useState<{
     receiptId: string;
     item: GroceryItem;
   } | null>(null);
+  const [matching, setMatching] = useState<{receiptId: string; item: GroceryItem} | null>(null);
+  const [reviewing,setReviewing]=useState<GroceryReceipt|null>(null);
+  if(reviewing&&onReceiptUpdate)return <Suspense fallback={<Modal title="Review grocery trip" onClose={()=>setReviewing(null)}><p>Opening receipt…</p></Modal>}><ReceiptReview receipt={reviewing} onClose={()=>setReviewing(null)} onSave={receipt=>{onReceiptUpdate(receipt);setReviewing(null);}}/></Suspense>;
+  if (matching) return <Suspense fallback={<Modal title="Find this product" onClose={()=>setMatching(null)}><p>Opening product search…</p></Modal>}><ReceiptProductReview item={matching.item} onClose={()=>setMatching(null)} onApply={(product,servingsPurchased)=>{
+    const latest = receipts.find(receipt=>receipt.id===matching.receiptId)?.items.find(item=>item.id===matching.item.id);
+    if (!latest) throw new Error("This grocery item is no longer available.");
+    onUpdate(matching.receiptId,applyReceiptProduct(latest,product,servingsPurchased));
+    setMatching(null);
+  }}/></Suspense>;
   if (editing)
     return (
       <Modal title="Check this grocery item" onClose={() => setEditing(null)}>
@@ -200,6 +224,7 @@ export function GroceriesDialog({
             const servings = String(form.get("servings")).trim();
             onUpdate(editing.receiptId, {
               ...editing.item,
+              productSnapshot: String(form.get("name")).trim() === editing.item.name && serving === editing.item.serving && JSON.stringify(nutrition) === JSON.stringify(editing.item.nutrition) ? editing.item.productSnapshot : undefined,
               name: String(form.get("name")).trim(),
               quantity: String(form.get("quantity")).trim(),
               serving,
@@ -288,7 +313,7 @@ export function GroceriesDialog({
             <ShoppingBasket size={38} />
             <h3>Start with your next grocery receipt.</h3>
             <p>
-              Share a photo in chat. Fuel will read the items and look for
+              Share a photo in chat. Rep & Plate will read the items and look for
               nutrition sources.
             </p>
           </div>
@@ -310,6 +335,7 @@ export function GroceriesDialog({
                   <PackageCheck size={27} />
                 </div>
                 {receipt.note && <p>{receipt.note}</p>}
+                {onReceiptUpdate&&<button className="button secondary" onClick={()=>setReviewing(receipt)}>Review store, date & prices</button>}
                 {totals.known > 0 && (
                   <div className="fuel-cart-total">
                     <strong>
@@ -381,6 +407,7 @@ export function GroceriesDialog({
                       )}
                       <Sources sources={item.sources} />
                       <div className="fuel-grocery-actions">
+                        {item.match !== "nonfood" && <button onClick={()=>setMatching({receiptId:receipt.id,item})}><Search size={14}/>{item.productCandidates?.length ? "Review USDA matches" : "Find USDA product"}</button>}
                         <button
                           onClick={() =>
                             setEditing({ receiptId: receipt.id, item })
@@ -425,7 +452,7 @@ export function GroceriesDialog({
         >
           {receipts.length
             ? "What can I make with these?"
-            : "Ask Fuel about receipts"}{" "}
+            : "Ask Rep & Plate about receipts"}{" "}
           <ArrowRight size={17} />
         </button>
       </div>

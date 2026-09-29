@@ -1,0 +1,80 @@
+[
+  {
+    "id": "choosing-trust",
+    "setup": "“I ate half the cheesecake.”",
+    "reply": "Half… got it.",
+    "title": "I’m choosing trust.",
+    "category": "Food",
+    "scene": "Spot on viewer left with folded arms, one eyebrow raised and very subtle affectionate deadpan expression, beside a large ivory serving plate on viewer right with cheesecake crumbs and just one last slice of cheesecake. Like the central illustration in reference. The visual is playful shared joke, not anger or disgust.",
+    "use": "Self-captioned food memes and playful campaign posts.",
+    "asset": "art/choosing-trust.png",
+    "card": "cards/choosing-trust.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "quick-workout",
+    "setup": "“Just a quick workout.”",
+    "reply": "Define quick.",
+    "title": "We have entered overtime.",
+    "category": "Training",
+    "scene": "Spot seated on an ivory gym bench, slumped in comically patient exhaustion with little towel draped over rim, holding a small round analog stopwatch with no text or numbers, one dumbbell resting on the floor at right. Spot looks sideways at stopwatch, one raised eyebrow and tiny straight mouth. Quiet gym suggested only by bench and sage background.",
+    "use": "Workout memes and gym group chats.",
+    "asset": "art/quick-workout.png",
+    "card": "cards/quick-workout.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "leg-day",
+    "setup": "“Leg day went great.”",
+    "reply": "And then we met the stairs.",
+    "title": "My legs have left the chat.",
+    "category": "Training",
+    "scene": "Spot at the TOP of a short three-step ivory staircase going down toward viewer right. Spot seated on top step looking down at stairs with drooping eyebrows and funny tiny worried mouth; green sneakers stick out awkwardly, one hand braced on stair and other on knee. Slight three-quarter view shows both plate face and staircase, three steps entirely in frame. Cute theatrical fatigue, no injury.",
+    "use": "Post-workout reactions and training campaigns.",
+    "asset": "art/leg-day.png",
+    "card": "cards/leg-day.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "some-assembly",
+    "setup": "“I bought stuff for dinner.”",
+    "reply": "Excellent. We have parts.",
+    "title": "Some assembly required.",
+    "category": "Food",
+    "scene": "Spot wearing a tiny cream chef hat behind a low cream kitchen counter, studying an open blank recipe booklet upside down with one raised eyebrow. On counter separated ingredients: tomato, dry pasta in a glass jar, courgette, and small olive oil bottle with blank label. A brown grocery bag to the side. Comically serious food preparation detective, inviting ingredients not messy.",
+    "use": "Meal ideas, shopping-list promos and cooking posts.",
+    "asset": "art/some-assembly.png",
+    "card": "cards/some-assembly.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "fridge-investigation",
+    "setup": "“Maybe there’s something new.”",
+    "reply": "It has been four minutes.",
+    "title": "Same fridge. New investigation.",
+    "category": "Everyday",
+    "scene": "Spot standing in front of an open miniature cream refrigerator, holding a magnifying glass and peering with one giant enlarged eye through lens into fridge. Fridge shelves have exactly a covered leftovers box, a carrot and a little milk carton with no label. Warm fridge light on curious plate face. View from side three-quarter, Spot face visible and fridge contents visible, detective gag, no hat.",
+    "use": "Relatable kitchen memes and group-chat replies.",
+    "asset": "art/fridge-investigation.png",
+    "card": "cards/fridge-investigation.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "recovery-department",
+    "setup": "“What’s the plan today?”",
+    "reply": "Already working on it.",
+    "title": "Recovery department. Very busy.",
+    "category": "Recovery",
+    "scene": "Spot tucked into a small sage green overstuffed armchair with an ivory knitted blanket over lower half, fluffy ivory slippers on visible feet, holding a tiny cream mug, closed content crescent eyes and smug relaxed smile. Small side table with a blank closed book. Very serious dedication to lounging, soft warm light, miniature set.",
+    "use": "Rest-day posts and cozy reaction replies.",
+    "asset": "art/recovery-department.png",
+    "card": "cards/recovery-department.png",
+    "width": 1254,
+    "height": 1254
+  }
+]

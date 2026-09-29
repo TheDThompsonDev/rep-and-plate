@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createServer } from "node:http";
+import { createServer, request as httpRequest } from "node:http";
 import {
   collectSources,
   modelAnswerSchema,
   normalizeAnswer,
   checkIntent,
 } from "./ai";
-import { createApi, publicError } from "./http";
+import { createApi, publicError, readConfig } from "./http";
 import { requestFixture, resultFixture } from "../tests/ai-fixtures";
 const config = {
   openaiKey: "test-key-not-real",
@@ -17,17 +17,76 @@ const config = {
 function modelFixture() {
   const r = resultFixture(crypto.randomUUID());
   return modelAnswerSchema.parse({
+    preferenceProposal: null,
+    suggestedAction: null,
+    recipePortionProposal: null,
     reply: r.reply,
     intent: "grocery",
     store: "Kroger",
     receiptNote: "",
-    items: r.receipt!.items,
+    purchase: null,
+    items: r.receipt!.items.map(item=>({...item,price:null})),
     meal: null,
     sources: r.sources,
   });
 }
 afterEach(() => vi.restoreAllMocks());
 describe("AI grounding and boundaries", () => {
+  it('retains receipt prices as unconfirmed evidence and never substitutes upload date for purchase date',()=>{
+    const answer=modelFixture();
+    answer.purchase={purchaseDate:'2026-09-20',currency:'CAD',subtotal:10,tax:1,discount:null,total:11};
+    answer.items[0].price={total:4,discount:1};
+    const result=normalizeAnswer(answer,requestFixture(),new Map());
+    expect(result.receipt?.purchase).toEqual({...answer.purchase,confirmed:false});
+    expect(result.receipt?.items[0].price).toEqual({total:4,discount:1});
+    expect(result.meal).toBeNull();
+    answer.purchase={purchaseDate:null,currency:null,subtotal:null,tax:null,discount:null,total:null};
+    expect(normalizeAnswer(answer,requestFixture(),new Map()).receipt?.purchase?.purchaseDate).toBeNull();
+  });
+  it("grounds prepared portions in current text and saved leftovers without a duplicate meal estimate", () => {
+    const request = {...requestFixture(), text:"I ate 1.5 portions of my overnight oats for breakfast."};
+    request.context.preparedRecipes = [{id:"batch-oats",name:"Overnight oats",preparedAt:"2026-09-25T08:00:00.000Z",remainingPortions:3,nutritionPerPortion:{calories:225,protein:9,carbs:33,fat:7}}];
+    const proposal = {batchId:"batch-oats",portions:1.5,category:"Breakfast" as const,evidence:request.text};
+    const answer = {...modelFixture(),intent:"meal" as const,items:[],recipePortionProposal:proposal,suggestedAction:"recipes" as const,meal:{title:"Oats",category:"Breakfast" as const,portion:"1.5 portions",note:"",calories:999,protein:99,carbs:99,fat:99,sources:[],components:null}};
+    const result=normalizeAnswer(answer,request,new Map());
+    expect(result.recipePortionProposal).toEqual(proposal);
+    expect(result.meal).toBeNull();
+    expect(result.suggestedAction).toBeNull();
+    for(const invalid of [{...proposal,batchId:"unknown"},{...proposal,portions:4},{...proposal,evidence:"I ate a different meal."}]) {
+      const held=normalizeAnswer({...answer,recipePortionProposal:invalid},request,new Map());
+      expect(held.recipePortionProposal).toBeNull();
+      expect(held.meal).toBeNull();
+      expect(held.warnings.join(' ')).toContain("leftovers");
+    }
+    expect(normalizeAnswer(answer,{...request,image:"data:image/png;base64,AAAA"},new Map()).recipePortionProposal).toBeNull();
+    expect(normalizeAnswer(answer,request,new Map(),{choice:"grocery",confidence:0.99}).recipePortionProposal).toBeNull();
+  });
+  it("sums complete meal components and blocks an oversized combined estimate", () => {
+    const answer = {...modelFixture(), intent:"meal" as const, items:[], meal:{
+      title:"Chai and eggs", category:"Breakfast" as const, portion:"One breakfast", note:"Milk, syrup and oil included.", sources:[],
+      calories:999, protein:999, carbs:999, fat:999,
+      components:[
+        {name:"Whole milk",portion:"1 cup",nutrition:{calories:150,protein:8,carbs:12,fat:8}},
+        {name:"Syrup",portion:"1 tbsp",nutrition:{calories:50,protein:0,carbs:13,fat:0}},
+        {name:"Olive oil",portion:"1 tsp",nutrition:{calories:40,protein:0,carbs:0,fat:4.5}},
+        {name:"Eggs",portion:"2 eggs",nutrition:{calories:140,protein:12,carbs:1,fat:10}},
+      ],
+    }};
+    const result = normalizeAnswer(answer,requestFixture(),new Map());
+    expect(result.meal).toMatchObject({calories:380,protein:20,carbs:26,fat:22.5});
+    expect(result.meal?.components).toHaveLength(4);
+    answer.meal.components = [0,1].map(()=>({name:"Very large portion",portion:"Check quantity",nutrition:{calories:15000,protein:1,carbs:1,fat:1}}));
+    const blocked = normalizeAnswer(answer,requestFixture(),new Map());
+    expect(blocked.meal).toBeNull();
+    expect(blocked.warnings.join(' ')).toContain('portions');
+  });
+  it("only passes known read-only tool suggestions for conversational replies", () => {
+    const answer = {...modelFixture(), intent: "conversation" as const, suggestedAction: "recipes" as const};
+    expect(normalizeAnswer(answer, requestFixture(), new Map()).suggestedAction).toBe("recipes");
+    expect(normalizeAnswer({...answer, intent:"grocery"}, requestFixture(), new Map()).suggestedAction).toBeNull();
+    expect(normalizeAnswer({...answer, intent:"meal", meal:null}, requestFixture(), new Map()).suggestedAction).toBe("recipes");
+    expect(modelAnswerSchema.safeParse({...answer, suggestedAction:"delete-meals"}).success).toBe(false);
+  });
   it("does not accept a model-invented URL as retrieval evidence", () => {
     const answer = modelFixture();
     const result = normalizeAnswer(
@@ -67,6 +126,7 @@ describe("AI grounding and boundaries", () => {
   it("holds records when JEV disagrees; groceries cannot also create a meal", () => {
     const answer = modelFixture();
     answer.meal = {
+      components: null,
       ...resultFixture("x").receipt!.items[0].nutrition!,
       title: "Milk",
       category: "Snack",
@@ -172,5 +232,74 @@ describe("HTTP API", () => {
     } finally {
       await new Promise<void>((r) => server.close(() => r()));
     }
+  });
+});
+
+describe("local API and cloud configuration boundary", () => {
+  it("exposes only the publishable configuration and rejects foreign hosts", async () => {
+    const settings = readConfig({
+      SUPABASE_URL: "https://fixture.supabase.co",
+      SUPABASE_PUBLISHABLE_KEY: "sb_publishable_browser_fixture",
+      SUPABASE_SECRET_KEY: "private-secret",
+      SUPABASE_SERVICE_ROLE_KEY: "private-role",
+      OPENAI_API_KEY: "private-ai",
+    });
+    const api = createApi(settings);
+    const server = createServer((req, res) => {
+      void api(req, res, () => res.writeHead(404).end());
+    });
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const { port } = server.address() as { port: number };
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/api/cloud/config`);
+      const config = await response.json();
+      expect(config).toEqual({
+        available: true,
+        url: "https://fixture.supabase.co",
+        publishableKey: "sb_publishable_browser_fixture",
+      });
+      expect(JSON.stringify(settings)).not.toContain("private-secret");
+      expect(JSON.stringify(settings)).not.toContain("private-role");
+      const status = await new Promise<number | undefined>(
+        (resolve, reject) => {
+          const request = httpRequest(
+            {
+              hostname: "127.0.0.1",
+              port,
+              path: "/api/cloud/config",
+              headers: { Host: "attacker.example" },
+            },
+            (res) => {
+              res.resume();
+              resolve(res.statusCode);
+            },
+          );
+          request.on("error", reject);
+          request.end();
+        },
+      );
+      expect(status).toBe(403);
+    } finally {
+      await new Promise<void>((resolve) => server.close(() => resolve()));
+    }
+  });
+});
+
+
+describe("preference proposal provenance",()=>{
+  it("only returns a valid proposal supported by the current typed conversation",()=>{
+    const request={...requestFixture(),text:"I dislike mushrooms."};
+    const answer={...modelFixture(),intent:"conversation" as const,preferenceProposal:{evidence:"I dislike mushrooms.",description:"Avoid mushrooms in meal ideas.",changes:[{field:"dislikes" as const,operation:"add" as const,value:"mushrooms"}]}};
+    expect(normalizeAnswer(answer,request,new Map()).preferenceProposal).toEqual(answer.preferenceProposal);
+    expect(normalizeAnswer(answer,{...request,text:"What is for dinner?"},new Map()).preferenceProposal).toBeNull();
+    expect(normalizeAnswer(answer,{...request,image:"data:image/png;base64,AAAA"},new Map()).preferenceProposal).toBeNull();
+    expect(normalizeAnswer({...answer,intent:"grocery"},request,new Map()).preferenceProposal).toBeNull();
+  });
+  it("rejects unsupported preference values without changing the response into a write",()=>{
+    const request={...requestFixture(),text:"I cook for two people."};
+    const answer={...modelFixture(),intent:"conversation" as const,preferenceProposal:{evidence:request.text,description:"Household size.",changes:[{field:"householdSize" as const,operation:"set" as const,value:"200"}]}};
+    const result=normalizeAnswer(answer,request,new Map());expect(result.preferenceProposal).toBeNull();expect(result.warnings.join(' ')).toContain("unchanged");
   });
 });

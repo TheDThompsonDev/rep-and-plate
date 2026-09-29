@@ -1,6 +1,82 @@
 import { clockTime, id, type AppState, type Exercise } from "./domain";
 
 export type Workout = AppState["workout"];
+export type ExerciseAdjustment = {
+  name: string;
+  weight: number;
+  target: number;
+  setCount: number;
+};
+
+/** Changes the remaining prescription without rewriting performed work. */
+export function adjustWorkoutExercise(
+  workout: Workout,
+  exerciseIndex: number,
+  adjustment: ExerciseAdjustment,
+): Workout {
+  const current = workout.exercises[exerciseIndex];
+  if (
+    workout.status !== "active" ||
+    !Number.isInteger(exerciseIndex) ||
+    !current
+  )
+    throw new Error(
+      "This exercise is no longer active. Open your current workout to adjust it.",
+    );
+  const name = adjustment.name.trim();
+  if (!name || name.length > 100)
+    throw new Error("Enter an exercise name with up to 100 characters.");
+  if (
+    !Number.isFinite(adjustment.weight) ||
+    adjustment.weight < 0 ||
+    adjustment.weight > 2000
+  )
+    throw new Error("Choose a weight between 0 and 2,000 lb.");
+  if (
+    !Number.isInteger(adjustment.target) ||
+    adjustment.target < 1 ||
+    adjustment.target > 100
+  )
+    throw new Error("Choose a target from 1 to 100 reps.");
+  if (
+    !Number.isInteger(adjustment.setCount) ||
+    adjustment.setCount < 1 ||
+    adjustment.setCount > 10
+  )
+    throw new Error("Choose between 1 and 10 sets.");
+  const hasRecorded = current.sets.some((reps) => reps !== null);
+  if (
+    hasRecorded &&
+    (name !== current.name || adjustment.weight !== current.weight)
+  )
+    throw new Error(
+      "This exercise has recorded sets. Keep its name and weight to preserve what you already did.",
+    );
+  if (current.sets.slice(adjustment.setCount).some((reps) => reps !== null))
+    throw new Error(
+      "Keep every recorded set. You can only remove unrecorded sets from the end.",
+    );
+  const changedIdentity =
+    name !== current.name || adjustment.weight !== current.weight;
+  return {
+    ...workout,
+    exercises: workout.exercises.map((exercise, index) =>
+      index !== exerciseIndex
+        ? exercise
+        : {
+            ...exercise,
+            name,
+            weight: adjustment.weight,
+            target: adjustment.target,
+            previous: changedIdentity ? [] : exercise.previous,
+            sets: Array.from(
+              { length: adjustment.setCount },
+              (_, set) => exercise.sets[set] ?? null,
+            ),
+          },
+    ),
+  };
+}
 const exercise = (
   name: string,
   weight: number,

@@ -1,0 +1,11 @@
+.voice-capture { display:grid; gap:16px; color:var(--ink, #112c35); }
+.voice-capture p { margin:0; line-height:1.5; }
+.voice-privacy { font-size:13px; color:var(--muted, #73818b); }
+.voice-recording { display:grid; justify-items:center; gap:18px; padding:22px; border-radius:20px; background:#e6f5ee; }
+.voice-recording progress { width:100%; accent-color:#17624d; height:8px; }
+.voice-pulse { width:16px; height:16px; background:#c54b48; border-radius:50%; box-shadow:0 0 0 7px #c54b481a; }
+.voice-transcript { display:grid; gap:8px; font-weight:600; }
+.voice-transcript textarea { width:100%; box-sizing:border-box; padding:14px; border:1px solid #dce4e1; border-radius:14px; background:#fafcfb; color:inherit; font:inherit; font-weight:400; resize:vertical; }
+.voice-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.voice-error { background:#fff3ef; padding:12px; border-radius:12px; color:#923d2c; }
+.voice-cancel { justify-self:center; }

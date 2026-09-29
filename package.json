@@ -1,25 +1,39 @@
 {
-  "name": "fuel-prototype",
+  "name": "rep-and-plate",
   "version": "1.0.0",
   "scripts": {
-    "test": "vitest run src/domain.test.ts src/ai.test.ts server/ai.test.ts",
+    "test": "vitest run src server",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test:e2e": "playwright test",
-    "start": "tsx server/index.ts"
+    "start": "tsx server/index.ts",
+    "catalog:import": "tsx scripts/import-usda.ts",
+    "catalog:benchmark": "tsx scripts/usda-benchmark.ts",
+    "db:setup": "tsx scripts/setup-supabase.ts",
+    "db:verify": "tsx scripts/verify-supabase.ts",
+    "db:beta": "tsx scripts/setup-beta.ts",
+    "mobile": "npm --prefix mobile start",
+    "mobile:api": "tsx scripts/mobile-dev.ts",
+    "mobile:check": "npm --prefix mobile run check",
+    "mobile:export": "npm --prefix mobile run export"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Fuel: a calm, local fitness capture prototype",
+  "description": "Rep & Plate: a calm, local fitness capture prototype",
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
+    "@vercel/functions": "^3.9.9",
+    "@zxing/browser": "^0.1.5",
+    "@zxing/library": "^0.21.3",
     "dotenv": "^18.0.4",
     "lucide-react": "^1.48.0",
     "openai": "^7.23.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-markdown": "^10.1.0",
+    "stream-json": "^3.7.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -27,8 +41,11 @@
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/stream-json": "^1.7.8",
     "@vitejs/plugin-react": "^6.1.1",
     "agent-browser": "^0.27.0",
+    "esbuild": "^0.28.2",
+    "postgres": "^3.4.9",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
@@ -36,5 +53,8 @@
     "vitest": "^5.0.1"
   },
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "type": "module"
 }

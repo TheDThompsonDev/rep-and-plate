@@ -1,0 +1,132 @@
+.fuel-cloud {
+  display: grid;
+  gap: 18px;
+  color: #17322e;
+}
+.fuel-cloud h3 {
+  font-size: 17px;
+  margin: 0 0 7px;
+}
+.fuel-cloud p {
+  margin: 0;
+  line-height: 1.5;
+  color: #70827e;
+  font-size: 14px;
+}
+.cloud-intro {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.cloud-intro > span {
+  background: #def3e9;
+  color: #17664f;
+  border-radius: 18px;
+  padding: 13px;
+  display: flex;
+}
+.cloud-feedback {
+  padding: 14px;
+  border-radius: 14px;
+  background: #eaf7f0;
+}
+.fuel-cloud .cloud-error {
+  color: #825537;
+  background: #fff2e7;
+}
+.cloud-account,
+.cloud-local,
+.cloud-review {
+  padding: 17px;
+  border: 1px solid #e2ebe7;
+  border-radius: 18px;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.cloud-account strong {
+  overflow-wrap: anywhere;
+}
+.cloud-account > span {
+  font-size: 12px;
+  color: #7b8b87;
+}
+.cloud-actions {
+  display: grid;
+  gap: 10px;
+}
+.cloud-actions > button {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  padding: 15px;
+  border: 1px solid #e2ebe7;
+  border-radius: 16px;
+  background: #fff;
+  color: #17664f;
+  cursor: pointer;
+}
+.cloud-actions strong,
+.cloud-actions small {
+  display: block;
+}
+.cloud-actions small {
+  font-size: 12px;
+  color: #788981;
+  margin-top: 4px;
+}
+.fuel-cloud button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.cloud-link {
+  background: transparent;
+  border: 0;
+  padding: 5px 0;
+  color: #17664f;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.cloud-review {
+  background: #f1faf5;
+}
+.cloud-counts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cloud-counts > span {
+  border-radius: 8px;
+  padding: 6px 9px;
+  background: #e5f2eb;
+  font-size: 12px;
+}
+.cloud-ack {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  align-items: start;
+}
+.cloud-ack input {
+  width: 18px;
+  height: 18px;
+  accent-color: #17664f;
+  flex-shrink: 0;
+}
+.cloud-review > label:not(.cloud-ack) {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+.cloud-review > label:not(.cloud-ack) input {
+  padding: 10px;
+  border: 1px solid #cddfd5;
+  border-radius: 10px;
+}
+.fuel-cloud .cloud-footnote {
+  font-size: 12px;
+}

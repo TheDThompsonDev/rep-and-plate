@@ -1,0 +1,28 @@
+.receipt-product-review { display:grid; gap:15px; color:#173c31; }
+.receipt-product-review p { margin:0; line-height:1.5; font-size:14px; }
+.receipt-original { display:grid; gap:5px; border-radius:15px; padding:15px; background:#edf7f1; overflow-wrap:anywhere; }
+.receipt-original span,.receipt-original small { color:#688277; font-size:12px; }
+.receipt-product-search { display:grid; gap:10px; }
+.receipt-product-search label,.receipt-product-quantity { display:grid; gap:7px; font-size:13px; color:#5e786a; }
+.receipt-product-search input,.receipt-product-quantity input { width:100%; box-sizing:border-box; min-width:0; padding:12px; border:1px solid #dce7df; background:white; border-radius:10px; color:#153a2d; }
+.receipt-product-notice { background:#f4f7f5; border-radius:11px; padding:12px; color:#607268; }
+.receipt-product-options { border:0; padding:0; display:grid; gap:8px; min-width:0; }
+.receipt-product-options legend { padding:0 0 10px; font-size:15px; font-weight:600; }
+.receipt-product-option { display:flex; align-items:flex-start; gap:10px; border:1px solid #e0e8e2; border-radius:12px; padding:13px; cursor:pointer; }
+.receipt-product-option.selected { border-color:#2b7959; background:#eff8f2; }
+.receipt-product-option input { flex:none; margin-top:4px; accent-color:#236b50; }
+.receipt-product-option span { display:grid; gap:4px; overflow-wrap:anywhere; min-width:0; }
+.receipt-product-option strong { font-size:14px; }
+.receipt-product-option small { color:#75877d; font-size:12px; }
+.receipt-product-details { padding:17px; border:1px solid #dce9df; border-radius:16px; display:grid; gap:12px; min-width:0; }
+.receipt-product-details h3 { margin:0; font-family:inherit; font-weight:600; font-size:18px; line-height:1.4; overflow-wrap:anywhere; }
+.receipt-product-details small,.receipt-product-basis { font-size:12px!important; color:#718479; line-height:1.5; }
+.receipt-product-details dl { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0; }
+.receipt-product-details dl>div { border-radius:10px; padding:10px; background:#ebf5ee; }
+.receipt-product-details dt { font-size:12px; color:#728578; }
+.receipt-product-details dd { margin:4px 0 0; font-weight:600; color:#205b42; }
+.receipt-product-details a { display:flex; align-items:center; gap:6px; color:#2f795a; font-size:13px; }
+.receipt-product-details details { font-size:13px; overflow-wrap:anywhere; }
+.receipt-product-confirm { display:flex; align-items:flex-start; gap:9px; font-size:13px; line-height:1.5; color:#516e5e; }
+.receipt-product-confirm input { accent-color:#236b50; margin-top:4px; }
+.receipt-product-cancel { justify-self:center; }

@@ -1,0 +1,60 @@
+.fuel-scanner { color: #142a31; font-size: 14px; line-height: 1.5; }
+.fuel-scanner button, .fuel-scanner input, .fuel-scanner select, .fuel-scanner textarea { font: inherit; }
+.fuel-scanner button { cursor: pointer; }
+.fuel-scanner button:disabled { opacity: .48; cursor: not-allowed; }
+.fuel-scanner-intro { display: flex; align-items: center; gap: 14px; background: #e4f5ee; border-radius: 18px; padding: 14px 18px; margin-bottom: 17px; }
+.fuel-scanner-intro > span { color: #116249; }
+.fuel-scanner-intro p { margin: 0; color: #658378; }
+.fuel-scanner-intro strong { color: #174e3e; font-weight: 600; }
+.fuel-scan-tools { display: flex; gap: 9px; margin: 14px 0; }
+.fuel-scan-tools button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: #f0f6f3; color: #245f4b; border: 1px solid #dce9e2; padding: 12px 8px; border-radius: 12px; }
+.fuel-scan-entry label { display: block; margin-bottom: 7px; color: #687e75; }
+.fuel-scan-entry > div { display: flex; gap: 8px; }
+.fuel-scan-entry input { flex: 1; min-width: 0; }
+.fuel-scanner input:not([type=checkbox]), .fuel-scanner select, .fuel-scanner textarea { background: #fff; border: 1px solid #dce6e0; border-radius: 10px; padding: 11px; min-width: 0; color: #18372c; }
+.fuel-scanner input:focus-visible, .fuel-scanner textarea:focus-visible, .fuel-scanner select:focus-visible, .fuel-scanner button:focus-visible { outline: 2px solid #378f71; outline-offset: 3px; }
+.fuel-scan-entry button, .fuel-label-save { background: #12694e; color: #fff; padding: 11px 15px; border-radius: 10px; }
+.fuel-scan-camera { position: relative; border-radius: 16px; overflow: hidden; background: #102921; color: white; }
+.fuel-scan-camera video { display: block; width: 100%; height: 230px; object-fit: cover; }
+.fuel-scan-guide { position: absolute; top: 48px; left: 10%; width: 80%; height: 130px; border: 2px solid #bcf0d8; border-radius: 9px; pointer-events: none; }
+.fuel-scan-camera p { margin: 8px 12px; font-size: 13px; }
+.fuel-scan-camera button { background: #def3e9; color: #124b37; margin: 0 12px 12px; padding: 7px 13px; border-radius: 9px; }
+.fuel-scan-status { color: #477762; font-size: 13px; margin: 12px 0; }
+.fuel-scan-error { background: #fff6e9; color: #8b6337; padding: 12px; border-radius: 11px; font-size: 13px; margin: 12px 0; }
+.fuel-scan-results { margin-top: 18px; }
+.fuel-scan-results h3, .fuel-product-review h3 { font-family: inherit; font-size: 19px; margin: 10px 0 5px; }
+.fuel-product-choice { display: grid; gap: 4px; width: 100%; border: 1px solid #dce9e2; background: #fff; padding: 14px; border-radius: 12px; margin: 8px 0; text-align: left; color: #224c3b; }
+.fuel-product-choice span, .fuel-product-choice small { color: #75867d; font-size: 12px; }
+.fuel-product-review { margin-top: 20px; border: 1px solid #dce9e2; background: linear-gradient(150deg, #f6fcf9, #fff 55%); padding: 18px; border-radius: 18px; }
+.fuel-product-eyebrow { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #438168; }
+.fuel-product-review p { color: #6b7e75; margin: 7px 0; overflow-wrap: anywhere; }
+.fuel-product-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 17px 0 10px; }
+.fuel-product-macros div { display: grid; gap: 3px; text-align: center; background: #e8f6ee; padding: 10px 3px; border-radius: 10px; }
+.fuel-product-macros strong { color: #165a40; font-size: 18px; }
+.fuel-product-macros span { color: #779184; font-size: 11px; text-transform: capitalize; }
+.fuel-product-review .fuel-product-basis, .fuel-scan-footnote { font-size: 12px; color: #849187; line-height: 1.5; }
+.fuel-product-review details { margin: 10px 0; }
+.fuel-product-review summary { color: #456c58; cursor: pointer; }
+.fuel-product-source { display: flex; gap: 5px; align-items: center; color: #2c795b; margin-top: 12px; }
+.fuel-product-review > small { display: block; font-size: 11px; color: #8b978f; margin: 5px 0 15px; }
+.fuel-scan-quantity { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #526f60; }
+.fuel-scan-quantity input { width: 95px; }
+.fuel-product-review .fuel-product-total { color: #2e7757; font-weight: 600; margin: 12px 0; }
+.fuel-product-actions { display: flex; gap: 8px; margin-top: 16px; }
+.fuel-product-actions button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; border-radius: 11px; padding: 12px 7px; color: #fff; background: #17684e; font-size: 13px; }
+.fuel-product-actions button + button { color: #226147; background: #e1f2e8; }
+.fuel-label-link { display: block; background: none; padding: 9px 0; margin: 10px 0 0; color: #367b5c; text-decoration: underline; text-underline-offset: 3px; font-size: 13px!important; }
+.fuel-label-intro { color: #6d8578; margin: 0 0 7px; }
+.fuel-label-code { color: #91a096; font-size: 12px; margin: 0; }
+.fuel-label-preview { display: block; background: #eff5f1; border-radius: 13px; overflow: hidden; color: #52836b; font-size: 12px; text-align: center; }
+.fuel-label-preview img { width: 100%; max-height: 240px; object-fit: contain; background: #e9eeeb; }
+.fuel-label-preview span { display: block; padding: 7px; }
+.fuel-label-fields { border: 0; padding: 0; margin: 16px 0; display: grid; gap: 12px; min-width: 0; }
+.fuel-label-fields legend { font-weight: 600; padding: 0 0 12px; }
+.fuel-label-fields label { display: grid; gap: 6px; color: #647c6d; font-size: 13px; min-width: 0; }
+.fuel-label-fields input, .fuel-label-fields select, .fuel-label-fields textarea { width: 100%; }
+.fuel-label-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fuel-label-confirm { display: flex; align-items: flex-start; gap: 9px; padding: 13px; background: #eaf5ee; border-radius: 12px; color: #4f7560; font-size: 13px; margin: 12px 0; }
+.fuel-label-confirm input { margin-top: 3px; accent-color: #247653; }
+.fuel-label-save { width: 100%; }
+@media(max-width: 420px) { .fuel-product-review { padding: 13px; } .fuel-product-actions { flex-direction: column; } .fuel-product-macros strong { font-size: 16px; } }

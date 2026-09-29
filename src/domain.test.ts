@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   initialState,
+  demoState,
   interpretText,
   resolveReview,
   stateSchema,
@@ -12,6 +13,12 @@ import {
 describe("daily records", () => {
   it("calculates totals from records for the requested local day", () => {
     const state = initialState();
+    state.meals = demoState().meals.map((meal, index) => ({
+      ...meal,
+      id: `personal-${index}`,
+      source: "Your logged meal",
+      example: false,
+    }));
     expect(sumNutrition(state.meals)).toEqual({
       calories: 1970,
       protein: 107,
@@ -24,17 +31,17 @@ describe("daily records", () => {
     expect(sumNutrition(state.meals).calories).toBe(2080);
   });
   it("resolves review idempotently without adding yesterday’s meal to today", () => {
-    const original = initialState();
+    const original = demoState();
     const next = resolveReview(original, "review-protein", "Chicken");
     expect(next.reviews[0].resolved).toBe(true);
     expect(next.meals).toHaveLength(5);
     expect(next.meals[4].day).not.toBe(today());
-    expect(sumNutrition(next.meals).calories).toBe(1970);
+    expect(sumNutrition(next.meals).calories).toBe(0);
     expect(resolveReview(next, "review-protein", "Steak")).toBe(next);
     expect(original.reviews[0].resolved).toBe(false);
   });
   it("does not record calories for fries that were not eaten", () => {
-    const state = initialState();
+    const state = demoState();
     expect(resolveReview(state, "review-fries", "None").meals).toHaveLength(4);
     expect(
       resolveReview(state, "review-fries", "About half").meals.at(-1)?.calories,
@@ -70,15 +77,15 @@ describe("bounded demo interpretation", () => {
   });
   it("validates snapshots and rejects invalid nutrition", () => {
     expect(stateSchema.safeParse(initialState()).success).toBe(true);
-    const state = initialState();
+    const state = demoState();
     state.meals[0].calories = -10;
     expect(stateSchema.safeParse(state).success).toBe(false);
   });
 });
 
 describe("chat upgrade", () => {
-  it("updates only seeded messages, preserving user captures and edited records", () => {
-    const old = initialState();
+  it("marks the chat migration without replacing old conversations or adding example meals", () => {
+    const old = demoState();
     delete old.chatRevision;
     old.meals = old.meals.filter((m) => m.id !== "chat-demo-dinner");
     old.meals[0].calories = 450;
@@ -92,11 +99,11 @@ describe("chat upgrade", () => {
       { id: "my-capture", role: "user", text: "My own note", time: "7:00 PM" },
     ];
     const next = upgradeChat(old);
-    expect(next.messages.some((m) => m.id === "intro")).toBe(false);
+    expect(next.messages).toEqual(old.messages);
     expect(next.messages.at(-1)?.text).toBe("My own note");
     expect(next.meals[0].calories).toBe(450);
     expect(next.meals.filter((m) => m.id === "chat-demo-dinner")).toHaveLength(
-      1,
+      0,
     );
     expect(upgradeChat(next)).toBe(next);
   });

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "press-conference",
+    "setup": "“I went for one walk.”",
+    "reply": "Get my publicist.",
+    "title": "I will not be taking questions.",
+    "category": "Main character",
+    "scene": "Spot holding a completely unnecessary celebrity press conference after one casual walk. He stands on a small riser behind a dense forest of 12 different microphones on stands; wearing enormous black sunglasses and a tiny ivory towel over one shoulder, one hand raised to silence imaginary reporters, smug dead-serious face. Golden confetti falling, dark forest-green velvet backdrop, theatrical flash bulbs, dramatic low camera angle. His green sneakers just visible below podium. The press conference is absurdly grand for this tiny plate. No audience characters needed. No letters on microphones or podium.",
+    "alt": "Spot in sunglasses holding a press conference behind far too many microphones.",
+    "use": "Walks, tiny wins, main-character group-chat replies.",
+    "asset": "art/press-conference.png",
+    "card": "cards/press-conference.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "leg-funeral",
+    "setup": "“I did three squats.”",
+    "reply": "We gather here today.",
+    "title": "Cause of death: character development.",
+    "category": "Gym drama",
+    "scene": "Spot conducting a hilariously overdramatic miniature funeral for HIS OWN ABILITY TO WALK after three squats. Rainy cinematic graveyard stage, Spot alive and well in tiny black funeral veil over top rim, dramatic single cartoon tear, holding a single white lily. Beside him a memorial easel with a framed PHOTO OF TWO GREEN SNEAKERS, black mourning ribbon, a wreath shaped like a tiny dumbbell. A low CLOSED shoebox-sized coffin rests on grass below frame, no body or remains. Ivory staircase looming in background like a villain. Absurd cartoon melodrama, cute not horror, moody blue-green dusk with warm light on face. Entire important scene in frame.",
+    "alt": "Spot mourning his legs beside a sneaker portrait, with stairs looming behind him.",
+    "use": "Self-captioned post-leg-day memes and gym banter.",
+    "asset": "art/leg-funeral.png",
+    "card": "cards/leg-funeral.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "dinner-conspiracy",
+    "setup": "“What should I make for dinner?”",
+    "reply": "I’ve connected the dots.",
+    "title": "There were no dots.",
+    "category": "Kitchen spiral",
+    "scene": "Spot has transformed a tiny kitchen into a completely unhinged detective conspiracy headquarters while deciding dinner. Center Spot with wildly focused wide eyes, one eyebrow too high, pointing a wooden spaghetti spoon at an enormous cork board covered in polaroid photos of pasta, tomatoes, cheese and ONE fork; tangled red string connects all photos in ridiculous intricate web. Spot holds a crumpled blank sheet in other glove. Mess of blank papers and three empty tiny coffee mugs below. Single dramatic overhead lamp, midnight dark-green kitchen, red string bright and legible, cinematic angle. Silly intense overthinking energy, no readable letters, not crime scene, no people photos.",
+    "alt": "Spot connecting pasta, tomatoes and cheese with red string on an enormous conspiracy board.",
+    "use": "Dinner indecision, meal planning and overthinking memes.",
+    "asset": "art/dinner-conspiracy.png",
+    "card": "cards/dinner-conspiracy.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "id": "shaker-ritual",
+    "setup": "“I bought a new shaker.”",
+    "reply": "The prophecy is complete.",
+    "title": "This is my entire personality now.",
+    "category": "Gym drama",
+    "scene": "Spot in an oversized deep forest-green ceremonial hooded cloak, the hood framing but never hiding his recognizable cream plate face, levitating a normal gym shaker bottle above a tiny stone pedestal with both hands raised. Bottle is plain cream with green lid and no branding. Radiant golden heavenly spotlight illuminates shaker, ring of small ivory candles, gym floor with one dumbbell to side. Spot's eyes comically wide with overwhelming reverence at this utterly ordinary plastic bottle. Epic fantasy movie composition, swirling subtle mist, visible tiny green sneakers under robe. Cute absurd sacred-shaker ceremony; no religious symbols, no text.",
+    "alt": "Cloaked Spot treating an ordinary shaker bottle like a magical relic.",
+    "use": "New gym gear, shaker obsession and new-hobby memes.",
+    "asset": "art/shaker-ritual.png",
+    "card": "cards/shaker-ritual.png",
+    "width": 1254,
+    "height": 1254
+  }
+]

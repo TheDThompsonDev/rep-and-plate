@@ -1,7 +1,15 @@
-import { aiResultSchema, type AIRequest, type AIResult } from "./ai-contract";
+import { apiFetch } from "./api-fetch";
+import { aiResultSchema, aiNutritionSchema, type AIRequest, type AIResult } from "./ai-contract";
+import { applyPreferenceProposal } from "./features/preferences/proposals";
+import { defaultPreferences } from "./features/preferences/contracts";
+import { receiptSpending } from './features/shopping/shopping';
+import { getPantryLots } from "./features/pantry/ledger";
+import { remainingRecipePortions } from "./features/recipes/portions";
+import { normalizeProposalComponents, sumProposalComponents } from "./features/meals/proposals";
 import {
   clockTime,
   sumNutrition,
+  personalMeals,
   today,
   type AppState,
   type Message,
@@ -20,6 +28,15 @@ export function buildAIRequest(state: AppState, message: Message): AIRequest {
       .slice(-12)
       .map((m) => ({ role: m.role, text: m.text.slice(0, 18000) })),
     context: {
+      shopping: (()=>{const spending=receiptSpending(state.groceries??[]);return {totals:spending.totals,recordedReceipts:state.groceries?.length??0,reviewedReceipts:spending.covered,missingOrUncheckedTotals:spending.unpriced,list:(state.shopping?.list??[]).slice(-50).map(({name,quantity,checked})=>({name,quantity,checked}))};})(),
+      preparedRecipes: (state.recipeBatches ?? [])
+        .filter(batch => !batch.undoneAt && remainingRecipePortions(batch) > 0)
+        .slice(-30)
+        .flatMap(batch => {
+          const nutrition = aiNutritionSchema.safeParse(Object.fromEntries(Object.entries(batch.nutrition).map(([key,value])=>[key,Math.round(value / batch.totalPortions * 100) / 100])));
+          return nutrition.success ? [{id: batch.id.slice(0,200), name: batch.name, preparedAt: batch.createdAt.slice(0,40), remainingPortions: remainingRecipePortions(batch), nutritionPerPortion:nutrition.data}] : [];
+        }),
+      preferences: state.preferences,
       goals: {
         calories: state.profile.calories,
         protein: state.profile.protein,
@@ -27,8 +44,7 @@ export function buildAIRequest(state: AppState, message: Message): AIRequest {
         fat: state.profile.fat,
       },
       totals: sumNutrition(state.meals),
-      meals: state.meals
-        .filter((m) => m.day === today())
+      meals: personalMeals(state.meals, today())
         .slice(-30)
         .map(({ title, category, calories, protein, carbs, fat }) => ({
           title,
@@ -38,12 +54,49 @@ export function buildAIRequest(state: AppState, message: Message): AIRequest {
           carbs,
           fat,
         })),
-      groceries: (state.groceries ?? [])
-        .slice(-5)
-        .map(({ store, items }) => ({
-          store,
-          items: items.filter((item) => item.availability === "available"),
-        })),
+      groceries: (() => {
+        const groups = new Map<
+          string,
+          {
+            store: string;
+            items: AIRequest["context"]["groceries"][number]["items"];
+          }
+        >();
+        const lots = getPantryLots(state).filter(
+          (lot) =>
+            lot.item.availability === "available" &&
+            (lot.remaining === null || lot.remaining > 0),
+        );
+        // Include useful available items from the whole pantry, not just the newest receipts.
+        for (const lot of lots.slice(0, 150)) {
+          const bucket = Math.floor(
+            [...groups.values()].reduce((n, g) => n + g.items.length, 0) / 30,
+          );
+          const key = String(bucket);
+          if (!groups.has(key))
+            groups.set(key, {
+              store: "Available pantry ingredients",
+              items: [],
+            });
+          groups
+            .get(key)!
+            .items.push({
+              ...lot.item,
+              productCandidates: undefined,
+              price: undefined,
+              servingsPurchased: lot.remaining,
+              quantity:
+                lot.remaining === null
+                  ? lot.item.quantity
+                  : `${lot.remaining} labeled servings remaining`,
+              note: `${lot.item.note} Bought at ${lot.store} on ${lot.date}.`.slice(
+                0,
+                1200,
+              ),
+            });
+        }
+        return [...groups.values()];
+      })(),
       workout: JSON.stringify({
         status: state.workout.status,
         title: state.workout.title ?? "Upper Body",
@@ -87,19 +140,34 @@ export function applyAIResult(state: AppState, result: AIResult): AppState {
         time: clockTime(),
         ai: true,
         aiStatus: "complete",
+        spotCheck: result.decision === 'uncertain',
+        workoutProposal: result.workout ?? undefined,
+        workoutCaptureStatus: result.workout ? 'pending' : undefined,
         receiptId: receipt?.id,
         mealProposal: result.meal ?? undefined,
+        preferenceProposal: result.preferenceProposal ?? undefined,
+        preferenceStatus: result.preferenceProposal ? "pending" : undefined,
+        suggestedAction: result.suggestedAction ?? undefined,
+        recipePortionProposal: result.recipePortionProposal ?? undefined,
+        recipePortionProposalStatus: result.recipePortionProposal ? "pending" : undefined,
         sources: result.sources,
         warnings: result.warnings,
       },
     ],
   };
 }
+export function resolvePreferenceProposal(state: AppState, messageId: string, accept: boolean): AppState {
+  const message=state.messages.find(entry=>entry.id===messageId);
+  if (!message?.preferenceProposal || message.preferenceStatus !== "pending") return state;
+  const preferences=accept ? applyPreferenceProposal(state.preferences ?? defaultPreferences(),message.preferenceProposal) : state.preferences;
+  return {...state,preferences,messages:state.messages.map(entry=>entry.id===messageId ? {...entry,preferenceStatus:accept ? "accepted" as const : "dismissed" as const} : entry)};
+}
 export function addProposedMeal(state: AppState, messageId: string): AppState {
   const message = state.messages.find((m) => m.id === messageId);
   const meal = message?.mealProposal;
   if (!message || !meal || message.mealId) return state;
   const mealId = `ai-meal-${messageId}`;
+  const totals = meal.components ? sumProposalComponents(meal.components) : meal;
   return {
     ...state,
     meals: [
@@ -108,11 +176,12 @@ export function addProposedMeal(state: AppState, messageId: string): AppState {
         id: mealId,
         title: meal.title,
         category: meal.category,
-        calories: meal.calories,
-        protein: meal.protein,
-        carbs: meal.carbs,
-        fat: meal.fat,
-        day: today(),
+        calories: totals.calories,
+        protein: totals.protein,
+        carbs: totals.carbs,
+        fat: totals.fat,
+        components: meal.components ? normalizeProposalComponents(meal.components, mealId) : undefined,
+        day: meal.day ?? today(),
         time: clockTime(),
         source: "AI estimate · checked by you",
         confidence: "estimated",
@@ -127,17 +196,18 @@ export function addProposedMeal(state: AppState, messageId: string): AppState {
 export async function requestAI(
   request: AIRequest,
   onProgress: (text: string) => void,
+  signal?: AbortSignal,
 ): Promise<AIResult> {
-  const response = await fetch("/api/chat", {
+  const response = await apiFetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(request),
-    signal: AbortSignal.timeout(185000),
+    signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(185000)]) : AbortSignal.timeout(185000),
   });
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
     throw new Error(
-      body.error ?? "Fuel couldn’t complete that request. Please try again.",
+      body.error ?? "Rep & Plate couldn’t complete that request. Please try again.",
     );
   }
   if (!response.body)
