@@ -11,6 +11,12 @@ import {
 } from "./domain";
 
 describe("daily records", () => {
+  it("starts with a neutral profile while preserving saved profile names", () => {
+    expect(initialState().profile.name).toBe("friend");
+    const saved = demoState();
+    saved.profile.name = "Alex";
+    expect(upgradeChat(saved).profile.name).toBe("Alex");
+  });
   it("calculates totals from records for the requested local day", () => {
     const state = initialState();
     state.meals = demoState().meals.map((meal, index) => ({

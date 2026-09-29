@@ -306,6 +306,7 @@ export function initialState(): AppState {
   return {
     ...state,
     chatRevision: 3,
+    profile: { ...state.profile, name: "friend" },
     meals: [],
     reviews: [],
     messages: [{
