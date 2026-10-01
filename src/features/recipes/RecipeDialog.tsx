@@ -21,20 +21,27 @@ type Attempt = {
   success: string;
 };
 type Run = (apply: Change, done: Attempt["done"], success: string) => void;
+export type RecipeDraft = {preparing:boolean;name:string;yieldAmount:string;selected:Record<string,string>};
 
 export default function RecipeDialog({
   state,
   onChange,
   onClose,
+  draft,
+  onDraftChange,
+  onOpenPantry,
 }: {
   state: AppState;
   onChange: (updater: Change) => void;
   onClose: () => void;
+  draft?: RecipeDraft;
+  onDraftChange?: (draft:RecipeDraft) => void;
+  onOpenPantry?: () => void;
 }) {
-  const [preparing, setPreparing] = useState(false);
-  const [name, setName] = useState("");
-  const [yieldAmount, setYieldAmount] = useState("");
-  const [selected, setSelected] = useState<Record<string, string>>({});
+  const [preparing, setPreparing] = useState(draft?.preparing??false);
+  const [name, setName] = useState(draft?.name??"");
+  const [yieldAmount, setYieldAmount] = useState(draft?.yieldAmount??"");
+  const [selected, setSelected] = useState<Record<string, string>>(draft?.selected??{});
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -42,6 +49,10 @@ export default function RecipeDialog({
   const batches = (state.recipeBatches || []).filter(
     (batch) => !batch.undoneAt,
   );
+  useEffect(()=>{
+    const next={preparing,name,yieldAmount,selected};
+    if(onDraftChange&&JSON.stringify(next)!==JSON.stringify(draft))onDraftChange(next);
+  },[preparing,name,yieldAmount,selected,draft,onDraftChange]);
 
   useEffect(() => {
     if (!attempt) return;
@@ -190,11 +201,13 @@ export default function RecipeDialog({
               serving size; the finished batch can have a different portion
               size.
             </p>
-            {!lots.length && (
-              <p>
-                Add groceries with known quantities and nutrition to your pantry
-                first.
-              </p>
+            {(!lots.length || lots.some(lot=>pantryLinkBlockReason(lot))) && (
+              <section className="recipe-review" aria-label="Set up recipe ingredients">
+                <h4>First, confirm the ingredients you have</h4>
+                <ol><li>Add a product or receipt to your pantry.</li><li>Check its nutrition and total labeled servings. Two packages with five servings each means ten servings.</li><li>Return here and choose only the servings you actually cooked.</li></ol>
+                <p>{onDraftChange?'Your batch name, yield and selections stay here while you review ingredients.':'Keep this form open while checking your ingredient labels.'} Preparing transfers pantry stock once; logging portions does not deduct it again.</p>
+                {onOpenPantry&&<button type="button" className="button secondary" onClick={onOpenPantry}>Set up ingredients in pantry</button>}
+              </section>
             )}
             {lots.map((lot) => {
               const blocked = pantryLinkBlockReason(lot);

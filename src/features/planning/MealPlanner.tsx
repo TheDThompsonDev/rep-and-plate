@@ -4,24 +4,27 @@ import { Modal } from '../../components';
 import { today, type Nutrition } from '../../domain';
 import type { PantryLot } from '../pantry/ledger';
 import { defaultPreferences, type FoodPreferences } from '../preferences/contracts';
-import type { MealCategory,MealPlan, PlannedMeal } from './contracts';
+import {mealPlanSchema, type MealCategory,type MealPlan, type PlannedMeal } from './contracts';
 import type { GroceryReceipt } from '../../ai-contract';
 import IngredientLink from './IngredientLink';
 import { linkPlannedIngredient, unloggedPlan } from './pantry-links';
 import { basketSummary, estimatePlanBasket } from './basket';
-import { formatIngredientAmount, mealEstimate, mealPortionSelections, planShoppingList, useUpSuggestions, validateDraftPlan, type PlanningContext } from './meal-plans';
+import { cookingStepText, invalidateCookingReview, planVarietySummary, reviewCookingMethod, formatIngredientAmount, mealEstimate, mealPortionSelections, planShoppingList, useUpSuggestions, validateDraftPlan, validateGeneratedPlan, type PlanningContext } from './meal-plans';
 import { copyMealToDay,createPlanRevision,movePlannedMeal,repeatApprovedWeek,shiftPlanDate } from './recurring-plans';
 import '../scanner/scanner.css';
 import './planning.css';
 
-export type MealPlannerProps={lots:PantryLot[];receipts?:GroceryReceipt[];preferences?:FoodPreferences;goals:Nutrition;value?:MealPlan;plans?:MealPlan[];loggedMealIds?:string[];onGenerate:(context:PlanningContext)=>Promise<MealPlan>;onSave:(plan:MealPlan)=>void;onClose:()=>void;onLog?:(meal:PlannedMeal,planId:string)=>void;onAsk?:(text:string)=>void};
-export default function MealPlanner({lots,receipts=[],preferences:provided,goals,value,plans=[],loggedMealIds=[],onGenerate,onSave,onClose,onLog,onAsk}:MealPlannerProps) {
+export type MealPlannerProps={lots:PantryLot[];receipts?:GroceryReceipt[];preferences?:FoodPreferences;goals:Nutrition;goalsConfigured?:boolean;value?:MealPlan;plans?:MealPlan[];loggedMealIds?:string[];onGenerate:(context:PlanningContext)=>Promise<MealPlan>;onSave:(plan:MealPlan)=>void;onDraftChange?:(plan:MealPlan)=>void;onClose:()=>void;onLog?:(meal:PlannedMeal,planId:string)=>void;onAsk?:(text:string)=>void};
+export default function MealPlanner({lots,receipts=[],preferences:provided,goals,goalsConfigured=false,value,plans=[],loggedMealIds=[],onGenerate,onSave,onDraftChange,onClose,onLog,onAsk}:MealPlannerProps) {
   const preferences=provided ?? defaultPreferences();
   const [plan,setPlan]=useState<MealPlan|undefined>(value);
   const [startDate,setStartDate]=useState(value?.days[0].date ?? today());
+  const [pantryMode,setPantryMode]=useState<PlanningContext['pantryMode']>('shopping-supported');
+  const [variety,setVariety]=useState<PlanningContext['variety']>('varied');
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState('');
   const [editing,setEditing]=useState<string|null>(null);
+  const [methodOpen,setMethodOpen]=useState<string|null>(null);
   const [swapping,setSwapping]=useState<string|null>(null);
   const [dismissed,setDismissed]=useState<string[]>([]);
   const [pendingLog,setPendingLog]=useState<string|null>(null);
@@ -42,6 +45,16 @@ export default function MealPlanner({lots,receipts=[],preferences:provided,goals
   const [mealCategories,setMealCategories]=useState<MealCategory[]>(()=>value ? [...new Set(value.days.flatMap(day=>day.meals.map(meal=>meal.category??'Dinner')))] : ['Dinner']);
   const savedPlans=plans.length?plans:value?[value]:[];
   const savedPlan=plan?savedPlans.find(saved=>saved.id===plan.id):undefined;
+  useEffect(()=>{
+    if(!onDraftChange || !plan || plan.status!=='draft')return;
+    const parsed=mealPlanSchema.safeParse(plan);
+    if(!parsed.success)return;
+    // Legacy revisions can append optional category after notes. Compare the
+    // same schema-normalized shape, not incidental object insertion order.
+    const saved=mealPlanSchema.safeParse(savedPlan);
+    if(saved.success&&JSON.stringify(saved.data)===JSON.stringify(parsed.data))return;
+    onDraftChange(parsed.data);
+  },[plan,savedPlan,onDraftChange]);
   const isSavedApproved=!!plan&&savedPlan?.status==='approved'&&JSON.stringify(savedPlan)===JSON.stringify(plan);
   const remainingPlan=plan?unloggedPlan(plan,loggedMealIds):undefined;
   const needs=remainingPlan ? planShoppingList(remainingPlan,lots) : [];
@@ -50,12 +63,12 @@ export default function MealPlanner({lots,receipts=[],preferences:provided,goals
   async function generate() {
     if(busy)return;
     setBusy(true);setError('');
-    try {const context={lots,preferences,goals,startDate,mealCategories};setPlan(validateDraftPlan(await onGenerate(context),context));setEditing(null);setSwapping(null);}
+    try {const context={lots,preferences,goals,goalsConfigured,startDate,mealCategories,pantryMode,variety};setPlan(validateGeneratedPlan(await onGenerate(context),context));setEditing(null);setSwapping(null);}
     catch(cause){setError(cause instanceof Error ? cause.message : 'The meal plan could not be created. Please try again.');}
     finally {setBusy(false);}
   }
   function updateMeal(id:string,update:(meal:PlannedMeal)=>PlannedMeal) {
-    setPlan(current=>current ? {...current,status:'draft',days:current.days.map(day=>({...day,meals:day.meals.map(meal=>meal.id===id ? update(meal) : meal)}))} : current);
+    setPlan(current=>current ? {...current,status:'draft',days:current.days.map(day=>({...day,meals:day.meals.map(meal=>meal.id===id ? invalidateCookingReview(meal,update(meal)) : meal)}))} : current);
   }
   function beginEdit(id:string) {
     if(!plan)return;
@@ -78,14 +91,18 @@ export default function MealPlanner({lots,receipts=[],preferences:provided,goals
   return <Modal title="Your week of meals" onClose={onClose} wide><div className="fuel-scanner fuel-planner">
     <div className="fuel-scanner-intro"><span><CalendarDays size={28}/></span><p>Start with what’s in your kitchen.<br/><strong>Make room for meals you enjoy.</strong></p></div>
     <p className="fuel-label-intro">A seven-day draft for {preferences.householdSize} {preferences.householdSize===1?'person':'people'}{preferences.cookingMinutes ? `, up to ${preferences.cookingMinutes} minutes per meal` : ''}. Review ingredients and portions before approving.</p>
-    {savedPlans.length>0&&<label className="fuel-plan-history">Saved weeks<select aria-label="Saved meal-plan weeks" value={plan?.id??''} onChange={event=>{const saved=savedPlans.find(item=>item.id===event.target.value);if(saved)chooseSaved(saved);}}>{!savedPlan&&<option value={plan?.id??''}>{plan?'Unsaved draft':'Choose a saved week'}</option>}{savedPlans.slice().reverse().map(saved=><option key={saved.id} value={saved.id}>{saved.days[0].date} · {saved.status==='approved'?'Approved':'Draft'}</option>)}</select><small>Save your draft before switching weeks.</small></label>}
+    {savedPlans.length>0&&<label className="fuel-plan-history">Saved weeks<select aria-label="Saved meal-plan weeks" value={plan?.id??''} onChange={event=>{const saved=savedPlans.find(item=>item.id===event.target.value);if(saved)chooseSaved(saved);}}>{!savedPlan&&<option value={plan?.id??''}>{plan?'Unsaved draft':'Choose a saved week'}</option>}{savedPlans.slice().reverse().map(saved=><option key={saved.id} value={saved.id}>{saved.days[0].date} · {saved.status==='approved'?'Approved':'Draft'}</option>)}</select><small>Generated drafts and valid edits are saved automatically. Approval stays your choice.</small></label>}
+    <div className="fuel-plan-generate"><label>Ingredients to use<select aria-label="Ingredients to use" value={pantryMode} disabled={busy} onChange={event=>setPantryMode(event.target.value as PlanningContext['pantryMode'])}><option value="shopping-supported">Include a shopping list</option><option value="pantry-only">Confirmed pantry only</option></select></label><label>Meal variety<select aria-label="Meal variety" value={variety} disabled={busy} onChange={event=>setVariety(event.target.value as PlanningContext['variety'])}><option value="varied">Prefer varied ingredients</option><option value="repeat-friendly">Repeats are welcome</option></select></label></div>
+    <p className="fuel-plan-meta">Variety means different ingredient combinations, not just different names or garnishes. Shopping-supported plans can add ingredients; a small pantry may need repeats. Pantry-only plans still need confirmed quantities for the whole week.</p>
     <fieldset className="fuel-plan-categories" disabled={busy}><legend>Meals to plan each day</legend><div>{(['Breakfast','Lunch','Dinner','Snack'] as const).map(category=><label key={category}><input type="checkbox" checked={mealCategories.includes(category)} disabled={mealCategories.length===1&&mealCategories.includes(category)} onChange={event=>setMealCategories(current=>(['Breakfast','Lunch','Dinner','Snack'] as const).filter(value=>value===category?event.target.checked:current.includes(value)))}/>{category}</label>)}</div><small>Choose at least one meal type. Each gets a place on all seven days.</small></fieldset>
     <div className="fuel-plan-generate"><label>Week starting<input type="date" value={startDate} onChange={event=>setStartDate(event.target.value)} disabled={busy}/></label><button className="fuel-label-save" onClick={()=>void generate()} disabled={busy || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)}><RefreshCw size={16}/>{busy?'Planning your meals…':plan?'Create a new draft':'Create my week'}</button></div>
     {error&&<p role="alert" className="fuel-scan-error">{error}</p>}
     {busy&&<p role="status" className="fuel-scan-status">Checking your ingredients, preferences, and portions…</p>}
     {plan&&<>
-      <div className="fuel-plan-status"><strong>{plan.status==='approved'?'Approved plan':'Draft to review'}</strong><span>Planning does not change your pantry or daily intake.</span></div>
+      <div className="fuel-plan-status"><strong>{plan.status==='approved'?'Approved plan':'Draft to review'}</strong><span>{onDraftChange?"Drafts save automatically. ":""}Planning does not change your pantry or daily intake.</span></div>
+      {!isSavedApproved&&<div className="fuel-product-actions"><button onClick={()=>save('draft')}>Save draft now</button><button onClick={()=>save('approved')}>Approve reviewed plan</button></div>}
       {isSavedApproved&&<section className="fuel-plan-repeat"><div><Copy size={19}/><strong>Make this week work again</strong></div><p>Copy the schedule into a new draft. We’ll check it against what remains in your pantry.</p><label>Repeat week starting<input type="date" aria-label="Repeat week starting" value={repeatStart} min={shiftPlanDate(plan.days[6].date,1)} onChange={event=>setRepeatStart(event.target.value)}/></label><button onClick={repeatWeek}>Repeat this week as a draft</button><small>Your approved week and logged meals stay as they are. This schedules no automatic activity.</small></section>}
+      <section className="fuel-plan-variety" aria-label="Ingredient variety check"><h3>Ingredient variety check</h3>{planVarietySummary(plan).map(check=><p key={check.category}>{check.message}</p>)}<small>Similar ingredient sets count as a shared pattern. This is a guide to repetition, not a promise of nutritional balance.</small></section>
       <div className="fuel-plan-days">{plan.days.map(day=><section key={day.date} className="fuel-plan-day"><h3>{new Date(day.date+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</h3>{day.meals.length===0&&<p className="fuel-plan-meta">Nothing planned for this day yet.</p>}{day.meals.map(meal=>{
         const estimate=mealEstimate(meal,lots);const canLog=mealPortionSelections(meal,lots);const edit=editing===meal.id;const logged=loggedMealIds.includes(`pantry-meal:plan:${plan.id}:${meal.id}`);const logging=pendingLog===`pantry-meal:plan:${plan.id}:${meal.id}`;
         return <article className="fuel-planned-meal" key={meal.id}>
@@ -98,6 +115,10 @@ export default function MealPlanner({lots,receipts=[],preferences:provided,goals
           {estimate.known>0?<p className="fuel-plan-nutrition">{estimate.complete?'~':'At least '}{Math.round(estimate.totals.calories)} cal · {estimate.totals.protein}g protein per portion{estimate.complete?'':' · partial estimate'}</p>:<p className="fuel-plan-meta">Nutrition will be available when ingredient amounts and labels are confirmed.</p>}
           {!estimate.complete&&estimate.known>0&&<p className="fuel-plan-meta">Nutrition available for {estimate.known} of {estimate.total} ingredients. Missing ingredients are not counted as zero.</p>}
           {meal.notes&&<p className="fuel-plan-note">{meal.notes}</p>}
+          {meal.cookingMethod ? <div className="fuel-plan-method">
+            <button type="button" aria-expanded={methodOpen===meal.id} onClick={()=>setMethodOpen(methodOpen===meal.id?null:meal.id)}>{meal.cookingMethod.reviewed?'Cooking method reviewed':'Review cooking method'}</button>
+            {methodOpen===meal.id&&<section aria-label={`Cooking method for ${meal.title}`}><h5>Cooking method</h5><p>Use the whole-recipe amounts above. Review the steps, timing and package cooking guidance before cooking. Opening or reviewing a method does not log food or change your pantry.</p><ol>{meal.cookingMethod.steps.map((step,index)=><li key={index}>{cookingStepText(step,meal)}</li>)}</ol><label><input type="checkbox" checked={meal.cookingMethod.reviewed} onChange={event=>{try{const revision=reviewCookingMethod(plan,meal.id,event.target.checked);setPlan(revision.plan);setMethodOpen(revision.mealIds[meal.id]);setError('');}catch(cause){setError(cause instanceof Error?cause.message:'Review this method again.');}}}/>I reviewed this cooking method</label><small>Ingredient or portion changes require another review. This records your review; it does not certify doneness or food safety.</small></section>}
+          </div> : <p className="fuel-plan-meta">No cooking method saved for this meal.</p>}
           <div className="fuel-plan-actions"><button onClick={()=>edit?setEditing(null):beginEdit(meal.id)}>{edit?'Done editing':'Edit meal'}</button><button onClick={()=>setSwapping(swapping===meal.id?null:meal.id)}>Swap meal</button>{onLog&&isSavedApproved&&<button disabled={!canLog || logged || !!pendingLog} onClick={()=>{if(canLog)logPortion(meal,plan.id);}}>{logged?'Portion logged':logging?'Saving portion...':'Log one portion'}</button>}</div>
           {swapping===meal.id&&<label className="fuel-plan-swap">Replace with another meal from this week<select value="" onChange={event=>{const other=plan.days.flatMap(item=>item.meals).find(item=>item.id===event.target.value);if(other){const revision=createPlanRevision(plan);const id=revision.mealIds[meal.id];setPlan({...revision.plan,days:revision.plan.days.map(day=>({...day,meals:day.meals.map(current=>current.id===id?{...other,id:current.id,category:current.category??'Dinner',ingredients:other.ingredients.map(item=>({...item}))}:current)}))});setEditing(null);setSwapping(null);}}}><option value="">Choose a meal</option>{plan.days.flatMap(item=>item.meals).filter(item=>item.id!==meal.id).map(item=><option key={item.id} value={item.id}>{item.title}</option>)}</select></label>}
         </article>;

@@ -1,6 +1,17 @@
 import {it,expect} from 'vitest';
 import {initialState,stateSchema} from '../../domain';
 import {isFreshDevice,mergeRecords,SyncEngine} from './sync';
+import {prepareSnapshot,snapshotSummary} from './client';
+it('preserves activity-only data in backup and refuses a silent first-sync replacement',async()=>{
+ const state={...initialState(),activities:[{id:'walk',title:'Walk',day:'2026-09-20',minutes:20,note:''}]};
+ expect(isFreshDevice(state)).toBe(false);
+ expect(prepareSnapshot(state).activities).toEqual(state.activities);
+ expect(snapshotSummary(state).activities).toBe(1);
+ let local=state;let writes=0;
+ const engine=new SyncEngine({local:()=>local,replace:async s=>{local=s as typeof state},read:async()=>({state:initialState(),revision:1}),write:async()=>{writes++;return 2},baseline:()=>null,checkpoint:async()=>{},empty:()=>isFreshDevice(local),active:()=>true});
+ await engine.tick();
+ expect(engine.status).toBe('conflict');expect(writes).toBe(0);expect(local.activities).toEqual(state.activities);
+});
 it('recognizes schema-normalized empty records but protects custom targets and body data',()=>{
  expect(isFreshDevice(stateSchema.parse(initialState()))).toBe(true);
  const changed=initialState();changed.profile.calories=2300;expect(isFreshDevice(changed)).toBe(false);

@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": ["../health.ts", "./*.ts", "../../src/features/connections/contracts.ts"]
+}

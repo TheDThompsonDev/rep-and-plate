@@ -4,6 +4,7 @@ const Markdown = lazy(() => import("react-markdown"));
 const ReceiptProductReview = lazy(() => import("./features/products/ReceiptProductReview"));
 const ReceiptReview = lazy(() => import('./features/shopping/ReceiptReview'));
 import { applyReceiptProduct } from "./features/products/receipt-match";
+import {isPurchaseReceipt} from './features/pantry/receipt-origin';
 import ProposalBreakdown from "./features/meals/ProposalBreakdown";
 import { sumProposalComponents } from "./features/meals/proposals";
 import {
@@ -180,8 +181,10 @@ export function GroceriesDialog({
   onUpdate,
   onAsk,
   onReceiptUpdate,
+  initialReview,
 }: {
   receipts: GroceryReceipt[];
+  initialReview?: {receiptId:string;itemId:string};
   onClose: () => void;
   onUpdate: (receiptId: string, item: GroceryItem) => void;
   onAsk: (text: string) => void;
@@ -190,11 +193,12 @@ export function GroceriesDialog({
   const [editing, setEditing] = useState<{
     receiptId: string;
     item: GroceryItem;
-  } | null>(null);
-  const [matching, setMatching] = useState<{receiptId: string; item: GroceryItem} | null>(null);
+    draft?:Record<string,string>;
+  } | null>(()=>{const receipt=receipts.find(value=>value.id===initialReview?.receiptId);const item=receipt?.items.find(value=>value.id===initialReview?.itemId);return receipt&&item&&!item.productCandidates?.length?{receiptId:receipt.id,item}:null;});
+  const [matching, setMatching] = useState<{receiptId: string; item: GroceryItem;draft?:Record<string,string>} | null>(()=>{const receipt=receipts.find(value=>value.id===initialReview?.receiptId);const item=receipt?.items.find(value=>value.id===initialReview?.itemId);return receipt&&item&&item.productCandidates?.length?{receiptId:receipt.id,item}:null;});
   const [reviewing,setReviewing]=useState<GroceryReceipt|null>(null);
   if(reviewing&&onReceiptUpdate)return <Suspense fallback={<Modal title="Review grocery trip" onClose={()=>setReviewing(null)}><p>Opening receipt…</p></Modal>}><ReceiptReview receipt={reviewing} onClose={()=>setReviewing(null)} onSave={receipt=>{onReceiptUpdate(receipt);setReviewing(null);}}/></Suspense>;
-  if (matching) return <Suspense fallback={<Modal title="Find this product" onClose={()=>setMatching(null)}><p>Opening product search…</p></Modal>}><ReceiptProductReview item={matching.item} onClose={()=>setMatching(null)} onApply={(product,servingsPurchased)=>{
+  if (matching) return <Suspense fallback={<Modal title="Find this product" onClose={()=>setMatching(null)}><p>Opening product search…</p></Modal>}><ReceiptProductReview item={matching.item} onClose={()=>setMatching(null)} onManual={()=>{setEditing(matching);setMatching(null);}} onApply={(product,servingsPurchased)=>{
     const latest = receipts.find(receipt=>receipt.id===matching.receiptId)?.items.find(item=>item.id===matching.item.id);
     if (!latest) throw new Error("This grocery item is no longer available.");
     onUpdate(matching.receiptId,applyReceiptProduct(latest,product,servingsPurchased));
@@ -241,13 +245,14 @@ export function GroceriesDialog({
             Use the package label when you have it. Leave unknown nutrition
             blank.
           </p>
+          <button type="button" className="button secondary" onClick={event=>{const form=event.currentTarget.form!;setMatching({...editing,draft:Object.fromEntries([...new FormData(form)].map(([key,value])=>[key,String(value)]))});setEditing(null);}}>{editing.item.productCandidates?.length?'Review suggested products instead':'Find this product instead'}</button>
           <label>
             Product name
             <input
               name="name"
               required
               maxLength={200}
-              defaultValue={editing.item.name}
+              defaultValue={editing.draft?.name??editing.item.name}
             />
           </label>
           <label>
@@ -255,7 +260,7 @@ export function GroceriesDialog({
             <input
               name="quantity"
               maxLength={100}
-              defaultValue={editing.item.quantity}
+              defaultValue={editing.draft?.quantity??editing.item.quantity}
             />
           </label>
           <label>
@@ -263,7 +268,7 @@ export function GroceriesDialog({
             <input
               name="serving"
               maxLength={150}
-              defaultValue={editing.item.serving}
+              defaultValue={editing.draft?.serving??editing.item.serving}
               placeholder="e.g. 1 cup (240 ml)"
             />
           </label>
@@ -275,9 +280,10 @@ export function GroceriesDialog({
               min="0.01"
               max="10000"
               step="any"
-              defaultValue={editing.item.servingsPurchased ?? ""}
+              defaultValue={editing.draft?.servings??editing.item.servingsPurchased ?? ""}
             />
           </label>
+          <p className="modal-intro">Packages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.</p>
           <div className="form-grid">
             {(["calories", "protein", "carbs", "fat"] as const).map((k) => (
               <label key={k}>
@@ -290,7 +296,7 @@ export function GroceriesDialog({
                   min="0"
                   max={k === "calories" ? 20000 : k === "carbs" ? 5000 : 2000}
                   step="any"
-                  defaultValue={editing.item.nutrition?.[k] ?? ""}
+                  defaultValue={editing.draft?.[k]??editing.item.nutrition?.[k] ?? ""}
                 />
               </label>
             ))}
@@ -305,7 +311,7 @@ export function GroceriesDialog({
     <Modal title="Your groceries" onClose={onClose} wide>
       <div className="fuel-pantry">
         <p>
-          What you bought, with nutrition estimates you can check. These
+          Groceries and ingredients on hand, with nutrition estimates you can check. These
           groceries are separate from what you’ve eaten.
         </p>
         {!receipts.length && (
@@ -329,17 +335,18 @@ export function GroceriesDialog({
                   <span>
                     <h3>{receipt.store}</h3>
                     <small>
-                      {receipt.date} · {receipt.items.length} items
+                      {receipt.purchase?.purchaseDate ? `Purchased ${receipt.purchase.purchaseDate}` : `Captured ${receipt.date}`} · {receipt.items.length} items
+                      {receipt.purchase?.purchaseDate && <span> · Captured {receipt.date}</span>}
                     </small>
                   </span>
                   <PackageCheck size={27} />
                 </div>
                 {receipt.note && <p>{receipt.note}</p>}
-                {onReceiptUpdate&&<button className="button secondary" onClick={()=>setReviewing(receipt)}>Review store, date & prices</button>}
+                {onReceiptUpdate&&isPurchaseReceipt(receipt)&&<button className="button secondary" onClick={()=>setReviewing(receipt)}>Review store, date & prices</button>}
                 {totals.known > 0 && (
                   <div className="fuel-cart-total">
                     <strong>
-                      Estimated purchase total
+                      {isPurchaseReceipt(receipt)?'Estimated purchase total':'Estimated initially recorded stock'}
                       {totals.known < totals.foods ? " · partial" : ""}
                     </strong>
                     <span>

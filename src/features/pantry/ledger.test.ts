@@ -66,6 +66,15 @@ function fixture(): AppState {
 }
 
 describe("pantry ledger and confirmed consumption", () => {
+  it('uses purchase day for pantry age while keeping the original capture day',()=>{
+    const state=fixture();const receipt=state.groceries![0];
+    receipt.date='2026-09-30';
+    receipt.purchase={purchaseDate:'2026-09-25',currency:'USD',subtotal:null,tax:null,discount:null,total:null,confirmed:true};
+    expect(getPantryLots(state)[0].date).toBe('2026-09-25');
+    expect(receipt.date).toBe('2026-09-30');
+    receipt.purchase.purchaseDate=null;
+    expect(getPantryLots(state)[0].date).toBe('2026-09-30');
+  });
   it("rejects explicit and legacy example meals without consuming real pantry portions", () => {
     for (const example of [
       { example: true, source: "Typed locally", note: "" },

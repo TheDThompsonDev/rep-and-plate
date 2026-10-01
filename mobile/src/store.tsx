@@ -23,6 +23,9 @@ import {
   cloudEpoch,
   onAccountChange,
 } from "../../src/features/cloud/sync-control";
+import { resolveAgentMeal } from "../../src/features/connections/context";
+import type { AgentAction } from "../../src/features/connections/contracts";
+import { sessionSignal } from "./auth";
 import { OwnedStateGate } from "../../src/platform/owned-state";
 import { chat, loadConnection } from "./api";
 export type Tab = "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "You";
@@ -41,9 +44,22 @@ export type Tool =
   | "workout"
   | "review"
   | "connection"
+  | "agents"
   | "cloud"
   | null;
 type Store = {
+  recordsRevision: number;
+  recordScope: () => number;
+  recipeDraft: {
+    name: string;
+    portions: string;
+    amounts: Record<string, string>;
+  };
+  setRecipeDraft: (draft: {
+    name: string;
+    portions: string;
+    amounts: Record<string, string>;
+  }) => void;
   captureRequest: number;
   tellSpot: () => void;
   spotReturning: boolean;
@@ -58,6 +74,8 @@ type Store = {
   error: string;
   notice: string;
   day: string;
+  captureDay: string;
+  setCaptureDay: (day: string) => void;
   tab: Tab;
   tool: Tool;
   busy: boolean;
@@ -72,6 +90,10 @@ type Store = {
   change: (update: (s: AppState) => AppState) => boolean;
   saveOnboardingProfile: (name: string) => Promise<void>;
   restoreRecords: (state: AppState) => Promise<void>;
+  applyAgentAction: (
+    action: AgentAction,
+    status: "accepted" | "dismissed",
+  ) => Promise<void>;
   send: (text: string, image?: string, retry?: string) => Promise<void>;
   cancel: () => void;
 };
@@ -91,7 +113,17 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     [progress, setProgress] = useState(""),
     [draft, setDraft] = useState("");
   const [labelBarcode, setLabelBarcode] = useState("");
+  const [captureDate, setCaptureDay] = useState("");
+  const [recipeDraft, setRecipeDraft] = useState({
+    name: "",
+    portions: "4",
+    amounts: {} as Record<string, string>,
+  });
+  const captureDay = captureDate || day;
   const [recordsReady, setRecordsReady] = useState(false);
+  const scope = useRef(0);
+  const [recordsRevision, setRecordsRevision] = useState(0);
+  const recordScope = useCallback(() => scope.current, []);
   const current = useRef<AppState | null>(null),
     controller = useRef<AbortController | null>(null);
   const gateRef = useRef<OwnedStateGate<AppState> | null>(null);
@@ -102,13 +134,14 @@ export function HealthProvider({ children }: { children: ReactNode }) {
       load: loadDevice,
     });
   const gate = gateRef.current;
-  const readyRecords=useCallback(()=>gate.current,[gate]);
-  const waitForRecords=useCallback(()=>gate.wait(),[gate]);
+  const readyRecords = useCallback(() => gate.current, [gate]);
+  const waitForRecords = useCallback(() => gate.wait(), [gate]);
   useEffect(() => {
     let live = true;
     const refresh = () => {
       const previousOwner = gate.owner;
       controller.current?.abort();
+      setTool((previous) => (previous === "planner" ? null : previous));
       void gate.refresh(
         (next, firstBinding) => {
           if (!live) return;
@@ -121,7 +154,11 @@ export function HealthProvider({ children }: { children: ReactNode }) {
           setRecordsReady(true);
           setError("");
           if (previousOwner !== gate.owner) {
+            scope.current++;
+            setRecordsRevision(scope.current);
             setDraft("");
+            setCaptureDay("");
+            setRecipeDraft({ name: "", portions: "4", amounts: {} });
             setTool((previous) =>
               firstBinding && previous === "cloud" ? "cloud" : null,
             );
@@ -170,7 +207,8 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
   function change(update: (s: AppState) => AppState) {
-    if (!gate.current || !current.current) return false;
+    if (recordsRevision !== scope.current || !gate.current || !current.current)
+      return false;
     try {
       const next = stateSchema.parse(update(current.current));
       gate.set(next);
@@ -205,6 +243,38 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     current.current = next;
     setState(next);
   }
+  async function applyAgentAction(
+    action: AgentAction,
+    status: "accepted" | "dismissed",
+  ) {
+    const before = gate.current;
+    if (!before) throw Error("Your records are still loading.");
+    const epoch = cloudEpoch(),
+      signal = sessionSignal();
+    signal.throwIfAborted();
+    const next = stateSchema.parse(resolveAgentMeal(before, action, status));
+    // saveDevice serializes writes for the captured owner. A successful server
+    // acknowledgment must follow a durable meal AND its independent receipt.
+    await saveDevice(next);
+    if (signal.aborted || epoch !== cloudEpoch())
+      throw Error(
+        "Your account changed. Reopen Connections to check your saved review.",
+      );
+    if (current.current !== before) {
+      if (current.current) await saveDevice(current.current);
+      throw Error(
+        "Your records changed during this review. Please review the proposal again.",
+      );
+    }
+    current.current = next;
+    gate.set(next);
+    setState(next);
+    setNotice(
+      status === "accepted"
+        ? "Meal logged on this device."
+        : "Proposal dismissed.",
+    );
+  }
   async function send(text: string, image?: string, retry?: string) {
     if (
       controller.current ||
@@ -223,6 +293,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
           time: clockTime(),
           ai: true,
           aiStatus: "pending",
+          captureDay,
         };
     if (!message) return;
     const source = current.current,
@@ -285,6 +356,10 @@ export function HealthProvider({ children }: { children: ReactNode }) {
   return (
     <Context.Provider
       value={{
+        recordsRevision,
+        recordScope,
+        recipeDraft,
+        setRecipeDraft,
         captureRequest,
         tellSpot: () => {
           setTab("Chat");
@@ -306,6 +381,8 @@ export function HealthProvider({ children }: { children: ReactNode }) {
         error,
         notice,
         day,
+        captureDay,
+        setCaptureDay,
         tab,
         tool,
         busy,
@@ -319,10 +396,28 @@ export function HealthProvider({ children }: { children: ReactNode }) {
         setTool,
         change,
         saveOnboardingProfile,
+        applyAgentAction,
         restoreRecords: async (next) => {
           const before = await gate.wait(),
             epoch = cloudEpoch();
-          await saveDevice(next);
+          // Invalidate pending tools before replacing their input records. A
+          // late generation must not write an old draft into the new snapshot.
+          scope.current++;
+          setRecordsRevision(scope.current);
+          controller.current?.abort();
+          setTool(null);
+          setDraft("");
+          setCaptureDay("");
+          setLabelBarcode("");
+          setRecipeDraft({ name: "", portions: "4", amounts: {} });
+          try {
+            await saveDevice(next);
+          } catch (cause) {
+            setNotice(
+              "Records could not be replaced. Reopen your backup tools to try again.",
+            );
+            throw cause;
+          }
           if (epoch !== cloudEpoch() || gate.current !== before) {
             throw Error(
               "Your records changed while loading. Sync will check again.",

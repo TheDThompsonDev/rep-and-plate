@@ -13,6 +13,7 @@ import {
   receiptSpending,
   remainingPlanNeeds,
   formatMoney,
+  purchaseReceipts,
 } from "../../src/features/shopping/shopping";
 import {
   priceObservationSchema,
@@ -206,7 +207,7 @@ export function Shopping() {
               ))}
             </Card>
           ))}
-          {state.groceries?.map((r) => (
+          {purchaseReceipts(state.groceries ?? []).map((r) => (
             <Row
               key={r.id}
               title={r.store || "Grocery receipt"}

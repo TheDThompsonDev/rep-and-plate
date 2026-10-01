@@ -64,7 +64,9 @@ describe("active workout adjustments", () => {
     ).toThrow(/recorded sets/);
   });
   it("never truncates a logged position, including zero reps or a gap", () => {
-    const recorded = recordSet(started(), 0, 2, 0);
+    // A starter no longer invents a 185 lb load; this fixture explicitly chooses it.
+    const chosen = adjustWorkoutExercise(started(),0,{name:'Bench Press',weight:185,target:8,setCount:3});
+    const recorded = recordSet(chosen, 0, 2, 0);
     const same = { name: "Bench Press", weight: 185, target: 8, setCount: 2 };
     expect(() => adjustWorkoutExercise(recorded, 0, same)).toThrow(
       /every recorded set/,
@@ -76,7 +78,7 @@ describe("active workout adjustments", () => {
       adjustWorkoutExercise(recorded, 0, { ...same, setCount: 4 }).exercises[0]
         .sets,
     ).toEqual([null, null, 0, null]);
-    const trailing = recordSet(started(), 0, 0, 8);
+    const trailing = recordSet(chosen, 0, 0, 8);
     expect(
       adjustWorkoutExercise(trailing, 0, { ...same, setCount: 1 }).exercises[0]
         .sets,

@@ -44,6 +44,7 @@ function ownMeal(id: string, components?: MealComponent[]): Meal {
     calories: 600,
     components,
   };
+}
 
   it("accepts only harmless explicit cooking and purity suffixes", () => {
     const state = initialState();
@@ -59,8 +60,6 @@ function ownMeal(id: string, components?: MealComponent[]): Meal {
       "60 recorded calories from oils and syrups.",
     );
   });
-}
-
 it("shows actual component evidence without adding meal calories or multiplying portions again", () => {
   const state = initialState();
   state.meals = [

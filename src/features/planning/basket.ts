@@ -2,6 +2,7 @@ import type { GroceryReceipt } from "../../ai-contract";
 import type { PantryLot } from "../pantry/ledger";
 import type { MealPlan } from "./contracts";
 import { formatMoney } from "../shopping/shopping";
+import {isPurchaseReceipt} from '../pantry/receipt-origin';
 
 /** A quantity-based historical estimate, not a quote or a promise of checkout savings. */
 export function estimatePlanBasket(
@@ -53,7 +54,7 @@ export function estimatePlanBasket(
       covered++;
       continue;
     }
-    const receipt = receipts.find((item) => item.id === lot.receiptId),
+    const receipt = receipts.find((item) => item.id === lot.receiptId&&isPurchaseReceipt(item)),
       purchase = receipt?.purchase;
     const price = lot.item.price?.total,
       quantity = lot.item.servingsPurchased;

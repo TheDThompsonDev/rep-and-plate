@@ -10,7 +10,7 @@ describe('repeatable meal-plan drafts',()=>{
   it('reads legacy dinner-only plans while strict generation requires meal categories',()=>{
     const original=fixture();expect(mealPlanSchema.safeParse(original).success).toBe(true);
     expect(mealPlanGenerationSchema.safeParse(original).success).toBe(false);
-    const withTypes={...original,days:original.days.map(day=>({...day,meals:day.meals.map(meal=>({...meal,category:'Dinner'}))}))};
+    const withTypes={...original,days:original.days.map(day=>({...day,meals:day.meals.map(meal=>({...meal,category:'Dinner',cookingMethod:null}))}))};
     expect(mealPlanGenerationSchema.safeParse(withTypes).success).toBe(true);
   });
   it('repeats an approved week with new dates and identities without changing the saved week',()=>{

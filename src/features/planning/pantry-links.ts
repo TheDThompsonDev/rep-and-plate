@@ -104,6 +104,7 @@ export function linkPlannedIngredient(
         item.id === mealId
           ? {
               ...item,
+              ...(item.cookingMethod?{cookingMethod:{...item.cookingMethod,reviewed:false}}:{}),
               ingredients: item.ingredients.map((ingredient, i) =>
                 i === index
                   ? {

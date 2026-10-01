@@ -45,9 +45,6 @@ test("native measurements and distinct set loads persist through reload", async 
     })
     .fill("100");
   await page
-    .getByRole("button", { name: "Save Bench Press set 1 weight", exact: true })
-    .click();
-  await page
     .getByRole("textbox", { name: "Bench Press set 1 reps", exact: true })
     .fill("8");
   await page
@@ -59,9 +56,6 @@ test("native measurements and distinct set loads persist through reload", async 
       exact: true,
     })
     .fill("110");
-  await page
-    .getByRole("button", { name: "Save Bench Press set 2 weight", exact: true })
-    .click();
   await page
     .getByRole("textbox", { name: "Bench Press set 2 reps", exact: true })
     .fill("7");

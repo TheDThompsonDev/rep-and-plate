@@ -1,7 +1,7 @@
-import { SpotWeeklyReview } from './features/spot/Spot';
-import SupportAndPrivacy from './features/support/SupportAndPrivacy';
-import { BodyWeightHistory } from './features/progress/BodyWeightHistory';
-import type { BodyWeightEntry } from './features/progress/body-weight';
+import { SpotWeeklyReview } from "./features/spot/Spot";
+import SupportAndPrivacy from "./features/support/SupportAndPrivacy";
+import { BodyWeightHistory } from "./features/progress/BodyWeightHistory";
+import type { BodyWeightEntry } from "./features/progress/body-weight";
 import { useRef, useState } from "react";
 import {
   ArrowRight,
@@ -34,6 +34,8 @@ import {
 import "./you.css";
 import "./refined-tabs.css";
 import { weeklyReview } from "./features/reviews/weekly-review";
+import { setLoad } from "./features/progress/set-loads";
+import { displayLoad } from "./workouts";
 import { getPantryLots } from "./features/pantry/ledger";
 import { remainingRecipePortions } from "./features/recipes/portions";
 import { sumProposalComponents } from "./features/meals/proposals";
@@ -42,6 +44,7 @@ type Props = {
   state: AppState;
   aiAvailable: boolean;
   onAccount: () => void;
+  onConnections: () => void;
   onMeetSpot: () => void;
   onScan: () => void;
   onGroceries: (receiptId?: string) => void;
@@ -70,6 +73,7 @@ export default function YouPage({
   state,
   aiAvailable,
   onAccount,
+  onConnections,
   onMeetSpot,
   onScan,
   onGroceries,
@@ -97,20 +101,50 @@ export default function YouPage({
     description: string;
     messageId?: string;
     receiptId?: string;
-    kind: "meal" | "preferences" | "recipe" | "receipt" | "workout";
+    kind:
+      "meal" | "preferences" | "recipe" | "receipt" | "workout" | "activity";
     result?: string;
   };
   const chatReviews: ConnectedReview[] = [];
   const completedChatReviews: ConnectedReview[] = [];
   for (const message of state.messages) {
+    if (message.activityProposal) {
+      const entry: ConnectedReview = {
+        id: `${message.id}:activity`,
+        title: message.activityProposal.title,
+        source: "Movement from Spot",
+        description: `${message.activityProposal.day} · ${message.activityProposal.minutes} minutes. Review before logging.`,
+        messageId: message.id,
+        kind: "activity",
+      };
+      if (message.activityCaptureStatus === "pending") chatReviews.push(entry);
+      else
+        completedChatReviews.push({
+          ...entry,
+          result:
+            message.activityCaptureStatus === "accepted"
+              ? "Activity logged"
+              : "Not logged",
+        });
+    }
     if (message.workoutProposal) {
       const entry: ConnectedReview = {
-        id: `${message.id}:workout`, title: message.workoutProposal.title,
-        source: 'Workout from Spot', description: `${message.workoutProposal.day} · ${message.workoutProposal.exercises.length} exercises. Check the date, loads and reps.`,
-        messageId: message.id, kind: 'workout',
+        id: `${message.id}:workout`,
+        title: message.workoutProposal.title,
+        source: "Workout from Spot",
+        description: `${message.workoutProposal.day} · ${message.workoutProposal.exercises.length} exercises. Check the date, loads and reps.`,
+        messageId: message.id,
+        kind: "workout",
       };
-      if (message.workoutCaptureStatus === 'pending') chatReviews.push(entry);
-      else completedChatReviews.push({...entry,result:message.workoutCaptureStatus === 'accepted' ? 'Workout logged' : 'Not logged'});
+      if (message.workoutCaptureStatus === "pending") chatReviews.push(entry);
+      else
+        completedChatReviews.push({
+          ...entry,
+          result:
+            message.workoutCaptureStatus === "accepted"
+              ? "Workout logged"
+              : "Not logged",
+        });
     }
     if (message.mealProposal && !message.mealId)
       chatReviews.push({
@@ -229,6 +263,13 @@ export default function YouPage({
     (batch) => remainingRecipePortions(batch) > 0,
   );
   const week = weeklyReview(state);
+  const activityDays = new Set([
+    ...week.meals.map((meal) => meal.day),
+    ...week.workouts.map((workout) => workout.day),
+    ...(state.activities ?? [])
+      .filter((item) => item.day >= week.start && item.day <= week.end)
+      .map((item) => item.day),
+  ]);
   const sessions = [
     ...(state.workout.history ?? []),
     ...(state.workout.startedAt
@@ -278,9 +319,14 @@ export default function YouPage({
             <Pencil size={17} />
           </button>
         </section>
-        <div className="you-row-group you-account-shortcuts" aria-label="Account and introduction">
+        <div
+          className="you-row-group you-account-shortcuts"
+          aria-label="Account and introduction"
+        >
           <button className="you-row" onClick={onAccount}>
-            <span className="you-row-icon neutral"><UserRound size={23} /></span>
+            <span className="you-row-icon neutral">
+              <UserRound size={23} />
+            </span>
             <span>
               <strong>Account & backups</strong>
               <small>Sign in, sign out, and manage saved records</small>
@@ -288,10 +334,22 @@ export default function YouPage({
             <ChevronRight size={20} />
           </button>
           <button className="you-row" onClick={onMeetSpot}>
-            <span className="you-row-icon neutral"><PlateMark /></span>
+            <span className="you-row-icon neutral">
+              <PlateMark />
+            </span>
             <span>
               <strong>Meet Spot</strong>
               <small>Replay the introduction. Keep your saved records.</small>
+            </span>
+            <ChevronRight size={20} />
+          </button>
+          <button className="you-row" onClick={onConnections}>
+            <span className="you-row-icon neutral">
+              <ShieldCheck size={23} />
+            </span>
+            <span>
+              <strong>Connections</strong>
+              <small>Your assistants, access, and meal proposals</small>
             </span>
             <ChevronRight size={20} />
           </button>
@@ -310,29 +368,27 @@ export default function YouPage({
             </button>
           </div>
           <div className="you-progress-number">
-            <strong>{week.loggedDays}</strong>
+            <strong>{activityDays.size}</strong>
             <span>of 7 days</span>
           </div>
           <p>
-            {week.loggedDays
-              ? "With meals you’ve logged"
+            {activityDays.size
+              ? "With meals or movement you’ve logged"
               : "Your first log starts the picture"}
           </p>
           <div
             className="you-activity-days"
-            aria-label="Days with recorded meals"
+            aria-label="Days with recorded meals or movement"
           >
             {Array.from({ length: 7 }, (_, index) => {
               const date = new Date(`${week.start}T12:00:00`);
               date.setDate(date.getDate() + index);
               const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-              const count = week.meals.filter(
-                (meal) => meal.day === key,
-              ).length;
+              const count = Number(activityDays.has(key));
               return (
                 <div
                   key={key}
-                  title={`${date.toLocaleDateString()}: ${count ? `${count} meals logged` : "Not logged"}`}
+                  title={`${date.toLocaleDateString()}: ${count ? "Activity recorded" : "Not logged"}`}
                 >
                   <span className={count ? "has-records" : ""}>
                     {count ? <Check size={17} /> : <span>—</span>}
@@ -350,7 +406,7 @@ export default function YouPage({
           <div className="you-progress-footer">
             <PlateMark />
             <span>
-              {week.loggedDays
+              {activityDays.size
                 ? "A record you can keep building on."
                 : "A meal, a drink, a workout. Start anywhere."}
             </span>
@@ -497,11 +553,13 @@ export default function YouPage({
               <Target size={22} />
             </span>
             <div>
-              <strong>Your saved daily targets.</strong>
-              <p>Starting targets are generic. Review and edit them for your needs; weight entries do not personalize them automatically.</p>
+              <strong>{state.profile.targetsConfigured ? 'Your saved daily targets.' : 'Tracking without daily targets.'}</strong>
+              <p>
+                {state.profile.targetsConfigured ? 'Targets are the values you chose. Weight entries do not change them automatically.' : 'Your reviews describe recorded meals without comparing them with a goal. You can set targets whenever you choose.'}
+              </p>
             </div>
           </div>
-          <div className="you-goal-values">
+          {state.profile.targetsConfigured && <div className="you-goal-values">
             {[
               { name: "Calories", value: state.profile.calories, unit: "cal" },
               { name: "Protein", value: state.profile.protein, unit: "g" },
@@ -516,9 +574,14 @@ export default function YouPage({
                 <span>{goal.name}</span>
               </div>
             ))}
-          </div>
+          </div>}
         </section>
-        {onSaveBodyWeight&&<BodyWeightHistory entries={state.bodyWeights} onSave={onSaveBodyWeight}/>}
+        {onSaveBodyWeight && (
+          <BodyWeightHistory
+            entries={state.bodyWeights}
+            onSave={onSaveBodyWeight}
+          />
+        )}
         <button
           className="you-next-workout"
           onClick={() => onNavigate("Workouts")}
@@ -668,11 +731,7 @@ export default function YouPage({
           <ArrowRight size={19} />
         </button>
       </div>
-      <FuelTabs
-        onScan={onScan}
-        active="You"
-        onNavigate={onNavigate}
-      />
+      <FuelTabs onScan={onScan} active="You" onNavigate={onNavigate} />
       {panel === "menu" && (
         <Modal title="Your space" onClose={() => setPanel(null)}>
           <div className="fuel-menu">
@@ -759,7 +818,7 @@ export default function YouPage({
       {panel === "weekly" && (
         <Modal title="Weekly Spot Check" onClose={() => setPanel(null)} wide>
           <div className="you-weekly-review">
-            <SpotWeeklyReview state={state}/>
+            <SpotWeeklyReview state={state} />
             <p className="you-week-range">
               {week.start} to {week.end} · Last seven days
             </p>
@@ -935,7 +994,14 @@ export default function YouPage({
                     <div className="you-session-exercise" key={ex.name}>
                       <strong>{ex.name}</strong>
                       <span>
-                        {ex.sets.map((r) => r ?? "—").join(", ")} reps
+                        {ex.sets
+                          .map((reps, index) =>
+                            reps === null
+                              ? null
+                              : `${displayLoad(setLoad(ex, index), state.profile.workoutUnit)} ${state.profile.workoutUnit ?? "lb"} × ${reps}`,
+                          )
+                          .filter(Boolean)
+                          .join(", ")}
                       </span>
                     </div>
                   ))}
@@ -946,8 +1012,8 @@ export default function YouPage({
                 <Dumbbell size={32} />
                 <h3>Your first session is ahead of you.</h3>
                 <p>
-                  Choose a workout and tell Rep & Plate how each set went.
-                  Your sessions will be here when you’re done.
+                  Choose a workout and tell Rep & Plate how each set went. Your
+                  sessions will be here when you’re done.
                 </p>
               </div>
             )}
@@ -991,7 +1057,11 @@ export default function YouPage({
             <button className="you-dialog-action" onClick={closeAndEdit}>
               Open preferences <ArrowRight size={17} />
             </button>
-            <SupportAndPrivacy requestIds={state.messages.filter(m=>m.aiStatus==='error').map(m=>m.id)}/>
+            <SupportAndPrivacy
+              requestIds={state.messages
+                .filter((m) => m.aiStatus === "error")
+                .map((m) => m.id)}
+            />
           </div>
         </Modal>
       )}

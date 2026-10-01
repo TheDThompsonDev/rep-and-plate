@@ -2,13 +2,43 @@ import { describe,it,expect } from 'vitest';
 import type { PantryLot } from '../pantry/ledger';
 import { defaultPreferences } from '../preferences/contracts';
 import type { MealPlan } from './contracts';
-import { formatIngredientAmount,mealEstimate,mealPortionSelections,planShoppingList,useUpSuggestions,validateDraftPlan } from './meal-plans';
+import { formatIngredientAmount,mealEstimate,mealPortionSelections,planShoppingList,planVarietySummary,useUpSuggestions,validateDraftPlan,validateGeneratedPlan } from './meal-plans';
 
 const lot:PantryLot={id:'receipt::milk',receiptId:'receipt',store:'Shop',date:'2026-09-25',purchased:4,remaining:4,inconsistent:false,item:{id:'milk',receiptText:'milk',name:'Whole milk',quantity:'4 cups',serving:'1 cup',servingsPurchased:4,nutrition:{calories:150,protein:8,carbs:12,fat:8},match:'exact',note:'',sources:[],needsReview:false,availability:'available'}};
 function fixture():MealPlan {
   return {id:'week',createdAt:'2026-09-25T12:00:00Z',status:'draft',days:Array.from({length:7},(_,index)=>({date:`2026-${index<6?'09':'10'}-${index<6?25+index:'01'}`,meals:[{id:`meal-${index}`,title:'Milk drink',portions:1,minutes:5,ingredients:[{lotId:lot.id,name:lot.item.name,servingLabel:'1 cup',servings:1}],notes:''}]}))};
 }
 describe('weekly meal plan accounting',()=>{
+  it('rejects pantry-only drafts with shortages or unknown quantities while allowing a shopping list',()=>{
+    const context={lots:[lot],preferences:defaultPreferences(),goals:{calories:2000,protein:100,carbs:200,fat:70},startDate:'2026-09-25',pantryMode:'pantry-only' as const};
+    expect(()=>validateGeneratedPlan(fixture(),context)).toThrow('confirmed pantry amounts');
+    expect(()=>validateGeneratedPlan(fixture(),{...context,lots:[{...lot,remaining:null}]})).toThrow('confirmed pantry amounts');
+    expect(validateGeneratedPlan(fixture(),{...context,pantryMode:'shopping-supported'}).days).toHaveLength(7);
+    expect(validateGeneratedPlan(fixture(),{...context,lots:[{...lot,remaining:7}]}).days).toHaveLength(7);
+  });
+  it('reports repeated ingredient patterns without discarding usable plans and removes provider notes',()=>{
+    const context={lots:[lot],preferences:defaultPreferences(),goals:{calories:2000,protein:100,carbs:200,fat:70},startDate:'2026-09-25',variety:'varied' as const};
+    const plan=fixture();plan.days[0].meals[0].notes='Warm the milk. There is enough milk for this week. Milk supply remains adequate. Oats will be depleted after this day. Stir until smooth.';
+    expect(planVarietySummary(validateGeneratedPlan(plan,context))[0].patterns).toBe(1);
+    const result=validateGeneratedPlan(plan,{...context,variety:'repeat-friendly'});
+    expect(result.days[0].meals[0].notes).toBe('');
+    expect(plan.days[0].meals[0].notes).toContain('enough');
+    plan.days[1].meals[0].title='Milk cocoa';plan.days[2].meals[0].title='Milk porridge';
+    expect(validateGeneratedPlan(plan,context).days).toHaveLength(7);
+    expect(planVarietySummary(plan)[0].patterns).toBe(1);
+  });
+  it('discards all provider notes, including paraphrased inventory claims, but retains user-authored notes on ordinary edits',()=>{
+    const context={lots:[lot],preferences:defaultPreferences(),goals:{calories:2000,protein:100,carbs:200,fat:70},startDate:'2026-09-25'};
+    const plan=fixture();
+    plan.days[0].meals[0].notes='Simmer the oats. Milk covers the whole week.';
+    const generated=validateGeneratedPlan(plan,context);
+    expect(generated.days[0].meals[0].notes).toBe('');
+    expect(generated.days[0].meals[0].ingredients).toEqual(plan.days[0].meals[0].ingredients);
+    expect(generated.days[0].meals[0].portions).toBe(plan.days[0].meals[0].portions);
+    expect(generated.days.map(day=>day.date)).toEqual(plan.days.map(day=>day.date));
+    const edited=structuredClone(generated);edited.days[0].meals[0].notes='My checked recipe: simmer for five minutes, then stir.';
+    expect(validateDraftPlan(edited,context).days[0].meals[0].notes).toBe(edited.days[0].meals[0].notes);
+  });
   it('displays explicit ingredient units without presenting grams as package servings',()=>{
     expect(formatIngredientAmount(40,'g')).toBe('40 g');
     expect(formatIngredientAmount(120,'ml')).toBe('120 ml');

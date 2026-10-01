@@ -488,8 +488,8 @@ export default function CloudAccount({
                   <>
                     <p>
                       {review.kind === "upload"
-                        ? "These device records will be sent to your Supabase account. This includes conversations, nutrition records, pantry, preferences, plans, workouts, and any photos stored with them."
-                        : "The saved copy will replace the meals, conversations, pantry, preferences, plans, and workouts on this device. Device-only changes will be lost unless you export them first."}
+                        ? "These device records will be sent to your Supabase account. This includes conversations, nutrition records, pantry, preferences, plans, workouts, timed activities, body measurements, and any photos stored with them."
+                        : "The saved copy will replace meals, conversations, pantry, preferences, plans, workouts, timed activities and body measurements on this device. Device-only changes will be lost unless you export them first."}
                     </p>
                     <RecordCounts
                       state={
@@ -565,7 +565,7 @@ export default function CloudAccount({
           <h3>On this device</h3>
           <p>
             {local.meals} meals · {local.groceries} grocery trips ·{" "}
-            {local.messages} messages · {local.recipeBatches} prepared batches
+            {local.messages} messages · {local.recipeBatches} prepared batches · {local.workouts} workouts · {local.activities} timed activities · {local.bodyWeights} body measurements
           </p>
           <button
             className="you-dialog-action"
@@ -593,6 +593,9 @@ function RecordCounts({ state }: { state: AppState }) {
       <span>{summary.messages} messages</span>
       <span>{summary.plans} plans</span>
       <span>{summary.recipeBatches} prepared batches</span>
+      <span>{summary.workouts} workouts</span>
+      <span>{summary.activities} timed activities</span>
+      <span>{summary.bodyWeights} body measurements</span>
       <span>{summary.embeddedPhotos} embedded photos</span>
       <span>{(summary.bytes / 1000000).toFixed(2)} MB</span>
     </div>

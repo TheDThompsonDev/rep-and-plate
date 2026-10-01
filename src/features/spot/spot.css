@@ -493,17 +493,6 @@
   width: 18px;
   height: 18px;
 }
-.spot-context {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 22px;
-  color: #315e4e;
-  font-size: 12px;
-}
-.spot-context strong {
-  font-size: 13px;
-}
 .fuel-chat-spot-icon {
   display: grid;
   place-items: center;

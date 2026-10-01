@@ -30,7 +30,7 @@ import {
   updatePantryDates,
 } from "./dates";
 import type { PantryDates } from "./date-contract";
-import "./pantry.css";
+import "./pantry.css";import ManualIngredient from './ManualIngredient';import {addManualPantryIngredient} from './manual-ingredient';
 
 function PantryDateEditor({
   lot,
@@ -151,7 +151,8 @@ export function PantryDialog({
   onAsk: (text: string) => void;
   receiptId?: string;
 }) {
-  const [details, setDetails] = useState(false);
+  const [details, setDetails] = useState(false);  const [addingIngredient,setAddingIngredient]=useState(false);
+  const [reviewItem,setReviewItem]=useState<{receiptId:string;itemId:string}|undefined>();
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [title, setTitle] = useState("");
   const [existingMealId, setExistingMealId] = useState("");
@@ -165,6 +166,7 @@ export function PantryDialog({
   const purchaseLots = getPantryLots(state).filter(
     (lot) => !receiptId || lot.receiptId === receiptId,
   );
+  const reviewQueue=purchaseLots.filter(lot=>lot.item.availability!=='used'&&(lot.item.needsReview||!lot.item.nutrition||!lot.item.serving||lot.remaining===null||lot.inconsistent)).sort((a,b)=>Number(!!b.item.needsReview||!b.item.nutrition)-Number(!!a.item.needsReview||!a.item.nutrition));
   const lots = dateOrder ? sortPantryByDate(purchaseLots) : purchaseLots;
   const dateReminders = sortPantryByDate(purchaseLots).filter((lot) =>
     pantryDateReminder(lot),
@@ -212,7 +214,7 @@ export function PantryDialog({
       return false;
     }
   };
-  if (dating)
+  if(addingIngredient)return <ManualIngredient onClose={()=>setAddingIngredient(false)} onAdd={input=>{const id=crypto.randomUUID();if(change(latest=>addManualPantryIngredient(latest,input,id))){setAddingIngredient(false);setNotice('Ingredient added to your pantry. Return to your recipe when you are ready. No meal logged.');}}}/>;  if (dating)
     return (
       <PantryDateEditor
         lot={dating}
@@ -232,11 +234,12 @@ export function PantryDialog({
   if (details)
     return (
       <GroceriesDialog
+        initialReview={reviewItem}
         onReceiptUpdate={receipt=>onChange(latest=>({...latest,groceries:latest.groceries?.map(old=>old.id===receipt.id?{...old,store:receipt.store,purchase:receipt.purchase,items:old.items.map(item=>({...item,price:receipt.items.find(line=>line.id===item.id)?.price??item.price}))}:old)}))}
         receipts={(state.groceries || []).filter(
           (receipt) => !receiptId || receipt.id === receiptId,
         )}
-        onClose={() => setDetails(false)}
+        onClose={() => {setDetails(false);setReviewItem(undefined);}}
         onAsk={(text) => {
           onClose();
           onAsk(text);
@@ -330,13 +333,14 @@ export function PantryDialog({
             {notice}
           </p>
         )}
-        {!lots.length && (
+        <button className="button secondary full-width" onClick={()=>setAddingIngredient(true)}>Add ingredient manually</button>        {!lots.length && (
           <div className="fuel-pantry-empty">
             <ShoppingBasket size={36} />
             <h3>Your next grocery trip starts here.</h3>
             <p>Scan a product or share a receipt in Chat.</p>
           </div>
         )}
+        {reviewQueue.length>0&&<section className="pantry-date-reminders" aria-label="Pantry review queue"><h3>{reviewQueue.length} food {reviewQueue.length===1?'item needs':'items need'} a check</h3><p>Start with product and nutrition details, then quantities. Nonfood receipt lines do not block your pantry.</p><ol>{reviewQueue.slice(0,3).map(lot=><li key={lot.id}><strong>{lot.item.name}</strong><span>{lot.item.needsReview||!lot.item.nutrition?'Confirm product and nutrition':'Confirm servings purchased'}</span><button className="button secondary" onClick={()=>{setReviewItem({receiptId:lot.receiptId,itemId:lot.item.id});setDetails(true);}}>Review {lot.item.name}</button></li>)}</ol>{reviewQueue.length>3&&<p>{reviewQueue.length-3} more after these.</p>}<p>Total servings = packages purchased × servings per package. For example, 2 tubs × 5 servings = 10 servings. Use the package label; leave an unknown amount blank.</p></section>}
         {dateReminders.length > 0 && (
           <section
             className="pantry-date-reminders"
@@ -387,7 +391,7 @@ export function PantryDialog({
                 <div>
                   <h3>{lot.item.name}</h3>
                   <small>
-                    {lot.store} · {lot.date}
+                    {lot.store} · {state.groceries?.find(receipt=>receipt.id===lot.receiptId)?.purchase?.purchaseDate?"Purchased":"Captured"} {lot.date}
                   </small>
                 </div>
               </div>

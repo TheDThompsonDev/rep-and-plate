@@ -2,7 +2,10 @@
   "name": "rep-and-plate",
   "version": "1.0.0",
   "scripts": {
-    "test": "vitest run src server",
+    "test": "vitest run src server && vitest run scripts/agents",
+    "health": "tsx scripts/health.ts",
+    "agents:mcp": "tsx scripts/agents/mcp.ts",
+    "agents:check": "tsc -p scripts/agents/tsconfig.json",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -23,6 +26,7 @@
   "license": "ISC",
   "description": "Rep & Plate: a calm, local fitness capture prototype",
   "dependencies": {
+    "@modelcontextprotocol/server": "^2.2.0",
     "@supabase/supabase-js": "^2.117.2",
     "@vercel/functions": "^3.9.9",
     "@zxing/browser": "^0.1.5",
@@ -37,6 +41,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "^2.2.0",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",

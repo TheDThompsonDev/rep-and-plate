@@ -26,10 +26,18 @@ test('preferences shape a seven-day plan with true shortages; approval and loggi
   await seedPantry(page);const before=await stored(page);
   await menu(page,'Food & routine preferences');
   await page.getByLabel('Foods to exclude or dietary restrictions').fill('peanuts');
+  await page.locator('summary').filter({hasText:'Meals & cooking'}).click();
   await page.getByLabel('Foods you dislike').fill('mushrooms');
   await page.getByLabel('Cooking time (minutes)').fill('20');
   await page.getByRole('button',{name:'Save food & routine preferences'}).click();
-  await page.reload();expect((await stored(page)).preferences.restrictions).toEqual(['peanuts']);
+  await page.reload();
+  // Refresh immediately; the synchronous journal must restore the edit even
+  // if its IndexedDB write was interrupted. Wait for hydrated UI before
+  // checking the asynchronous durable copy, rather than reading stale IDB.
+  await menu(page,'Food & routine preferences');
+  await expect(page.getByLabel('Foods to exclude or dietary restrictions')).toHaveValue('peanuts');
+  await expect.poll(async()=>(await stored(page)).preferences?.restrictions).toEqual(['peanuts']);
+  await page.getByRole('button',{name:'Close dialog',exact:true}).click();
   await menu(page,'Plan my week');
   await page.getByRole('button',{name:'Create my week'}).click();
   await expect(page.locator('.fuel-plan-day')).toHaveCount(7);

@@ -5,6 +5,7 @@ import { readConfig } from "./http.ts";
 import type { BetaServices } from "./beta.ts";
 import {createAccountDeletion} from './account.ts';
 import {createOperationsServices} from './operations-services.ts';
+import { defaultSupportUrl } from '../src/features/support/model.ts';
 
 export function betaServices(
   env: Record<string, string | undefined>,
@@ -13,7 +14,7 @@ export function betaServices(
   const publicConfig = validateCloudConfig({
     url: config.supabaseUrl,
     publishableKey: config.supabasePublishableKey,
-    supportUrl:env.SUPPORT_URL,
+    supportUrl:env.SUPPORT_URL || defaultSupportUrl,
   });
   const secret = env.SUPABASE_SECRET_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
   const origin = new URL(env.APP_ORIGIN || "invalid");

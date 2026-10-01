@@ -33,11 +33,13 @@ test("native shell preserves chat draft, opens receipt capture and saves househo
   await page
     .getByRole("textbox", { name: "People in your household" })
     .fill("3");
+  await page.getByRole("button", {name:"Shopping", exact:true}).click();
   await page
     .getByRole("textbox", { name: "Weekly grocery budget (optional)" })
     .fill("150");
+  await page.getByRole("button", {name:"Food", exact:true}).click();
   await page
-    .getByRole("textbox", { name: "favorites (comma separated)" })
+    .getByRole("textbox", { name: "Favorite foods (comma separated)" })
     .pressSequentially("rice, beans");
   await page
     .getByRole("button", { name: "Save preferences", exact: true })
@@ -120,14 +122,16 @@ test("native workout logs sets and persists session", async ({ page }) => {
   await page
     .getByRole("button", { name: "Start Upper Body", exact: true })
     .click();
+  await page.getByRole("textbox", { name: "Bench Press set 1 weight (lb)" }).fill("45");
   await page.getByRole("textbox", { name: "Bench Press set 1 reps" }).fill("7");
   await page
     .getByRole("button", { name: "Save Bench Press set 1", exact: true })
     .click();
-  await expect(page.getByText("Set 1 · ✓ 7 reps").first()).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Bench Press set 1 reps", exact: true })).toHaveValue("7");
   await page
     .getByRole("button", { name: "Finish workout", exact: true })
     .click();
+  await page.getByRole("button",{name:"Save finished workout",exact:true}).click();
   await page.reload();
   const state = await page.evaluate(
     (k) => JSON.parse(localStorage.getItem(k)!),

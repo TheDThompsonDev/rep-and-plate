@@ -16,6 +16,7 @@ async function seedExamples(page: Page, includePersonalDinner = false) {
 }
 async function seedPersonalDinner(page: Page) {
   const state = demoState();
+  state.profile.targetsConfigured = true;
   const dinner = {
     ...state.meals.find((meal) => meal.id === "chat-demo-dinner")!,
     id: "personal-dinner",
@@ -36,20 +37,27 @@ async function seedPersonalDinner(page: Page) {
   ];
   await seedBrowserRecords(page, state);
   await page.reload();
+  await page.getByRole("textbox", { name: "Message Rep & Plate" }).waitFor();
+  expect((await readBrowserRecords(page)).meals).toEqual([dinner]);
 }
 
 async function send(page: Page, text: string) {
-  await page
-    .getByRole("textbox", { name: "Message Rep & Plate" })
-    .fill(text);
+  await page.getByRole("textbox", { name: "Message Rep & Plate" }).fill(text);
   await page.getByRole("button", { name: "Send message", exact: true }).click();
   await expect(
-    page
-      .getByRole("status")
-      .filter({ hasText: "Rep & Plate is responding" }),
+    page.getByRole("status").filter({ hasText: "Rep & Plate is responding" }),
   ).toHaveCount(0);
 }
 const stored = readBrowserRecords;
+async function chooseLoad(page: Page, name: string, load: string) {
+  await page
+    .getByRole("button", { name: `Adjust ${name}`, exact: true })
+    .click();
+  await page.getByLabel("Weight (lb)", { exact: true }).fill(load);
+  await page
+    .getByRole("button", { name: "Save exercise", exact: true })
+    .click();
+}
 
 test("Workout selection becomes a persistent conversation and archives finished sessions", async ({
   page,
@@ -70,6 +78,7 @@ test("Workout selection becomes a persistent conversation and archives finished 
   await expect(
     page.getByRole("heading", { name: "Lower Body in progress" }),
   ).toBeVisible();
+  await chooseLoad(page, "Goblet Squat", "35");
   await page
     .getByRole("button", { name: "Goblet Squat set 1: 10 reps", exact: true })
     .click();
@@ -112,6 +121,9 @@ test("Workout selection becomes a persistent conversation and archives finished 
   await page
     .getByRole("button", { name: "Finish workout", exact: true })
     .click();
+  await page
+    .getByRole("button", { name: "Save partial workout", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Lower Body saved", exact: true }),
   ).toBeVisible();
@@ -150,6 +162,10 @@ test.beforeEach(async ({ page }) => {
   );
   await page.route("**/api/chat", (route) => route.abort());
   await page.goto("/");
+  // Route completion can precede async onboarding hydration and the first
+  // app save. Finish initialization before injecting records into its store.
+  await page.getByRole("textbox", { name: "Message Rep & Plate" }).waitFor();
+  await stored(page);
 });
 
 test("Chat starts clean with four destinations and direct barcode scanning", async ({
@@ -161,7 +177,7 @@ test("Chat starts clean with four destinations and direct barcode scanning", asy
     page.getByRole("heading", { name: "Rep & Plate", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", {name:"Always here.", exact:true}),
+    page.getByRole("heading", { name: "Always here.", exact: true }),
   ).toBeVisible();
   const tabs = page.getByRole("navigation", { name: "Chat navigation" });
   await expect(tabs.getByRole("button")).toHaveText([
@@ -298,6 +314,14 @@ test("bench sets can be recorded and corrected inside chat", async ({
 }) => {
   await send(page, "Start my workout");
   await page
+    .getByRole("button", {
+      name: "Choose or adjust workout loads",
+      exact: true,
+    })
+    .click();
+  await chooseLoad(page, "Bench Press", "45");
+  await page.getByRole("button", { name: "Chat", exact: true }).click();
+  await page
     .getByRole("button", { name: "Bench set 1: 8 reps", exact: true })
     .click();
   await page
@@ -403,6 +427,7 @@ test("You reviews and goals update shared records and persist", async ({
   await page
     .getByRole("spinbutton", { name: "Daily calories", exact: true })
     .fill("2200");
+  await page.locator('input[name="targetsConfigured"]').check();
   await page
     .getByRole("button", { name: "Save preferences", exact: true })
     .click();
@@ -484,6 +509,7 @@ test("You shows captured notes, editable meals, and real workout history", async
   await page
     .getByRole("button", { name: "Start workout", exact: true })
     .click();
+  await chooseLoad(page, "Bench Press", "45");
   await page
     .getByRole("button", { name: "Bench Press set 1: 8 reps", exact: true })
     .click();

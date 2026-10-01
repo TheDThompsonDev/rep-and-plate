@@ -98,7 +98,12 @@ export function SupportAndPrivacy({
         ? dataHandling.map((item) => (
             <View key={item.title}>
               <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.text}>{item.text}</Text>
+              <Text style={styles.text}>
+                {item.text.replace(
+                  "Account & saved data",
+                  "Cloud & your records",
+                )}
+              </Text>
             </View>
           ))
         : null}

@@ -4,12 +4,15 @@ import type { PantryEvent } from "./contracts";
 import type { MealComponent } from "../meals/contracts";
 import { componentNutrition, scaleNutrition } from "../meals/arithmetic";
 import { restoreRecipePortion } from "../recipes/portions";
+import {isPurchaseReceipt} from './receipt-origin';
 
 export type PantryLot = {
   id: string;
   receiptId: string;
   store: string;
   date: string;
+  purchaseDate?: string | null;
+  capturedDate?: string;
   item: GroceryItem;
   purchased: number | null;
   remaining: number | null;
@@ -38,7 +41,9 @@ export function pantryLots(state: AppState): PantryLot[] {
           id: lotId,
           receiptId: receipt.id,
           store: receipt.store,
-          date: receipt.date,
+          date: isPurchaseReceipt(receipt) ? receipt.purchase?.purchaseDate ?? receipt.date : receipt.date,
+          purchaseDate: isPurchaseReceipt(receipt) ? receipt.purchase?.purchaseDate ?? null : null,
+          capturedDate: receipt.date,
           item,
           purchased,
           remaining: balance,

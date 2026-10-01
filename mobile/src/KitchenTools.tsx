@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { cloudEpoch } from "../../src/features/cloud/sync-control";
 import { Text, View, Image } from "react-native";
 import { Button, Card, Choice, Field, Row, Sheet, Sources, s } from "./ui";
 import { useHealth } from "./store";
@@ -40,13 +41,20 @@ import { receiptPurchaseSchema } from "../../src/features/shopping/contracts";
 import { defaultPreferences } from "../../src/features/preferences/contracts";
 import {
   validateDraftPlan,
+  validateGeneratedPlan,
   mealEstimate,
   mealPortionSelections,
+  cookingStepText,
+  reviewCookingMethod,
+  planVarietySummary,
+  cookingMethodIssue,
 } from "../../src/features/planning/meal-plans";
 import {
   type MealPlan,
   type MealCategory,
   mealPlanSchema,
+  type PlannedMeal,
+  type CookingStep,
 } from "../../src/features/planning/contracts";
 import {
   repeatApprovedWeek,
@@ -61,18 +69,35 @@ import {
   type WorkoutProposal,
 } from "../../src/features/workout-planning/contracts";
 import { completedWorkoutContext } from "../../src/features/workout-planning/history";
-import { PlanIngredientLink } from './PlanIngredientLink';
-import { linkPlannedIngredient, unloggedPlan } from '../../src/features/planning/pantry-links';
-import { basketSummary, estimatePlanBasket } from '../../src/features/planning/basket';
+import { PlanIngredientLink } from "./PlanIngredientLink";
+import {
+  linkPlannedIngredient,
+  unloggedPlan,
+} from "../../src/features/planning/pantry-links";
+import {
+  basketSummary,
+  estimatePlanBasket,
+} from "../../src/features/planning/basket";
+import { packageServings } from "../../src/features/products/quantities";
+import { addManualPantryIngredient } from "../../src/features/pantry/manual-ingredient";
+import { purchaseReceipts } from "../../src/features/shopping/shopping";
 
 export function Pantry() {
   const h = useHealth(),
+    [manual, setManual] = useState(false),
     [edit, setEdit] = useState<PantryLot | null>(null),
     [receipt, setReceipt] = useState<GroceryReceipt | null>(null),
     [amount, setAmount] = useState<Record<string, string>>({}),
     [title, setTitle] = useState("Meal from my pantry"),
     [category, setCategory] = useState<Meal["category"]>("Dinner");
   const lots = getPantryLots(h.state!);
+  const reviewQueue = lots
+    .filter(
+      (l) =>
+        l.item.match !== "nonfood" &&
+        (l.item.needsReview || !l.item.nutrition || l.remaining === null),
+    )
+    .sort((a, b) => Number(!b.item.nutrition) - Number(!a.item.nutrition));
   return (
     <Sheet title="Your pantry" onClose={() => h.setTool(null)}>
       <Text style={s.muted}>
@@ -82,12 +107,46 @@ export function Pantry() {
       {!lots.length && (
         <Button label="Add a receipt" onPress={() => h.setTool("receipt")} />
       )}
+      <Button
+        label="Add ingredient manually"
+        secondary
+        onPress={() => setManual(true)}
+      />
+      {reviewQueue.length > 0 && (
+        <Card>
+          <Text style={s.h3}>{reviewQueue.length} food items need a check</Text>
+          <Text style={s.muted}>
+            Match the food and serving first, then count package servings.
+            Receipt text alone rarely includes all of this.
+          </Text>
+          {reviewQueue.map((l) => (
+            <Row
+              key={l.id}
+              title={`Check ${l.item.name}`}
+              detail={
+                !l.item.nutrition
+                  ? "1. Confirm food and nutrition"
+                  : "2. Confirm available servings"
+              }
+              onPress={() => setEdit(l)}
+            />
+          ))}
+        </Card>
+      )}
+      {(h.recipeDraft.name ||
+        Object.keys(h.recipeDraft.amounts).length > 0) && (
+        <Button
+          label="Return to recipe draft"
+          secondary
+          onPress={() => h.setTool("recipes")}
+        />
+      )}
       <Text style={s.h2}>Your grocery trips</Text>
-      {h.state!.groceries?.map((r) => (
+      {purchaseReceipts(h.state!.groceries ?? []).map((r) => (
         <Row
           key={r.id}
           title={r.store || "Grocery receipt"}
-          detail={`${r.date} · Check purchase details`}
+          detail={`${r.purchase?.purchaseDate ? `Purchased ${r.purchase.purchaseDate}` : `Captured ${r.date} · Purchase date unknown`}${r.purchase?.purchaseDate && r.purchase.purchaseDate !== r.date ? ` · Captured ${r.date}` : ""} · Check purchase details`}
           onPress={() => setReceipt(r)}
         />
       ))}
@@ -177,9 +236,83 @@ export function Pantry() {
           />
         ))}
       {edit && <PantryEditor lot={edit} onClose={() => setEdit(null)} />}
+      {manual && <ManualIngredient onClose={() => setManual(false)} />}
       {receipt && (
         <ReceiptEditor receipt={receipt} onClose={() => setReceipt(null)} />
       )}
+    </Sheet>
+  );
+}
+function ManualIngredient({ onClose }: { onClose: () => void }) {
+  const h = useHealth(),
+    [name, setName] = useState(""),
+    [serving, setServing] = useState(""),
+    [servings, setServings] = useState("");
+  const [values, setValues] = useState({
+    calories: "",
+    protein: "",
+    carbs: "",
+    fat: "",
+  });
+  const [operation] = useState(id);
+  return (
+    <Sheet title="Add ingredient you have" onClose={onClose}>
+      <Text style={s.muted}>
+        Use the package label or known nutrition. This adds pantry stock, not
+        food eaten or a purchase expense.
+      </Text>
+      <Field label="Ingredient name" value={name} onChangeText={setName} />
+      <Field
+        label="Labeled serving (for example 40 g)"
+        value={serving}
+        onChangeText={setServing}
+      />
+      <Field
+        label="Servings available"
+        keyboardType="decimal-pad"
+        value={servings}
+        onChangeText={setServings}
+      />
+      {(["calories", "protein", "carbs", "fat"] as const).map((k) => (
+        <Field
+          key={k}
+          label={`${k} per serving`}
+          value={values[k]}
+          onChangeText={(v) => setValues({ ...values, [k]: v })}
+          keyboardType="decimal-pad"
+        />
+      ))}
+      <Button
+        label="Save ingredient"
+        disabled={
+          !name.trim() ||
+          !serving.trim() ||
+          !servings.trim() ||
+          Object.values(values).some((v) => !v.trim())
+        }
+        onPress={() => {
+          if (
+            h.change((s) =>
+              addManualPantryIngredient(
+                s,
+                {
+                  name,
+                  serving,
+                  servings: Number(servings),
+                  nutrition: {
+                    calories: Number(values.calories),
+                    protein: Number(values.protein),
+                    carbs: Number(values.carbs),
+                    fat: Number(values.fat),
+                  },
+                },
+                operation,
+              ),
+            )
+          )
+            onClose();
+        }}
+      />
     </Sheet>
   );
 }
@@ -204,6 +337,8 @@ function PantryEditor({
     [quantity, setQuantity] = useState(
       lot.item.servingsPurchased?.toString() ?? "",
     ),
+    [packages, setPackages] = useState(""),
+    [perPackage, setPerPackage] = useState(""),
     [remaining, setRemaining] = useState(lot.remaining?.toString() ?? ""),
     [query, setQuery] = useState(lot.item.name),
     [products, setProducts] = useState<FoodProduct[]>(
@@ -313,7 +448,11 @@ function PantryEditor({
         }
       />
       <Field
-        label="Total labeled servings purchased"
+        label={
+          lot.receiptId.startsWith("manual-ingredient:")
+            ? "Total labeled servings on hand"
+            : "Total labeled servings purchased"
+        }
         value={quantity}
         onChangeText={(v) => {
           setQuantity(v);
@@ -322,8 +461,37 @@ function PantryEditor({
         keyboardType="decimal-pad"
       />
       <Text style={s.tiny}>
-        Count servings across the whole purchase. Leave blank if unknown.
+        Count labeled servings in this stock entry. Leave blank if unknown.
       </Text>
+      <Field
+        label="Packages available (optional calculator)"
+        value={packages}
+        onChangeText={setPackages}
+        keyboardType="decimal-pad"
+      />
+      <Field
+        label="Labeled servings per package"
+        value={perPackage}
+        onChangeText={setPerPackage}
+        keyboardType="decimal-pad"
+      />
+      <Button
+        label="Use package serving count"
+        secondary
+        onPress={() => {
+          try {
+            const total = packageServings(packages, perPackage);
+            if (total === null)
+              throw Error(
+                "Enter positive package counts and servings per package (total up to 10,000).",
+              );
+            setQuantity(String(total));
+            setChecked(false);
+          } catch (cause) {
+            setError((cause as Error).message);
+          }
+        }}
+      />
       {(["calories", "protein", "carbs", "fat"] as const).map((k) => (
         <Field
           key={k}
@@ -573,9 +741,11 @@ export function ReceiptEditor({
 }
 export function Recipes() {
   const h = useHealth(),
-    [name, setName] = useState(""),
-    [portions, setPortions] = useState("4"),
-    [amounts, setAmounts] = useState<Record<string, string>>({}),
+    [name, setName] = useState(h.recipeDraft.name),
+    [portions, setPortions] = useState(h.recipeDraft.portions),
+    [amounts, setAmounts] = useState<Record<string, string>>(
+      h.recipeDraft.amounts,
+    ),
     [eat, setEat] = useState<Record<string, string>>({}),
     [category, setCategory] = useState<Meal["category"]>("Dinner");
   const lots = getPantryLots(h.state!).filter(
@@ -586,7 +756,13 @@ export function Recipes() {
       !l.inconsistent,
   );
   return (
-    <Sheet title="Recipes & leftovers" onClose={() => h.setTool(null)}>
+    <Sheet
+      title="Recipes & leftovers"
+      onClose={() => {
+        h.setRecipeDraft({ name, portions, amounts });
+        h.setTool(null);
+      }}
+    >
       <Text style={s.muted}>
         Preparing a batch moves ingredients out of your pantry. Log only the
         portions you eat.
@@ -653,9 +829,19 @@ export function Recipes() {
       ))}
       {!lots.length && (
         <Text style={s.muted}>
-          Confirm pantry nutrition and quantities to prepare a batch.
+          First add your ingredients to the pantry and confirm the label serving
+          size, nutrition, and available servings. Then return here to prepare
+          your batch; your draft name and portions are kept.
         </Text>
       )}
+      <Button
+        label="Set up pantry ingredients"
+        secondary
+        onPress={() => {
+          h.setRecipeDraft({ name, portions, amounts });
+          h.setTool("pantry");
+        }}
+      />
       <Button
         label="Prepare recipe batch"
         disabled={!name.trim() || !lots.length}
@@ -674,6 +860,7 @@ export function Recipes() {
           ) {
             setName("");
             setAmounts({});
+            h.setRecipeDraft({ name: "", portions: "4", amounts: {} });
           }
         }}
       />
@@ -682,23 +869,75 @@ export function Recipes() {
 }
 export function Planner() {
   const h = useHealth(),
-    [plan, setPlan] = useState<MealPlan | undefined>(
+    [plan, updatePlan] = useState<MealPlan | undefined>(
       h.state!.mealPlans?.at(-1),
     ),
     [start, setStart] = useState(today()),
+    [pantryMode, setPantryMode] = useState<
+      "pantry-only" | "shopping-supported"
+    >("shopping-supported"),
+    [variety, setVariety] = useState<"varied" | "repeat-friendly">("varied"),
     [categories, setCategories] = useState<MealCategory[]>(["Dinner"]),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+  const [cookingId, setCookingId] = useState<string | null>(null);
+  const cookingMeal = plan?.days
+    .flatMap((d) => d.meals)
+    .find((m) => m.id === cookingId);
+  const scope = useRef(h.recordScope()),
+    epoch = useRef(cloudEpoch()),
+    mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const lots = getPantryLots(h.state!),
     preferences = h.state!.preferences ?? defaultPreferences(),
     context = {
       lots,
       preferences,
       goals: h.state!.profile,
+      goalsConfigured: h.state!.profile.targetsConfigured === true,
       startDate: start,
       mealCategories: categories,
+      pantryMode,
+      variety,
     };
-  const basket=plan?basketSummary(estimatePlanBasket(unloggedPlan(plan,h.state!.meals.map(meal=>meal.id)),lots,h.state!.groceries??[],today()),preferences.weeklyBudget,preferences.shoppingCurrency):undefined;
+  const setPlan = (next: MealPlan) => {
+    if (
+      !mounted.current ||
+      scope.current !== h.recordScope() ||
+      epoch.current !== cloudEpoch()
+    )
+      return;
+    if (
+      h.change((s) => ({
+        ...s,
+        mealPlans: [
+          ...(s.mealPlans ?? []).filter((p) => p.id !== next.id),
+          next,
+        ],
+      }))
+    )
+      updatePlan(next);
+  };
+  const basket = plan
+    ? basketSummary(
+        estimatePlanBasket(
+          unloggedPlan(
+            plan,
+            h.state!.meals.map((meal) => meal.id),
+          ),
+          lots,
+          h.state!.groceries ?? [],
+          today(),
+        ),
+        preferences.weeklyBudget,
+        preferences.shoppingCurrency,
+      )
+    : undefined;
   const editMeal = (
     mealId: string,
     patch: Parameters<typeof editPlannedMeal>[2],
@@ -714,10 +953,14 @@ export function Planner() {
   const save = (status: MealPlan["status"]) => {
     if (!plan) return;
     try {
-      const checked = validateDraftPlan(plan, {
-        ...context,
-        startDate: plan.days[0].date,
-      }, {enforceHousehold:false,enforceCategories:false});
+      const checked = validateDraftPlan(
+        plan,
+        {
+          ...context,
+          startDate: plan.days[0].date,
+        },
+        { enforceHousehold: false, enforceCategories: false },
+      );
       if (
         h.change((s) => ({
           ...s,
@@ -734,6 +977,34 @@ export function Planner() {
   };
   return (
     <Sheet title="Your week of meals" onClose={() => h.setTool(null)}>
+      <Text style={s.muted}>
+        Generated plans and edits save as drafts automatically. Only Approve
+        plan makes a plan ready to log.
+      </Text>
+      <Text style={s.h3}>Ingredients</Text>
+      <Choice
+        values={["pantry-only", "shopping-supported"]}
+        labels={{
+          "pantry-only": "Use confirmed pantry only",
+          "shopping-supported": "Include a shopping list",
+        }}
+        value={pantryMode}
+        onChange={(v) => setPantryMode(v as typeof pantryMode)}
+      />
+      <Text style={s.h3}>Meal variety</Text>
+      <Choice
+        values={["varied", "repeat-friendly"]}
+        labels={{
+          varied: "Prefer varied ingredients",
+          "repeat-friendly": "Repeats are welcome",
+        }}
+        value={variety}
+        onChange={(v) => setVariety(v as typeof variety)}
+      />
+      <Text style={s.tiny}>
+        Variety is a preference. We compare ingredient patterns in the result;
+        different meal names can still use the same base.
+      </Text>
       <Field
         label="Week starts (YYYY-MM-DD)"
         value={start}
@@ -770,7 +1041,7 @@ export function Planner() {
             setError("");
             try {
               setPlan(
-                validateDraftPlan(
+                validateGeneratedPlan(
                   await jsonApi("/api/plans/meals", context),
                   context,
                 ),
@@ -796,6 +1067,11 @@ export function Planner() {
           <Text style={s.h3}>
             {plan.status === "draft" ? "Review your draft" : "Your saved plan"}
           </Text>
+          {planVarietySummary(plan).map((summary) => (
+            <Text key={summary.category} style={s.muted}>
+              {summary.message}
+            </Text>
+          ))}
           {plan.days.map((d) => (
             <View key={d.date} style={{ gap: 12 }}>
               <Text style={s.h2}>{d.date}</Text>
@@ -833,9 +1109,42 @@ export function Planner() {
                       {m.minutes ?? "?"} min
                     </Text>
                     {m.ingredients.map((x, i) => (
-                      <View key={i} style={{gap:8}}><Text style={s.muted}>
-                        {x.name} · {x.servings} × {x.servingLabel}
-                      </Text>{!logged&&<PlanIngredientLink ingredient={x} lots={lots} preferences={preferences} onLink={(lotId,amount)=>{try{setPlan(linkPlannedIngredient(plan,m.id,i,lotId,amount,{lots,preferences,loggedMealIds:h.state!.meals.map(meal=>meal.id),confirmed:true}));setError('');}catch(cause){setError((cause as Error).message);}}}/>}</View>
+                      <View key={i} style={{ gap: 8 }}>
+                        <Text style={s.muted}>
+                          {x.name} · {x.servings} × {x.servingLabel}
+                        </Text>
+                        {!logged && (
+                          <PlanIngredientLink
+                            ingredient={x}
+                            lots={lots}
+                            preferences={preferences}
+                            onLink={(lotId, amount) => {
+                              try {
+                                setPlan(
+                                  linkPlannedIngredient(
+                                    plan,
+                                    m.id,
+                                    i,
+                                    lotId,
+                                    amount,
+                                    {
+                                      lots,
+                                      preferences,
+                                      loggedMealIds: h.state!.meals.map(
+                                        (meal) => meal.id,
+                                      ),
+                                      confirmed: true,
+                                    },
+                                  ),
+                                );
+                                setError("");
+                              } catch (cause) {
+                                setError((cause as Error).message);
+                              }
+                            }}
+                          />
+                        )}
+                      </View>
                     ))}
                     <Text style={s.muted}>
                       {estimate.known
@@ -847,6 +1156,50 @@ export function Planner() {
                       value={m.notes}
                       onChangeText={(notes) => editMeal(m.id, { notes })}
                     />
+                    <Text style={s.h3}>Cooking method</Text>
+                    {!!m.cookingMethod && !!cookingMethodIssue(m) && (
+                      <Text style={s.muted}>{cookingMethodIssue(m)}</Text>
+                    )}
+                    <Text style={s.muted}>
+                      {m.cookingMethod
+                        ? m.cookingMethod.reviewed
+                          ? "Method reviewed by you"
+                          : "Method needs your review"
+                        : "No method saved yet. Add steps from the recipe you intend to make."}
+                    </Text>
+                    {m.cookingMethod?.steps.map((step, i) => (
+                      <Text key={i} style={s.text}>
+                        {i + 1}. {cookingStepText(step, m)}
+                      </Text>
+                    ))}
+                    <Button
+                      label={`Review cooking method: ${m.title}`}
+                      secondary
+                      onPress={() => setCookingId(m.id)}
+                    />
+                    {m.cookingMethod && (
+                      <Button
+                        label={
+                          m.cookingMethod.reviewed
+                            ? `Mark method unreviewed: ${m.title}`
+                            : `I reviewed this method: ${m.title}`
+                        }
+                        secondary
+                        onPress={() => {
+                          try {
+                            setPlan(
+                              reviewCookingMethod(
+                                plan,
+                                m.id,
+                                !m.cookingMethod!.reviewed,
+                              ).plan,
+                            );
+                          } catch (cause) {
+                            setError((cause as Error).message);
+                          }
+                        }}
+                      />
+                    )}
                     <PlanMove
                       plan={plan}
                       mealId={m.id}
@@ -878,7 +1231,17 @@ export function Planner() {
             </View>
           ))}
           <Button label="Save draft" secondary onPress={() => save("draft")} />
-          {basket&&<Card><Text style={s.h3}>Basket cost coverage</Text><Text style={s.muted}>{basket.amount}</Text><Text style={s.muted}>{basket.coverage}{basket.budgetText}</Text><Text style={s.tiny}>{basket.note}</Text></Card>}
+          {basket && (
+            <Card>
+              <Text style={s.h3}>Basket cost coverage</Text>
+              <Text style={s.muted}>{basket.amount}</Text>
+              <Text style={s.muted}>
+                {basket.coverage}
+                {basket.budgetText}
+              </Text>
+              <Text style={s.tiny}>{basket.note}</Text>
+            </Card>
+          )}
           <Button label="Approve plan" onPress={() => save("approved")} />
           <Button
             label="Repeat next week as draft"
@@ -901,6 +1264,159 @@ export function Planner() {
           />
         </>
       )}
+      {cookingMeal && (
+        <CookingMethodEditor
+          meal={cookingMeal}
+          onClose={() => setCookingId(null)}
+          onSave={(steps) => {
+            editMeal(cookingMeal.id, {
+              cookingMethod: { steps, reviewed: false },
+            });
+            setCookingId(null);
+          }}
+        />
+      )}
+    </Sheet>
+  );
+}
+function CookingMethodEditor({
+  meal,
+  onSave,
+  onClose,
+}: {
+  meal: PlannedMeal;
+  onSave: (steps: CookingStep[]) => void;
+  onClose: () => void;
+}) {
+  const [steps, setSteps] = useState<CookingStep[]>(
+    meal.cookingMethod?.steps ?? [],
+  );
+  const [action, setAction] = useState<CookingStep["action"]>("combine"),
+    [ingredients, setIngredients] = useState<number[]>([]),
+    [minutes, setMinutes] = useState(""),
+    [temperature, setTemperature] = useState("");
+  const valid =
+    ingredients.length > 0 &&
+    (!["boil", "simmer", "saute", "bake", "steam", "microwave"].includes(
+      action,
+    ) ||
+      !!minutes.trim()) &&
+    (action !== "bake" || !!temperature.trim()) &&
+    (!minutes.trim() ||
+      (Number.isFinite(Number(minutes)) &&
+        Number(minutes) > 0 &&
+        Number(minutes) <= 240)) &&
+    (!temperature.trim() ||
+      (Number.isInteger(Number(temperature)) &&
+        Number(temperature) >= 30 &&
+        Number(temperature) <= 300));
+  const issue = cookingMethodIssue({
+    ...meal,
+    cookingMethod: { steps, reviewed: false },
+  });
+  return (
+    <Sheet title={`Cooking method: ${meal.title}`} onClose={onClose}>
+      <Text style={s.muted}>
+        Check these steps against your recipe and package instructions. Saving a
+        method requires another review; it does not log food or change pantry
+        stock.
+      </Text>
+      {steps.map((step, i) => (
+        <Card key={i}>
+          <Text style={s.text}>
+            {i + 1}. {cookingStepText(step, meal)}
+          </Text>
+          <Button
+            label={`Remove step ${i + 1}`}
+            secondary
+            onPress={() => setSteps((all) => all.filter((_, j) => j !== i))}
+          />
+        </Card>
+      ))}
+      <Text style={s.h3}>Add a step</Text>
+      <Choice
+        values={[
+          "rinse",
+          "chop",
+          "slice",
+          "dice",
+          "combine",
+          "stir",
+          "blend",
+          "boil",
+          "simmer",
+          "saute",
+          "bake",
+          "steam",
+          "microwave",
+          "rest",
+          "serve",
+        ]}
+        value={action}
+        onChange={(v) => setAction(v as CookingStep["action"])}
+      />
+      {meal.ingredients.map((ingredient, i) => (
+        <Button
+          key={i}
+          label={`${ingredients.includes(i) ? "✓ " : ""}${ingredient.name}`}
+          secondary
+          onPress={() =>
+            setIngredients((all) =>
+              all.includes(i) ? all.filter((j) => j !== i) : [...all, i],
+            )
+          }
+        />
+      ))}
+      <Field
+        label={
+          ["boil", "simmer", "saute", "bake", "steam", "microwave"].includes(
+            action,
+          )
+            ? "Step minutes (required)"
+            : "Step minutes (optional)"
+        }
+        value={minutes}
+        onChangeText={setMinutes}
+        keyboardType="decimal-pad"
+      />
+      <Field
+        label={
+          action === "bake"
+            ? "Step temperature Celsius (required)"
+            : "Step temperature Celsius (optional)"
+        }
+        value={temperature}
+        onChangeText={setTemperature}
+        keyboardType="decimal-pad"
+      />
+      <Button
+        label="Add cooking step"
+        disabled={!valid || steps.length >= 16}
+        onPress={() => {
+          setSteps((all) => [
+            ...all,
+            {
+              action,
+              ingredientIndexes: ingredients,
+              minutes: minutes.trim() ? Number(minutes) : null,
+              temperatureC: temperature.trim() ? Number(temperature) : null,
+            },
+          ]);
+          setIngredients([]);
+          setMinutes("");
+          setTemperature("");
+        }}
+      />
+      <Button
+        label="Save cooking method"
+        disabled={!steps.length || !!issue}
+        onPress={() => onSave(steps)}
+      />
+      {!!issue && <Text style={s.muted}>{issue}</Text>}
+      <Text style={s.tiny}>
+        Include every listed ingredient in at least one step. Heated cooking
+        steps require a duration; baking also requires a temperature.
+      </Text>
     </Sheet>
   );
 }
@@ -994,6 +1510,8 @@ export function WorkoutBuilder() {
                   return {
                     ...s,
                     workout: {
+                      routines: s.workout.routines,
+                      restUntil: null,
                       status: "active",
                       planId: "personalized",
                       title: checked.title,
@@ -1015,6 +1533,7 @@ export function WorkoutBuilder() {
                       exercises: checked.exercises.map((e) => ({
                         name: e.name,
                         weight: 0,
+                        weightConfirmed: false,
                         target: e.reps,
                         previous: [],
                         sets: Array(e.sets).fill(null),
@@ -1217,8 +1736,10 @@ export function Label() {
                 }),
               ),
             )
-          )
+          ) {
+            h.setLabelBarcode(gtin);
             h.setTool("scan");
+          }
         }}
       />
     </Sheet>

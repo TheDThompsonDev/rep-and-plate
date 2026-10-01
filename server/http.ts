@@ -14,6 +14,7 @@ import { createShoppingApi } from "./shopping.ts";
 import { createHash } from "node:crypto";
 import type { ChatCache } from "./chat-cache.ts";
 import { generationAvailable, QWEN_BASE_URL, QWEN_MODEL } from "./generation.ts";
+import { createAgentHandler } from './agents/http.ts';
 
 export const readConfig = (
   env: Record<string, string | undefined>,
@@ -69,6 +70,7 @@ export function createApi(
   const planApi = createPlanApi(config);
   const voiceApi = createVoiceApi(config);
   const shoppingApi = createShoppingApi(config);
+  let agents: Promise<ReturnType<typeof createAgentHandler>> | undefined;
   const completed = new Map<string, { at: number; result: AIResult }>();
   const running = new Set<string>();
   let active = 0;
@@ -81,6 +83,16 @@ export function createApi(
   ) {
     const path = (req.url ?? "").split("?")[0];
     if (!path.startsWith("/api/")) return next();
+    if (!hosted && path.startsWith('/api/agents/')) {
+      try {
+        agents ??= import('./agents/sqlite.ts').then(({ SqliteAgentStore }) => createAgentHandler({ store: new SqliteAgentStore() }));
+        return await (await agents)(req, res);
+      } catch {
+        agents = undefined;
+        res.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+        return res.end(JSON.stringify({ error: { code: 'UNAVAILABLE', message: 'Connections storage is unavailable.', retryable: true } }));
+      }
+    }
     res.setHeader("Cache-Control", "no-store");
     res.setHeader("X-Content-Type-Options", "nosniff");
     const json = (status: number, body: unknown) => {

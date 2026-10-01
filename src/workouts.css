@@ -771,3 +771,9 @@
   }
 }
 .workout-set-load{display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin:8px 0}.workout-set-load label{display:grid;gap:4px;font-size:11px;flex:1;min-width:150px}.workout-set-load input{width:100%;box-sizing:border-box;padding:9px;border:1px solid #cad8d0;border-radius:8px}.workout-set-load button{padding:9px;border:1px solid #cad8d0;border-radius:8px;background:white;font-size:12px}.workout-set-load button:disabled{opacity:.45}.workout-set-load small{display:block;width:100%;font-size:11px;color:#607267}
+.workout-utilities{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 20px;background:#f2f8f3;font-size:14px}.workout-utilities select{padding:8px;border-radius:10px;border:1px solid #a8c1b1}.workout-utilities p{flex-basis:100%;margin:0}.workout-technique{padding:10px 14px;line-height:1.5}.workout-technique summary{cursor:pointer;font-weight:600}.workout-order{display:flex;flex-wrap:wrap;gap:8px;padding:8px 14px}.workout-order button{padding:8px;border:1px solid #bccac0;border-radius:10px;background:white;color:#214e37}.workout-order button:disabled{opacity:.45}
+
+.workout-rest-tools summary { cursor: pointer; font-weight: 600; }
+.workout-rest-tools[open] { flex-basis: 100%; }
+.workout-rest-tools p { margin: 8px 0; }
+.workout-rest-tools output, .workout-rest-tools > span { margin: 0 8px; }

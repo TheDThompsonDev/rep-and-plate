@@ -131,8 +131,8 @@ export function Capture({ receipt = false }: { receipt?: boolean }) {
             }
           />
           <Text style={s.tiny}>
-            Sent to our AI provider, QwenCloud or OpenAI, for image reading and research. Review uncertain
-            product matches and quantities.
+            Sent to our AI provider, QwenCloud or OpenAI, for image reading and
+            research. Review uncertain product matches and quantities.
           </Text>
           <Button
             label="Save image for later review"
@@ -173,9 +173,14 @@ export function Scanner({
   const h = useHealth(),
     [permission, requestPermission] = useCameraPermissions(),
     [camera, setCamera] = useState(false),
-    [barcode, setBarcode] = useState(""),
+    [barcode, setBarcode] = useState(h.labelBarcode),
     [products, setProducts] = useState<FoodProduct[]>([]),
-    [selected, setSelected] = useState<FoodProduct | null>(null),
+    [selected, setSelected] = useState<FoodProduct | null>(
+      () =>
+        h.state!.products?.find(
+          (p) => p.gtin === normalizeGTIN(h.labelBarcode),
+        ) ?? null,
+    ),
     [servings, setServings] = useState("1"),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
@@ -339,7 +344,10 @@ export function Scanner({
         <Button
           label="Enter the label myself"
           secondary
-            onPress={() => { h.setLabelBarcode(barcode); h.setTool("label"); }}
+          onPress={() => {
+            h.setLabelBarcode(barcode);
+            h.setTool("label");
+          }}
         />
       )}
     </Sheet>
@@ -472,7 +480,11 @@ export function Voice() {
           if (h.tab === "Workouts" && h.state!.workout.status === "active") {
             h.change((s) => ({
               ...s,
-              workout: replyToWorkout(s.workout, text),
+              workout: replyToWorkout(
+                s.workout,
+                text,
+                s.profile.workoutUnit ?? "lb",
+              ),
             }));
             h.setTool(null);
           } else void h.send(text);

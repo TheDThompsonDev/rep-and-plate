@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { activityProposalSchema } from './activity-contract.ts';
 import { workoutCaptureSchema } from './features/spot/contracts.ts';
 import { receiptPurchaseSchema, receiptLinePriceSchema } from './features/shopping/contracts.ts';
 import { preferenceProposalSchema } from "./features/preferences/proposals.ts";
@@ -77,6 +78,7 @@ export const mealProposalSchema = aiNutritionSchema.extend({
 });
 export type MealProposal = z.infer<typeof mealProposalSchema>;
 export const aiResultSchema = z.object({
+  activity: activityProposalSchema.nullable().optional(),
   workout: workoutCaptureSchema.nullable().optional(),
   recipePortionProposal: recipePortionProposalSchema.nullable().optional(),
   suggestedAction: chatActionSchema.nullable().optional(),
@@ -92,6 +94,7 @@ export const aiResultSchema = z.object({
 export type AIResult = z.infer<typeof aiResultSchema>;
 export type AIStatus = { available: boolean; jev: boolean; model?: string };
 export const aiRequestSchema = z.object({
+  captureDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   requestId: z.string().uuid(),
   text: z.string().min(1).max(4000),
   image: z
@@ -109,6 +112,8 @@ export const aiRequestSchema = z.object({
     )
     .max(20),
   context: z.object({
+    goalsConfigured: z.boolean().optional(),
+    activities: z.array(activityProposalSchema).max(30).optional(),
     shopping: z.object({
       totals: z.record(z.string().regex(/^[A-Z]{3}$/),z.number().nonnegative()),
       recordedReceipts: z.number().int().nonnegative(), reviewedReceipts:z.number().int().nonnegative(),

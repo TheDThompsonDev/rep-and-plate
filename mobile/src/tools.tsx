@@ -21,12 +21,22 @@ import { weeklyReview } from "../../src/features/reviews/weekly-review";
 export function MealEditor({
   meal,
   onClose,
+  onRepeat,
+  onSaved,
 }: {
   meal: Meal;
   onClose: () => void;
+  onRepeat?: () => void;
+  onSaved?: (day: string) => void;
 }) {
   const h = useHealth(),
     [value, setValue] = useState(meal),
+    [nutrition, setNutrition] = useState(() => ({
+      calories: String(meal.calories),
+      protein: String(meal.protein),
+      carbs: String(meal.carbs),
+      fat: String(meal.fat),
+    })),
     [confirm, setConfirm] = useState(false),
     [links, setLinks] = useState<Record<string, string>>({});
   const linked =
@@ -55,8 +65,8 @@ export function MealEditor({
           key={k}
           label={`${k}${k === "calories" ? "" : " (g)"}`}
           keyboardType="decimal-pad"
-          value={String(value[k])}
-          onChangeText={(v) => setValue({ ...value, [k]: Number(v) })}
+          value={nutrition[k]}
+          onChangeText={(v) => setNutrition({ ...nutrition, [k]: v })}
         />
       ))}
       <Field
@@ -74,14 +84,35 @@ export function MealEditor({
       <Button
         label="Save meal"
         onPress={() => {
-          if (!isCalendarDate(value.day) || !value.title.trim()) {
+          if (
+            Object.values(nutrition).some(
+              (v) =>
+                !v.trim() ||
+                !Number.isFinite(Number(v)) ||
+                Number(v) < 0 ||
+                Number(v) > 20000,
+            )
+          ) {
+            h.setNotice(
+              "Enter nutrition values from 0 to 20,000. Decimals are welcome.",
+            );
+            return;
+          }
+          const parsed = Object.fromEntries(
+            Object.entries(nutrition).map(([k, v]) => [k, Number(v)]),
+          );
+          if (
+            !isCalendarDate(value.day) ||
+            value.day > h.day ||
+            !value.title.trim()
+          ) {
             h.setNotice("Check the meal name and date.");
             return;
           }
           if (
             linked &&
             (["calories", "protein", "carbs", "fat"] as const).some(
-              (k) => value[k] !== meal[k],
+              (k) => parsed[k] !== meal[k],
             )
           ) {
             h.setNotice(
@@ -92,19 +123,31 @@ export function MealEditor({
           if (
             h.change((st) => ({
               ...st,
+              messages: st.messages.map((message) =>
+                message.mealId === meal.id
+                  ? {
+                      ...message,
+                      text: "Meal details were corrected. Open the saved meal to review the current values.",
+                    }
+                  : message,
+              ),
               meals: st.meals.map((m) =>
                 m.id === meal.id
                   ? mealSchema.parse({
                       ...value,
+                      ...parsed,
                       components: linked ? value.components : undefined,
                     })
                   : m,
               ),
             }))
-          )
+          ) {
+            onSaved?.(value.day);
             onClose();
+          }
         }}
       />
+      {onRepeat && <Button label="Repeat meal" secondary onPress={onRepeat} />}
       <Text style={s.h3}>Ingredients from your pantry</Text>
       {!linked &&
         getPantryLots(h.state!)
@@ -188,11 +231,19 @@ export function MealEditor({
 }
 export function Profile() {
   const h = useHealth(),
-    [value, setValue] = useState(h.state!.profile);
+    [value, setValue] = useState(h.state!.profile),
+    [nutrition, setNutrition] = useState(() => ({
+      calories: String(value.calories),
+      protein: String(value.protein),
+      carbs: String(value.carbs),
+      fat: String(value.fat),
+    }));
   return (
     <Sheet title="Your profile & daily targets" onClose={() => h.setTool(null)}>
       <Text style={s.muted}>
-        These are your chosen targets. Change them whenever your needs change.
+        Starting targets are examples, not personal recommendations. If you
+        already have targets from your own plan, enter them here. You can also
+        keep logging food without treating these examples as a goal.
       </Text>
       <Field
         label="Name"
@@ -203,23 +254,52 @@ export function Profile() {
         <Field
           key={k}
           label={`Daily ${k} target`}
-          value={String(value[k])}
+          value={nutrition[k]}
           keyboardType="decimal-pad"
-          onChangeText={(v) => setValue({ ...value, [k]: Number(v) })}
+          onChangeText={(v) => setNutrition({ ...nutrition, [k]: v })}
         />
       ))}
       <Button
         label="Save targets"
         onPress={() => {
           if (
-            Object.values(value).some(
-              (v) => typeof v === "number" && (!Number.isFinite(v) || v <= 0),
+            Object.values(nutrition).some(
+              (v) => !v.trim() || !Number.isFinite(Number(v)) || Number(v) <= 0,
             )
           ) {
             h.setNotice("Enter positive daily targets.");
             return;
           }
-          if (h.change((s) => ({ ...s, profile: value }))) h.setTool(null);
+          if (
+            h.change((s) => ({
+              ...s,
+              profile: {
+                ...value,
+                ...Object.fromEntries(
+                  Object.entries(nutrition).map(([k, v]) => [k, Number(v)]),
+                ),
+                targetsConfigured: true,
+              },
+            }))
+          )
+            h.setTool(null);
+        }}
+      />
+      <Button
+        label="Log without daily targets"
+        secondary
+        onPress={() => {
+          if (
+            h.change((s) => ({
+              ...s,
+              profile: {
+                ...s.profile,
+                name: value.name,
+                targetsConfigured: false,
+              },
+            }))
+          )
+            h.setTool(null);
         }}
       />
     </Sheet>
@@ -228,6 +308,10 @@ export function Profile() {
 export function Preferences() {
   const h = useHealth(),
     [p, setP] = useState(h.state!.preferences ?? defaultPreferences()),
+    [budget, setBudget] = useState(
+      h.state!.preferences?.weeklyBudget?.toString() ?? "",
+    ),
+    [section, setSection] = useState("Food"),
     [lists, setLists] = useState(() =>
       Object.fromEntries(
         (
@@ -243,12 +327,25 @@ export function Preferences() {
     );
   return (
     <Sheet title="Food & household preferences" onClose={() => h.setTool(null)}>
-      <Field
-        label="People in your household"
-        keyboardType="number-pad"
-        value={String(p.householdSize)}
-        onChangeText={(v) => setP({ ...p, householdSize: Number(v) })}
+      <Text style={s.muted}>
+        Choose only what matters to you. Every section is optional; Save keeps
+        changes in all sections.
+      </Text>
+      <Choice
+        values={["Food", "Shopping", "Cooking & training"]}
+        value={section}
+        onChange={setSection}
       />
+      {section === "Food" && (
+        <>
+          <Field
+            label="People in your household"
+            keyboardType="number-pad"
+            value={String(p.householdSize)}
+            onChangeText={(v) => setP({ ...p, householdSize: Number(v) })}
+          />
+        </>
+      )}
       {(
         [
           "restrictions",
@@ -257,71 +354,108 @@ export function Preferences() {
           "preferredStores",
           "equipment",
         ] as const
-      ).map((k) => (
-        <Field
-          key={k}
-          label={`${k} (comma separated)`}
-          value={lists[k]}
-          onChangeText={(v) => setLists({ ...lists, [k]: v })}
-        />
-      ))}
-      <Text style={s.h3}>What matters most when shopping?</Text>
-      <Choice
-        values={[
-          "balanced",
-          "budget",
-          "protein",
-          "calories",
-          "less-sugar",
-          "convenience",
-        ]}
-        value={p.shoppingPriority ?? "balanced"}
-        onChange={(v) =>
-          setP({ ...p, shoppingPriority: v as typeof p.shoppingPriority })
-        }
-      />
-      <Field
-        label="Weekly grocery budget (optional)"
-        value={p.weeklyBudget?.toString() ?? ""}
-        keyboardType="decimal-pad"
-        onChangeText={(v) => setP({ ...p, weeklyBudget: v ? Number(v) : null })}
-      />
-      <Field
-        label="Currency"
-        value={p.shoppingCurrency ?? "USD"}
-        autoCapitalize="characters"
-        maxLength={3}
-        onChangeText={(v) => setP({ ...p, shoppingCurrency: v.toUpperCase() })}
-      />
-      <Choice
-        values={["unknown", "economy", "flexible"]}
-        value={p.budget}
-        onChange={(v) => setP({ ...p, budget: v as typeof p.budget })}
-      />
-      <Choice
-        values={["open", "usual"]}
-        value={p.brandFlexibility ?? "open"}
-        onChange={(v) =>
-          setP({ ...p, brandFlexibility: v as typeof p.brandFlexibility })
-        }
-      />
-      <Text style={s.tiny}>
-        Open to other brands, or prefer your usual brands.
-      </Text>
-      <Field
-        label="Cooking time in minutes (optional)"
-        value={p.cookingMinutes?.toString() ?? ""}
-        keyboardType="number-pad"
-        onChangeText={(v) =>
-          setP({ ...p, cookingMinutes: v ? Number(v) : null })
-        }
-      />
-      <Field
-        label="Workout goals and preferences"
-        multiline
-        value={p.workoutPreferences}
-        onChangeText={(v) => setP({ ...p, workoutPreferences: v })}
-      />
+      )
+        .filter((k) =>
+          section === "Food"
+            ? ["restrictions", "dislikes", "favorites"].includes(k)
+            : section === "Shopping"
+              ? k === "preferredStores"
+              : k === "equipment",
+        )
+        .map((k) => (
+          <Field
+            key={k}
+            label={`${{ restrictions: "Dietary restrictions", dislikes: "Foods to avoid", favorites: "Favorite foods", preferredStores: "Preferred stores", equipment: "Cooking equipment" }[k]} (comma separated)`}
+            value={lists[k]}
+            onChangeText={(v) => setLists({ ...lists, [k]: v })}
+          />
+        ))}
+      {section === "Shopping" && (
+        <>
+          <Text style={s.h3}>What matters most when shopping?</Text>
+          <Choice
+            values={[
+              "balanced",
+              "budget",
+              "protein",
+              "calories",
+              "less-sugar",
+              "convenience",
+            ]}
+            labels={{
+              balanced: "Balanced",
+              budget: "Lower cost",
+              protein: "More protein",
+              calories: "Calorie fit",
+              "less-sugar": "Less sugar",
+              convenience: "Convenience",
+            }}
+            value={p.shoppingPriority ?? "balanced"}
+            onChange={(v) =>
+              setP({ ...p, shoppingPriority: v as typeof p.shoppingPriority })
+            }
+          />
+          <Field
+            label="Weekly grocery budget (optional)"
+            value={budget}
+            keyboardType="decimal-pad"
+            onChangeText={setBudget}
+          />
+          <Field
+            label="Currency"
+            value={p.shoppingCurrency ?? "USD"}
+            autoCapitalize="characters"
+            maxLength={3}
+            onChangeText={(v) =>
+              setP({ ...p, shoppingCurrency: v.toUpperCase() })
+            }
+          />
+          <Text style={s.h3}>Budget flexibility</Text>
+          <Choice
+            labels={{
+              unknown: "No preference yet",
+              economy: "Keep costs low",
+              flexible: "Flexible budget",
+            }}
+            values={["unknown", "economy", "flexible"]}
+            value={p.budget}
+            onChange={(v) => setP({ ...p, budget: v as typeof p.budget })}
+          />
+          <Text style={s.h3}>Brand preference</Text>
+          <Choice
+            labels={{
+              open: "Open to other brands",
+              usual: "Prefer usual brands",
+            }}
+            values={["open", "usual"]}
+            value={p.brandFlexibility ?? "open"}
+            onChange={(v) =>
+              setP({ ...p, brandFlexibility: v as typeof p.brandFlexibility })
+            }
+          />
+          <Text style={s.tiny}>
+            Open to other brands, or prefer your usual brands.
+          </Text>
+        </>
+      )}
+      {section === "Cooking & training" && (
+        <>
+          <Field
+            label="Cooking time in minutes (optional)"
+            value={p.cookingMinutes?.toString() ?? ""}
+            keyboardType="number-pad"
+            onChangeText={(v) =>
+              setP({ ...p, cookingMinutes: v ? Number(v) : null })
+            }
+          />
+          <Field
+            label="Workout goals and preferences"
+            multiline
+            value={p.workoutPreferences}
+            onChangeText={(v) => setP({ ...p, workoutPreferences: v })}
+          />
+        </>
+      )}
       <Button
         label="Save preferences"
         onPress={() => {
@@ -330,6 +464,7 @@ export function Preferences() {
               ...s,
               preferences: preferencesSchema.parse({
                 ...p,
+                weeklyBudget: budget.trim() ? Number(budget) : null,
                 ...Object.fromEntries(
                   Object.entries(lists).map(([k, v]) => [
                     k,

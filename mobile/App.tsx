@@ -1,6 +1,6 @@
 import { SpotAvatar, SpotWordmark } from "./src/Spot";
 import "./src/runtime";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -41,7 +41,8 @@ import {
 import { Shopping } from "./src/Shopping";
 import { Cloud } from "./src/Cloud";
 import { NativeOnboarding } from "./src/Onboarding";
-import {AccountSync} from './src/AccountSync';
+import { AccountSync } from "./src/AccountSync";
+import { Connections } from "./src/Connections";
 function HealthApp() {
   const h = useHealth();
   useEffect(() => {
@@ -112,18 +113,44 @@ function HealthApp() {
             </View>
           </IconButton>
         </View>
-        <AccountSync/>
-        {h.tab === "Chat" ? (
-          <ChatScreen />
-        ) : h.tab === "Nutrition" ? (
-          <NutritionScreen />
-        ) : h.tab === "Kitchen" ? (
-          <KitchenScreen />
-        ) : h.tab === "Workouts" ? (
-          <WorkoutsScreen />
-        ) : (
-          <YouScreen />
+        <AccountSync />
+        <Connections />
+        {!!h.notice && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Dismiss notification"
+            onPress={() => h.setNotice("")}
+            style={{
+              backgroundColor: colors.ink,
+              padding: 12,
+              marginHorizontal: 15,
+              borderRadius: 12,
+              flexDirection: "row",
+              gap: 8,
+            }}
+          >
+            <Text
+              accessibilityLiveRegion="polite"
+              style={{ color: "white", fontSize: 14, flex: 1 }}
+            >
+              {h.notice}
+            </Text>
+            <Text style={{ color: "white", fontSize: 14 }}>Dismiss</Text>
+          </Pressable>
         )}
+        <Fragment key={h.recordsRevision}>
+          {h.tab === "Chat" ? (
+            <ChatScreen />
+          ) : h.tab === "Nutrition" ? (
+            <NutritionScreen />
+          ) : h.tab === "Kitchen" ? (
+            <KitchenScreen />
+          ) : h.tab === "Workouts" ? (
+            <WorkoutsScreen />
+          ) : (
+            <YouScreen />
+          )}
+        </Fragment>
         <View
           style={[
             s.row,
@@ -199,53 +226,37 @@ function HealthApp() {
           ))}
         </View>
       </KeyboardAvoidingView>
-      {h.tool === "receipt" || h.tool === "capture" ? (
-        <Capture receipt={h.tool === "receipt"} />
-      ) : h.tool === "scan" ? (
-        <Scanner />
-      ) : h.tool === "voice" ? (
-        <Voice />
-      ) : h.tool === "profile" ? (
-        <Profile />
-      ) : h.tool === "preferences" ? (
-        <Preferences />
-      ) : h.tool === "connection" ? (
-        <Connection />
-      ) : h.tool === "review" ? (
-        <Review />
-      ) : h.tool === "pantry" ? (
-        <Pantry />
-      ) : h.tool === "recipes" ? (
-        <Recipes />
-      ) : h.tool === "planner" ? (
-        <Planner />
-      ) : h.tool === "workout" ? (
-        <WorkoutBuilder />
-      ) : h.tool === "shopping" ? (
-        <Shopping />
-      ) : h.tool === "cloud" ? (
-        <Cloud />
-      ) : h.tool === "label" ? (
-        <Label />
-      ) : null}
-      {!!h.notice && (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Dismiss notification"
-          onPress={() => h.setNotice("")}
-          style={{
-            position: "absolute",
-            bottom: 90,
-            left: 15,
-            right: 15,
-            backgroundColor: colors.ink,
-            padding: 16,
-            borderRadius: 16,
-          }}
-        >
-          <Text style={{ color: "white", fontSize: 14 }}>{h.notice}</Text>
-        </Pressable>
-      )}
+      <Fragment key={h.tool === "cloud" ? "account-tool" : h.recordsRevision}>
+        {h.tool === "receipt" || h.tool === "capture" ? (
+          <Capture receipt={h.tool === "receipt"} />
+        ) : h.tool === "scan" ? (
+          <Scanner />
+        ) : h.tool === "voice" ? (
+          <Voice />
+        ) : h.tool === "profile" ? (
+          <Profile />
+        ) : h.tool === "preferences" ? (
+          <Preferences />
+        ) : h.tool === "connection" ? (
+          <Connection />
+        ) : h.tool === "review" ? (
+          <Review />
+        ) : h.tool === "pantry" ? (
+          <Pantry />
+        ) : h.tool === "recipes" ? (
+          <Recipes />
+        ) : h.tool === "planner" ? (
+          <Planner />
+        ) : h.tool === "workout" ? (
+          <WorkoutBuilder />
+        ) : h.tool === "shopping" ? (
+          <Shopping />
+        ) : h.tool === "cloud" ? (
+          <Cloud />
+        ) : h.tool === "label" ? (
+          <Label />
+        ) : null}
+      </Fragment>
     </SafeAreaView>
   );
 }
@@ -253,7 +264,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <HealthProvider>
-        <NativeOnboarding><HealthApp /></NativeOnboarding>
+        <NativeOnboarding>
+          <HealthApp />
+        </NativeOnboarding>
       </HealthProvider>
     </SafeAreaProvider>
   );

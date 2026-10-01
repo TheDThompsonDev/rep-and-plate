@@ -25,7 +25,7 @@ const normalizedName = (name: string) =>
   name.trim().toLowerCase().replace(/\s+/g, " ");
 
 /** Recorded sets only: preset targets and `previous` example values are not evidence. */
-export function completedWorkoutContext(
+export function completedWorkoutHistory(
   workout: AppState["workout"],
 ): CompletedWorkoutContext[] {
   const sessions = [
@@ -74,7 +74,7 @@ export function completedWorkoutContext(
         .map((exercise) => ({
           name: exercise.name.trim().slice(0, 100),
           weight: exercise.weight,
-          ...(exercise.setWeights?{setWeights:exercise.sets.map((reps,index)=>({reps,weight:setLoad(exercise,index)})).filter(({reps})=>reps!==null&&Number.isInteger(reps)&&reps>=0&&reps<=100).slice(0,10).map(({weight})=>weight)}:{}),
+          ...(exercise.setWeights?{setWeights:exercise.sets.map((reps,index)=>({reps,weight:setLoad(exercise,index)})).filter(({reps})=>reps!==null&&Number.isInteger(reps)&&reps>=0&&reps<=100).map(({weight})=>weight)}:{}),
           sets: exercise.sets
             .filter(
               (reps): reps is number =>
@@ -82,15 +82,17 @@ export function completedWorkoutContext(
                 Number.isInteger(reps) &&
                 reps >= 0 &&
                 reps <= 100,
-            )
-            .slice(0, 10),
+            ),
         }))
-        .filter((exercise) => exercise.sets.length > 0)
-        .slice(0, 8),
+        .filter((exercise) => exercise.sets.length > 0),
     }))
     .filter((session) => session.exercises.length > 0)
-    .sort((a, b) => Date.parse(b.finishedAt) - Date.parse(a.finishedAt))
-    .slice(0, 5);
+    .sort((a, b) => Date.parse(b.finishedAt) - Date.parse(a.finishedAt));
+}
+
+/** AI requests intentionally receive bounded recent context; the diary does not. */
+export function completedWorkoutContext(workout: AppState['workout']):CompletedWorkoutContext[] {
+  return completedWorkoutHistory(workout).slice(0,5).map(session=>({...session,exercises:session.exercises.slice(0,8).map(exercise=>({...exercise,sets:exercise.sets.slice(0,10),...(exercise.setWeights?{setWeights:exercise.setWeights.slice(0,10)}:{})}))}));
 }
 
 export function lastExerciseEvidence(
@@ -99,7 +101,7 @@ export function lastExerciseEvidence(
 ) {
   const target = normalizedName(name);
   if (!target) return null;
-  for (const session of completedWorkoutContext(workout)) {
+  for (const session of completedWorkoutHistory(workout)) {
     const exercise = session.exercises.find(
       (entry) => normalizedName(entry.name) === target,
     );

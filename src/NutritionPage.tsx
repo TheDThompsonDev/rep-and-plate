@@ -1,4 +1,4 @@
-import { SpotEmptyState } from './features/spot/Spot';
+import { SpotEmptyState } from "./features/spot/Spot";
 import { useState } from "react";
 import {
   BarChart3,
@@ -41,6 +41,8 @@ type Props = {
   onScan: () => void;
   onEditGoals: () => void;
   onEditMeal: (meal: Meal) => void;
+  onManualMeal: (day: string) => void;
+  onCaptureMeal: (day: string) => void;
   onChatSummary: () => void;
   onAsk: (text: string) => void;
   onOpenPantry?: () => void;
@@ -55,6 +57,8 @@ export default function NutritionPage({
   onScan,
   onEditGoals,
   onEditMeal,
+  onManualMeal,
+  onCaptureMeal,
   onChatSummary,
   onAsk,
   onOpenPantry,
@@ -78,7 +82,8 @@ export default function NutritionPage({
   const insightCards = nutritionInsights(state);
   const totals = sumNutrition(state.meals, day);
   const remaining = state.profile.calories - totals.calories;
-  const progress = Math.min(1, totals.calories / state.profile.calories);
+  const targetsConfigured = !!state.profile.targetsConfigured;
+  const progress = targetsConfigured ? Math.min(1, totals.calories / state.profile.calories) : 0;
   const meals = personalMeals(state.meals, day);
   const hasExamples = state.meals.some(isExampleMeal);
   const dateLabel = (value: string) =>
@@ -131,6 +136,14 @@ export default function NutritionPage({
             <br /> coming together.
           </h1>
           <p>A clear picture of what fuels you.</p>
+          {!state.profile.targetsConfigured && (
+            <p className="nutrition-example-note">
+              You’re tracking without daily targets. Your recorded totals are shown below.{" "}
+              <button className="text-button" onClick={onEditGoals}>
+                Set daily targets
+              </button>
+            </p>
+          )}
         </div>
         <div className="nutrition-date-controls">
           <button onClick={() => moveDay(-1)} aria-label="Previous day">
@@ -185,7 +198,7 @@ export default function NutritionPage({
           </h2>
           <p className="nutrition-remaining">
             {meals.length
-              ? `${Math.abs(remaining).toLocaleString()} calories ${remaining >= 0 ? "left" : "above target"}`
+              ? targetsConfigured ? `${Math.abs(remaining).toLocaleString()} calories ${remaining >= 0 ? "left" : "above target"}` : 'Recorded calories · no daily target'
               : "Nothing logged for this day yet"}
           </p>
           <div className="nutrition-numbers">
@@ -221,7 +234,7 @@ export default function NutritionPage({
               </svg>
               <span className="nutrition-ring-label">
                 <strong>{totals.calories.toLocaleString()}</strong>
-                <span>of {state.profile.calories.toLocaleString()} cal</span>
+                <span>{targetsConfigured ? `of ${state.profile.calories.toLocaleString()} cal` : 'cal recorded'}</span>
               </span>
             </button>
             <div className="nutrition-macro-list">
@@ -239,9 +252,9 @@ export default function NutritionPage({
                     </span>
                     <span className="nutrition-macro-value">
                       <strong>{totals[key]}g</strong>
-                      <span> / {state.profile[key]}g</span>
+                      {targetsConfigured && <span> / {state.profile[key]}g</span>}
                     </span>
-                    <span
+                    {targetsConfigured && <span
                       className="nutrition-macro-track"
                       role="progressbar"
                       aria-label={key}
@@ -250,8 +263,8 @@ export default function NutritionPage({
                       aria-valuemax={Math.max(totals[key], state.profile[key])}
                     >
                       <i style={{ width: `${Math.min(100, percent)}%` }} />
-                    </span>
-                    <span className="nutrition-macro-percent">{percent}%</span>
+                    </span>}
+                    {targetsConfigured && <span className="nutrition-macro-percent">{percent}%</span>}
                   </div>
                 );
               })}
@@ -261,7 +274,9 @@ export default function NutritionPage({
             <span>
               {meals.length
                 ? `From ${meals.length} ${meals.length === 1 ? "meal" : "meals"} you logged`
-                : "Based on your saved daily targets."}
+                : state.profile.targetsConfigured
+                  ? "Based on your saved daily targets."
+                  : "No daily targets set. Log at your own pace."}
             </span>
             <button onClick={onEditGoals} aria-label="Edit daily targets">
               Edit targets <Pencil size={13} />
@@ -296,12 +311,18 @@ export default function NutritionPage({
             {meals.length > 0 && (
               <button
                 className="nutrition-log-action"
-                onClick={() => onNavigate("Chat")}
+                onClick={() => onCaptureMeal(day)}
               >
                 <Plus size={16} /> Log a meal
               </button>
             )}
           </div>
+          <button
+            className="button secondary"
+            onClick={() => onManualMeal(day)}
+          >
+            Enter meal manually
+          </button>
           {hasExamples && (
             <p className="nutrition-example-note">
               Example meals are excluded from your totals and food log.
@@ -367,7 +388,7 @@ export default function NutritionPage({
               ))}
             </div>
           ) : (
-            <SpotEmptyState side="plate" onCapture={()=>onNavigate('Chat')}/>
+            <SpotEmptyState side="plate" onCapture={() => onCaptureMeal(day)} />
           )}
         </section>
         <section
@@ -488,11 +509,7 @@ export default function NutritionPage({
           onAsk={onAsk}
         />
       </div>
-      <FuelTabs
-        onScan={onScan}
-        active="Nutrition"
-        onNavigate={onNavigate}
-      />
+      <FuelTabs onScan={onScan} active="Nutrition" onNavigate={onNavigate} />
       {dialog === "menu" && (
         <Modal title="Your nutrition" onClose={() => setDialog(null)}>
           <div className="fuel-menu">

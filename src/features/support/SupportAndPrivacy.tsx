@@ -1,5 +1,10 @@
-import { useState,useEffect } from "react";
-import { dataHandling, supportDiagnostics, validSupportUrl } from "./model";
+import { useState, useEffect } from "react";
+import {
+  dataHandling,
+  supportDiagnostics,
+  validSupportUrl,
+  defaultSupportUrl,
+} from "./model";
 
 export default function SupportAndPrivacy({
   supportUrl,
@@ -9,9 +14,21 @@ export default function SupportAndPrivacy({
   requestIds?: readonly string[];
 }) {
   const [notice, setNotice] = useState("");
-  const [configured,setConfigured]=useState(supportUrl);
-  useEffect(()=>{if(supportUrl)return;let live=true;void fetch('/api/cloud/config').then(r=>r.ok?r.json():null).then(v=>{if(live)setConfigured(validSupportUrl(v?.supportUrl));}).catch(()=>{});return()=>{live=false;};},[supportUrl]);
-  const contact = validSupportUrl(configured);
+  const [configured, setConfigured] = useState(supportUrl);
+  useEffect(() => {
+    if (supportUrl) return;
+    let live = true;
+    void fetch("/api/cloud/config")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((v) => {
+        if (live) setConfigured(validSupportUrl(v?.supportUrl));
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [supportUrl]);
+  const contact = validSupportUrl(configured) ?? defaultSupportUrl;
   const download = () => {
     const url = URL.createObjectURL(
       new Blob([supportDiagnostics("web", requestIds)], {

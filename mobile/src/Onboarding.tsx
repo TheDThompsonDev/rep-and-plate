@@ -132,15 +132,7 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
               }}
             >
               <SpotScene
-                scene={
-                  flow.step === "intro"
-                    ? intro.scene
-                    : flow.step === "ready"
-                      ? "shaker-ritual"
-                      : flow.step === "setup"
-                        ? "dinner-conspiracy"
-                        : "press-conference"
-                }
+                scene={flow.step === "intro" ? intro.scene : "press-conference"}
               />
               {flow.loading ? (
                 <>
@@ -392,8 +384,9 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                         </Pressable>
                       )}
                       <Text style={s.tiny}>
-                        Your account saves changes automatically. Other accounts
-                        keep separate records.
+                        {flow.localMode
+                          ? "Your records stay on this device. Export a backup or sign in to save them to an account."
+                          : "Your account saves changes automatically. Other accounts keep separate records."}
                       </Text>
                       <Button
                         label={

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { activityProposalSchema, activitySchema } from './activity-contract';
+import { agentResolutionSchema } from './features/connections/contracts';
 import { bodyWeightEntrySchema } from './features/progress/body-weight';
 import { spotPreferencesSchema, workoutCaptureSchema } from './features/spot/contracts';
 import { shoppingStateSchema } from './features/shopping/contracts';
@@ -56,6 +58,9 @@ const reviewSchema = z.object({
 });
 export type ReviewItem = z.infer<typeof reviewSchema>;
 const messageSchema = z.object({
+  captureDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  activityProposal: activityProposalSchema.optional(),
+  activityCaptureStatus: z.enum(['pending', 'accepted', 'dismissed']).optional(),
   spotCheck: z.boolean().optional(),
   workoutProposal: workoutCaptureSchema.optional(),
   workoutCaptureStatus: z.enum(['pending', 'accepted', 'dismissed']).optional(),
@@ -82,15 +87,19 @@ const messageSchema = z.object({
 });
 export type Message = z.infer<typeof messageSchema>;
 export const exerciseSchema = z.object({
+  weightConfirmed: z.boolean().optional(),
   name: z.string(),
   weight: amount,
   target: z.number().int().positive(),
   previous: z.array(z.number()),
   sets: z.array(z.number().int().min(0).max(100).nullable()),
   setWeights: z.array(amount.nullable()).optional(),
+  setEffort: z.array(z.number().finite().min(1).max(10).nullable()).optional(),
 });
 export type Exercise = z.infer<typeof exerciseSchema>;
 export const stateSchema = z.object({
+  activities: z.array(activitySchema).optional(),
+  agentResolutions: z.array(agentResolutionSchema).optional(),
   bodyWeights: z.array(bodyWeightEntrySchema).max(10000).optional(),
   spot: spotPreferencesSchema.optional(),
   shopping: shoppingStateSchema.optional(),
@@ -106,6 +115,8 @@ export const stateSchema = z.object({
     .object({ key: z.literal("dinner"), image: z.string().optional() })
     .optional(),
   profile: z.object({
+    targetsConfigured: z.boolean().optional(),
+    workoutUnit: z.enum(['lb','kg']).optional(),
     name: z.string().min(1),
     calories: z.number().min(1).max(10000),
     protein: z.number().min(1).max(1000),
@@ -116,6 +127,18 @@ export const stateSchema = z.object({
   reviews: z.array(reviewSchema),
   messages: z.array(messageSchema),
   workout: z.object({
+    restUntil: z.number().finite().nonnegative().nullable().optional(),
+    routines: z.array(z.object({
+      id: z.string().min(1),
+      name: z.string().trim().min(1).max(100),
+      exercises: z.array(z.object({
+        name: z.string().trim().min(1).max(100),
+        target: z.number().int().min(1).max(100),
+        setCount: z.number().int().min(1).max(10),
+        suggestedLoad: z.number().finite().min(0).max(2000).optional(),
+      })).min(1).max(50),
+    })).max(100).optional(),
+    originalFinishedAt: z.string().optional(),
     planId: z.string().optional(),
     title: z.string().optional(),
     conversation: z
@@ -304,12 +327,32 @@ export function isExampleMeal(meal: Pick<Meal, "id" | "source" | "example"> & { 
 export function personalMeals(meals: Meal[], day?: string): Meal[] {
   return meals.filter((meal) => !isExampleMeal(meal) && (day === undefined || meal.day === day));
 }
+/** Repeat intake only. Pantry and prepared-batch consumption require their own review. */
+/** Scale a reviewed meal from its original portion, without introducing floating-point display noise. */
+export function scaleMealPortion(meal: Meal, multiplier: number): Meal {
+  if (!Number.isFinite(multiplier) || multiplier <= 0 || multiplier > 100) throw new Error('Choose a portion multiplier greater than 0 and no more than 100.');
+  const scale = (value: number) => Number((value * multiplier).toPrecision(15));
+  const nutrition = (value: Nutrition) => ({calories:scale(value.calories),protein:scale(value.protein),carbs:scale(value.carbs),fat:scale(value.fat)});
+  const scaled = {...meal,...nutrition(meal),components:meal.components?.map(component=>({...component,servings:scale(component.servings),nutrition:nutrition(component.nutrition)}))};
+  const parsed = mealSchema.safeParse(scaled);
+  if (!parsed.success) throw new Error('That portion exceeds the supported nutrition range. Choose a smaller amount.');
+  return parsed.data;
+}
+export function repeatMeal(state: AppState, mealId: string, day = today(), multiplier = 1): AppState {
+  const meal = state.meals.find(entry=>entry.id === mealId);
+  if (!meal || isExampleMeal(meal)) throw new Error('Choose a saved personal meal to repeat.');
+  const date = new Date(`${day}T12:00:00`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !Number.isFinite(date.getTime()) || date.getDate() !== Number(day.slice(-2)) || day > today()) throw new Error('Choose a valid meal date that is not in the future.');
+  const {recipeBatchId: _batch,recipePortions: _portions,...copy} = scaleMealPortion(meal,multiplier);
+  return {...state,meals:[...state.meals,{...copy,id:id(),day,time:clockTime(),example:false,source:'Repeated saved meal',note:`${multiplier === 1 ? 'Same portions and nutrition' : `${multiplier} × the original portion and nutrition`} as ${meal.title}. Pantry and prepared portions were not changed.`,components:copy.components?.map(({lotId:_lot,...component})=>({...component,id:id()}))}]};
+}
 export function initialState(): AppState {
   const state = demoState();
   return {
     ...state,
     chatRevision: 3,
-    profile: { ...state.profile, name: "friend" },
+    profile: { ...state.profile, name: "friend", targetsConfigured:false },
+    workout: {...state.workout,exercises:state.workout.exercises.map(exercise => ({...exercise,weight:0,weightConfirmed:false,previous:[],sets:exercise.sets.map(()=>null)}))},
     meals: [],
     reviews: [],
     messages: [{

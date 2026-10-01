@@ -134,6 +134,8 @@ test('Reviewed voice reps update the active workout once without calling Chat AI
   await page.route('**/api/voice', route => route.fulfill({ json: { text: 'Got 8' } }))
   await page.goto('/#workouts')
   await page.getByRole('button', { name: 'Start workout', exact: true }).click()
+  await page.getByLabel('Bench Press set 1 weight (lb)',{exact:true}).fill('45')
+  await page.getByRole('region',{name:'Bench Press',exact:true}).locator('.workout-set').first().getByRole('button',{name:'Save set weight',exact:true}).click()
   await openVoice(page)
   await page.getByRole('button', { name: 'Start recording', exact: true }).click()
   await page.getByRole('button', { name: 'Stop recording', exact: true }).click()

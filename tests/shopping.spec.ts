@@ -109,6 +109,8 @@ test("Shopping preferences save, survive reload and remain accessible from You",
   await page
     .getByRole("button", { name: "Shopping preferences", exact: true })
     .click();
+  await page.locator("summary").filter({hasText:"Meals & cooking"}).click();
+  await page.locator("summary").filter({hasText:"Shopping & budget"}).click();
   await page.getByLabel("People to cook for").fill("4");
   await page.getByLabel("Shopping priority").selectOption("budget");
   await page.getByLabel("Weekly grocery budget").fill("150");
@@ -321,6 +323,8 @@ test("A household meal plan uses pantry macros and contributes only actual short
   await page
     .getByRole("button", { name: "Shopping preferences", exact: true })
     .click();
+  await page.locator("summary").filter({hasText:"Meals & cooking"}).click();
+  await page.locator("summary").filter({hasText:"Shopping & budget"}).click();
   await page.getByLabel("People to cook for").fill("2");
   await page.getByLabel("Shopping priority").selectOption("budget");
   await page.getByLabel("Weekly grocery budget").fill("150");
@@ -369,6 +373,7 @@ test("A household meal plan uses pantry macros and contributes only actual short
   await page
     .getByRole("button", { name: "Open meal planner", exact: true })
     .click();
+  await page.getByLabel("Meal variety").selectOption("repeat-friendly");
   await page.getByRole("button", { name: "Create my week" }).click();
   await expect(page.locator(".fuel-plan-day")).toHaveCount(7);
   expect(captured.preferences).toMatchObject({

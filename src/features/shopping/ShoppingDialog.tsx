@@ -28,6 +28,7 @@ import {
   compareProducts,
   formatMoney,
   receiptSpending,
+  purchaseReceipts,
   receiptPrice,
   remainingPlanNeeds,
 } from "./shopping";
@@ -253,7 +254,7 @@ export default function ShoppingDialog({
   );
   const current = choices.find((choice) => choice.item.id === selected);
   const original = current?.item.productSnapshot;
-  const receipts = state.groceries ?? [];
+  const receipts = purchaseReceipts(state.groceries ?? []);
   const spending = receiptSpending(receipts);
   const needs = remainingPlanNeeds(state, today());
   const observedPrice = (product: FoodProduct) =>

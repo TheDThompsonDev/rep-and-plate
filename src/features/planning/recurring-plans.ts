@@ -54,11 +54,16 @@ export function copyMealToDay(input:MealPlan,mealId:string,targetDate:string):{p
   return {plan,mealId:meal.id};
 }
 
-export function editPlannedMeal(input:MealPlan,mealId:string,patch:Partial<Pick<PlannedMeal,'title'|'category'|'portions'|'ingredients'|'notes'|'minutes'>>):MealPlan {
+export function editPlannedMeal(input:MealPlan,mealId:string,patch:Partial<Pick<PlannedMeal,'title'|'category'|'portions'|'ingredients'|'notes'|'minutes'|'cookingMethod'>>):MealPlan {
   if(input.status!=='draft')throw new Error('Create a draft revision before editing a meal.');
   const plan=mealPlanSchema.parse(input);
   const day=plan.days.find(day=>day.meals.some(meal=>meal.id===mealId));
   if(!day)throw new Error('This meal is no longer in the plan.');
-  day.meals=day.meals.map(meal=>meal.id===mealId?plannedMealSchema.parse({...meal,...patch}):meal);
+  day.meals=day.meals.map(meal=>{
+    if(meal.id!==mealId)return meal;
+    const changed=plannedMealSchema.parse({...meal,...patch});
+    if(changed.cookingMethod&&(changed.portions!==meal.portions||JSON.stringify(changed.ingredients)!==JSON.stringify(meal.ingredients)))changed.cookingMethod.reviewed=false;
+    return changed;
+  });
   return plan;
 }

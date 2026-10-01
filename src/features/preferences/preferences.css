@@ -21,3 +21,6 @@
 .fuel-preference-footnote { display:block; font-size:10px; line-height:1.5; color:#94a398; margin-top:10px; }
 .fuel-preference-proposal .fuel-preference-status { display:flex; align-items:center; gap:6px; color:#4a8967; font-size:12px; }
 .fuel-preference-proposal .fuel-preference-error { color:#99713f; font-size:12px; background:#fff7e9; padding:10px; border-radius:9px; }
+
+.fuel-preferences-section {border:1px solid #dce9e1;border-radius:12px;margin:12px 0;padding:12px;}
+.fuel-preferences-section > summary {cursor:pointer;font-weight:600;color:#203d2c;padding:8px 0;}

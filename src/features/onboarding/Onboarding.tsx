@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check, LogOut } from "lucide-react";
 import { readState } from "../../domain";
-import {hydrateBrowserRecords,persistBrowserRecords} from '../../platform/browser-records';
+import {
+  hydrateBrowserRecords,
+  persistBrowserRecords,
+} from "../../platform/browser-records";
 import { introduction, focusChoices, ONBOARDING_KEY } from "./model";
 import { useOnboarding, type OnboardingAdapter } from "./useOnboarding";
 import { spotScenes } from "../spot/scenes";
@@ -9,7 +12,10 @@ import "./onboarding.css";
 import { PasswordRecovery } from "../cloud/PasswordRecovery";
 
 const adapter: OnboardingAdapter = {
-  read: async () => {await hydrateBrowserRecords();return localStorage.getItem(ONBOARDING_KEY);},
+  read: async () => {
+    await hydrateBrowserRecords();
+    return localStorage.getItem(ONBOARDING_KEY);
+  },
   write: async (value) => {
     localStorage.setItem(ONBOARDING_KEY, value);
   },
@@ -431,8 +437,9 @@ export default function Onboarding({
                           </label>
                         )}
                         <p className="welcome-fine">
-                          Your account saves changes automatically. Other
-                          accounts keep separate records.
+                          {flow.localMode
+                            ? "Guest records stay on this device. Sign in later to link them and enable account saving."
+                            : "Your account saves changes automatically. Other accounts keep separate records."}
                         </p>
                         <button
                           className="welcome-primary"

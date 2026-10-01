@@ -1,5 +1,44 @@
 # Error ledger
 
+## PERSONA-20260930 — Decimal records, capture context and correction identity
+
+- Status: fixes implemented in working changes; user acceptance and physical-device release checks remain pending. [Remediation evidence](../audits/2026-09-30-remediation/) preserves the checks and original failures.
+- Web meal numeric inputs defaulted to integer steps, rejecting name-only corrections to decimal macros. Native inputs parsed every keystroke, turning `18.3` into `183`. Keep editable strings until validated submission and allow decimal steps.
+- AI nutrition prose previously survived independent component-total normalization. Generate the displayed summary from canonical totals; manual corrections also replace stale linked prose.
+- A live date test showed the provider ignored the selected historical diary day. Persist captureDay with the source message and enforce it for undated captures, retaining actual today separately. A second live check invented a portion despite an explicit unknown amount; hold the proposal for clarification instead.
+- Finished-session correction initially risked moving historical completion dates to today. Persist originalFinishedAt while reopened, restore it on finish and clear the marker before the next archive.
+- Workout choices must reach every recorder: the legacy Chat buttons and manual interpretation previously bypassed the shared set recorder. Chat now uses the same load guard and recorded-load snapshot as Workouts. Explicitly supplied load/reps remain accepted.
+- Root browser checks reproduced decimal-save, activity-day and support failures before repair; shared and native guards retain their own red-to-green evidence. Regression fixtures now choose actual starter loads and confirm partial finish deliberately. Test expectations were updated where autosaved drafts intentionally replace the earlier save-only behavior; original approved plans and inventory still must stay unchanged.
+
+## VERIFY-SWARM-001 — Shared development server lifetime during parallel suites
+
+- Status: tooling setup corrected before integrated verification.
+- A focused Playwright run owned the server reused by another suite, then exited and stopped it. The integrated run's connection-refused results do not establish product failures. Separate output folders avoid one runner clearing another's screenshots.
+- Root now owns a persistent Vite process. Server-import changes also trigger brief restarts, so the final aggregate suite runs after source freeze. No tests, checks or failure thresholds were removed.
+- A later run passed 263/264; a legacy nutrition fixture rendered no meals after direct store injection. Five unchanged focused repetitions passed. The fixture previously awaited route loading only, before asynchronous onboarding hydration/first app persistence necessarily completed. It now waits for Chat readiness, drains queued writes and asserts the seeded meals after reload. Ten desktop/mobile repeats passed. Startup overlap is the suspected cause; no production defect or product fix is claimed from this single failure. Original and repeated results remain in the remediation evidence.
+
+## PERSONA-PLAN-002 — Drafts outlive replacement records and generated stock prose
+
+- Final cross-review found that an open web planner retained its local draft during an automatic account refresh. Its autosave could reinsert the stale plan after the newer copy arrived. A browser regression reproduced the still-open editor; the fix closes record-bound editors and cancels pending capture on automatic/manual restore, reset and owner changes. The updated regression checks the newer plan survives reload and remains in the mocked account copy.
+- Native replacement also left temporary recipe values and an in-flight planner generation alive. The failing native boundary journey is retained. Replacement now invalidates draft scope, closes tools, clears temporary values and prevents late planner commits into replacement records.
+- Keyword filtering could not guarantee factual stock prose: “Milk covers the whole week” passed through. Generated plan normalization now discards provider notes entirely, leaving calculated stock summaries as the inventory authority. User-authored notes survive ordinary draft validation. The tradeoff is explicit: generated schedules and ingredient quantities do not include generated cooking directions.
+- Server-log inspection caught a render loop even after browser assertions passed: legacy revisions appended the optional category field in a different key order than schema-normalized saved plans. Raw JSON equality repeatedly triggered autosave. Compare normalized objects; the new browser regression covers console errors and persistence as well as visible content.
+- Evidence: [remediation verification](../audits/2026-09-30-remediation/verification.md), including red/green boundary and stock-prose checks. Hosted accounts and physical phones remain outside this local verification.
+
+## AGENT-CONNECTIONS-001 — Retry, quota and verification boundaries
+
+- Status: repaired in working changes; live hosted pairing remains unverified.
+- Review found frequent inbox polling would exhaust the shared app allowance. Agent admission now uses separate counters and foreground-only polling; the PostgreSQL verifier exercises quota boundaries and independence from AI usage.
+- Review found a saved local approval can conflict with an already terminal server outcome. Independent durable receipts prevent repeat logging, and Recent outcomes retains the differing result instead of endlessly attempting an impossible acknowledgment.
+- The multibyte capacity test initially rebuilt a multi-megabyte JSON document in a loop and timed out during the full parallel unit run. Calculating the fixture size once retains the capacity assertions without quadratic setup work. The subsequent full unit run passed 350 tests.
+- An early browser run restarted Vite while shared source changed; fixture cleanup also closed the isolated API before pending refreshes drained. The fixture now drains page routes before closing its server. All eight dedicated desktop/mobile connection journeys pass.
+- The first broader browser run passed 225/236 checks; failures involved existing asynchronous record-saving assertions and changed privacy copy during concurrent account-storage work. Rechecking the updated affected files is tracked in the agent implementation record. CYC startup is still limited by CYC-ASSETS-001.
+- Rechecking reproduced a test-only immediate-refresh failure: its polling callback threw when the compatibility mirror was temporarily null, ending the assertion before the writer could finish. The callback now permits that transient empty state while still requiring the exact recovered name and journal cleanup.
+- A later unit run overlapped the production build and browser suite; three CLI subprocess checks exceeded their five-second limit. Final verification runs the unit suite without those overlapping jobs, retaining the configured timeouts. A transient unused import from concurrent account edits was already removed before the subsequent successful production build.
+- The full browser rerun exposed two remaining immediate-read races after saving a repeated plan and checking a shopping item. Their assertions now wait for those exact durable values; checking the writer queue alone can precede React's save effect. Expected records and values are unchanged.
+- Removing competing build/browser commands reduced but did not eliminate CLI cold-start timeouts: Vitest's own parallel unit transforms still competed with the process-level tests. `npm test` now runs the complete source/server suite followed by the complete CLI/MCP suite, preserving all assertions and timeouts while separating process-level integration from unit-worker startup.
+- The follow-up shopping preferences check read records while the reloaded page still displayed its hydration screen. Its existing visible-restored-household assertion now runs before inspecting saved preferences. This retains both reload and exact-value checks.
+
 ## READINESS-001 — Account continuity and interrupted persistence
 
 - Live REST conflict verification uncovered the original snapshot RPCs using SQLSTATE40001 for permanent revision mismatch. PostgREST repeatedly retried the transaction until the socket closed after60seconds. Additive20260929_snapshot_conflicts changes only those business raises toPT409; clients retain legacy40001 recognition and handlePT409. Hosted stale create/update/delete checks now return promptly without changing the saved copy; 29 readiness and19 snapshot DB checks pass. Original applied migration hashes remain unchanged.
@@ -143,3 +182,37 @@
 - Cause: the Vercel TypeScript output preserved extensionless imports across shared modules; local tsx and Vite checks did not expose this Node ESM packaging issue.
 - Fix: bundle local TypeScript dependencies with esbuild into .generated/health.mjs and export it from api/health.mjs; external packages remain runtime dependencies.
 - Guards: production config 200, unauthenticated status 401, approved synthetic account streamed a real AI response and replayed it; private capture access checks passed. Synthetic account and image removed afterward.
+
+## AUDIT-R2-001 — Display limits and normalized dates blocked real workout history
+
+- Status: resolved in round-two working changes; retained red/green evidence in `docs/audits/2026-09-30-round-2-remediation/`.
+- Signature: full history stopped after five web sessions; valid imported ISO dates without milliseconds could display but not reopen. Recent-training counts underreported sessions exceeding eight exercises or ten sets.
+- Cause: presentation reused the bounded AI context helper, then compared normalized display dates with raw stored strings.
+- Fix: separate full recorded history from bounded AI projection; use timestamp equality for correction. Recent UI counts use full records within the latest five sessions.
+- Guards: `src/round-two-workouts.test.ts`, `tests/round-two-workouts.spec.ts` cover thirteen sessions, nine exercises/twelve sets, 112 recent sets and reopening the oldest imported session.
+
+## AUDIT-R2-002 — Confirming an unchanged load left an empty input
+
+- Status: resolved in working changes after independent review and a reproduced browser failure.
+- Signature: explicitly confirming bodyweight zero and applying it to remaining sets enabled rep entry but left the remaining load fields blank.
+- Cause: the input draft initialized from confirmation state, while its React key only included numeric load and unit.
+- Fix: include confirmation state in input identity so newly confirmed unchanged references display correctly.
+- Guard: the bodyweight UI regression first failed with expected `0`, actual empty string, then passed on desktop and mobile. Prior actual sets remain protected by shared-operation tests.
+
+## VERIFY-R2-001 — Source edits can invalidate an in-flight browser observation
+
+- One mobile routine check lost its typed load during parallel source editing; the same unchanged check passed after the shared lane froze. HMR is suspected, not proven.
+- Preserve the failure and rerun against stable source; do not add retries or change a product assertion to mask it. Coordinate final exports and aggregate suites after source changes stop.
+
+## AUDIT-R2-003 — Provider reconstructed invalid pantry identifiers
+
+- Signature: two controlled live planner calls returned 422 because generated lot IDs were absent from the supplied pantry. Both rejections left meals, stock events, groceries and saved plans unchanged.
+- Cause: provider context exposed long composite IDs alongside nested receipt/product identifiers, while output accepted arbitrary reference strings.
+- Fix: server-only request-local aliases with an alias-or-null output enum; exact reverse lookup restores original IDs before unchanged stock/date/restriction validation. Unknown references are never inferred from food names. The minimized context retains package dates, prices, ingredient labels and stock uncertainty.
+- Guards: six `server/plan-references.test.ts` regressions cover exact mapping, identically named lots, unknown aliases, empty pantry, source immutability and core validation. Final live evidence and remaining limits are in the round-two kitchen report.
+
+## AUDIT-R2-004 — Incomplete optional cooking method rejected a usable schedule
+
+- Signature: a controlled live week failed because one generated method omitted an ingredient, even though the method is optional.
+- Fix: omit an incomplete generated method while retaining a valid schedule and complete methods on other meals. The UI explicitly reports no method; review still requires complete references, cooking times and baking temperature. No timing or missing method is fabricated.
+- Guards: retained red optional-method test, corrected shared regression and desktop/mobile seven-meal fixture with six methods and one explicit omission. Core inventory, date and restriction failures continue to reject the plan.

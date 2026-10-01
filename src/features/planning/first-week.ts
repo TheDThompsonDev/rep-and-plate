@@ -1,5 +1,6 @@
 import type { AppState } from "../../domain";
 import { getPantryLots } from "../pantry/ledger";
+import { purchaseReceipts } from "../pantry/receipt-origin";
 import { planShoppingList } from "./meal-plans";
 import { unloggedPlan } from "./pantry-links";
 
@@ -32,8 +33,8 @@ export function firstWeekSteps(state: AppState) {
     {
       key: "receipt",
       title: "Give your groceries a job",
-      detail: "Upload a receipt so Spot can plan with what you already bought.",
-      done: !!state.groceries?.length,
+      detail: "Add a receipt to include purchase details. Manually entered pantry food already counts as stock.",
+      done: purchaseReceipts(state.groceries ?? []).length > 0,
       action: "receipt",
     },
     {
@@ -63,7 +64,7 @@ export function firstWeekSteps(state: AppState) {
       key: "cook",
       title: "Cook it. Enjoy it. Tell Spot.",
       detail:
-        "Follow the plan notes and log a portion after eating. Your pantry updates once.",
+        "Review any cooking method and package guidance, then log a portion after eating. Your pantry updates once.",
       done:
         !!plan &&
         state.meals.some((meal) =>

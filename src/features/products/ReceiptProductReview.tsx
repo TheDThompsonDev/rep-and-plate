@@ -6,15 +6,18 @@ import type { GroceryItem } from '../../ai-contract'
 import { nutritionForServing, type FoodProduct } from './contracts'
 import { productSearchResultSchema, type ProductSearchResult } from './search-contract'
 import './receipt-product.css'
+import {packageServings} from './quantities'
 const ProductScanner=lazy(()=>import('../scanner/ProductScanner'));
 
-export type ReceiptProductReviewProps = { item: GroceryItem; onClose: () => void; onApply: (product: FoodProduct, servingsPurchased: number | null) => void }
+export type ReceiptProductReviewProps = { item: GroceryItem; onClose: () => void; onManual?:()=>void; onApply: (product: FoodProduct, servingsPurchased: number | null) => void }
 const numberText = (value: number | null, unit: string) => value === null ? 'Unknown' : `${Math.round(value * 100) / 100}${unit}`
-export default function ReceiptProductReview({ item, onClose, onApply }: ReceiptProductReviewProps) {
+export default function ReceiptProductReview({ item, onClose, onManual, onApply }: ReceiptProductReviewProps) {
   const [query, setQuery] = useState((item.name || item.receiptText).slice(0, 160))
   const [result, setResult] = useState<ProductSearchResult | null>(()=>item.productCandidates?.length ? {status:'candidates',products:item.productCandidates,message:'Possible USDA matches from your receipt description. None has been selected. Check the brand, package and serving, or refine the search.'} : null)
   const [selected, setSelected] = useState<FoodProduct | null>(null)
   const [quantity, setQuantity] = useState('')
+  const [packages,setPackages]=useState('')
+  const [perPackage,setPerPackage]=useState('')
   const [checked, setChecked] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -24,7 +27,7 @@ export default function ReceiptProductReview({ item, onClose, onApply }: Receipt
   const applied = useRef(false)
   useEffect(() => () => { generation.current++; request.current?.abort() }, [])
   const close = () => { generation.current++; request.current?.abort(); onClose() }
-  const resetChoice = () => { setSelected(null); setChecked(false); setQuantity(''); applied.current = false }
+  const resetChoice = () => { setSelected(null); setChecked(false); setQuantity('');setPackages('');setPerPackage(''); applied.current = false }
   async function search() {
     if (query.trim().length < 2 || query.trim().length > 160) { setError('Enter at least two characters from the product name or brand.'); return }
     request.current?.abort()
@@ -45,12 +48,13 @@ export default function ReceiptProductReview({ item, onClose, onApply }: Receipt
   }
   const perServing = selected ? nutritionForServing(selected) : null
   const validQuantity = quantity.trim() === '' || (Number.isFinite(Number(quantity)) && Number(quantity) > 0 && Number(quantity) <= 10000)
-  if(scanning)return <Suspense fallback={<Modal title="Scan this receipt item" onClose={()=>setScanning(false)}><p>Opening scanner…</p></Modal>}><ProductScanner onClose={()=>setScanning(false)} onProduct={()=>{}} onLabel={()=>{setScanning(false);setError('Use the package label to edit this item if USDA has no matching product. Choose Keep current details, then Edit details.');}} onSelect={product=>{setScanning(false);setSelected(product);setResult({status:'candidates',products:[product],message:'Barcode matched. Check the label and total servings purchased before saving.'});setQuantity('');setChecked(false);applied.current=false;}}/></Suspense>
+  if(scanning)return <Suspense fallback={<Modal title="Scan this receipt item" onClose={()=>setScanning(false)}><p>Opening scanner…</p></Modal>}><ProductScanner onClose={()=>setScanning(false)} onProduct={()=>{}} onLabel={()=>{setScanning(false);if(onManual)onManual();else setError('Use the package label to edit this item if USDA has no matching product. Choose Keep current details, then Edit details.');}} onSelect={product=>{setScanning(false);setSelected(product);setResult({status:'candidates',products:[product],message:'Barcode matched. Check the label and total servings purchased before saving.'});setQuantity('');setChecked(false);applied.current=false;}}/></Suspense>
   return <Modal title="Find this receipt item" onClose={close}>
     <div className="receipt-product-review">
       <div className="receipt-original"><span>On your receipt</span><strong>{item.receiptText || item.name}</strong><small>{item.quantity}</small></div>
       <p>Receipt names are often shortened. Search with the full product name or brand, then compare your package.</p>
       <button className="button secondary" disabled={busy} onClick={()=>setScanning(true)}>Scan this package barcode</button>
+      {onManual&&<button className="button secondary" onClick={()=>{generation.current++;request.current?.abort();onManual();}}>Enter package details manually</button>}
       <form className="receipt-product-search" onSubmit={event => { event.preventDefault(); void search() }}>
         <label>Product name or receipt description<input value={query} maxLength={160} onChange={event => { setQuery(event.target.value); setResult(null); resetChoice(); generation.current++; request.current?.abort(); setBusy(false) }} /></label>
         <button type="submit" className="primary-button" disabled={busy || query.trim().length < 2}><Search size={17} /> {busy ? 'Searching…' : 'Search USDA'}</button>
@@ -73,6 +77,7 @@ export default function ReceiptProductReview({ item, onClose, onApply }: Receipt
         {selected.ingredients && <details><summary>Ingredients</summary><p>{selected.ingredients}</p></details>}
         <label className="receipt-product-quantity">Total labeled servings purchased<input type="number" min="0.01" max="10000" step="any" value={quantity} onChange={event => { setQuantity(event.target.value); setChecked(false) }} placeholder="Leave blank if unknown" /></label>
         <small>Count servings across the whole purchase, not packages. Leave blank if you haven’t checked; the old quantity won’t be assumed.</small>
+        <details><summary>Calculate servings from packages</summary><p>Read servings per container from the label. For example, 2 packages × 5 servings = 10 labeled servings.</p><label>Packages purchased<input type="number" min="0.01" step="any" value={packages} onChange={event=>setPackages(event.target.value)}/></label><label>Servings per package<input type="number" min="0.01" step="any" value={perPackage} onChange={event=>setPerPackage(event.target.value)}/></label><button type="button" disabled={packageServings(packages,perPackage)===null} onClick={()=>{const total=packageServings(packages,perPackage);if(total!==null){setQuantity(String(total));setChecked(false);}}}>Use calculated total{packageServings(packages,perPackage)!==null?`: ${packageServings(packages,perPackage)} servings`:''}</button></details>
         {!validQuantity && <p role="alert">Enter a positive number up to 10,000, or leave it blank.</p>}
         <label className="receipt-product-confirm"><input type="checkbox" checked={checked} onChange={event => setChecked(event.target.checked)} /><span>I checked the product, serving and purchased amount against my package.</span></label>
         <button className="primary-button" disabled={!checked || !validQuantity || busy} onClick={() => {

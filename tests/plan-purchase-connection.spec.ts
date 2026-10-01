@@ -16,6 +16,8 @@ test("first useful week starts with household preferences and leads to receipt r
       exact: true,
     })
     .click();
+  await page.locator('summary').filter({hasText:'Meals & cooking'}).click();
+  await page.locator('summary').filter({hasText:'Shopping & budget'}).click();
   await page.getByLabel("People to cook for").fill("2");
   await page.getByLabel("Weekly grocery budget").fill("80");
   await page
@@ -144,7 +146,10 @@ test("a reviewed purchase connects to the existing week and logs exactly once", 
   const before = await readBrowserRecords(page);
   expect(before.meals).toEqual([]);
   expect(before.pantryEvents).toEqual([]);
-  expect(before.mealPlans[0].days[0].meals[0].ingredients[0].lotId).toBeNull();
+  // The reviewed link now autosaves as a draft. It still needs explicit approval before logging.
+  expect(before.mealPlans[0].days[0].meals[0].ingredients[0].lotId).toBe('shop::rice');
+  expect(before.mealPlans[0].status).toBe('draft');
+  await expect(page.getByRole('button',{name:'Log one portion',exact:true})).toHaveCount(0);
   await page
     .getByRole("button", { name: "Approve this plan", exact: true })
     .click();

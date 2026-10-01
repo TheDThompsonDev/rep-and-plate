@@ -200,10 +200,12 @@ export function Choice({
   values,
   value,
   onChange,
+  labels,
 }: {
   values: string[];
   value: string;
   onChange: (s: string) => void;
+  labels?: Record<string, string>;
 }) {
   return (
     <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
@@ -227,7 +229,7 @@ export function Choice({
               v === value && { color: colors.green, fontWeight: "600" },
             ]}
           >
-            {v}
+            {labels?.[v] ?? v}
           </Text>
         </Pressable>
       ))}

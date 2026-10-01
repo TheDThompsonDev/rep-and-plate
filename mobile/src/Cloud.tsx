@@ -87,8 +87,11 @@ export function Cloud() {
   return (
     <Sheet title="Cloud & your records" onClose={() => h.setTool(null)}>
       <Text style={s.muted}>
-        Your account saves changes automatically. Export a backup or review a
-        saved copy here. Other accounts keep separate records.
+        {user
+          ? "Signed in. Account saving runs when connected; changes may still be waiting to sync. Check the saving status before changing devices."
+          : "Your records are on this device. Sign in and check account saving status before relying on another device."}{" "}
+        Export a backup or review a saved copy here. Other accounts keep
+        separate records.
       </Text>
       <Button
         label="Export this device"
@@ -332,18 +335,22 @@ export function Cloud() {
           <Text style={s.muted}>
             {snapshotSummary(restore).meals} meals ·{" "}
             {snapshotSummary(restore).groceries} receipts ·{" "}
+            {snapshotSummary(restore).workouts} workouts ·{" "}
+            {snapshotSummary(restore).activities} activities ·{" "}
+            {snapshotSummary(restore).bodyWeights} weight entries ·{" "}
             {snapshotSummary(restore).messages} messages. Export this device
             first if you want to keep both copies.
           </Text>
           <Button
             label="Restore these records"
-            disabled={h.busy}
-            onPress={() => {
-              if (h.change(() => restore)) {
+            disabled={h.busy || busy}
+            onPress={() =>
+              void run(async () => {
+                await h.restoreRecords(restore);
                 setRestore(null);
                 h.setNotice("Records restored on this device.");
-              }
-            }}
+              })
+            }
           />
           <Button
             secondary

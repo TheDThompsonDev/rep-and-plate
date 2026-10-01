@@ -78,3 +78,24 @@ test('signing out during a photo restore never applies or uploads the former acc
  release();await expect(page.getByRole('button',{name:'Sign in',exact:true})).toBeVisible();
  await page.reload();expect((await stored(page)).profile.name).not.toBe('Pending cloud copy');expect(cloud.saveCalls).toBe(0);
 });
+
+test('automatic account refresh closes an open planner without overwriting the newer plan',async({page})=>{
+ const cloud=await mockCloud(page),state=initialState();
+ const plan={id:'shared-week',createdAt:new Date().toISOString(),status:'draft' as const,days:Array.from({length:7},(_,index)=>({date:`2026-10-0${index+1}`,meals:[{id:`planned-${index}`,title:'Local beans',category:'Dinner' as const,portions:1,minutes:15,ingredients:[{lotId:null,name:'Beans',servingLabel:'1 cup',servings:1}],notes:''}]}))};
+ state.mealPlans=[plan];
+ await page.addInitScript(state=>{if(!localStorage.getItem('fuel.prototype.v1'))localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));},state);
+ await enter(page,'Planner keeper');
+ const status=page.getByRole('complementary',{name:'Account save status'});
+ await expect(status).toContainText('Saved to your account');
+ await page.getByRole('button',{name:'Kitchen',exact:true}).click();
+ await page.getByRole('button',{name:'Open meal planner',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Local beans',exact:true})).toHaveCount(7);
+ const replacement={...cloud.remote.state,mealPlans:[{...plan,days:plan.days.map(day=>({...day,meals:day.meals.map(meal=>({...meal,title:'Phone beans'}))}))}]};
+ cloud.remote={...cloud.remote,revision:cloud.remote.revision+1,state:replacement};
+ await expect(page.getByRole('dialog',{name:'Your week of meals'})).not.toBeVisible({timeout:15000});
+ await expect.poll(async()=>(await stored(page)).mealPlans?.[0].days[0].meals[0].title).toBe('Phone beans');
+ await page.reload();
+ await page.getByRole('button',{name:'Open meal planner',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Phone beans',exact:true})).toHaveCount(7);
+ expect(cloud.remote.state.mealPlans[0].days[0].meals[0].title).toBe('Phone beans');
+});

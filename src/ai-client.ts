@@ -3,6 +3,7 @@ import { aiResultSchema, aiNutritionSchema, type AIRequest, type AIResult } from
 import { applyPreferenceProposal } from "./features/preferences/proposals";
 import { defaultPreferences } from "./features/preferences/contracts";
 import { receiptSpending } from './features/shopping/shopping';
+import { purchaseReceipts } from './features/pantry/receipt-origin';
 import { getPantryLots } from "./features/pantry/ledger";
 import { remainingRecipePortions } from "./features/recipes/portions";
 import { normalizeProposalComponents, sumProposalComponents } from "./features/meals/proposals";
@@ -15,7 +16,8 @@ import {
   type Message,
 } from "./domain";
 
-export function buildAIRequest(state: AppState, message: Message): AIRequest {
+export function buildAIRequest(state: AppState, message: Message, selectedDay?: string): AIRequest {
+  const captureDay = selectedDay ?? message.captureDay ?? today();
   const index = state.messages.findIndex((m) => m.id === message.id);
   const previous = index < 0 ? state.messages : state.messages.slice(0, index);
   return {
@@ -23,12 +25,15 @@ export function buildAIRequest(state: AppState, message: Message): AIRequest {
     text: message.text,
     image: message.image?.startsWith("data:") ? message.image : undefined,
     day: today(),
+    captureDay,
     history: previous
       .filter((m) => m.ai && m.aiStatus !== "error" && m.aiStatus !== "pending")
       .slice(-12)
       .map((m) => ({ role: m.role, text: m.text.slice(0, 18000) })),
     context: {
-      shopping: (()=>{const spending=receiptSpending(state.groceries??[]);return {totals:spending.totals,recordedReceipts:state.groceries?.length??0,reviewedReceipts:spending.covered,missingOrUncheckedTotals:spending.unpriced,list:(state.shopping?.list??[]).slice(-50).map(({name,quantity,checked})=>({name,quantity,checked}))};})(),
+      goalsConfigured: state.profile.targetsConfigured,
+      activities: state.activities?.slice(-30).map(({title,day,minutes,note})=>({title,day,minutes,note})),
+      shopping: (()=>{const spending=receiptSpending(state.groceries??[]);return {totals:spending.totals,recordedReceipts:purchaseReceipts(state.groceries??[]).length,reviewedReceipts:spending.covered,missingOrUncheckedTotals:spending.unpriced,list:(state.shopping?.list??[]).slice(-50).map(({name,quantity,checked})=>({name,quantity,checked}))};})(),
       preparedRecipes: (state.recipeBatches ?? [])
         .filter(batch => !batch.undoneAt && remainingRecipePortions(batch) > 0)
         .slice(-30)
@@ -43,8 +48,8 @@ export function buildAIRequest(state: AppState, message: Message): AIRequest {
         carbs: state.profile.carbs,
         fat: state.profile.fat,
       },
-      totals: sumNutrition(state.meals),
-      meals: personalMeals(state.meals, today())
+      totals: sumNutrition(state.meals, captureDay),
+      meals: personalMeals(state.meals, captureDay)
         .slice(-30)
         .map(({ title, category, calories, protein, carbs, fat }) => ({
           title,
@@ -142,6 +147,8 @@ export function applyAIResult(state: AppState, result: AIResult): AppState {
         aiStatus: "complete",
         spotCheck: result.decision === 'uncertain',
         workoutProposal: result.workout ?? undefined,
+        activityProposal: result.activity ?? undefined,
+        activityCaptureStatus: result.activity ? 'pending' : undefined,
         workoutCaptureStatus: result.workout ? 'pending' : undefined,
         receiptId: receipt?.id,
         mealProposal: result.meal ?? undefined,

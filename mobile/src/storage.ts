@@ -292,8 +292,14 @@ export async function importRecords(): Promise<AppState | null> {
     Platform.OS === "web"
       ? await (await fetch(result.assets[0].uri)).text()
       : await FileSystem.readAsStringAsync(result.assets[0].uri);
-  const value = JSON.parse(raw);
-  return restoreDeviceSnapshot(
-    JSON.stringify(stateSchema.parse(value.state ?? value)),
-  );
+  try {
+    const value = JSON.parse(raw);
+    return restoreDeviceSnapshot(
+      JSON.stringify(stateSchema.parse(value.state ?? value)),
+    );
+  } catch {
+    throw new Error(
+      "This file is not a valid Rep & Plate backup. Your current records are unchanged. Choose another backup file.",
+    );
+  }
 }

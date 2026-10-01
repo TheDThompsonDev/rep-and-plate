@@ -2,6 +2,8 @@ import type { GroceryReceipt } from "../../ai-contract";
 import type { FoodProduct } from "../products/contracts";
 import type { AppState } from "../../domain";
 import { getPantryLots } from "../pantry/ledger";
+import {purchaseReceipts} from '../pantry/receipt-origin';
+export {purchaseReceipts} from '../pantry/receipt-origin';
 import { planShoppingList, type ShoppingNeed } from "../planning/meal-plans";
 import {
   priceObservationSchema,
@@ -11,10 +13,11 @@ import {
 } from "./contracts";
 
 export function receiptSpending(receipts: GroceryReceipt[]) {
+  const purchases=purchaseReceipts(receipts);
   const totals: Record<string, number> = Object.create(null);
   const stores: Record<string, Record<string, number>> = Object.create(null);
   let unpriced = 0;
-  for (const receipt of receipts) {
+  for (const receipt of purchases) {
     const p = receipt.purchase;
     if (!p?.confirmed || p.total === null || !p.currency) {
       unpriced++;
@@ -27,7 +30,7 @@ export function receiptSpending(receipts: GroceryReceipt[]) {
     stores[store][p.currency] =
       Math.round(((stores[store][p.currency] ?? 0) + p.total) * 100) / 100;
   }
-  return { totals, stores, unpriced, covered: receipts.length - unpriced };
+  return { totals, stores, unpriced, covered: purchases.length - unpriced };
 }
 
 /** Checked receipts can supply price evidence only when the whole purchased amount is known. */
@@ -35,7 +38,7 @@ export function receiptPrice(
   receipts: GroceryReceipt[],
   product: FoodProduct,
 ): PriceObservation | undefined {
-  const observations = receipts.flatMap((receipt) => {
+  const observations = purchaseReceipts(receipts).flatMap((receipt) => {
     const purchase = receipt.purchase;
     if (!purchase?.confirmed || !purchase.currency || !purchase.purchaseDate)
       return [];

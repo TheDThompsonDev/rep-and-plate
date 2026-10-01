@@ -8,6 +8,12 @@ the preview cookie. Existing account and beta-membership checks still apply.
 See [private preview setup and access](docs/PRIVATE_PREVIEW.md) for code rotation,
 local testing, and the explicit public-launch switch.
 
+## Agent connections
+
+Open **You → Connections** to create scoped, expiring access for an external assistant. A shared API, CLI and MCP stdio adapter support permitted nutrition/pantry/preferences/workout context, reviewed meal-log proposals, and proposal status. Meal proposals never count as eaten until you choose **Log this meal**. Connection revocation and duplicate-request protection are built in.
+
+See the [agent setup guide](docs/AGENT_CONNECTIONS.md) for CLI/MCP examples, permissions and deployment requirements. Local agents work with the local web app; native agent management uses a hosted account. The hosted agent migration and deployment must be installed before remote connections work. Individual Muse/Grok Bot integrations are not yet verified.
+
 ## Spot
 
 Spot is the shared food-and-training companion in the web and native apps.
@@ -72,7 +78,7 @@ npm run test:e2e    # Desktop and mobile flows with mocked providers
 6. **Nutrition and review:** Daily totals, insights and weekly review use saved records. Clearly identified drink/oil/sauce/syrup components support recorded-calorie summaries with meal/portion evidence. Insufficient or inconsistent data is qualified; sample records do not establish personal patterns.
 7. **Workouts:** Request an AI proposal using completed recorded history, review previous loads/reps, and edit exercise names, sets and targets. In an active session, logged work is protected: name/weight lock once sets are recorded, and logged sets cannot be truncated. No automatic load increases or unconnected recovery claims.
 8. **Voice:** Start recording explicitly, stop within a minute, review/edit the transcript and press Send. The same reviewed text enters Chat or the active workout logger. Rep & Plate does not save the raw audio; transcription sends it to OpenAI.
-9. **Account and backup:** You includes account access, explicit reviewed snapshot upload/restore, local export and deletion controls. This is manual snapshot transfer, not automatic synchronization. The hosted database setup and 19 ownership/conflict checks passed; real password sign-in and reviewed backup/restore/deletion passed using a cleaned-up synthetic account. Real-user confirmation-email delivery remains unverified.
+9. **Account and backup:** After sign-in and explicit linking, both apps automatically save account records, restore a fresh device and expose offline/conflict status. Conflicting copies require review; they are not merged silently. Account switches keep separate device archives. You includes export/import, recovery, verified password changes and account deletion. Guest records remain on the device. Actual confirmation/recovery email delivery is a separate release check.
 10. **Recipes and leftovers:** Open **Recipes & leftovers** from Chat or type “recipes.” Confirm ingredients actually used and the batch yield. Preparation moves raw ingredients out of the pantry without logging intake. Record fractional portions when eaten; undo restores prepared portions, and undoing preparation restores raw ingredients only after logged portions are reversed. Nutrition stays tied to preparation snapshots. Tell Chat how many portions of a saved batch you ate to review a confirmation card; acceptance logs once and updates leftovers without deducting raw ingredients again.
 
 Chat opens by default. AI replies can offer buttons to open the pantry, recipes, meal planner, preferences or workout builder. These buttons only open review tools. Resetting or restoring records cancels pending AI so late results cannot repopulate old data or keep Chat waiting. Existing demos remain separate from real processing; camera/voice have permission and unsupported-browser fallbacks.
@@ -109,7 +115,7 @@ Receipt extraction is bounded to 40 items with an omission notice; check long re
 
 Provider calls show errors/progress and require explicit retries. Completed chat request IDs have a ten-minute in-memory retry cache; confirmed record actions are idempotent. Audio transcription has separate size, rate, concurrency and timeout limits. Browser recording stops at 60 seconds.
 
-Private records and images remain in browser `localStorage` under `fuel.prototype.v1` unless the user explicitly uploads a cloud snapshot. Clearing site data removes local records. Storage exhaustion is reported. Preferences, product corrections and pantry events persist with the local state. The shared USDA SQLite catalog contains no private label corrections or user photos.
+Browser histories and photos use IndexedDB, with a small-record refresh journal and best-effort localStorage compatibility mirror. Linked account records save automatically with revision checks; saved photos use immutable private storage. Check account-saving status before switching devices. Clearing site data removes the device copy. Storage exhaustion is reported. Preferences, product corrections and pantry events persist with records. The shared USDA SQLite catalog contains no private label corrections or user photos.
 
 Live messages/images and relevant context are sent through the server to QwenCloud when Qwen is configured, or OpenAI in legacy setups; limited extracted classification context is sent to TypeSafe. Voice transcription uses OpenAI separately. Responses requests use `store: false`, which is not a guarantee of zero provider retention. Transcription/provider account retention terms still apply. Secrets are excluded from browser bundles and version control. Loopback request boundaries, body/rate/concurrency limits and redacted errors do not replace hosted authentication and per-user budgets.
 
@@ -117,7 +123,7 @@ Official references: [USDA API guide](https://fdc.nal.usda.gov/api-guide/), [Ope
 
 ## Cloud setup status
 
-The account UI, reviewed snapshots, optimistic version checks and migration are implemented. **The hosted migration is applied and all 19 database ownership/conflict checks passed.** Verification used actual database roles and temporary fixtures that were rolled back; no emails were sent or test accounts retained. Real password sign-in, upload, restore, cloud deletion and sign-out also passed through the browser with synthetic recipe/date records. Real-user confirmation-email delivery remains.
+Automatic account continuity, private saved media, optimistic revision checks and account lifecycle are implemented. Historical hosted checks and migration ordering are documented in [readiness repairs](docs/READINESS_REPAIRS_2026-09-29.md) and [account lifecycle](docs/context/account-lifecycle.md). Those results do not verify a newly changed deployment. Real confirmation/recovery email delivery remains a release prerequisite.
 
 Once a working administration connection is configured:
 
@@ -126,11 +132,11 @@ npm run db:setup
 npm run db:verify
 ```
 
-The setup script applies `supabase/migrations/20260925_fuel.sql`. The verification script performs 19 transactional checks and rolls them back. An SQL-editor route can apply the same migration when direct database connectivity is unavailable. Database ownership checks passed against the configured project. Recurring account UI tests mock Supabase; `npx tsx scripts/verify-cloud-browser.ts --run` separately creates and cleans up one synthetic account for a real browser check, with no emails. Continuous sync, conflict merging across individual records, richer media storage and full account lifecycle remain follow-ups. See [storage architecture](docs/research/storage-architecture.md).
+The original setup script applies `supabase/migrations/20260925_fuel.sql`; current deployments also need the additive readiness/account/sync/operations migrations and any enabled assistant-connection migration. Follow the linked readiness and feature runbooks rather than treating the original setup as the entire schema. Recurring account UI tests mock Supabase. Historical live scripts use temporary or cleaned-up synthetic data. Individual-record conflict merging is not implemented: the user reviews which complete copy to keep. Older [storage research](docs/research/storage-architecture.md) describes design history, not current operating instructions.
 
 ## Verification and remaining scope
 
-Latest evidence: all 188 unit tests and all 140 desktop/mobile browser tests passed. Production build passed. Earlier standalone API/static smoke checks, OpenAI meal-plan, workout and synthetic label checks succeeded. New live checks covered OpenAI/JEV preference proposals, a 21-meal full-day week, complete meal components including drinks and oil, saved-batch portion proposals, tool suggestions, USDA product-name searches and automatic receipt candidates. Real Supabase browser upload/restore/deletion preserved recipes and pantry dates. Local USDA cached examples returned found/ambiguous outcomes. No configured secret-key values were found in the earlier browser bundle scan. See [execution status](docs/AGENT_EXECUTION_STATUS.md) for limits and exact interpretation.
+Dated results, failures and limits are retained in the [five-persona audit](docs/audits/2026-09-30-personas/report.md) and [remediation evidence](docs/audits/2026-09-30-remediation/). Run the commands above on the current checkout; historical test counts do not certify a changed tree. Browser tests use controlled providers and isolated records. Physical-device behavior, real email delivery, representative receipt accuracy and provider operating costs require separate release evidence.
 
 External retailer histories, trackers, native health stores, Meta glasses and Muse/grokbot connections are **not implemented**. Their [research reports](docs/research/) identify supported directions, access requirements and unanswered questions. Remaining food work includes measured receipt/USDA coverage, richer ingredient matching and raw/cooked conversions, background reminders and unattended recurring schedules. Missing meal logs never imply waste.
 
@@ -142,7 +148,7 @@ External retailer histories, trackers, native health stores, Meta glasses and Mu
 - `src/features/pantry/`, `meals/`: quantities, events, components and reconciliation.
 - `src/features/preferences/`, `planning/`, `insights/`, `reviews/`: preferences, full-day/repeated plans, comparisons and real-record summaries.
 - `src/features/workout-planning/`, `voice/`, `server/plans.ts`, `server/voice.ts`: proposed workouts, planning and reviewed transcription.
-- `src/features/cloud/`, `supabase/migrations/`, `scripts/setup-supabase.ts`, `scripts/verify-supabase.ts`: optional account/snapshot workflow with verified database ownership rules.
+- `src/features/cloud/`, `src/platform/`, `supabase/migrations/`: automatic linked-account saving, local archives, private media, conflict review and account lifecycle.
 - `src/App.tsx`, `ChatLayer.tsx`, `NutritionPage.tsx`, `WorkoutPage.tsx`, `YouPage.tsx`: existing UI and feature integration.
 
 ## Assets

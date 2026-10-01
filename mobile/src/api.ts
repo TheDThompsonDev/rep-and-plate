@@ -1,3 +1,4 @@
+import { defaultSupportUrl } from "../../src/features/support/model";
 import { fetch as expoFetch } from "expo/fetch";
 import {
   aiResultSchema,
@@ -16,8 +17,9 @@ import {
 import { uploadCapture } from "../../src/platform/capture-upload";
 export type Connection = { url: string; token: string };
 let connection: Connection | null = null;
+export const getConnection = () => connection ? Promise.resolve(connection) : loadConnection();
 let supportUrl:string|undefined;
-export const getSupportUrl=()=>supportUrl;
+export const getSupportUrl=()=>supportUrl || defaultSupportUrl;
 const responseSignals = new WeakMap<Response, AbortSignal>();
 export function validConnection(value: Connection) {
   const url = new URL(value.url);

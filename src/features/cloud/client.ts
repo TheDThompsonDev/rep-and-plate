@@ -99,6 +99,9 @@ export function snapshotSummary(state: AppState) {
   const json = JSON.stringify(state);
   return {
     meals: state.meals.length,
+    workouts: new Set([...(state.workout.history ?? []),state.workout].filter(session=>session.startedAt).map(session=>session.startedAt)).size,
+    activities: state.activities?.length ?? 0,
+    bodyWeights: state.bodyWeights?.length ?? 0,
     groceries: state.groceries?.length ?? 0,
     messages: state.messages.length,
     plans: state.mealPlans?.length ?? 0,

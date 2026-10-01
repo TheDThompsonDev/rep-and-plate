@@ -61,6 +61,7 @@ export default function ReceiptReview({
           Check the printed receipt. These are household purchases, separate
           from meals you ate. Leave unreadable amounts blank.
         </p>
+        <p className="shopping-muted">Captured {receipt.date}. The purchase date below comes from your receipt and can be earlier.</p>
         <label>
           Grocery store
           <input name="store" maxLength={200} defaultValue={receipt.store} />

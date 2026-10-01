@@ -84,8 +84,9 @@ test("Nutrition shows accepted Chat meals inline and edits update its totals", a
   await expect(meal).toContainText("450 cal");
   await expect(page.locator(".nutrition-ring-label strong")).toHaveText("450");
   await expect(
-    page.getByRole("progressbar", { name: "protein", exact: true }),
-  ).toHaveAttribute("aria-valuenow", "27");
+    page.locator('.nutrition-macro.protein .nutrition-macro-value strong'),
+  ).toHaveText("27g");
+  await expect(page.getByRole('progressbar',{name:'protein',exact:true})).toHaveCount(0);
   await page.reload();
   await page.getByRole("button", { name: "Nutrition", exact: true }).click();
   await expect(meal).toContainText("450 cal");
@@ -145,8 +146,9 @@ test("Nutrition excludes persisted example meals and opens the connected plannin
   ).not.toContainText(sample.title);
   await expect(page.locator(".nutrition-ring-label strong")).toHaveText("200");
   await expect(
-    page.getByRole("progressbar", { name: "protein", exact: true }),
-  ).toHaveAttribute("aria-valuenow", "20");
+    page.locator('.nutrition-macro.protein .nutrition-macro-value strong'),
+  ).toHaveText("20g");
+  await expect(page.getByRole('progressbar',{name:'protein',exact:true})).toHaveCount(0);
   expect(
     (await readBrowserRecords(page)).meals.length,
   ).toBe(2);

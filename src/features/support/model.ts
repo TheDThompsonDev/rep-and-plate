@@ -1,5 +1,9 @@
+export const defaultSupportUrl = "mailto:dthompsondev@gmail.com";
+
 export function validSupportUrl(value: unknown): string | undefined {
   if (typeof value !== "string" || value.length > 2000) return;
+  if (/^mailto:[a-z0-9.!#$&'*+/=_`{|}~-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(value))
+    return value;
   try {
     const url = new URL(value);
     if (url.protocol === "https:" && !url.username && !url.password)

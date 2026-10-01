@@ -3,9 +3,11 @@ import { createServer, request as httpRequest } from "node:http";
 import {
   collectSources,
   modelAnswerSchema,
+  providerAnswerSchema,
   normalizeAnswer,
   checkIntent,
 } from "./ai";
+import { zodTextFormat } from 'openai/helpers/zod';
 import { createApi, publicError, readConfig } from "./http";
 import { requestFixture, resultFixture } from "../tests/ai-fixtures";
 const config = {
@@ -32,6 +34,73 @@ function modelFixture() {
 }
 afterEach(() => vi.restoreAllMocks());
 describe("AI grounding and boundaries", () => {
+  it('keeps an uncertain follow-up footer neutral instead of questioning established meal intent',()=>{
+    const answer={...modelFixture(),items:[],intent:'uncertain' as const,reply:'We can use a common serving for review, or keep a note. Which would you prefer?'};
+    const result=normalizeAnswer(answer,{...requestFixture(),text:'I already ate it and cannot remember how much.',history:[{role:'user',text:'I ate peanut butter for breakfast.'},{role:'assistant',text:'How much peanut butter?'}]},new Map());
+    expect(result.warnings.join(' ')).not.toMatch(/meal or a grocery|whether.*meal/);
+    expect(result.reply).toContain('Which would you prefer');
+  });
+  it('provides a strict nullable activity field to providers while legacy answers remain readable',()=>{
+    const legacy=modelFixture();
+    expect(modelAnswerSchema.safeParse(legacy).success).toBe(true);
+    const format=zodTextFormat(providerAnswerSchema,'capture');
+    expect(format.strict).toBe(true);
+    const schema=format.schema as {required:string[];properties:Record<string,{anyOf:{required?:string[]}[]}>};
+    expect(schema.required).toContain('activity');
+    expect(schema.properties.activity.anyOf.find(option=>option.required)?.required).toEqual(['title','day','minutes','note']);
+    expect(providerAnswerSchema.safeParse({...legacy,workout:null,activity:null}).success).toBe(true);
+  });
+  it('uses the normalized nutrition totals in prose as well as the review card',()=>{
+    const answer={...modelFixture(),intent:'meal' as const,items:[],reply:'Your meal has 23 g protein, 34 g carbs and 1 g fat.',meal:{title:'Yogurt',category:'Breakfast' as const,portion:'one bowl',note:'',sources:[],calories:220,protein:23,carbs:34,fat:1,components:[{name:'Yogurt',portion:'one bowl',nutrition:{calories:215,protein:18.3,carbs:33,fat:0.4}}]}};
+    const result=normalizeAnswer(answer,requestFixture(),new Map());
+    expect(result.reply).toContain('18.3 g protein');
+    expect(result.reply).toContain('0.4 g fat');
+    expect(result.reply).not.toContain('23 g protein');
+  });
+  it('keeps an explicit consumed-food clarification about portions',()=>{
+    const answer={...modelFixture(),items:[],intent:'uncertain' as const,reply:'Is this a meal or groceries?'};
+    const result=normalizeAnswer(answer,{...requestFixture(),text:'I ate peanut butter for breakfast'},new Map());
+    expect(result.reply).toContain('portion');
+    expect(result.reply).not.toContain('groceries');
+  });
+  it('holds a model-invented portion when typed consumption gives no amount',()=>{
+    const meal={title:'Peanut butter',category:'Breakfast' as const,portion:'1 tablespoon',note:'Estimated serving',sources:[],calories:95,protein:3.5,carbs:3,fat:8,components:null};
+    const answer={...modelFixture(),intent:'meal' as const,items:[],meal};
+    const result=normalizeAnswer(answer,{...requestFixture(),text:'I ate peanut butter for breakfast.'},new Map());
+    expect(result.meal).toBeNull();
+    expect(result.reply).toContain('portion');
+    expect(result.reply).not.toContain('groceries');
+    expect(normalizeAnswer(answer,{...requestFixture(),text:'I ate 1 tablespoon of peanut butter for breakfast.'},new Map()).meal).not.toBeNull();
+  });
+  it('uses the selected diary day for an undated meal while retaining an explicit date',()=>{
+    const request={...requestFixture(),day:'2026-09-30',captureDay:'2026-09-20'};
+    const meal={title:'Toast',category:'Breakfast' as const,portion:'1 slice',note:'',sources:[],calories:100,protein:3,carbs:20,fat:1,components:null};
+    const answer={...modelFixture(),intent:'meal' as const,items:[],meal};
+    expect(normalizeAnswer(answer,request,new Map()).meal?.day).toBe('2026-09-20');
+    expect(normalizeAnswer({...answer,meal:{...meal,day:request.day}},request,new Map()).meal?.day).toBe('2026-09-20');
+    expect(normalizeAnswer({...answer,meal:{...meal,day:'2026-09-29'}},{...request,text:'I ate one slice of toast yesterday'},new Map()).meal?.day).toBe('2026-09-29');
+    expect(normalizeAnswer(answer,{...request,captureDay:'2026-02-31'},new Map()).meal).toBeNull();
+  });
+  it('proposes a timed walk without inventing sets, calories or an already-saved result',()=>{
+    const activity={title:'Walk',minutes:20,day:'2026-09-20',note:''};
+    const answer={...modelFixture(),intent:'conversation' as const,items:[],activity,suggestedAction:'workout' as const};
+    const result=normalizeAnswer(answer,{...requestFixture(),day:'2026-09-30'},new Map());
+    expect(result.activity).toEqual(activity);
+    expect(result.workout).toBeNull();
+    expect(result.meal).toBeNull();
+    expect(result.suggestedAction).toBeNull();
+    expect(result.reply).toContain('before saving');
+    expect(normalizeAnswer({...answer,activity:{...activity,day:'2026-09-30'}},{...requestFixture(),day:'2026-09-30',captureDay:'2026-09-20',text:'I walked for 20 minutes'},new Map()).activity?.day).toBe('2026-09-20');
+    expect(normalizeAnswer({...answer,activity:{...activity,day:'2026-02-31'}},requestFixture(),new Map()).activity).toBeNull();
+  });
+  it('retains an explicit date for a bounded portion clarification but not a new independent capture',()=>{
+    const meal={title:'Peanut butter',category:'Breakfast' as const,portion:'2 tablespoons',note:'',sources:[],calories:190,protein:8,carbs:7,fat:16,components:null,day:'2026-09-29'};
+    const answer={...modelFixture(),intent:'meal' as const,items:[],meal};
+    const request={...requestFixture(),day:'2026-09-30',captureDay:'2026-09-20',text:'2 tablespoons',history:[{role:'user' as const,text:'Yesterday I ate peanut butter.'},{role:'assistant' as const,text:'How much peanut butter did you eat?'}]};
+    expect(normalizeAnswer(answer,request,new Map()).meal?.day).toBe('2026-09-29');
+    expect(normalizeAnswer({...answer,meal:{...meal,title:'Apple',day:'2026-09-30'}},{...request,text:'I ate one apple.'},new Map()).meal?.day).toBe('2026-09-20');
+    expect(normalizeAnswer(answer,{...request,history:[request.history[0],{role:'assistant',text:'Check your saved meal card.'}]},new Map()).meal?.day).toBe('2026-09-20');
+  });
   it('retains receipt prices as unconfirmed evidence and never substitutes upload date for purchase date',()=>{
     const answer=modelFixture();
     answer.purchase={purchaseDate:'2026-09-20',currency:'CAD',subtotal:10,tax:1,discount:null,total:11};

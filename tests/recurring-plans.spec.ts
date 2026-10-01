@@ -1,17 +1,20 @@
-import { commitSeededRecords,readBrowserRecords } from "./record-fixture";
+import { seedBrowserRecords,readBrowserRecords } from "./record-fixture";
 import { test,expect,type Page } from "./app-fixture";
 
 const stored=readBrowserRecords;
 async function seedWeek(page:Page) {
   await page.goto('/');
-  await page.evaluate(()=>{
-    const state=JSON.parse(localStorage.getItem('fuel.prototype.v1')!);
+  await expect(page.getByRole('textbox',{name:'Message Rep & Plate'})).toBeVisible();
+  // Read through the durable transaction queue, then seed this exact snapshot.
+  // A separate compatibility-mirror reread can race the app's initial writes.
+  const state=await stored(page);
     state.groceries=[{id:'repeat-shop',fingerprint:'repeat-shop',store:'Test pantry',date:'2026-09-25',note:'',sources:[],items:[{id:'oats',receiptText:'Oats',name:'Oats',quantity:'10 servings',serving:'1/2 cup',servingsPurchased:10,nutrition:{calories:150,protein:5,carbs:27,fat:3},match:'exact',note:'',sources:[],needsReview:false,availability:'available'}]}];
     state.pantryEvents=[{id:'stock-check',lotId:'repeat-shop::oats',kind:'adjusted',servings:-7,createdAt:'2026-09-25T12:00:00Z',note:'Counted three servings remaining.'}];
     state.mealPlans=[{id:'original-approved',createdAt:'2026-09-25T12:00:00Z',status:'approved',days:Array.from({length:7},(_,index)=>{const date=new Date('2026-09-25T12:00:00Z');date.setUTCDate(date.getUTCDate()+index);return {date:date.toISOString().slice(0,10),meals:[{id:`original-${index}`,title:`Oatmeal ${index+1}`,portions:1,minutes:10,ingredients:[{lotId:'repeat-shop::oats',name:'Oats',servingLabel:'1/2 cup',servings:1}],notes:'Prepare oats with water.'}]};})}];
-    localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
-  });await commitSeededRecords(page);
+  await seedBrowserRecords(page,state);
   await page.reload();
+  await expect(page.getByRole('textbox',{name:'Message Rep & Plate'})).toBeVisible();
+  await expect.poll(async()=>(await stored(page)).mealPlans?.find((plan:any)=>plan.id==='original-approved')).toEqual(state.mealPlans[0]);
 }
 async function openPlan(page:Page) {
   await page.getByRole('button',{name:'Open chat menu'}).click();
@@ -20,6 +23,37 @@ async function openPlan(page:Page) {
 test.beforeEach(async({page})=>{
   await page.route('**/api/status',route=>route.fulfill({json:{available:true,jev:true}}));
   await page.route('**/api/chat',route=>route.abort());
+});
+
+test('legacy plan revisions autosave once without console errors or rewriting their approved source',async({page})=>{
+  const errors:string[]=[];
+  page.on('console',message=>{if(message.type()==='error'&&errors.length<20)errors.push(message.text());});
+  page.on('pageerror',error=>{if(errors.length<20)errors.push(error.message);});
+  await seedWeek(page);
+  const original=(await stored(page)).mealPlans[0];
+  // Legacy records omit category; revision adds it after the existing fields.
+  expect(original.days[0].meals[0].category).toBeUndefined();
+  await openPlan(page);
+  await page.evaluate(()=>{
+    (window as any).__planAutosaveWrites=0;
+    const write=Storage.prototype.setItem;
+    Storage.prototype.setItem=function(key,value){
+      if(key==='health.pending.guest'&&JSON.parse(value).mealPlans?.length===2)(window as any).__planAutosaveWrites++;
+      return write.call(this,key,value);
+    };
+  });
+  await page.getByLabel('Repeat week starting',{exact:true}).fill('2026-10-02');
+  await page.getByRole('button',{name:'Repeat this week as a draft',exact:true}).click();
+  await expect.poll(async()=>(await stored(page)).mealPlans.length).toBe(2);
+  await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(resolve,250)))));
+  expect(await page.evaluate(()=>(window as any).__planAutosaveWrites)).toBe(1);
+  await page.getByRole('button',{name:'Edit meal',exact:true}).first().click();
+  await page.getByLabel('Meal name',{exact:true}).fill('My revised oats');
+  await expect.poll(async()=>(await stored(page)).mealPlans.at(-1).days[0].meals[0].title).toBe('My revised oats');
+  // Let passive effects settle; an assertion that only checks saved content missed the loop.
+  await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(resolve,150)))));
+  expect(errors).toEqual([]);
+  expect((await stored(page)).mealPlans[0]).toEqual(original);
 });
 
 test('approved weeks repeat into editable drafts with fresh shortages and no automatic logging',async({page})=>{
@@ -31,7 +65,10 @@ test('approved weeks repeat into editable drafts with fresh shortages and no aut
   await expect(page.locator('.fuel-plan-status')).toContainText('Draft to review');
   await expect(page.getByRole('button',{name:'Log one portion',exact:true})).toHaveCount(0);
   await expect(page.locator('.fuel-plan-shopping')).toContainText('4 additional servings');
-  expect((await stored(page)).mealPlans).toEqual(before.mealPlans);
+  // Repeated drafts now save automatically; the original approved week stays byte-equivalent.
+  await expect.poll(async()=>(await stored(page)).mealPlans.length).toBe(2);
+  expect((await stored(page)).mealPlans[0]).toEqual(original);
+  expect((await stored(page)).mealPlans[1].status).toBe('draft');
   expect((await stored(page)).meals).toEqual(before.meals);
   expect((await stored(page)).pantryEvents).toEqual(before.pantryEvents);
   await page.getByRole('button',{name:'Save draft',exact:true}).click();
@@ -104,7 +141,7 @@ test('editing or extending an approved week creates a new revision and preserves
   expect(await page.getByRole('dialog').evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);
 });
 
-test('full-day generation sends selected meal types and reviews all 28 meals before saving',async({page})=>{
+test('full-day generation sends selected meal types and autosaves all 28 meals as an unapproved draft',async({page})=>{
   let context:any;
   await page.route('**/api/plans/meals',route=>{
     context=route.request().postDataJSON();
@@ -123,7 +160,9 @@ test('full-day generation sends selected meal types and reviews all 28 meals bef
   const firstDay=page.locator('.fuel-plan-day').first();
   for(const category of ['Breakfast','Lunch','Dinner','Snack'])await expect(firstDay).toContainText(`${category} · 1 portion`);
   await expect(page.locator('.fuel-plan-shopping')).toContainText('25 additional servings');
-  expect((await stored(page)).mealPlans).toEqual(before.mealPlans);
+  expect((await stored(page)).mealPlans[0]).toEqual(before.mealPlans[0]);
+  expect((await stored(page)).mealPlans.at(-1)).toMatchObject({id:'full-day-draft',status:'draft'});
+  await expect(page.getByRole('button',{name:'Log one portion',exact:true})).toHaveCount(0);
   expect((await stored(page)).meals).toEqual(before.meals);
   expect((await stored(page)).pantryEvents).toEqual(before.pantryEvents);
   await page.getByRole('button',{name:'Save draft',exact:true}).click();
@@ -133,15 +172,15 @@ test('full-day generation sends selected meal types and reviews all 28 meals bef
 
 test('oversized planned portions fail visibly without crashing or changing intake',async({page})=>{
   await seedWeek(page);
-  await page.evaluate(()=>{
-    const state=JSON.parse(localStorage.getItem('fuel.prototype.v1')!);
+  const state=await stored(page);
     state.groceries[0].items[0].servingsPurchased=1000;
     state.pantryEvents=[];
     state.mealPlans[0].days[0].meals[0].ingredients[0].servings=200;
-    localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));
-  });
-  await commitSeededRecords(page);
-  await page.reload();const before=await stored(page);await openPlan(page);
+  await seedBrowserRecords(page,state);
+  await page.reload();
+  await expect(page.getByRole('textbox',{name:'Message Rep & Plate'})).toBeVisible();
+  await expect.poll(async()=>(await stored(page)).mealPlans?.[0]?.days[0].meals[0].ingredients[0].servings).toBe(200);
+  const before=await stored(page);await openPlan(page);
   const first=page.locator('.fuel-planned-meal').first();
   await first.getByRole('button',{name:'Log one portion',exact:true}).click();
   await expect(page.getByRole('alert')).toContainText('too large');

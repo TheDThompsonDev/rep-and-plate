@@ -69,6 +69,7 @@ test("personal dashboard excludes examples and preserves dated history through m
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByLabel("Daily calories", { exact: true }).fill("1900");
+  await page.locator('input[name="targetsConfigured"]').check();
   await page
     .getByRole("button", { name: "Save preferences", exact: true })
     .click();

@@ -417,7 +417,7 @@ export default function KitchenPage({
                 <span>
                   <strong>{receipt.store || "Grocery receipt"}</strong>
                   <small>
-                    {displayCalendarDate(receipt.date)} ·{" "}
+                    {receipt.purchase?.purchaseDate?`Purchased ${displayCalendarDate(receipt.purchase.purchaseDate)}`:`Captured ${displayCalendarDate(receipt.date)}`} ·{" "}
                     {
                       receipt.items.filter((item) => item.match !== "nonfood")
                         .length

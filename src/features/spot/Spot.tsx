@@ -8,6 +8,7 @@ import {
 import { ArrowRight, Check, CircleDot, RotateCcw } from "lucide-react";
 import type { AppState } from "../../domain";
 import type { WorkoutCapture } from "./contracts";
+import { displayLoad } from "../../workouts";
 import {
   spotIntro,
   spotPose,
@@ -402,12 +403,14 @@ export function SpotEmptyState({
   );
 }
 export function SpotWorkoutCheck({
+  unit = "lb",
   proposal,
   status,
   onResolve,
   onFix,
 }: {
   proposal: WorkoutCapture;
+  unit?: "lb" | "kg";
   status: string;
   onResolve: (accept: boolean) => void;
   onFix: () => void;
@@ -429,8 +432,10 @@ export function SpotWorkoutCheck({
           <li key={i}>
             <strong>{e.name}</strong>
             <span>
-              {e.weight ? `${e.weight} lb` : "Bodyweight"} · {e.reps.join(", ")}{" "}
-              reps
+              {e.weight
+                ? `${displayLoad(e.weight, unit)} ${unit}`
+                : "Bodyweight"}{" "}
+              · {e.reps.join(", ")} reps
             </span>
           </li>
         ))}

@@ -64,11 +64,12 @@ export function NutritionSummary({
   compact = false,
 }: {
   totals: Nutrition;
-  goals: Nutrition;
+  goals: Nutrition & { targetsConfigured?: boolean };
   compact?: boolean;
 }) {
   const remaining = goals.calories - totals.calories;
-  const progress = Math.min(totals.calories / goals.calories, 1);
+  const configured = !!goals.targetsConfigured;
+  const progress = configured ? Math.min(totals.calories / goals.calories, 1) : 0;
   return (
     <div className={`nutrition-summary ${compact ? "compact" : ""}`}>
       <div className="calorie-ring">
@@ -85,13 +86,12 @@ export function NutritionSummary({
         <div className="ring-label">
           <span className="eyebrow">CALORIES</span>
           <strong>{totals.calories.toLocaleString()}</strong>
-          <span>of {goals.calories.toLocaleString()} cal</span>
+          <span>{configured ? `of ${goals.calories.toLocaleString()} cal` : 'cal recorded'}</span>
         </div>
       </div>
       <div className="macros">
         <div className="remaining">
-          <strong>{Math.abs(remaining).toLocaleString()}</strong> calories{" "}
-          {remaining >= 0 ? "left today" : "above target"}
+          {configured ? <><strong>{Math.abs(remaining).toLocaleString()}</strong> calories {remaining >= 0 ? "left today" : "above target"}</> : 'Recorded totals · no daily targets'}
         </div>
         {(["protein", "carbs", "fat"] as const).map((key) => (
           <div className={`macro ${key}`} key={key}>
@@ -101,10 +101,10 @@ export function NutritionSummary({
                 {key === "fat" ? "Fats" : key[0].toUpperCase() + key.slice(1)}
               </span>
               <span>
-                <b>{totals[key]}g</b> / {goals[key]}g
+                <b>{totals[key]}g</b>{configured && <> / {goals[key]}g</>}
               </span>
             </div>
-            <div
+            {configured && <div
               className="progress-track"
               role="progressbar"
               aria-label={key}
@@ -117,7 +117,7 @@ export function NutritionSummary({
                   width: `${Math.min((totals[key] / goals[key]) * 100, 100)}%`,
                 }}
               />
-            </div>
+            </div>}
           </div>
         ))}
       </div>

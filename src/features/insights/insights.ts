@@ -159,8 +159,8 @@ export function nutritionInsights(state: AppState, end = today()) {
     {
       tone: "protein",
       title: `${Math.round(sum.protein / days.size)}g protein per logged day.`,
-      description: `${reached} of ${days.size} logged ${days.size === 1 ? "day" : "days"} reached your current ${state.profile.protein}g target.`,
-      detail: `Compared with your current target; past targets may have differed. This describes recorded meals and does not assume each day's log is complete.\n\n${records}`,
+      description: state.profile.targetsConfigured ? `${reached} of ${days.size} logged ${days.size === 1 ? "day" : "days"} reached your current ${state.profile.protein}g target.` : 'Recorded protein from your meals. No daily target is set.',
+      detail: `${state.profile.targetsConfigured ? 'Compared with your current target; past targets may have differed. ' : ''}This describes recorded meals and does not assume each day's log is complete.\n\n${records}`,
       evidence,
     },
     componentInsight(meals, evidence) ?? {

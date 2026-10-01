@@ -2,6 +2,7 @@ import type { AppState, Message } from "../../domain";
 import { personalMeals, today } from "../../domain";
 import { weeklyReview } from "../reviews/weekly-review";
 import { workoutCaptureSchema } from "./contracts";
+import { setLoad } from '../progress/set-loads';
 
 export type SpotSide = "plate" | "rep";
 export type SpotExpression =
@@ -22,17 +23,20 @@ export function messageSpot(message?: Message): SpotState {
   return {
     side:
       message?.workoutProposal ||
+      message?.activityProposal ||
+      message?.activityCaptureStatus ||
       message?.workoutCaptureStatus ||
       message?.kind === "workout" ||
       message?.suggestedAction === "workout"
         ? "rep"
         : "plate",
     expression:
-      message?.mealId || message?.workoutCaptureStatus === "accepted"
+      message?.mealId || message?.workoutCaptureStatus === "accepted" || message?.activityCaptureStatus === 'accepted'
         ? "happy"
         : message?.spotCheck ||
             message?.mealProposal ||
             message?.workoutProposal
+            || message?.activityProposal
           ? "confused"
           : "default",
   };
@@ -78,6 +82,7 @@ export const spotIntro = [
 export function hasSpotLog(state: AppState) {
   return (
     personalMeals(state.meals).length > 0 ||
+    (state.activities?.length ?? 0) > 0 ||
     (state.workout.history ?? []).some((w) => !!w.finishedAt) ||
     state.workout.status === "finished"
   );
@@ -166,7 +171,7 @@ export function spotWeek(state: AppState, end = today()) {
     if (!keys.delete(key)) continue;
     volume += w.exercises.reduce(
       (sum, e) =>
-        sum + e.weight * e.sets.reduce<number>((n, r) => n + (r ?? 0), 0),
+        sum + e.sets.reduce<number>((n, reps, index) => n + setLoad(e,index) * (reps ?? 0), 0),
       0,
     );
   }
