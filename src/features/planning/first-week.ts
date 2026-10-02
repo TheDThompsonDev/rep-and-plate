@@ -3,16 +3,13 @@ import { getPantryLots } from "../pantry/ledger";
 import { purchaseReceipts } from "../pantry/receipt-origin";
 import { planShoppingList } from "./meal-plans";
 import { unloggedPlan } from "./pantry-links";
+import { receiptReadiness } from '../receipts/journey';
 
 export function firstWeekSteps(state: AppState) {
   const lots = getPantryLots(state),
     plan = state.mealPlans?.at(-1);
-  const reviewed =
-    lots.length > 0 &&
-    lots.every(
-      (lot) =>
-        !lot.item.needsReview && lot.remaining !== null && !lot.inconsistent,
-    );
+  const readiness = receiptReadiness(state);
+  const reviewed = readiness.ready > 0 && readiness.checks === 0;
   const needs = plan
     ? planShoppingList(
         unloggedPlan(

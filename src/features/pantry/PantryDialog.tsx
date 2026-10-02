@@ -31,6 +31,7 @@ import {
 } from "./dates";
 import type { PantryDates } from "./date-contract";
 import "./pantry.css";import ManualIngredient from './ManualIngredient';import {addManualPantryIngredient} from './manual-ingredient';
+import { receiptSourcePhoto, receiptReadiness } from '../receipts/journey';
 
 function PantryDateEditor({
   lot,
@@ -234,6 +235,8 @@ export function PantryDialog({
   if (details)
     return (
       <GroceriesDialog
+        onAdjustRemaining={(purchaseId, itemId) => { const lot = purchaseLots.find(l => l.receiptId === purchaseId && l.item.id === itemId); if (lot) { setDetails(false); setReviewItem(undefined); setAdjusting(lot); setOperationId(crypto.randomUUID()); } }}
+        sourcePhotos={Object.fromEntries((state.groceries ?? []).map(receipt => [receipt.id, receiptSourcePhoto(state, receipt.id)]))}
         initialReview={reviewItem}
         onReceiptUpdate={receipt=>onChange(latest=>({...latest,groceries:latest.groceries?.map(old=>old.id===receipt.id?{...old,store:receipt.store,purchase:receipt.purchase,items:old.items.map(item=>({...item,price:receipt.items.find(line=>line.id===item.id)?.price??item.price}))}:old)}))}
         receipts={(state.groceries || []).filter(
@@ -245,17 +248,8 @@ export function PantryDialog({
           onAsk(text);
         }}
         onUpdate={(id, item) => {
-          try {
             updatePantryItem(state, id, item);
             onChange((latest) => updatePantryItem(latest, id, item));
-          } catch (caught) {
-            setError(
-              caught instanceof Error
-                ? caught.message
-                : "Please check the quantity.",
-            );
-            setDetails(false);
-          }
         }}
       />
     );
@@ -323,6 +317,7 @@ export function PantryDialog({
           What you bought, what is left, and what you used. Nothing counts as
           eaten until you confirm it.
         </p>
+        {lots.length > 0 && <section className="receipt-result-actions" aria-label="Put groceries to use"><p>{receiptReadiness(state, receiptId).ready} checked foods on hand. Start with these; unclear products and amounts still need review.</p><button className="button primary" disabled={receiptReadiness(state, receiptId).ready === 0} onClick={() => { onClose(); onAsk('Help me choose dinner tonight using my available, checked groceries. Ask about unknown products and quantities and list ingredients I need to buy. Do not log a meal or change stock.'); }}>Help me choose dinner tonight</button><button className="button secondary" onClick={() => setDetails(true)}>Check purchase details</button></section>}
         {error && (
           <p role="alert" className="pantry-feedback error">
             {error}
@@ -689,9 +684,6 @@ export function PantryDialog({
               ))}
           </section>
         )}
-        <button className="you-dialog-action" onClick={() => setDetails(true)}>
-          Check purchase details <ArrowRight size={17} />
-        </button>
         <button
           className="you-dialog-action"
           onClick={() => {

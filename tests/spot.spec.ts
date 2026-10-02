@@ -19,6 +19,12 @@ test("Spot introduction pivots to Rep, capture stays universal, and visuals are 
     page.getByRole("heading", { name: "Hey. I’m Spot." }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Here’s what you can do with me." })).toBeVisible();
+  await page.getByRole("button", { name: "More about Spot", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Give your groceries a plan." }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Tell me what you ate." }),
   ).toBeVisible();
@@ -118,6 +124,10 @@ test("workout capture confirms once, survives reload and retains an active sessi
     });
   });
   await page.goto("/");
+  await page.getByRole('button', { name: 'What can I say to Spot?', exact: true }).click();
+  await page.getByRole('button', { name: 'Workout example', exact: true }).click();
+  expect((await readBrowserRecords(page)).workout.history).toEqual(state.workout.history);
+  await page.getByRole('button', { name: 'Use my own words', exact: true }).click();
   await page
     .getByRole("textbox", { name: "Message Rep & Plate" })
     .fill("Bench 185 3x5, incline DB 60s 3x8");
@@ -126,6 +136,7 @@ test("workout capture confirms once, survives reload and retains an active sessi
     page.getByRole("heading", { name: "Spot Check", exact: true }),
   ).toBeVisible();
   await expect(page.locator('.spot-check [data-side="rep"]')).toBeVisible();
+  expect((await readBrowserRecords(page)).workout.history).toEqual(state.workout.history);
   await page.screenshot({ path: info.outputPath("spot-workout-check.png") });
   await page.getByRole("button", { name: "Yep, log workout" }).click();
   await expect(page.getByText("Logged.", { exact: true })).toBeVisible();

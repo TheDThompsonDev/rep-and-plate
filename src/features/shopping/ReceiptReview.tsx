@@ -3,15 +3,18 @@ import { Modal } from "../../components";
 import type { GroceryReceipt } from "../../ai-contract";
 import { receiptPurchaseSchema, receiptLinePriceSchema } from "./contracts";
 import "./shopping.css";
+import ReceiptSource from '../receipts/ReceiptSource';
 
 export default function ReceiptReview({
   receipt,
   onSave,
   onClose,
+  sourceImage,
 }: {
   receipt: GroceryReceipt;
   onSave: (receipt: GroceryReceipt) => void;
   onClose: () => void;
+  sourceImage?: string;
 }) {
   const [error, setError] = useState("");
   const purchase = receipt.purchase;
@@ -57,6 +60,7 @@ export default function ReceiptReview({
           }
         }}
       >
+        <ReceiptSource image={sourceImage}/>
         <p>
           Check the printed receipt. These are household purchases, separate
           from meals you ate. Leave unreadable amounts blank.

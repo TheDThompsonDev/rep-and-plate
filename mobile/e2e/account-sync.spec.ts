@@ -10,8 +10,12 @@ test('native fresh account restores cloud records and saves a later change acros
  await page.goto('/');await page.getByRole('button',{name:'Sign in',exact:true}).click();
  await page.getByLabel('Email',{exact:true}).fill('fixture@example.test');await page.getByLabel('Password',{exact:true}).fill('test-password-only');
  await page.getByRole('button',{name:'Sign in',exact:true}).last().click();
+ await page.getByRole('textbox',{name:'Your name',exact:true}).fill('From website');
  await page.getByRole('checkbox',{name:'These device records are mine'}).click();
- await page.getByRole('button',{name:'That’s me. Let’s go.'}).click();await page.getByRole('button',{name:'Let’s do this'}).click();
+ await page.getByRole('button',{name:'That’s me. Let’s go.'}).click();
+  await page.getByRole('button', { name: 'Set this up later', exact: true }).click();
+  await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+await page.getByRole('button',{name:'Let’s do this'}).click();
  await expect(page.getByText('Saved to your account',{exact:true})).toBeVisible();
  const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('dannys-health.native.v1')!).profile.name);
  await expect.poll(saved).toBe('From website');expect(cloud.saveCalls).toBe(0);

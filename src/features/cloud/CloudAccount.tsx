@@ -22,6 +22,7 @@ import { requireBrowserOwner } from "./client";
 import { PasswordRecovery } from "./PasswordRecovery";
 import { AccountSecurity } from "./AccountSecurity";
 import { pauseCloudSync, resumeCloudSync } from "./sync-control";
+import { ONBOARDING_KEY, parseOnboarding, defaultFocus } from '../onboarding/model';
 
 type Review =
   | { kind: "upload"; state: AppState }
@@ -33,15 +34,23 @@ export default function CloudAccount({
   state,
   onRestore,
   onClose,
+  initialMode = 'signin',
+  forChat = false,
+  forReceipt = false,
+  onChatReady,
 }: {
   state: AppState;
   onRestore: (state: AppState) => void;
   onClose: () => void;
+  initialMode?: 'signin' | 'signup';
+  forChat?: boolean;
+  forReceipt?: boolean;
+  onChatReady?: () => void;
 }) {
   const [client, setClient] = useState<SupabaseClient | null>(null);
   const [configured, setConfigured] = useState<boolean | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [signingUp, setSigningUp] = useState(false);
+  const [signingUp, setSigningUp] = useState(initialMode === 'signup');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -99,7 +108,7 @@ export default function CloudAccount({
     setChecked(false);
     setReview(null);
     setConflict(false);
-    if (!client || !user) return;
+    if (!client || !user || forChat) return;
     let cancelled = false;
     readSnapshotMetadata(client, user.id)
       .then((saved) => {
@@ -119,7 +128,7 @@ export default function CloudAccount({
     return () => {
       cancelled = true;
     };
-  }, [client, user?.id]);
+  }, [client, user?.id, forChat]);
 
   const run = async (action: () => Promise<void>) => {
     if (busyRef.current) return;
@@ -223,8 +232,10 @@ export default function CloudAccount({
     });
 
   return (
-    <Modal title="Your account & saved records" onClose={onClose}>
+    <Modal title={forReceipt ? 'Read receipts with Spot' : forChat ? 'Chat with Spot' : 'Your account & saved records'} onClose={onClose}>
       <div className="fuel-cloud">
+        {forReceipt ? <p className="cloud-feedback">Sign in and confirm your device records to read receipts. Your photo stays ready while you finish. During private preview, receipt reading needs an approved account.</p> : forChat && <p className="cloud-feedback">Chat is available to signed-in users. Create an account or sign in to ask health and fitness questions and log meals with Spot. Your unsent message stays in the composer.</p>}
+        {forChat && <p className="cloud-footnote">During the private beta, your account also needs chat access enabled.</p>}
         {user && (
           <section className="cloud-account" aria-label="Signed-in account">
             <strong>Signed in as {user.email || "your account"}</strong>
@@ -265,7 +276,7 @@ export default function CloudAccount({
             saved in this browser.
           </p>
         )}
-        <div className="cloud-intro">
+        {!forChat && <div className="cloud-intro">
           <span>
             <Cloud size={24} />
           </span>
@@ -276,7 +287,7 @@ export default function CloudAccount({
               review a saved copy here.
             </p>
           </div>
-        </div>
+        </div>}
         {error && (
           <p role="alert" className="cloud-feedback cloud-error">
             {error}
@@ -299,8 +310,12 @@ export default function CloudAccount({
               disabled={busy}
               onClick={() =>
                 void run(async () => {
-                  await requireBrowserOwner(client, true);
-                  setNotice("Device records linked. You can now use the beta.");
+                  const session = await requireBrowserOwner(client, true);
+                  if (!accountStillCurrent(session.user.id)) return;
+                  const onboarding = parseOnboarding(localStorage.getItem(ONBOARDING_KEY));
+                  localStorage.setItem(ONBOARDING_KEY, JSON.stringify({ version: 1, mode: 'account', userId: session.user.id, focus: onboarding?.focus ?? defaultFocus }));
+                  setNotice("Device records linked. Return to chat to check your connection.");
+                  if (forChat) onChatReady?.();
                 })
               }
             >
@@ -402,7 +417,7 @@ export default function CloudAccount({
             </button>
           </form>
         )}
-        {user && (
+        {user && !forChat && (
           <>
             {client && <AccountSecurity client={client} />}
             <section className="cloud-account">
@@ -561,7 +576,7 @@ export default function CloudAccount({
           </>
         )}
         {configured && !user && <PasswordRecovery client={client} />}
-        <section className="cloud-local">
+        {!forChat && <section className="cloud-local">
           <h3>On this device</h3>
           <p>
             {local.meals} meals · {local.groceries} grocery trips ·{" "}
@@ -578,7 +593,7 @@ export default function CloudAccount({
             own records. Signing out keeps this account’s separate local copy on
             this device.
           </p>
-        </section>
+        </section>}
       </div>
     </Modal>
   );

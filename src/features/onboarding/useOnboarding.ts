@@ -1,6 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
-import { parseOnboarding, type OnboardingRecord } from "./model";
+import {
+  parseOnboarding,
+  requireOnboardingName,
+  type OnboardingRecord,
+} from "./model";
+import {
+  draftKey,
+  emptyDraft,
+  parseDraft,
+  type OnboardingDraft,
+} from "./draft";
+import { id } from "../../domain";
 
 export type OnboardingAdapter = {
   read: () => Promise<string | null>;
@@ -8,13 +19,22 @@ export type OnboardingAdapter = {
   owner: () => Promise<string | null>;
   client: () => Promise<SupabaseClient | null>;
   verifyOwner: (client: SupabaseClient, bind?: boolean) => Promise<unknown>;
+  readDraft: (key: string) => Promise<string | null>;
+  writeDraft: (key: string, value: string | null) => Promise<void>;
 };
 export function useOnboarding(adapter: OnboardingAdapter) {
   const [loading, setLoading] = useState(true);
   const [entered, setEntered] = useState(false);
   const [replaying, setReplaying] = useState(false);
   const [step, setStep] = useState<
-    "welcome" | "intro" | "account" | "setup" | "ready"
+    | "welcome"
+    | "intro"
+    | "guide"
+    | "account"
+    | "setup"
+    | "goals"
+    | "nutrition"
+    | "ready"
   >("welcome");
   const [slide, setSlide] = useState(0);
   const [mode, setMode] = useState<"signup" | "signin">("signup");
@@ -27,6 +47,10 @@ export function useOnboarding(adapter: OnboardingAdapter) {
   const [notice, setNotice] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [localMode, setLocalMode] = useState(false);
+  const [draft, setDraft] = useState(() => emptyDraft(id()));
+  const [draftReady, setDraftReady] = useState(false);
+  const [firstLog, setFirstLog] = useState<string | null>(null);
+  const draftWrites = useRef(Promise.resolve());
   const alive = useRef(true),
     locked = useRef(false),
     identity = useRef<string | null>(null);
@@ -46,7 +70,7 @@ export function useOnboarding(adapter: OnboardingAdapter) {
       if (!active) return;
       record.current = parseOnboarding(raw);
       setOwner(savedOwner);
-      if (!record.current && !savedOwner) setLoading(false);
+      let canResumeAccount = false;
       try {
         const c = await adapter.client();
         if (!active) return;
@@ -58,6 +82,12 @@ export function useOnboarding(adapter: OnboardingAdapter) {
             const nextIdentity = session?.user.id ?? null;
             if (identity.current !== nextIdentity || event === "SIGNED_OUT")
               authEpoch.current++;
+            if (identity.current !== nextIdentity || event === "SIGNED_OUT") {
+              setDraft(emptyDraft(id()));
+              setFirstLog(null);
+              setLocalMode(false);
+              setConfirmed(false);
+            }
             if (identity.current && identity.current !== nextIdentity) {
               setEntered(false);
               setReplaying(false);
@@ -82,6 +112,10 @@ export function useOnboarding(adapter: OnboardingAdapter) {
           const current = session.data.session?.user ?? null;
           identity.current = current?.id ?? null;
           setUser(current);
+          if (current && savedOwner?.endsWith(`:${current.id}`)) {
+            await adapter.verifyOwner(c);
+            canResumeAccount = active && identity.current === current.id;
+          }
           if (
             record.current?.mode === "account" &&
             record.current.userId === current?.id &&
@@ -112,7 +146,47 @@ export function useOnboarding(adapter: OnboardingAdapter) {
             setEntered(true);
         }
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          const currentId = identity.current;
+          const completed = record.current;
+          const matches =
+            completed?.mode === "account"
+              ? completed.userId === currentId
+              : completed?.mode === "guest" && !savedOwner;
+          if (matches) {
+            if (completed?.firstLogPending === true)
+              setFirstLog(completed.focus);
+          } else {
+            const restored = parseDraft(
+              await adapter.readDraft(draftKey(currentId)),
+            );
+            if (
+              active &&
+              identity.current === currentId &&
+              restored &&
+              (!restored.localMode || (!currentId && !savedOwner))
+            ) {
+              // Account setup may resume past confirmation only after records were bound by prepare().
+              const resumeStep =
+                currentId &&
+                !canResumeAccount &&
+                ["goals", "nutrition", "ready"].includes(restored.step)
+                  ? "setup"
+                  : restored.step;
+              setDraft(restored);
+              setLocalMode(restored.localMode);
+              setStep(resumeStep);
+              setSlide(restored.slide);
+              setNotice(
+                "Welcome back. Your unfinished setup is ready to continue.",
+              );
+            }
+          }
+          if (active) {
+            setDraftReady(true);
+            setLoading(false);
+          }
+        }
       }
     })().catch(() => {
       if (active) {
@@ -128,7 +202,32 @@ export function useOnboarding(adapter: OnboardingAdapter) {
       unsubscribe();
     };
   }, [adapter, retry]);
-  async function run(action: () => Promise<void>) {
+  useEffect(() => {
+    if (!draftReady || loading || entered || replaying || busy) return;
+    const key = draftKey(user?.id ?? null);
+    const value = JSON.stringify({ ...draft, step, slide, localMode });
+    draftWrites.current = draftWrites.current
+      .then(() => adapter.writeDraft(key, value))
+      .catch(() => {
+        if (alive.current)
+          setNotice(
+            "Setup could not be saved on this device. Keep this page open and try again before leaving.",
+          );
+      });
+  }, [
+    adapter,
+    draftReady,
+    loading,
+    entered,
+    replaying,
+    busy,
+    draft,
+    step,
+    slide,
+    localMode,
+    user?.id,
+  ]);
+  const run = useCallback(async (action: () => Promise<void>) => {
     if (locked.current) return;
     locked.current = true;
     setBusy(true);
@@ -147,7 +246,7 @@ export function useOnboarding(adapter: OnboardingAdapter) {
       locked.current = false;
       if (alive.current) setBusy(false);
     }
-  }
+  }, []);
   function account(next: "signup" | "signin") {
     setMode(next);
     setStep("account");
@@ -199,13 +298,41 @@ export function useOnboarding(adapter: OnboardingAdapter) {
         record.current.userId === result.data.session.user.id
       ) {
         await adapter.verifyOwner(client);
-        if (alive.current && identity.current === result.data.session.user.id)
+        if (alive.current && identity.current === result.data.session.user.id) {
+          if (record.current.firstLogPending === true)
+            setFirstLog(record.current.focus);
           setEntered(true);
-      } else setStep("setup");
+        }
+      } else {
+        const currentId = result.data.session.user.id;
+        const savedOwner = await adapter.owner();
+        const restored = parseDraft(
+          await adapter.readDraft(draftKey(currentId)),
+        );
+        if (!alive.current || identity.current !== currentId) return;
+        setOwner(savedOwner);
+        if (restored && !restored.localMode) {
+          const canResumeAccount = !!savedOwner?.endsWith(`:${currentId}`);
+          if (canResumeAccount) await adapter.verifyOwner(client);
+          if (!alive.current || identity.current !== currentId) return;
+          setDraft(restored);
+          setSlide(restored.slide);
+          setStep(
+            canResumeAccount &&
+              ["goals", "nutrition", "ready"].includes(restored.step)
+              ? restored.step
+              : "setup",
+          );
+          setNotice(
+            "Welcome back. Your unfinished setup is ready to continue.",
+          );
+        } else setStep("setup");
+      }
     });
   }
-  async function prepare() {
+  async function prepare(name: string) {
     await run(async () => {
+      requireOnboardingName(name);
       if (!localMode) {
         if (!client || !user || !confirmed)
           throw Error(
@@ -220,11 +347,16 @@ export function useOnboarding(adapter: OnboardingAdapter) {
         throw Error(
           "These records are linked to an account. Sign in with that account to continue.",
         );
-      if (alive.current) setStep("ready");
+      if (alive.current) setStep("goals");
     });
   }
-  async function finish(focus: string, saveProfile: () => Promise<void>) {
+  async function finish(
+    focus: string,
+    name: string,
+    saveProfile: (name: string) => Promise<void>,
+  ) {
     await run(async () => {
+      const normalizedName = requireOnboardingName(name);
       const epoch = authEpoch.current;
       const expectedIdentity = identity.current;
       const stillCurrent = () => {
@@ -245,18 +377,26 @@ export function useOnboarding(adapter: OnboardingAdapter) {
       } else if (await adapter.owner())
         throw Error("Sign in with the account linked to these device records.");
       stillCurrent();
-      await saveProfile();
+      await saveProfile(normalizedName);
       stillCurrent();
       const value: OnboardingRecord = {
         version: 1,
         mode: localMode ? "guest" : "account",
         ...(localMode ? {} : { userId: user!.id }),
         focus,
+        firstLogPending: true,
       };
+      await draftWrites.current;
+      stillCurrent();
       await adapter.write(JSON.stringify(value));
+      stillCurrent();
+      await adapter
+        .writeDraft(draftKey(expectedIdentity), null)
+        .catch(() => {});
       stillCurrent();
       if (alive.current) {
         record.current = value;
+        setFirstLog(focus);
         setEntered(true);
         setStep("welcome");
       }
@@ -268,6 +408,23 @@ export function useOnboarding(adapter: OnboardingAdapter) {
     setError("");
     setNotice("");
   };
+  const dismissFirstLog = useCallback(
+    () =>
+      run(async () => {
+        const saved = record.current;
+        if (!saved || !entered) return;
+        const epoch = authEpoch.current;
+        if (saved.mode === "account" && saved.userId !== identity.current)
+          return;
+        const value = { ...saved, firstLogPending: false };
+        await adapter.write(JSON.stringify(value));
+        if (alive.current && authEpoch.current === epoch) {
+          record.current = value;
+          setFirstLog(null);
+        }
+      }),
+    [adapter, entered, run],
+  );
   return {
     loading,
     entered,
@@ -288,6 +445,11 @@ export function useOnboarding(adapter: OnboardingAdapter) {
     confirmed,
     setConfirmed,
     localMode,
+    draft,
+    patchDraft: (patch: Partial<OnboardingDraft>) =>
+      setDraft((previous) => ({ ...previous, ...patch })),
+    firstLog,
+    dismissFirstLog,
     authenticate,
     prepare,
     finish,

@@ -46,6 +46,10 @@ test("native Spot intro, workout check, saved result and weekly Rep summary", as
     page.getByRole("heading", { name: "Hey. I’m Spot." }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Here’s what you can do with me." })).toBeVisible();
+  await page.getByRole("button", { name: "More about Spot", exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Give your groceries a plan.' })).toBeVisible();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Tell me what you did." }),

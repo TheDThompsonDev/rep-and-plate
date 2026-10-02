@@ -66,7 +66,7 @@ npx playwright install chromium
 npm run test:e2e    # Desktop and mobile flows with mocked providers
 ```
 
-`PORT` overrides the standalone port. This remains a browser application, not a native mobile build. No public deployment has been performed.
+`PORT` overrides the standalone port. The browser app is deployed at [repandplate.com](https://repandplate.com) behind its existing invitation gate. Native builds use the separate mobile project.
 
 ## What you can use
 
@@ -159,7 +159,7 @@ Fonts are bundled locally: **DM Sans** and **Lora**, distributed under the SIL O
 - Breakfast: https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38
 - Gym: https://images.unsplash.com/photo-1534438327276-14e5300c3a48
 
-The server binds only to `127.0.0.1` by default. No deployment has been performed.
+The local server binds only to `127.0.0.1` by default. The latest hosted release and verification are recorded in the [deployment report](docs/audits/2026-09-30-round-2-remediation/deployment/report.md).
 
 ### Generated chat photo
 

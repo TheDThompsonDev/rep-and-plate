@@ -4,6 +4,7 @@ import { stateSchema, type AppState } from "../../domain";
 import {switchBrowserAccount} from './account-storage';
 import {registerAccountConfig} from './account-client';
 import {validSupportUrl} from '../support/model';
+import { AccountAccessError } from '../../account-access';
 
 export const MAX_SNAPSHOT_BYTES = 4_800_000;
 export type CloudConfig = { url: string; publishableKey: string;supportUrl?:string };
@@ -44,12 +45,14 @@ const projects = new WeakMap<SupabaseClient, string>();
 export async function requireBrowserOwner(client: SupabaseClient, bind = false) {
   const { data, error } = await client.auth.getSession();
   const project = projects.get(client);
-  if (error || !data.session || !project) throw new Error('Sign in from Your profile → Your account to continue.');
+  if (error) throw error;
+  if (!data.session) throw new AccountAccessError('signin', 'Sign in to chat with Spot.');
+  if (!project) throw new Error('Account settings could not be verified.');
   const identity = `${project}:${data.session.user.id}`;
   const owner = localStorage.getItem('health.records.owner');
-  if (owner && owner !== identity && !bind) throw new Error('These browser records belong to another account. Confirm opening your separate account records during setup.');
+  if (owner && owner !== identity && !bind) throw new AccountAccessError('setup', 'These browser records belong to another account. Confirm opening your separate account records during setup.');
   if (!owner) {
-    if (!bind) throw new Error('Open Your account and confirm these device records are yours before using the beta.');
+    if (!bind) throw new AccountAccessError('setup', 'Open Your account and confirm these device records are yours before using the beta.');
     await switchBrowserAccount(identity);
   }
   if(owner && owner!==identity && bind)await switchBrowserAccount(identity);

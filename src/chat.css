@@ -1114,5 +1114,43 @@
   }
 }
 
-.fuel-pantry-link-action{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:5px 0 0 42px;padding:10px 13px;max-width:calc(100% - 42px);border:1px solid #d5e9df;border-radius:14px;background:#eff8f3;color:#17634e;font:inherit;font-size:13px;text-align:left;}
-.fuel-pantry-link-action:focus-visible{outline:2px solid #19785b;outline-offset:3px;}
+.fuel-pantry-link-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 5px 0 0 42px;
+  padding: 10px 13px;
+  max-width: calc(100% - 42px);
+  border: 1px solid #d5e9df;
+  border-radius: 14px;
+  background: #eff8f3;
+  color: #17634e;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+}
+.fuel-pantry-link-action:focus-visible {
+  outline: 2px solid #19785b;
+  outline-offset: 3px;
+}
+.fuel-connection-notice {
+  margin: 12px 20px;
+  padding: 14px;
+  border: 1px solid #d5e4df;
+  border-radius: 16px;
+  background: #f3f8f5;
+  color: #25483e;
+  font-size: 14px;
+}
+.fuel-connection-notice p {
+  margin: 6px 0 10px;
+}
+.fuel-connection-notice > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fuel-connection-notice button {
+  min-height: 44px;
+}

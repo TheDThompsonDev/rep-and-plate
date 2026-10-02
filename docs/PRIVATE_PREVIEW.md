@@ -24,9 +24,11 @@ seven days in that browser via a signed, HttpOnly, Secure, SameSite cookie. The
 code stays on the server. Visit `/preview` and choose **Leave preview** to lock
 that browser again. Rotating the code and redeploying invalidates existing cookies.
 
-The invitation gate also covers native API requests: a native client without
-the preview cookie cannot access the hosted API while the gate is enabled.
-Local native development services are unchanged. This gate does not modify
+Native bootstrap (`GET /api/cloud/config`) and CORS preflight are public. API
+requests with a bearer token proceed to the existing account/connection,
+membership and scope checks; a bearer header alone does not authorize access.
+Browser app assets still require the invitation cookie. Local native development
+services are unchanged. This gate does not modify
 Supabase sign-up configuration or replace its row-level security policies.
 
 The code should be shared privately with trusted testers. Login throttling is

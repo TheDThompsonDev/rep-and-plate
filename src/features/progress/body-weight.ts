@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { calendarDate } from "../shopping/contracts";
+import { calendarDate } from "../shopping/contracts.ts";
 export const bodyWeightEntrySchema = z.object({
   id: z.string().min(1).max(100),
   day: calendarDate,

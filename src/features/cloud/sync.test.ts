@@ -16,6 +16,19 @@ it('recognizes schema-normalized empty records but protects custom targets and b
  expect(isFreshDevice(stateSchema.parse(initialState()))).toBe(true);
  const changed=initialState();changed.profile.calories=2300;expect(isFreshDevice(changed)).toBe(false);
 });
+it('restores name-only setup when the account name matches, while protecting different names and tracking records',async()=>{
+ let local=initialState();local.profile.name='Alex';
+ const remote=initialState();remote.profile.name='Alex';remote.activities=[{id:'cloud-walk',title:'Walk',day:'2026-10-01',minutes:20,note:''}];
+ expect(isFreshDevice(local)).toBe(false);
+ expect(isFreshDevice(local,'Someone else')).toBe(false);
+ const changed=initialState();changed.profile.name='Alex';changed.profile.calories=2300;
+ expect(isFreshDevice(changed,'Alex')).toBe(false);
+ changed.profile.calories=initialState().profile.calories;changed.activities=remote.activities;
+ expect(isFreshDevice(changed,'Alex')).toBe(false);
+ let writes=0;
+ const engine=new SyncEngine({local:()=>local,replace:async s=>{local=s},read:async()=>({state:remote,revision:7}),write:async()=>{writes++;return 8},checkpoint:async()=>{},baseline:()=>null,empty:account=>isFreshDevice(local,account?.profile.name),active:()=>true});
+ await engine.tick();expect(engine.status).toBe('saved');expect(local.activities).toEqual(remote.activities);expect(writes).toBe(0);
+});
 it('merges independent settings without losing either device edit',()=>{
  const b=initialState(); const a={...b,profile:{...b.profile,name:'A'}};const c={...b,profile:{...b.profile,protein:150}};
  expect(mergeRecords(b,a,c)?.profile).toMatchObject({name:'A',protein:150});

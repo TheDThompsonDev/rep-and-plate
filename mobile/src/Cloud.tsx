@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ONBOARDING_KEY, defaultFocus, parseOnboarding } from '../../src/features/onboarding/model';
 import { Text } from "react-native";
 import { type SupabaseClient } from "@supabase/supabase-js";
 import { Button, Card, Field, Sheet, s } from "./ui";
@@ -233,7 +235,13 @@ export function Cloud() {
             disabled={busy || h.busy}
             onPress={() =>
               void run(async () => {
+                const expected = user;
                 await requireDeviceOwner(client, true);
+                checkIdentity(expected);
+                const onboarding = parseOnboarding(await AsyncStorage.getItem(ONBOARDING_KEY));
+                checkIdentity(expected);
+                await AsyncStorage.setItem(ONBOARDING_KEY, JSON.stringify({ version: 1, mode: 'account', userId: expected, focus: onboarding?.focus ?? defaultFocus }));
+                checkIdentity(expected);
                 setError(
                   "Device records linked to your account. Chat and cloud access are ready.",
                 );

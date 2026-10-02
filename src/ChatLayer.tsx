@@ -12,7 +12,7 @@ import PreferenceProposalCard from "./features/preferences/PreferenceProposalCar
 import { defaultPreferences } from "./features/preferences/contracts";
 import type { ChatAction } from "./ai-contract";
 import RecipePortionProposalCard from "./features/recipes/RecipePortionProposalCard";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import {
   ArrowUp,
   BarChart3,
@@ -38,9 +38,14 @@ import {
   type Page,
 } from "./domain";
 import "./chat.css";
+import ReceiptEntry from './features/receipts/ReceiptEntry';
+import ReceiptExample from './features/receipts/ReceiptExample';
+import { receiptReadiness } from './features/receipts/journey';
 import { displayLoad } from "./workouts";
+import InteractionGuide from './features/onboarding/InteractionGuide';
 
 type Props = {
+  firstTrackingStep?: ReactNode;
   replayIntro: boolean;
   onReplayIntro: (replay: boolean) => void;
   onCorrectMeal: (messageId: string) => void;
@@ -55,14 +60,23 @@ type Props = {
   composer: string;
   processing: boolean;
   aiAvailable: boolean;
+  connectionChecking: boolean;
+  chatAccess?: 'signin' | 'setup' | 'restricted';
+  onChatAccount: (mode?: 'signin' | 'signup') => void;
+  onReconnect: () => void;
+  onAccount: () => void;
   aiStage: string;
   onRetry: (messageId: string) => void;
   onGroceries: (receiptId: string) => void;
+  onAddReceipt: () => void;
+  onReceiptDinner: (receiptId: string) => void;
+  onReceiptSpending: () => void;
   onScan: () => void;
   onPlan: () => void;
   onPreferences: () => void;
   onRecipes: () => void;
   onAction: (action: ChatAction) => void;
+  onManualMeal: () => void;
   onRecipePortion: (messageId: string, accept: boolean) => void;
   onAddMeal: (messageId: string) => void;
   onComposerChange: (value: string) => void;
@@ -81,6 +95,7 @@ type Props = {
 };
 
 export default function ChatLayer({
+  firstTrackingStep,
   replayIntro,
   onReplayIntro: setReplayIntro,
   onCorrectMeal,
@@ -95,14 +110,23 @@ export default function ChatLayer({
   composer,
   processing,
   aiAvailable,
+  connectionChecking,
+  chatAccess,
+  onChatAccount,
+  onReconnect,
+  onAccount,
   aiStage,
   onRetry,
   onGroceries,
+  onAddReceipt,
+  onReceiptDinner,
+  onReceiptSpending,
   onScan,
   onPlan,
   onPreferences,
   onRecipes,
   onAction,
+  onManualMeal,
   onRecipePortion,
   onAddMeal,
   onComposerChange,
@@ -119,6 +143,7 @@ export default function ChatLayer({
   onSetReps,
   onResolve,
 }: Props) {
+  const [receiptExample, setReceiptExample] = useState(false);
   const [comeback, setComeback] = useState(() => {
     try {
       return isComeback(
@@ -156,6 +181,7 @@ export default function ChatLayer({
   const [aboutOpen, setAboutOpen] = useState(false);
   const threadRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const examplesRef = useRef<HTMLDetailsElement>(null);
   const lastCount = useRef(
     state.messages.some((message) => message.ai) ? 0 : state.messages.length,
   );
@@ -225,6 +251,7 @@ export default function ChatLayer({
         aria-label="Capture conversation"
         aria-live="polite"
       >
+        {firstTrackingStep}
         <SpotWelcome
           key={intro ? "intro" : "welcome"}
           intro={intro}
@@ -234,12 +261,71 @@ export default function ChatLayer({
             setComeback(false);
             onSpotSettings({ introSeen: true });
           }}
-          onCapture={() => inputRef.current?.focus()}
+          onCapture={() => chatAccess === 'signin' || chatAccess === 'setup' ? onChatAccount() : inputRef.current?.focus()}
           onCatchup={() => {
             setCatchup(true);
             inputRef.current?.focus();
           }}
         />
+        <details className="chat-interaction-guide" ref={examplesRef}>
+          <summary role="button">What can I say to Spot?</summary>
+          <InteractionGuide tryLabel="Use my own words" onTry={() => {
+            if (examplesRef.current) examplesRef.current.open = false;
+            inputRef.current?.focus();
+          }}/>
+          <button className="spot-text-button" onClick={onManualMeal}>Enter a meal manually</button>
+        </details>
+        {!state.groceries?.length && <ReceiptEntry onReceipt={onAddReceipt} onExample={() => setReceiptExample(true)}/>}
+        {!aiAvailable && (
+          <div className="fuel-connection-notice" role="status">
+            <strong>
+              {connectionChecking
+                ? "Checking chat connection…"
+                : chatAccess === 'signin' ? "Sign in to chat with Spot"
+                : chatAccess === 'setup' ? "Finish setting up chat"
+                : chatAccess === 'restricted' ? "Chat access isn’t enabled for this account yet"
+                : "Connected chat is unavailable."}
+            </strong>
+            <p>
+              {chatAccess === 'signin'
+                ? "Chat is available to signed-in users. Create an account or sign in to ask health and fitness questions and log meals with Spot. Manual tracking is available without an account."
+                : chatAccess === 'setup'
+                ? "You’re signed in. Confirm your device records to finish setting up chat."
+                : chatAccess === 'restricted'
+                ? "You’re signed in, but this account doesn’t have chat access. Check Your account or contact support from Help & privacy."
+                : "Manual food logging and workouts still work. Retry the connection or check Your account."}
+            </p>
+            <div>
+              {chatAccess === 'signin' ? <>
+                <button className="button primary" onClick={() => onChatAccount('signup')}>Create account</button>
+                <button className="button secondary" onClick={() => onChatAccount('signin')}>Sign in</button>
+              </> : chatAccess === 'setup' ? <button className="button primary" onClick={() => onChatAccount()}>Finish setup</button> : <>
+              <button className="button secondary" onClick={onAccount}>
+                Your account
+              </button>
+              <button
+                className="button secondary"
+                onClick={onReconnect}
+                disabled={connectionChecking}
+              >
+                Retry connection
+              </button>
+              <button
+                className="button secondary"
+                onClick={() => {
+                  if (examplesRef.current) {
+                    examplesRef.current.open = true;
+                    examplesRef.current.scrollIntoView({ block: 'nearest' });
+                    examplesRef.current.querySelector('summary')?.focus();
+                  }
+                }}
+              >
+                Chat examples
+              </button>
+              </>}
+            </div>
+          </div>
+        )}
         {catchup && (
           <div className="spot-catchup">
             <strong>Catch me up.</strong> Send one moment at a time, with its
@@ -276,6 +362,10 @@ export default function ChatLayer({
             const receipt = (state.groceries ?? []).find(
               (g) => g.id === message.receiptId,
             );
+            const savedReceipt = message.captureIntent === 'receipt' && !!message.captureReviewId &&
+              !state.reviews.find(r => r.id === message.captureReviewId)?.resolved;
+            const inconclusiveReceipt = savedReceipt && message.aiStatus === 'complete' &&
+              !state.messages.some(m => m.requestId === message.id && m.receiptId);
             const isInsight =
               message.kind === "insight" || message.kind === "summary";
             const previous = state.messages[index - 1];
@@ -372,7 +462,7 @@ export default function ChatLayer({
                       {message.ai && message.role === "assistant" ? (
                         <AIText text={message.text} sources={message.sources} />
                       ) : (
-                        <p>{message.text}</p>
+                        <p>{message.captureIntent === 'receipt' ? 'My grocery receipt' : message.text}</p>
                       )}
                       <span className="fuel-time">
                         {message.time}
@@ -389,8 +479,12 @@ export default function ChatLayer({
                     <GroceryCard
                       receipt={receipt}
                       onOpen={() => onGroceries(receipt.id)}
+                      readiness={receiptReadiness(state, receipt.id)}
+                      onDinner={() => onReceiptDinner(receipt.id)}
+                      onSpending={onReceiptSpending}
                     />
                   )}
+                  {savedReceipt && (!message.aiStatus || inconclusiveReceipt) && <div className="receipt-result-actions"><p>{inconclusiveReceipt ? 'No groceries were extracted. Your original photo is still here; try again or add a clearer receipt.' : 'Receipt photo saved. Read it when connected to add groceries; nothing has been logged as eaten.'}</p><button className="button primary" disabled={processing || connectionChecking} onClick={() => aiAvailable ? onRetry(message.id) : chatAccess === 'signin' || chatAccess === 'setup' ? onChatAccount() : onReconnect()}>{aiAvailable ? inconclusiveReceipt ? 'Read this receipt again' : 'Read this receipt' : chatAccess === 'signin' || chatAccess === 'setup' ? 'Sign in to read this receipt' : 'Reconnect to read this receipt'}</button>{inconclusiveReceipt && <button className="button secondary" onClick={onAddReceipt}>Add a clearer receipt</button>}</div>}
                   {message.preferenceProposal && (
                     <PreferenceProposalCard
                       proposal={message.preferenceProposal}
@@ -715,6 +809,7 @@ export default function ChatLayer({
           )}
         </form>
       </div>
+      {receiptExample && <ReceiptExample onClose={() => setReceiptExample(false)}/>}
       <FuelTabs
         active="Chat"
         onNavigate={onNavigate}

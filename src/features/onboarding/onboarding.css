@@ -45,7 +45,7 @@
   max-width: 1050px;
   margin: 35px auto 60px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 70px;
   align-items: center;
 }
@@ -56,6 +56,7 @@
 }
 .welcome-art img {
   width: 100%;
+  height: auto;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 40% 40% 22px 22px;
@@ -302,6 +303,7 @@
   color: #667c69;
 }
 @media (max-width: 700px) {
+  .welcome-art-guide { display: none; }
   .welcome-shell {
     padding: 0 22px 22px;
   }

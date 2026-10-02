@@ -46,13 +46,15 @@ test("native account deletion confirms credentials and never clears records on f
   await page
     .getByLabel("Password", { exact: true })
     .fill("current-test-password");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await page.getByRole("button", { name: "Sign in", exact: true }).last().click();
   await page
     .getByRole("button", { name: "These device records are mine", exact: true })
     .click();
   const before = await page.evaluate(() =>
     localStorage.getItem("dannys-health.native.v1"),
   );
+  const draft = 'rep-and-plate.onboarding.draft.v1.account:11111111-1111-4111-8111-111111111111';
+  await page.evaluate(key => {localStorage.setItem(key,'unfinished setup');localStorage.setItem('rep-and-plate.onboarding.draft.v1.account:other','other account');},draft);
   await page
     .getByRole("button", { name: "Delete my account", exact: true })
     .click();
@@ -75,13 +77,16 @@ test("native account deletion confirms credentials and never clears records on f
   expect(
     await page.evaluate(() => localStorage.getItem("dannys-health.native.v1")),
   ).toBe(before);
+  expect(await page.evaluate(key => localStorage.getItem(key),draft)).toBe('unfinished setup');
   allow = true;
   await page
     .getByLabel("Current password", { exact: true })
     .fill("current-test-password");
   await button.click();
-  await expect(page.getByRole("heading", { name: /Good food/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Track your food/ })).toBeVisible();
   expect(attempts).toBe(2);
+  expect(await page.evaluate(key => localStorage.getItem(key),draft)).toBeNull();
+  expect(await page.evaluate(() => localStorage.getItem('rep-and-plate.onboarding.draft.v1.account:other'))).toBe('other account');
   expect(
     await page.evaluate(() => localStorage.getItem("health.records.owner")),
   ).toBeNull();

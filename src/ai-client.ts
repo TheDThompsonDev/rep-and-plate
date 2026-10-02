@@ -31,6 +31,9 @@ export function buildAIRequest(state: AppState, message: Message, selectedDay?: 
       .slice(-12)
       .map((m) => ({ role: m.role, text: m.text.slice(0, 18000) })),
     context: {
+      fitnessGoal: state.profile.fitnessGoal,
+      nutritionBaseline: state.profile.nutritionBaseline,
+      bodyWeights: state.bodyWeights?.filter(entry => entry.day <= today()).slice().sort((a, b) => a.day.localeCompare(b.day)).slice(-30),
       goalsConfigured: state.profile.targetsConfigured,
       activities: state.activities?.slice(-30).map(({title,day,minutes,note})=>({title,day,minutes,note})),
       shopping: (()=>{const spending=receiptSpending(state.groceries??[]);return {totals:spending.totals,recordedReceipts:purchaseReceipts(state.groceries??[]).length,reviewedReceipts:spending.covered,missingOrUncheckedTotals:spending.unpriced,list:(state.shopping?.list??[]).slice(-50).map(({name,quantity,checked})=>({name,quantity,checked}))};})(),
@@ -123,12 +126,16 @@ export function applyAIResult(state: AppState, result: AIResult): AppState {
     (g) => g.fingerprint === result.receipt?.fingerprint,
   );
   const receipt = previous ?? result.receipt;
+  const capture = state.messages.find(message => message.id === result.requestId);
   return {
     ...state,
     groceries:
       result.receipt && !previous
         ? [...(state.groceries ?? []), result.receipt]
         : state.groceries,
+    reviews: result.receipt && capture?.captureReviewId
+      ? state.reviews.map(review => review.id === capture.captureReviewId ? { ...review, resolved: true, answer: 'Groceries extracted' } : review)
+      : state.reviews,
     messages: [
       ...state.messages.map((m) =>
         m.id === result.requestId

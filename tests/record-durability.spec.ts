@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 test('an immediate refresh restores the latest small edit even before its durable write completes',async({page})=>{
- await page.goto('/');await expect(page.getByRole('heading',{name:/Good food/})).toBeVisible();
+ await page.goto('/');await expect(page.getByRole('heading',{name:/Track your food/})).toBeVisible();
  await page.evaluate(async()=>{
   const storage=await import('/src/platform/browser-records.ts');
   const {initialState}=await import('/src/domain.ts');

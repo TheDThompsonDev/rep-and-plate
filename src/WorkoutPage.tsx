@@ -109,6 +109,8 @@ export default function WorkoutPage({
   onVoice,
   onBuild,
   onScan,
+  startWithMovement = false,
+  onFirstMovementClose,
 }: {
   state: AppState;
   setState: Dispatch<SetStateAction<AppState>>;
@@ -117,10 +119,12 @@ export default function WorkoutPage({
   onVoice: () => void;
   onBuild: () => void;
   onScan: () => void;
+  startWithMovement?: boolean;
+  onFirstMovementClose?: () => void;
 }) {
   const workout = state.workout;
   const unit = state.profile.workoutUnit ?? "lb";
-  const [activityOpen, setActivityOpen] = useState(false);
+  const [activityOpen, setActivityOpen] = useState(startWithMovement);
   const [editingActivity, setEditingActivity] = useState<
     NonNullable<AppState["activities"]>[number] | null
   >(null);
@@ -1118,7 +1122,7 @@ export default function WorkoutPage({
       {activityOpen && (
         <Modal
           title="Log walk or cardio"
-          onClose={() => setActivityOpen(false)}
+          onClose={() => { setActivityOpen(false); if (startWithMovement) onFirstMovementClose?.(); }}
         >
           <form
             className="edit-form"
@@ -1146,6 +1150,7 @@ export default function WorkoutPage({
                     : addActivity(s, input),
                 );
                 setActivityOpen(false);
+                if (startWithMovement) onFirstMovementClose?.();
                 setActivityError("");
               } catch (error) {
                 setActivityError(

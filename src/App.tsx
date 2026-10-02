@@ -1,4 +1,6 @@
 import Onboarding from "./features/onboarding/Onboarding";
+import { FirstLog } from './features/onboarding/FirstLog';
+import { hasFirstLog } from './features/onboarding/first-log';
 import { persistBrowserRecords } from "./platform/browser-records";
 import { useBrowserRecords } from "./platform/useBrowserRecords";
 import { saveBodyWeight } from "./features/progress/body-weight";
@@ -7,7 +9,10 @@ import { resolveActivityProposal } from "./activities";
 import type { RecipeDraft } from "./features/recipes/RecipeDialog";
 import { SpotVisuals } from "./features/spot/Spot";
 import { resolveWorkoutCapture } from "./features/spot/model";
-import { apiFetch } from "./api-fetch";
+import { apiFetch, isHostedBrowser } from "./api-fetch";
+import { AccountAccessError } from "./account-access";
+import { chatGuidance, isChatHelp } from "./chat-guidance";
+import { dinnerPrompt, receiptPrompt, saveReceiptCapture, upgradeSavedReceiptCaptures } from './features/receipts/journey';
 import { resolveAgentMeal } from "./features/connections/context";
 import { cloudEpoch, onAccountChange } from "./features/cloud/sync-control";
 import {
@@ -38,6 +43,9 @@ const WorkoutBuilder = lazy(
   () => import("./features/workout-planning/WorkoutBuilder"),
 );
 const CloudAccount = lazy(() => import("./features/cloud/CloudAccount"));
+import { applyFitnessSetup } from './features/progress/fitness-goal';
+import { applyNutritionSetup } from './features/progress/nutrition-setup';
+import { weightCheckIn } from './features/progress/fitness-goal';
 const ConnectionsHub = lazy(
   () => import("./features/connections/ConnectionsHub"),
 );
@@ -176,7 +184,7 @@ const insights = [
   },
 ];
 
-function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
+function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboarding: () => void; firstLog: string | null; dismissFirstLog: () => void }) {
   useLocalDay();
   const [state, setState, stateForSync] = useBrowserRecords(() =>
     setToast(
@@ -184,7 +192,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     ),
   );
   const [page, setPage] = useState<Page>(() =>
-    location.hash === "#connections"
+    location.hash === '#receipt' ? 'Kitchen' : location.hash === "#connections"
       ? "You"
       : (navigation.find((n) => n.name.toLowerCase() === location.hash.slice(1))
           ?.name ?? "Chat"),
@@ -192,6 +200,9 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   const [toast, setToast] = useState("");
   const [editMeal, setEditMeal] = useState<Meal | null>(null);
   const [editProposalId, setEditProposalId] = useState<string | null>(null);
+  const [firstMovement, setFirstMovement] = useState(false);
+  const tracked = hasFirstLog(state);
+  useEffect(() => { if (firstLog && tracked) dismissFirstLog(); }, [firstLog, tracked, dismissFirstLog]);
   const [captureDay, setCaptureDay] = useState<string | null>(null);
   const [scannerProduct, setScannerProduct] = useState<
     FoodProduct | undefined
@@ -199,7 +210,9 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   const [recipeDraft, setRecipeDraft] = useState<RecipeDraft>();
   const [resumeRecipe, setResumeRecipe] = useState(false);
   const [recordRevision, setRecordRevision] = useState(0);
-  function clearCaptureDrafts() {
+  const preserveGuestChatDraft = useRef(false);
+  const resumeReceiptCapture = useRef(false);
+  function clearCaptureDrafts(keepComposer = false) {
     setRecordRevision((current) => current + 1);
     setPlannerOpen(false);
     setPreferencesOpen(false);
@@ -210,9 +223,13 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     setGroceriesOpen(null);
     setReviewMessageId(null);
     setLinkMealId(null);
-    setCaptureOpen(false);
-    setReceiptCapture(false);
-    setCaptureContext("");
+    if (!keepComposer || !resumeReceiptCapture.current) {
+      resumeReceiptCapture.current = false;
+      setCaptureOpen(false);
+      setReceiptCapture(false);
+      setCaptureContext('');
+      setUpload(null);
+    }
     setCaptureError("");
     setRecipeDraft(undefined);
     setResumeRecipe(false);
@@ -223,16 +240,17 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     setRecipesOpen(false);
     setScannerOpen(false);
     setLabelGTIN(null);
-    setUpload(null);
-    setComposer("");
+    if (!keepComposer) setComposer("");
   }
   useEffect(() => {
     let owner = localStorage.getItem("health.records.owner");
     return onAccountChange(() => {
       const next = localStorage.getItem("health.records.owner");
       if (next !== owner) {
+        const keepDraft = !owner && !!next && preserveGuestChatDraft.current;
+        preserveGuestChatDraft.current = false;
         owner = next;
-        clearCaptureDrafts();
+        clearCaptureDrafts(keepDraft);
         cancelPendingAI();
       }
     });
@@ -284,8 +302,8 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     text: string;
     evidence?: string;
   } | null>(null);
-  const [captureOpen, setCaptureOpen] = useState(false);
-  const [receiptCapture, setReceiptCapture] = useState(false);
+  const [captureOpen, setCaptureOpen] = useState(() => location.hash === '#receipt');
+  const [receiptCapture, setReceiptCapture] = useState(() => location.hash === '#receipt');
   const [captureError, setCaptureError] = useState("");
   const [upload, setUpload] = useState<{ name: string; image: string } | null>(
     null,
@@ -293,7 +311,8 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   const [composer, setComposer] = useState("");
   const [reviewMessageId, setReviewMessageId] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
-  const [aiStatus, setAIStatus] = useState<AIStatus | null>(null);
+  const [aiStatus, setAIStatus] = useState<(AIStatus & { access?: 'signin' | 'setup' | 'restricted' }) | null>(null);
+  const [connectionRevision, setConnectionRevision] = useState(0);
   const [aiStage, setAIStage] = useState("");
   const [captureContext, setCaptureContext] = useState("");
   const [groceriesOpen, setGroceriesOpen] = useState<string | null>(null);
@@ -309,6 +328,47 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   const [workoutBuilderOpen, setWorkoutBuilderOpen] = useState(false);
   const [voiceOpen, setVoiceOpen] = useState(false);
   const [cloudOpen, setCloudOpen] = useState(false);
+  const [profileAccountMode, setProfileAccountMode] = useState<'signin' | 'signup'>('signin');
+  const [chatAccountMode, setChatAccountMode] = useState<'signin' | 'signup' | null>(null);
+  function openChatAccount(mode: 'signin' | 'signup' = 'signin') {
+    preserveGuestChatDraft.current = !localStorage.getItem('health.records.owner');
+    setChatAccountMode(mode);
+    setCloudOpen(true);
+  }
+  function openReceipt() {
+    setReceiptCapture(true);
+    setCaptureContext('');
+    setCaptureError('');
+    setUpload(null);
+    setCaptureOpen(true);
+  }
+  function receiptAccount() {
+    resumeReceiptCapture.current = true;
+    setCaptureOpen(false);
+    openChatAccount();
+  }
+  function returnToReceipt() {
+    if (resumeReceiptCapture.current) {
+      resumeReceiptCapture.current = false;
+      setCaptureOpen(true);
+    }
+  }
+  function chooseReceiptDinner(receiptId: string) {
+    const receipt = state.groceries?.find(r => r.id === receiptId);
+    if (!receipt) return;
+    askFromGroceries(dinnerPrompt(receipt));
+  }
+  function askFromGroceries(text: string) {
+    navigate('Chat');
+    setComposer(text);
+    if (aiBusy.current) {
+      notify('Spot is finishing the current response. Your dinner request stays in the composer to send next.');
+      return;
+    }
+    if (aiStatus?.available) { setComposer(''); void sendAI(text); }
+    else if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') openChatAccount();
+    else notify('Your dinner request is ready. Reconnect to send it; no meal or pantry amounts have changed.');
+  }
   const [connectionsOpen, setConnectionsOpen] = useState(
     () => location.hash === "#connections",
   );
@@ -358,25 +418,55 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   });
 
   useEffect(() => {
-    setState(upgradeChat);
+    setState(s => upgradeSavedReceiptCaptures(upgradeChat(s)));
   }, []);
   useEffect(() => {
     let live = true;
-    apiFetch("/api/status")
-      .then((r) => r.json())
+    const controller = new AbortController();
+    setAIStatus(null);
+    apiFetch("/api/status", {
+      signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]),
+    })
+      .then((r) => {
+        if (r.status === 401) throw new AccountAccessError('signin', 'Sign in to chat with Spot.');
+        if (r.status === 403) return { available: false, access: 'restricted' };
+        if (!r.ok) throw new Error("Connection unavailable");
+        return r.json();
+      })
       .then((value) => {
         if (live)
           setAIStatus({
             available: value.available === true,
             jev: value.jev === true,
             model: value.model,
+            access: value.access,
           });
       })
-      .catch(() => {
-        if (live) setAIStatus({ available: false, jev: false });
+      .catch((error) => {
+        if (live) setAIStatus({ available: false, jev: false, access: error instanceof AccountAccessError ? error.reason : undefined });
       });
     return () => {
       live = false;
+      controller.abort();
+    };
+  }, [connectionRevision]);
+  useEffect(() => {
+    const refresh = () => setConnectionRevision((revision) => revision + 1);
+    const unsubscribe = onAccountChange(refresh);
+    let active = true;
+    let unsubscribeAuth = () => {};
+    if (isHostedBrowser()) void import('./features/cloud/client').then(async ({ getCloudClient }) => {
+      const client = await getCloudClient();
+      if (!active || !client) return;
+      const sub = client.auth.onAuthStateChange(() => refresh());
+      unsubscribeAuth = () => sub.data.subscription.unsubscribe();
+    }).catch(() => {});
+    window.addEventListener("online", refresh);
+    return () => {
+      unsubscribe();
+      active = false;
+      unsubscribeAuth();
+      window.removeEventListener("online", refresh);
     };
   }, []);
 
@@ -387,6 +477,11 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   }, [toast]);
   useEffect(() => {
     const onHash = () => {
+      if (location.hash === '#receipt') {
+        setPage('Kitchen');
+        openReceipt();
+        return;
+      }
       if (location.hash === "#connections") {
         setPage("You");
         setConnectionsStarted(true);
@@ -409,6 +504,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   );
 
   function navigate(next: Page) {
+    setFirstMovement(false);
     setPage(next);
     location.hash = next.toLowerCase();
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -502,13 +598,22 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   }
   async function sendAI(text: string, image?: string, retryId?: string) {
     if (aiBusy.current) return;
+    if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') {
+      openChatAccount();
+      return;
+    }
     if (!aiStatus?.available) {
       notify(
         "The AI connection isn’t available. Please check the server and refresh.",
       );
       return;
     }
-    const message = retryId
+    const previousMessage = retryId ? state.messages.find(m => m.id === retryId) : undefined;
+    const reread = previousMessage?.captureIntent === 'receipt' && previousMessage.aiStatus === 'complete' &&
+      !state.messages.some(m => m.requestId === retryId && m.receiptId);
+    const message = reread
+      ? { ...previousMessage!, id: id(), time: clockTime(), aiStatus: 'pending' as const, aiError: undefined }
+      : retryId
       ? state.messages.find((m) => m.id === retryId)
       : {
           id: id(),
@@ -521,6 +626,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
           captureDay: captureDay ?? undefined,
         };
     if (!message) return;
+    if (message.aiStatus === 'complete') return;
     const generation = ++aiGeneration.current;
     const controller = new AbortController();
     aiRequestController.current = controller;
@@ -529,7 +635,9 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     setAIStage("Connecting to Rep & Plate…");
     setState((s) => ({
       ...s,
-      messages: retryId
+      messages: reread
+        ? [...s.messages.map(m => m.id === retryId ? { ...m, captureReviewId: undefined } : m), message]
+        : retryId
         ? s.messages.map((m) =>
             m.id === retryId
               ? { ...m, aiStatus: "pending", aiError: undefined }
@@ -601,6 +709,32 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     e?.preventDefault();
     const text = (preset ?? composer).trim();
     if (!text || processing) return;
+    if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') {
+      setComposer(text);
+      openChatAccount();
+      return;
+    }
+    if (aiStatus?.access === 'restricted') {
+      notify('Chat access is not enabled for this account yet. Open Your account or contact support.');
+      return;
+    }
+    if (isChatHelp(text)) {
+      setComposer("");
+      setState((s) => ({
+        ...s,
+        messages: [
+          ...s.messages,
+          { id: id(), role: "user", text, time: clockTime() },
+          {
+            id: id(),
+            role: "assistant",
+            text: chatGuidance(aiStatus?.available === true),
+            time: clockTime(),
+          },
+        ],
+      }));
+      return;
+    }
     if (
       /^(?:my |open )?(?:shopping list|smart swaps|shopping|grocery spending)[?!.]*$/i.test(
         text,
@@ -860,23 +994,8 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
         };
         response = `Bench saved: ${result.weight} lb × ${result.reps.join(", ")} reps. It’s in your workout.`;
       } else {
-        next = {
-          ...next,
-          reviews: [
-            ...s.reviews,
-            {
-              id: id(),
-              title: "A capture to come back to",
-              question: text,
-              source: `Text · ${clockTime()}`,
-              options: ["Keep as a note"],
-              kind: "capture",
-              resolved: false,
-            },
-          ],
-        };
         response =
-          "Saved your words for review. I can’t estimate this yet in the prototype, but your note is here whenever you need it.";
+          "I can’t answer freely while connected chat is unavailable. Your message is kept here, but nothing was logged or added to review. Open Your account to check sign-in, then retry the connection and send your message again. You can also use Nutrition → Enter meal manually, Workouts, or ask “What should I say?” for local shortcuts.";
       }
       return {
         ...next,
@@ -950,7 +1069,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
   }
   function saveUploadForReview() {
     if (!upload) return;
-    setState((s) => ({
+    setState((s) => receiptCapture ? saveReceiptCapture(s, upload.image, upload.name, captureContext) : ({
       ...s,
       reviews: [
         ...s.reviews,
@@ -1001,7 +1120,14 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
     if (reps !== null) {
       setState((s) => ({
         ...s,
-        workout: recordSet(s.workout, exIndex, setIndex, reps, undefined, s.profile.workoutUnit ?? 'lb'),
+        workout: recordSet(
+          s.workout,
+          exIndex,
+          setIndex,
+          reps,
+          undefined,
+          s.profile.workoutUnit ?? "lb",
+        ),
       }));
       return;
     }
@@ -1153,10 +1279,12 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
               </button>
             </div>
           </header>
+          {state.profile.fitnessGoal && page !== 'You' && weightCheckIn(state.bodyWeights ?? [], state.profile.fitnessGoal, today()).due && <div className="quick-account" role="status"><p>{weightCheckIn(state.bodyWeights ?? [], state.profile.fitnessGoal, today()).text}</p><button onClick={() => navigate('You')}>Log your weight</button></div>}
           <main
             id="main"
             className={`main-content ${page === "Chat" || page === "Nutrition" || page === "Kitchen" || page === "Workouts" || page === "You" || page === "Review" ? "chat-main" : ""}`}
           >
+            {page !== 'Chat' && firstLog && !tracked && <FirstLog focus={firstLog} onMeal={() => manualMeal(today())} onMovement={() => { navigate('Workouts'); setFirstMovement(true); }} onLater={dismissFirstLog} />}
             {page === "Today" && (
               <div className="page-enter">
                 <div className="page-heading">
@@ -1199,9 +1327,11 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                       <span className="tiny-leaf">
                         <CircleDot size={15} />
                       </span>
-                      {!state.profile.targetsConfigured ? 'Recorded meals, at your own pace.' : totals.protein < state.profile.protein
-                        ? "A little more protein will round out your day."
-                        : "You’ve reached your protein goal for today."}
+                      {!state.profile.targetsConfigured
+                        ? "Recorded meals, at your own pace."
+                        : totals.protein < state.profile.protein
+                          ? "A little more protein will round out your day."
+                          : "You’ve reached your protein goal for today."}
                       <span className="muted-dot">•</span>
                       <span>Looking good</span>
                     </div>
@@ -1423,7 +1553,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                 onOpenPlan={() => setPlannerOpen(true)}
                 onOpenRecipes={() => setRecipesOpen(true)}
                 onAsk={(text) => {
-                  navigate("Chat");
+                  navigate('Chat');
                   submitText(undefined, text);
                 }}
                 state={state}
@@ -1439,6 +1569,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
 
             {page === "Chat" && (
               <ChatLayer
+                firstTrackingStep={firstLog && !tracked ? <FirstLog focus={firstLog} onMeal={() => manualMeal(today())} onMovement={() => { navigate('Workouts'); setFirstMovement(true); }} onLater={dismissFirstLog} /> : undefined}
                 replayIntro={replaySpotIntro}
                 onReplayIntro={(replay) =>
                   replay ? onReplayOnboarding() : setReplaySpotIntro(false)
@@ -1503,16 +1634,27 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                 composer={composer}
                 processing={processing}
                 aiAvailable={aiStatus?.available ?? false}
+                connectionChecking={aiStatus === null}
+                chatAccess={aiStatus?.access}
+                onChatAccount={openChatAccount}
+                onReconnect={() =>
+                  setConnectionRevision((revision) => revision + 1)
+                }
+                onAccount={() => setCloudOpen(true)}
                 aiStage={aiStage}
                 onRetry={(messageId) => {
                   void sendAI("", undefined, messageId);
                 }}
                 onGroceries={setGroceriesOpen}
+                onAddReceipt={openReceipt}
+                onReceiptDinner={chooseReceiptDinner}
+                onReceiptSpending={() => { setShoppingTab('spending'); setShoppingOpen(true); }}
                 onScan={openScanner}
                 onPlan={() => setPlannerOpen(true)}
                 onPreferences={() => setPreferencesOpen(true)}
                 onRecipes={() => setRecipesOpen(true)}
                 onAction={openChatAction}
+                onManualMeal={() => manualMeal(captureDay ?? today())}
                 onRecipePortion={(messageId, accept) => {
                   try {
                     resolveRecipePortionProposal(state, messageId, accept);
@@ -1541,14 +1683,19 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                 onComposerChange={setComposer}
                 onSend={submitText}
                 onCamera={() => {
+                  if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') { openChatAccount(); return; }
                   setReceiptCapture(false);
                   cameraRef.current?.click();
                 }}
                 onAttach={() => {
+                  if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') { openChatAccount(); return; }
                   setReceiptCapture(false);
                   fileRef.current?.click();
                 }}
-                onVoice={voice}
+                onVoice={() => {
+                  if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') { openChatAccount(); return; }
+                  voice();
+                }}
                 onProfile={() => navigate("You")}
                 onNavigate={navigate}
                 onEditMeal={setEditMeal}
@@ -1573,13 +1720,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                 onNavigate={navigate}
                 onScan={openScanner}
                 onTargets={() => setProfileOpen(true)}
-                onAddReceipt={() => {
-                  setReceiptCapture(true);
-                  setCaptureError("");
-                  setUpload(null);
-                  setCaptureContext("");
-                  setCaptureOpen(true);
-                }}
+                onAddReceipt={openReceipt}
                 onShopping={() => {
                   setShoppingTab("swaps");
                   setShoppingOpen(true);
@@ -1589,16 +1730,15 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                 onReceipt={(receiptId) => setGroceriesOpen(receiptId)}
                 onPlan={() => setPlannerOpen(true)}
                 onRecipes={() => setRecipesOpen(true)}
-                onAsk={(text) => {
-                  navigate("Chat");
-                  submitText(undefined, text);
-                }}
+                onAsk={askFromGroceries}
               />
             )}
 
             {page === "Workouts" && (
               <WorkoutPage
-                key={recordRevision}
+                key={`${recordRevision}-${firstMovement}`}
+                startWithMovement={firstMovement && !!firstLog && !tracked}
+                onFirstMovementClose={() => setFirstMovement(false)}
                 onScan={openScanner}
                 state={state}
                 setState={setState}
@@ -1624,7 +1764,9 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                   setReviewMessageId(messageId);
                   navigate("Chat");
                 }}
-                onAccount={() => setCloudOpen(true)}
+                onAccount={(mode = 'signin') => { setProfileAccountMode(mode); setCloudOpen(true); }}
+                onSaveFitness={draft => { const next = applyFitnessSetup(state, draft, today(), id()); setState(next); }}
+                onSaveNutrition={result => { const next = applyNutritionSetup(state, result); setState(next); }}
                 onConnections={() => {
                   setConnectionsStarted(true);
                   setConnectionsOpen(true);
@@ -1760,6 +1902,11 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
             }}
           >
             <div className="capture-modal">
+              {receiptCapture && <div className="receipt-capture-benefit"><strong>Give this grocery trip a dinner plan.</strong><p>Save what you bought, check the products and amounts, then choose dinner from your groceries and see what else you need.</p><small>Purchases never count as food eaten. You review uncertain details.</small></div>}
+              {receiptCapture && !aiStatus?.available && <div className="receipt-access" role="status">
+                <p>{aiStatus === null ? 'Checking receipt reading…' : aiStatus.access === 'signin' ? 'Sign in to read your receipt and get meal ideas.' : aiStatus.access === 'setup' ? 'Finish account setup to read your receipt.' : aiStatus.access === 'restricted' ? 'Receipt reading is not enabled for this account during private preview.' : 'AI is unavailable. Save your photo now and read this receipt when connected.'}</p>
+                {aiStatus?.access === 'signin' || aiStatus?.access === 'setup' ? <button className="button primary full-width" onClick={receiptAccount}>{aiStatus.access === 'setup' ? 'Finish setup for receipts' : 'Sign in to read receipts'}</button> : aiStatus && <button className="button secondary full-width" onClick={() => { if (aiStatus.access === 'restricted') receiptAccount(); else setConnectionRevision(r => r + 1); }}>{aiStatus.access === 'restricted' ? 'Check receipt access' : 'Retry receipt connection'}</button>}
+              </div>}
               {captureError && <p role="alert">{captureError}</p>}
               {upload ? (
                 <>
@@ -1777,29 +1924,26 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                       ? receiptCapture
                         ? "Check that the store, items, and prices are readable. We’ll identify your groceries and research their nutrition, keeping purchases separate from meals you ate."
                         : "Send a meal photo, grocery receipt, or order screenshot. Rep & Plate will read it and look for useful nutrition sources."
-                      : "AI is unavailable. You can still save this image for review."}
+                      : receiptCapture ? 'Save the photo for later, or use the receipt access option above. Saving a photo does not extract groceries.' : "AI is unavailable. You can still save this image for review."}
                   </p>
-                  {aiStatus?.available && (
-                    <>
                       <label className="fuel-capture-context">
                         Anything to add? (optional)
                         <textarea
                           maxLength={2000}
                           value={captureContext}
                           onChange={(e) => setCaptureContext(e.target.value)}
-                          placeholder="e.g. My grocery receipt, or what I had for lunch"
+                          placeholder={receiptCapture ? 'e.g. Two packs of chicken, one is already used' : 'e.g. My grocery receipt, or what I had for lunch'}
                         />
                       </label>
+                  {aiStatus?.available && (
+                    <>
                       <button
                         className="button primary full-width"
                         disabled={processing}
                         onClick={() => {
                           const image = upload.image;
                           const text = receiptCapture
-                            ? "This is a grocery receipt for items I purchased. Identify the store and items, research their nutrition, and save the grocery list separately from meals I ate. Do not log these purchases as food eaten." +
-                              (captureContext.trim()
-                                ? `\n\nAdditional context: ${captureContext.trim()}`
-                                : "")
+                            ? receiptPrompt(captureContext)
                             : captureContext.trim() ||
                               "Please help me understand this photo or receipt. If these are groceries I purchased, research their nutrition and save the grocery list separately from meals I ate.";
                           setCaptureOpen(false);
@@ -1809,15 +1953,16 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                           void sendAI(text, image);
                         }}
                       >
-                        Send to Rep & Plate <ArrowRight size={17} />
+                        {receiptCapture ? 'Read my receipt' : 'Send to Rep & Plate'} <ArrowRight size={17} />
                       </button>
-                      <p className="section-note">
-                        Sent to our AI provider for image reading and web
-                        research; extracted details may be checked by TypeSafe.
-                        Your saved records stay in this browser.
-                      </p>
                     </>
                   )}
+                  <p className="section-note">
+                    Reading sends the image to our AI provider for image reading
+                    and web research; extracted details may be checked by TypeSafe.
+                    Records save on this device. With account saving enabled,
+                    a private account copy of records and photos is saved too.
+                  </p>
                   <button
                     className={`button ${aiStatus?.available ? "" : "primary"} full-width`}
                     onClick={saveUploadForReview}
@@ -1944,7 +2089,23 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
           {cloudOpen && (
             <CloudAccount
               state={state}
-              onClose={() => setCloudOpen(false)}
+              initialMode={chatAccountMode ?? profileAccountMode}
+              forChat={chatAccountMode !== null}
+              forReceipt={resumeReceiptCapture.current}
+              onChatReady={() => {
+                setCloudOpen(false);
+                setChatAccountMode(null);
+                setConnectionRevision(value => value + 1);
+                returnToReceipt();
+                notify('Account setup complete. Your draft is ready to send once chat connects.');
+              }}
+              onClose={() => {
+                setCloudOpen(false);
+                setChatAccountMode(null);
+                preserveGuestChatDraft.current = false;
+                returnToReceipt();
+                setConnectionRevision(value => value + 1);
+              }}
               onRestore={(restored) => {
                 cancelPendingAI();
                 clearCaptureDrafts();
@@ -1961,7 +2122,11 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                 if (page === "Workouts" && state.workout.status === "active")
                   setState((s) => ({
                     ...s,
-                    workout: replyToWorkout(s.workout, text, s.profile.workoutUnit ?? 'lb'),
+                    workout: replyToWorkout(
+                      s.workout,
+                      text,
+                      s.profile.workoutUnit ?? "lb",
+                    ),
                   }));
                 else submitText(undefined, text);
               }}
@@ -2149,10 +2314,7 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
                   setRecipesOpen(true);
                 }
               }}
-              onAsk={(text) => {
-                navigate("Chat");
-                void sendAI(text);
-              }}
+              onAsk={askFromGroceries}
             />
           )}
           {recipesOpen && (
@@ -2216,8 +2378,15 @@ function App({ onReplayOnboarding }: { onReplayOnboarding: () => void }) {
           <MealEditor
             key={editMeal.id}
             isProposal={!!editProposalId}
-            newManual={!editProposalId && !state.meals.some((m) => m.id === editMeal.id) && editMeal.source === 'Manual entry'}
-            repeatDraft={!state.meals.some((m) => m.id === editMeal.id) && editMeal.source === 'Repeated saved meal'}
+            newManual={
+              !editProposalId &&
+              !state.meals.some((m) => m.id === editMeal.id) &&
+              editMeal.source === "Manual entry"
+            }
+            repeatDraft={
+              !state.meals.some((m) => m.id === editMeal.id) &&
+              editMeal.source === "Repeated saved meal"
+            }
             onRepeat={
               !editProposalId && state.meals.some((m) => m.id === editMeal.id)
                 ? () =>
@@ -2378,27 +2547,43 @@ function MealEditor({
 }) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
-  const [values, setValues] = useState(() => ({calories:newManual ? '' : String(meal.calories),protein:newManual ? '' : String(meal.protein),carbs:newManual ? '' : String(meal.carbs),fat:newManual ? '' : String(meal.fat)}));
-  const [portion, setPortion] = useState('1');
+  const [values, setValues] = useState(() => ({
+    calories: newManual ? "" : String(meal.calories),
+    protein: newManual ? "" : String(meal.protein),
+    carbs: newManual ? "" : String(meal.carbs),
+    fat: newManual ? "" : String(meal.fat),
+  }));
+  const [portion, setPortion] = useState("1");
   const [appliedPortion, setAppliedPortion] = useState(1);
   const [reviewedMeal, setReviewedMeal] = useState(meal);
   const [note, setNote] = useState(meal.note);
   function applyPortion() {
     try {
       const multiplier = Number(portion);
-      const scaled = scaleMealPortion(meal,multiplier);
+      const scaled = scaleMealPortion(meal, multiplier);
       setReviewedMeal(scaled);
-      setValues({calories:String(scaled.calories),protein:String(scaled.protein),carbs:String(scaled.carbs),fat:String(scaled.fat)});
+      setValues({
+        calories: String(scaled.calories),
+        protein: String(scaled.protein),
+        carbs: String(scaled.carbs),
+        fat: String(scaled.fat),
+      });
       setAppliedPortion(multiplier);
-      setNote(`${multiplier} × the original saved portion. Pantry and prepared portions were not changed.`);
-      setError('');
-    } catch (error) { setError(error instanceof Error ? error.message : 'Check the portion.'); }
+      setNote(
+        `${multiplier} × the original saved portion. Pantry and prepared portions were not changed.`,
+      );
+      setError("");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Check the portion.");
+    }
   }
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    if (Object.values(values).some(value=>!value.trim())) {
-      setError('Enter all four nutrition values. Use 0 only for a known zero; unknown values cannot be saved as zero.');
+    if (Object.values(values).some((value) => !value.trim())) {
+      setError(
+        "Enter all four nutrition values. Use 0 only for a known zero; unknown values cannot be saved as zero.",
+      );
       return;
     }
     const parsed = mealSchema.safeParse({
@@ -2442,13 +2627,45 @@ function MealEditor({
               : "Your own values, saved exactly as entered."}
           </span>
         </div>
-        {newManual && <p>Enter calories, protein, carbs and fat from a label or your own estimate. Use 0 only when you know the value is zero. If you don’t know a value, ask Spot for a reviewed estimate instead.</p>}
-        {repeatDraft && <div className="estimate-notice"><div>
-          <label>Portion multiplier<input type="number" min="0.0001" max="100" step="any" value={portion} onChange={event=>setPortion(event.target.value)} /></label>
-          <button className="button secondary" type="button" onClick={applyPortion}>Apply portion</button>
-          <p>1 repeats the original portion; 0.5 is half and 2 is double. Apply, review the values below, then save. Pantry and prepared portions are not changed.</p>
-          {Number(portion) !== appliedPortion && <p role="status">Apply the portion before saving.</p>}
-        </div></div>}
+        {newManual && (
+          <p>
+            Enter calories, protein, carbs and fat from a label or your own
+            estimate. Use 0 only when you know the value is zero. If you don’t
+            know a value, ask Spot for a reviewed estimate instead.
+          </p>
+        )}
+        {repeatDraft && (
+          <div className="estimate-notice">
+            <div>
+              <label>
+                Portion multiplier
+                <input
+                  type="number"
+                  min="0.0001"
+                  max="100"
+                  step="any"
+                  value={portion}
+                  onChange={(event) => setPortion(event.target.value)}
+                />
+              </label>
+              <button
+                className="button secondary"
+                type="button"
+                onClick={applyPortion}
+              >
+                Apply portion
+              </button>
+              <p>
+                1 repeats the original portion; 0.5 is half and 2 is double.
+                Apply, review the values below, then save. Pantry and prepared
+                portions are not changed.
+              </p>
+              {Number(portion) !== appliedPortion && (
+                <p role="status">Apply the portion before saving.</p>
+              )}
+            </div>
+          </div>
+        )}
         {isProposal && (
           <p>
             Editing this estimate does not log it. Your original stays unchanged
@@ -2502,7 +2719,12 @@ function MealEditor({
                 max="20000"
                 step="any"
                 value={values[key]}
-                onChange={event=>setValues(current=>({...current,[key]:event.target.value}))}
+                onChange={(event) =>
+                  setValues((current) => ({
+                    ...current,
+                    [key]: event.target.value,
+                  }))
+                }
               />
             </label>
           ))}
@@ -2513,7 +2735,7 @@ function MealEditor({
             name="note"
             maxLength={1500}
             value={note}
-            onChange={event=>setNote(event.target.value)}
+            onChange={(event) => setNote(event.target.value)}
             rows={3}
           />
         </label>
@@ -2701,6 +2923,6 @@ function ProfileEditor({
 
 export default function OnboardedApp() {
   return (
-    <Onboarding>{(replay) => <App onReplayOnboarding={replay} />}</Onboarding>
+    <Onboarding>{(replay, firstLog, dismissFirstLog) => <App onReplayOnboarding={replay} firstLog={firstLog} dismissFirstLog={dismissFirstLog} />}</Onboarding>
   );
 }

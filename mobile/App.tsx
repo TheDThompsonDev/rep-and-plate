@@ -1,6 +1,8 @@
 import { SpotAvatar, SpotWordmark } from "./src/Spot";
+import { weightCheckIn } from '../src/features/progress/fitness-goal';
+import { today } from '../src/domain';
 import "./src/runtime";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -40,11 +42,18 @@ import {
 } from "./src/KitchenTools";
 import { Shopping } from "./src/Shopping";
 import { Cloud } from "./src/Cloud";
-import { NativeOnboarding } from "./src/Onboarding";
+import { NativeOnboarding, useWelcome } from "./src/Onboarding";
+import { FirstLog } from './src/FirstLog';
+import { ManualMeal } from './src/ManualMeal';
+import { hasFirstLog } from '../src/features/onboarding/first-log';
 import { AccountSync } from "./src/AccountSync";
 import { Connections } from "./src/Connections";
 function HealthApp() {
   const h = useHealth();
+  const welcome = useWelcome();
+  const [firstMeal, setFirstMeal] = useState(false), [firstMovement, setFirstMovement] = useState(false);
+  const tracked = h.state ? hasFirstLog(h.state) : false;
+  useEffect(() => { if (welcome.firstLog && tracked) welcome.dismissFirstLog(); }, [welcome.firstLog, tracked, welcome.dismissFirstLog]);
   useEffect(() => {
     const sub = BackHandler.addEventListener("hardwareBackPress", () => {
       if (h.tool) {
@@ -114,6 +123,9 @@ function HealthApp() {
           </IconButton>
         </View>
         <AccountSync />
+        {welcome.firstLog && !tracked && <FirstLog focus={welcome.firstLog} onMeal={() => setFirstMeal(true)} onMovement={() => {setFirstMovement(true);h.setTab('Workouts');}} onLater={welcome.dismissFirstLog} />}
+        {firstMeal && <ManualMeal day={h.day} onClose={() => setFirstMeal(false)} onSaved={() => {setFirstMeal(false);h.setTab('Nutrition');}} />}
+        {h.state.profile.fitnessGoal && h.tab !== 'You' && weightCheckIn(h.state.bodyWeights ?? [], h.state.profile.fitnessGoal, today()).due && <Pressable accessibilityRole="button" accessibilityLabel="Log your weight" onPress={() => h.setTab('You')} style={[s.hero, { padding: 12, marginHorizontal: 15 }]}><Text style={s.h3}>{weightCheckIn(h.state.bodyWeights ?? [], h.state.profile.fitnessGoal, today()).text}</Text><Text style={s.muted}>Log your weight →</Text></Pressable>}
         <Connections />
         {!!h.notice && (
           <Pressable
@@ -146,7 +158,7 @@ function HealthApp() {
           ) : h.tab === "Kitchen" ? (
             <KitchenScreen />
           ) : h.tab === "Workouts" ? (
-            <WorkoutsScreen />
+            <WorkoutsScreen key={String(firstMovement)} startWithMovement={firstMovement && !!welcome.firstLog && !tracked} onFirstMovementClose={() => setFirstMovement(false)} />
           ) : (
             <YouScreen />
           )}

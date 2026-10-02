@@ -1,7 +1,7 @@
 import { commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
-test("first useful week starts with household preferences and leads to receipt review", async ({
+test("first useful week starts with receipts and offers optional household preferences", async ({
   page,
 }) => {
   await page.route("**/api/status", (route) =>
@@ -10,6 +10,8 @@ test("first useful week starts with household preferences and leads to receipt r
   await page.goto("/");
   await page.getByRole("button", { name: "Kitchen", exact: true }).click();
   const guide = page.getByRole("region", { name: "Your first useful week" });
+  await expect(guide.getByRole('button', { name: 'Start: Give your groceries a job', exact: true })).toBeVisible();
+  await guide.getByText('Tailor my week and nutrition targets', { exact: true }).click();
   await guide
     .getByRole("button", {
       name: "Start: Make it your kind of week",

@@ -1,12 +1,15 @@
 import {test,expect,type Page} from '@playwright/test';
 import {mockCloud,stored} from './cloud-fixture';
 import {initialState} from '../src/domain';
-async function enter(page:Page,name=''){
+async function enter(page:Page,name:string){
  await page.goto('/');await page.getByRole('button',{name:'Sign in',exact:true}).click();
  await page.getByLabel('Email',{exact:true}).fill('fixture@example.test');await page.getByLabel('Password',{exact:true}).fill('test-password-only');
  await page.locator('form').getByRole('button',{name:'Sign in',exact:true}).click();
- if(name)await page.getByLabel('Your name').fill(name);
+ await page.getByLabel('Your name').fill(name);
  await page.getByRole('checkbox',{name:/These device records are mine/}).check();await page.getByRole('button',{name:'That’s me. Let’s go.'}).click();
+  await page.getByRole('button', { name: 'Set this up later', exact: true }).click();
+  await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+
  await page.getByRole('button',{name:'Let’s do this'}).click();
 }
 test('account saves automatically, survives reload, and pulls a change from another device',async({page})=>{
@@ -20,14 +23,14 @@ test('account saves automatically, survives reload, and pulls a change from anot
 test('a fresh signed-in device automatically restores its existing account records',async({page})=>{
  const cloud=await mockCloud(page);const state=initialState();state.profile.name='Returning friend';
  cloud.remote={user_id:'11111111-1111-4111-8111-111111111111',revision:9,updated_at:new Date().toISOString(),state};
- await enter(page);await expect(page.getByRole('complementary',{name:'Account save status'})).toContainText('Saved to your account');
+ await enter(page,'Returning friend');await expect(page.getByRole('complementary',{name:'Account save status'})).toContainText('Saved to your account');
  expect((await stored(page)).profile.name).toBe('Returning friend');expect(cloud.saveCalls).toBe(0);
 });
 test('existing local records conflict safely with a different account copy and preserve recovery copy',async({page})=>{
  const cloud=await mockCloud(page);const state=initialState();state.profile.name='Local history';
  await page.addInitScript(state=>{if(!localStorage.getItem('fuel.prototype.v1'))localStorage.setItem('fuel.prototype.v1',JSON.stringify(state));},state);
  cloud.remote={user_id:'11111111-1111-4111-8111-111111111111',revision:9,updated_at:new Date().toISOString(),state:{...state,profile:{...state.profile,name:'Cloud history'}}};
- await enter(page);const status=page.getByRole('complementary',{name:'Account save status'});
+ await enter(page,'Local history');const status=page.getByRole('complementary',{name:'Account save status'});
  await expect(status).toContainText('Two copies need your review');expect(cloud.saveCalls).toBe(0);expect((await stored(page)).profile.name).toBe('Local history');
  await status.getByRole('button',{name:'Use account copy'}).click();await expect(status).toContainText('Saved to your account');
  expect((await stored(page)).profile.name).toBe('Cloud history');
@@ -40,7 +43,7 @@ test('large restored photos survive reload when the localStorage compatibility m
  state.messages[0].image=`rp-media:${user}/${'a'.repeat(64)}.png`;
  cloud.remote={user_id:user,revision:9,updated_at:new Date().toISOString(),state};
  await page.route('https://fuelcloudtest.supabase.co/storage/v1/object/**',route=>route.fulfill({headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*'},contentType:'image/png',body:photo}));
- await enter(page);
+ await enter(page,'Photo keeper');
  const status=page.getByRole('complementary',{name:'Account save status'});
  await expect(status).toContainText('Saved to your account',{timeout:20000});
  const inspect=()=>page.evaluate(async()=>{
@@ -73,7 +76,7 @@ test('signing out during a photo restore never applies or uploads the former acc
  cloud.remote={user_id:user,revision:9,updated_at:new Date().toISOString(),state};
  let release!:()=>void,seen!:()=>void;const gate=new Promise<void>(resolve=>{release=resolve;}),started=new Promise<void>(resolve=>{seen=resolve;});
  await page.route('https://fuelcloudtest.supabase.co/storage/v1/object/**',async route=>{seen();await gate;await route.fulfill({headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*'},contentType:'image/png',body:Buffer.from('test-photo')});});
- await enter(page);await started;
+ await enter(page,'Setup name');await started;
  await page.evaluate(async()=>{const path='/src/features/cloud/client.ts';const {getCloudClient}=await import(path);await (await getCloudClient()).auth.signOut({scope:'local'});});
  release();await expect(page.getByRole('button',{name:'Sign in',exact:true})).toBeVisible();
  await page.reload();expect((await stored(page)).profile.name).not.toBe('Pending cloud copy');expect(cloud.saveCalls).toBe(0);

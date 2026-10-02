@@ -1,6 +1,11 @@
 import { useWelcome } from "./Onboarding";
 import { FirstWeek } from "./FirstWeek";
 import { BodyWeightHistory } from "./BodyWeightHistory";
+import { FitnessSetup } from './FitnessSetup';
+import { NutritionSetup } from './NutritionSetup';
+import { applyNutritionSetup } from '../../src/features/progress/nutrition-setup';
+import { QuickAccount } from './QuickAccount';
+import { applyFitnessSetup } from '../../src/features/progress/fitness-goal';
 import { SupportAndPrivacy } from "./SupportAndPrivacy";
 import { getSupportUrl } from "./api";
 import { SpotMoment, SpotWeeklyReview } from "./Spot";
@@ -17,11 +22,12 @@ import {
   Screen,
   Choice,
   Field,
+  Sheet,
   colors,
   s,
 } from "./ui";
 import { isCalendarDate } from "../../src/features/pantry/date-contract";
-import { type Meal, personalMeals, sumNutrition } from "../../src/domain";
+import { type Meal, personalMeals, sumNutrition, id, today } from "../../src/domain";
 import { nutritionInsights } from "../../src/features/insights/insights";
 import { weeklyReview } from "../../src/features/reviews/weekly-review";
 import { getPantryLots } from "../../src/features/pantry/ledger";
@@ -479,6 +485,9 @@ export function KitchenScreen() {
 export { NativeWorkout as WorkoutsScreen } from "./NativeWorkout";
 export function YouScreen() {
   const welcome = useWelcome();
+  const [editingGoal, setEditingGoal] = useState(false);
+  const [editingNutrition, setEditingNutrition] = useState(false);
+  const weightEntry = useRef(id());
   const h = useHealth(),
     state = h.state!,
     review = weeklyReview(state);
@@ -494,6 +503,19 @@ export function YouScreen() {
         Your progress, preferences, and the little things that make this work
         for you.
       </Text>
+      <QuickAccount />
+      <Button label="Calorie starting point" secondary onPress={() => setEditingNutrition(true)} />
+      {editingNutrition && <Sheet title="Your calorie starting point" onClose={() => setEditingNutrition(false)}><NutritionSetup baseline={state.profile.nutritionBaseline} kind={state.profile.fitnessGoal?.kind} weight={state.bodyWeights?.filter(entry => entry.day <= today()).slice().sort((a,b) => a.day.localeCompare(b.day)).at(-1)} existingTargets={state.profile.targetsConfigured ? state.profile : undefined} onSave={result => {
+        applyNutritionSetup(state, result);
+        if (!h.change(current => applyNutritionSetup(current, result))) throw Error('Your starting point could not be saved. Check your account and try again.');
+        setEditingNutrition(false);
+      }} /></Sheet>}
+      <BodyWeightHistory key={state.profile.fitnessGoal?.unit ?? 'default'} onEditGoal={() => { weightEntry.current = id(); setEditingGoal(true); }} />
+      {editingGoal && <Sheet title="Your goals & starting point" onClose={() => setEditingGoal(false)}><FitnessSetup goal={state.profile.fitnessGoal} weight={state.bodyWeights?.slice().sort((a, b) => a.day.localeCompare(b.day)).at(-1)} onSave={draft => {
+        applyFitnessSetup(state, draft, today(), weightEntry.current);
+        if (!h.change(current => applyFitnessSetup(current, draft, today(), weightEntry.current))) throw Error('Your goal could not be saved. Check your account and try again.');
+        setEditingGoal(false);
+      }} /></Sheet>}
       <SpotWeeklyReview />
       <Row
         title="Meet Spot"
@@ -534,7 +556,6 @@ export function YouScreen() {
         detail="Review generic starting targets and choose your own"
         onPress={() => h.setTool("profile")}
       />
-      <BodyWeightHistory />
       <Row
         title="Food & household preferences"
         detail="Favorites, restrictions, budget, and equipment"

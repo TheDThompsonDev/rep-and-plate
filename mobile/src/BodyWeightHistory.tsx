@@ -7,10 +7,12 @@ import {
   saveBodyWeight,
   bodyWeightTrend,
 } from "../../src/features/progress/body-weight";
-export function BodyWeightHistory() {
+import { cadenceLabels, goalLabels, weightCheckIn } from '../../src/features/progress/fitness-goal';
+export function BodyWeightHistory({ onEditGoal }: { onEditGoal?: () => void } = {}) {
   const h = useHealth(),
     entries = h.state!.bodyWeights ?? [];
-  const [unit, setUnit] = useState<"lb" | "kg">("lb"),
+  const goal = h.state!.profile.fitnessGoal;
+  const [unit, setUnit] = useState<"lb" | "kg">(goal?.unit ?? entries.at(-1)?.unit ?? "lb"),
     [day, setDay] = useState(today()),
     [value, setValue] = useState(""),
     [editing, setEditing] = useState<string | null>(null),
@@ -19,6 +21,9 @@ export function BodyWeightHistory() {
   return (
     <Card>
       <Text style={s.h2}>Your weight, over time</Text>
+      {goal && <Text style={s.h3}>{goalLabels[goal.kind]}{goal.targetWeight === undefined ? '' : ` · Target: ${goal.targetWeight} ${goal.unit}`} · {cadenceLabels[goal.cadence]} check-ins</Text>}
+      <Text style={s.muted}>{weightCheckIn(entries, goal, today()).text}</Text>
+      {onEditGoal && <Button label={goal ? 'Edit your goal' : 'Set your goal'} secondary onPress={onEditGoal} />}
       <Text style={s.muted}>
         Optional measurements from you. Starting nutrition targets are generic;
         edit them in Your profile. Weight entries do not change them

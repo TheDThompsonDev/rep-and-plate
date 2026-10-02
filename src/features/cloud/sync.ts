@@ -31,7 +31,7 @@ export type SyncAdapter={
  local:()=>AppState;replace:(value:AppState)=>Promise<void>;
  read:()=>Promise<Checkpoint|null>;write:(value:AppState,revision:number)=>Promise<number>;
  baseline:()=>Checkpoint|null;checkpoint:(value:Checkpoint)=>Promise<void>;
- empty:()=>boolean;active:()=>boolean;
+ empty:(account?:AppState)=>boolean;active:()=>boolean;
  archive?:(value:AppState,source:'device'|'cloud')=>Promise<void>;
 };
 export class SyncEngine {
@@ -53,7 +53,7 @@ export class SyncEngine {
     if(choice){await this.io.archive?.(local,'device');await this.io.archive?.(remote.state,'cloud');if(!this.io.active())return;next=choice==='cloud'?remote.state:local;}
     else if(same(local,remote.state))next=local;
     else if(base){const merged=mergeRecords(base.state,local,remote.state);if(!merged){this.status='conflict';return;}next=merged;}
-    else if(this.io.empty()&&same(initial,local))next=remote.state;
+    else if(this.io.empty(remote.state)&&same(initial,local))next=remote.state;
     else{this.status='conflict';return;}
    }else if(base&&!choice){
     // A cloud copy was removed. Do not resurrect it from a stale device.
@@ -73,8 +73,11 @@ export class SyncEngine {
   finally{this.running=false;}
  }
 }
-export function isFreshDevice(state:AppState){
+export function isFreshDevice(state:AppState,accountName?:string){
  const fresh=initialState();
+ // A required setup name that matches the account is not a competing edit.
+ // Every other profile field and tracking record still has to be untouched.
+ if(accountName&&state.profile.name===accountName)fresh.profile.name=accountName;
  const ignore=new Set(['messages','spot','chatRevision']);
  return Object.keys(state).every(key=>ignore.has(key)||same(state[key as keyof AppState],fresh[key as keyof AppState]))
   &&!state.messages.some(m=>m.id!=='welcome');

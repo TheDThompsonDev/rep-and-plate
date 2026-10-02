@@ -1,5 +1,6 @@
 import { initialState, STORAGE_KEY, stateSchema } from "../../domain";
 import { ONBOARDING_KEY } from "../onboarding/model";
+import { draftKey } from '../onboarding/draft';
 import { resumeCloudSync, pauseCloudSync } from "./sync-control";
 import {
   browserGet,
@@ -41,6 +42,7 @@ export async function clearBrowserAccount(expectedUserId?: string) {
   return browserRecordTransaction(async () => {
     const owner = localStorage.getItem("health.records.owner");
     if (expectedUserId) {
+      localStorage.removeItem(draftKey(expectedUserId));
       for (const key of await browserKeys())
         if (
           /^(health\.account\.|health\.sync\.|health\.pending\.)/.test(key) &&
@@ -50,6 +52,7 @@ export async function clearBrowserAccount(expectedUserId?: string) {
       if (!owner?.endsWith(`:${expectedUserId}`)) return;
     }
     if (!owner) return;
+    if (!expectedUserId) localStorage.removeItem(draftKey(owner.slice(owner.lastIndexOf(':') + 1)));
     if (owner) {
       await browserRemove(accountStorageKey(owner));
       await browserRemove(syncStorageKey(owner));

@@ -22,6 +22,7 @@ import {
 import { resolveRecipePortionProposal } from "../../src/features/recipes/proposals";
 import { ManualMeal } from "./ManualMeal";
 import { resolveActivityProposal } from "../../src/activities";
+import { InteractionGuide } from './InteractionGuide';
 function ChatMessage({ message: m }: { message: Message }) {
   const h = useHealth(),
     state = h.state!;
@@ -327,6 +328,8 @@ export function ChatScreen() {
   }, [h.captureRequest]);
   const comeback = h.spotReturning;
   const [catchup, setCatchup] = useState(false);
+  const [examplesOpen, setExamplesOpen] = useState(false);
+  const [manualMealOpen, setManualMealOpen] = useState(false);
   const intro = h.spotIntroReplay;
   useEffect(() => {
     if (h.spotIntroReplay)
@@ -367,6 +370,14 @@ export function ChatScreen() {
                 input.current?.focus();
               }}
             />
+            <Card>
+              <Button secondary label={examplesOpen ? 'Hide examples' : 'What can I say to Spot?'} onPress={() => {
+                setExamplesOpen(!examplesOpen);
+                list.current?.scrollToOffset({ offset: 0, animated: false });
+              }}/>
+              {examplesOpen && <InteractionGuide tryLabel="Use my own words" onTry={() => { setExamplesOpen(false); input.current?.focus(); }}/>}
+              {examplesOpen && <Button secondary label="Enter a meal manually" onPress={() => setManualMealOpen(true)}/>}
+            </Card>
             {catchup && (
               <Card>
                 <Text style={s.h3}>Catch me up.</Text>
@@ -387,7 +398,7 @@ export function ChatScreen() {
         renderItem={({ item }) => <ChatMessage message={item} />}
         contentContainerStyle={{ padding: 18, paddingTop: 8 }}
         onContentSizeChange={() =>
-          h.state!.messages.some((m) => m.role === "user") &&
+          !examplesOpen && h.state!.messages.some((m) => m.role === "user") &&
           list.current?.scrollToEnd({ animated: false })
         }
         keyboardShouldPersistTaps="handled"
@@ -408,6 +419,7 @@ export function ChatScreen() {
           ) : null
         }
       />
+      {manualMealOpen && <ManualMeal day={h.day} onClose={() => setManualMealOpen(false)}/>}
       <View
         style={[
           s.row,

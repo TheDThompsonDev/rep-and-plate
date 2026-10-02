@@ -7,11 +7,12 @@ import { nutritionForServing, type FoodProduct } from './contracts'
 import { productSearchResultSchema, type ProductSearchResult } from './search-contract'
 import './receipt-product.css'
 import {packageServings} from './quantities'
+import ReceiptSource from '../receipts/ReceiptSource';
 const ProductScanner=lazy(()=>import('../scanner/ProductScanner'));
 
-export type ReceiptProductReviewProps = { item: GroceryItem; onClose: () => void; onManual?:()=>void; onApply: (product: FoodProduct, servingsPurchased: number | null) => void }
+export type ReceiptProductReviewProps = { item: GroceryItem; sourceImage?: string; onClose: () => void; onManual?:()=>void; onApply: (product: FoodProduct, servingsPurchased: number | null) => void }
 const numberText = (value: number | null, unit: string) => value === null ? 'Unknown' : `${Math.round(value * 100) / 100}${unit}`
-export default function ReceiptProductReview({ item, onClose, onManual, onApply }: ReceiptProductReviewProps) {
+export default function ReceiptProductReview({ item, sourceImage, onClose, onManual, onApply }: ReceiptProductReviewProps) {
   const [query, setQuery] = useState((item.name || item.receiptText).slice(0, 160))
   const [result, setResult] = useState<ProductSearchResult | null>(()=>item.productCandidates?.length ? {status:'candidates',products:item.productCandidates,message:'Possible USDA matches from your receipt description. None has been selected. Check the brand, package and serving, or refine the search.'} : null)
   const [selected, setSelected] = useState<FoodProduct | null>(null)
@@ -51,6 +52,7 @@ export default function ReceiptProductReview({ item, onClose, onManual, onApply 
   if(scanning)return <Suspense fallback={<Modal title="Scan this receipt item" onClose={()=>setScanning(false)}><p>Opening scanner…</p></Modal>}><ProductScanner onClose={()=>setScanning(false)} onProduct={()=>{}} onLabel={()=>{setScanning(false);if(onManual)onManual();else setError('Use the package label to edit this item if USDA has no matching product. Choose Keep current details, then Edit details.');}} onSelect={product=>{setScanning(false);setSelected(product);setResult({status:'candidates',products:[product],message:'Barcode matched. Check the label and total servings purchased before saving.'});setQuantity('');setChecked(false);applied.current=false;}}/></Suspense>
   return <Modal title="Find this receipt item" onClose={close}>
     <div className="receipt-product-review">
+      <ReceiptSource image={sourceImage}/>
       <div className="receipt-original"><span>On your receipt</span><strong>{item.receiptText || item.name}</strong><small>{item.quantity}</small></div>
       <p>Receipt names are often shortened. Search with the full product name or brand, then compare your package.</p>
       <button className="button secondary" disabled={busy} onClick={()=>setScanning(true)}>Scan this package barcode</button>

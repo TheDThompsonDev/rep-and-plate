@@ -6,14 +6,19 @@ import {
   type BodyWeightEntry,
 } from "./body-weight";
 import "./progress.css";
+import { cadenceLabels, goalLabels, weightCheckIn, type FitnessGoal } from './fitness-goal';
 export function BodyWeightHistory({
   entries = [],
   onSave,
+  goal,
+  onEditGoal,
 }: {
   entries?: BodyWeightEntry[];
   onSave: (entry: BodyWeightEntry) => void;
+  goal?: FitnessGoal;
+  onEditGoal?: () => void;
 }) {
-  const [unit, setUnit] = useState<"lb" | "kg">("lb"),
+  const [unit, setUnit] = useState<"lb" | "kg">(goal?.unit ?? entries.at(-1)?.unit ?? "lb"),
     [day, setDay] = useState(today()),
     [value, setValue] = useState(""),
     [editing, setEditing] = useState<string | null>(null),
@@ -22,9 +27,12 @@ export function BodyWeightHistory({
   return (
     <section className="body-weight-history" aria-label="Body weight history">
       <h2>Your weight, over time</h2>
+      {goal && <p><strong>{goalLabels[goal.kind]}</strong>{goal.targetWeight === undefined ? '' : ` · Target: ${goal.targetWeight} ${goal.unit}`} · {cadenceLabels[goal.cadence]} check-ins</p>}
+      <p>{weightCheckIn(entries, goal, today()).text}</p>
+      {onEditGoal && <button type="button" onClick={onEditGoal}>{goal ? 'Edit your goal' : 'Set your goal'}</button>}
       <p>
-        Optional measurements from you. These do not change your food targets or
-        suggest a goal.
+        Measurements you log, in the unit you choose. These do not automatically
+        change your food targets.
       </p>
       <p>
         {trend.change === null

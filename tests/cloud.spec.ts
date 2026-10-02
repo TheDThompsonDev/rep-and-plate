@@ -9,7 +9,7 @@ test("Account sign-out returns to welcome and preserves records even if the serv
   await expect(signout).toBeInViewport();
   cloud.failedSignOut=true;
   await signout.click();
-  await expect(page.getByRole('heading',{name:/Good food/})).toBeVisible();
+  await expect(page.getByRole('heading',{name:/Track your food/})).toBeVisible();
   await expect(page.getByRole('navigation')).toHaveCount(0);
   expect(await stored(page)).toEqual(before);
 });
@@ -123,6 +123,7 @@ test("Cloud setup and authentication never automatically upload device records",
     .fill("fixture@example.test");
   await page.getByLabel("Password", { exact: true }).fill("test-password-only");
   await page
+    .getByRole("dialog", { name: "Your account & saved records" })
     .getByRole("button", { name: "Create account", exact: true })
     .click();
   await expect(page.getByRole("status")).toContainText("Check your email");

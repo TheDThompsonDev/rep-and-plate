@@ -27,6 +27,8 @@ import { resolveAgentMeal } from "../../src/features/connections/context";
 import type { AgentAction } from "../../src/features/connections/contracts";
 import { sessionSignal } from "./auth";
 import { OwnedStateGate } from "../../src/platform/owned-state";
+import { applyFitnessSetup, type FitnessSetupDraft } from '../../src/features/progress/fitness-goal';
+import { applyNutritionSetup, type NutritionSetupResult } from '../../src/features/progress/nutrition-setup';
 import { chat, loadConnection } from "./api";
 export type Tab = "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "You";
 export type Tool =
@@ -88,7 +90,7 @@ type Store = {
   setTab: (t: Tab) => void;
   setTool: (t: Tool) => void;
   change: (update: (s: AppState) => AppState) => boolean;
-  saveOnboardingProfile: (name: string) => Promise<void>;
+  saveOnboardingProfile: (name: string, fitness?: FitnessSetupDraft | null, weightEntryId?: string, nutrition?: NutritionSetupResult | null) => Promise<void>;
   restoreRecords: (state: AppState) => Promise<void>;
   applyAgentAction: (
     action: AgentAction,
@@ -225,10 +227,10 @@ export function HealthProvider({ children }: { children: ReactNode }) {
       return false;
     }
   }
-  async function saveOnboardingProfile(name: string) {
+  async function saveOnboardingProfile(name: string, fitness?: FitnessSetupDraft | null, weightEntryId?: string, nutrition?: NutritionSetupResult | null) {
     const before = await gate.wait(),
       epoch = cloudEpoch();
-    const next = stateSchema.parse({
+    const named = stateSchema.parse({
       ...before,
       profile: {
         ...before.profile,
@@ -236,6 +238,8 @@ export function HealthProvider({ children }: { children: ReactNode }) {
       },
       spot: { ...before.spot, introSeen: true },
     });
+    const started = fitness ? applyFitnessSetup(named, fitness, today(), weightEntryId ?? id()) : named;
+    const next = stateSchema.parse(nutrition ? applyNutritionSetup(started, nutrition) : started);
     await saveDevice(next);
     if (epoch !== cloudEpoch() || gate.current !== before)
       throw Error("Your account changed. Please try setup again.");

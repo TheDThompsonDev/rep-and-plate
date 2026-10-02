@@ -5,6 +5,7 @@ import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import { initialState, stateSchema, type AppState } from "../../src/domain";
+import { draftKey } from '../../src/features/onboarding/draft';
 import {
   invalidateCloudSync,
   cloudEpoch,
@@ -197,6 +198,7 @@ export async function clearNativeAccount(expectedUserId?: string) {
   return recordTransaction(async () => {
     const owner = await deviceOwnership.get();
     if (expectedUserId) {
+      await AsyncStorage.removeItem(draftKey(expectedUserId));
       for (const name of await accountFiles.keys())
         if (
           /^(health\.account\.|health\.sync\.)/.test(name) &&
@@ -206,6 +208,7 @@ export async function clearNativeAccount(expectedUserId?: string) {
       if (!owner?.endsWith(`:${expectedUserId}`)) return;
     }
     if (!owner) return;
+    if (!expectedUserId) await AsyncStorage.removeItem(draftKey(owner.slice(owner.lastIndexOf(':') + 1)));
     if (owner) {
       await accountFiles.remove(archiveKey(owner));
       await accountFiles.remove(`health.sync.${encodeURIComponent(owner)}`);

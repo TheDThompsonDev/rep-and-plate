@@ -8,6 +8,9 @@ import { productSchema } from "./features/products/contracts.ts";
 import { pantryDatesSchema } from "./features/pantry/date-contract.ts";
 import { proposalComponentsSchema } from "./features/meals/proposals.ts";
 import { recipePortionProposalSchema } from "./features/recipes/proposal-contract.ts";
+import { fitnessGoalSchema } from './features/progress/fitness-goal.ts';
+import { nutritionBaselineSchema } from './features/progress/nutrition-setup.ts';
+import { bodyWeightEntrySchema } from './features/progress/body-weight.ts';
 
 export const chatActionSchema = z.enum(["pantry", "recipes", "meal-plan", "preferences", "workout", "shopping"]);
 export type ChatAction = z.infer<typeof chatActionSchema>;
@@ -112,6 +115,9 @@ export const aiRequestSchema = z.object({
     )
     .max(20),
   context: z.object({
+    fitnessGoal: fitnessGoalSchema.optional(),
+    nutritionBaseline: nutritionBaselineSchema.optional(),
+    bodyWeights: z.array(bodyWeightEntrySchema).max(30).optional(),
     goalsConfigured: z.boolean().optional(),
     activities: z.array(activityProposalSchema).max(30).optional(),
     shopping: z.object({

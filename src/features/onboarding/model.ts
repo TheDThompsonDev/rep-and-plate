@@ -4,6 +4,7 @@ export type OnboardingRecord = {
   mode: "guest" | "account";
   userId?: string;
   focus: string;
+  firstLogPending?: boolean;
 };
 export function parseOnboarding(raw: string | null): OnboardingRecord | null {
   try {
@@ -18,11 +19,25 @@ export function parseOnboarding(raw: string | null): OnboardingRecord | null {
     return null;
   }
 }
+export const defaultFocus = "A little of all three";
 export const focusChoices = [
   "Food & meals",
   "Movement & workouts",
-  "A little of both",
+  "Groceries & dinner",
+  defaultFocus,
 ];
+export function requireOnboardingName(name: string) {
+  const trimmed = name.trim();
+  if (!trimmed) throw Error("Enter the name you’d like Spot to call you.");
+  if (trimmed.length > 60) throw Error("Keep your name to 60 characters or fewer.");
+  return trimmed;
+}
+export function firstStepForFocus(focus: string) {
+  if (focus === "Food & meals") return "Start with one meal. A few words are enough.";
+  if (focus === "Movement & workouts") return "Start with a walk or a workout. It doesn’t have to be epic.";
+  if (focus === "Groceries & dinner") return "Start with a grocery receipt. Check what you bought, then log portions when you eat them.";
+  return "Start with a meal, a workout, or a grocery receipt. You can use all three at your own pace.";
+}
 export const introduction = [
   {
     scene: "press-conference" as const,
@@ -30,6 +45,12 @@ export const introduction = [
     line: "You opened the app. I called a press conference.",
     detail:
       "Part dinner plate. Part weight plate. Your wildly invested sidekick for food, movement, and being a human.",
+  },
+  {
+    scene: "dinner-conspiracy" as const,
+    title: "Give your groceries a plan.",
+    line: "Your receipt has dinner potential.",
+    detail: "Add a grocery receipt, check the products and amounts, then get meal ideas from what you have and see what else you need. Purchases never count as food eaten.",
   },
   {
     scene: "dinner-conspiracy" as const,

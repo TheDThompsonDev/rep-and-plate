@@ -9,6 +9,8 @@ test('native full tour replays without losing records or drafts',async({page})=>
  await expect(page.getByRole('heading',{name:'Hey. I’m Spot.'})).toBeVisible();
  await expect(page.getByTestId('spot-scene-press-conference')).toBeVisible();
  await page.getByRole('button',{name:'Next',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Here’s what you can do with me.'})).toBeVisible();
+ await page.getByRole('button',{name:'More about Spot',exact:true}).click();
  await expect(page.getByTestId('spot-scene-dinner-conspiracy')).toBeVisible();
  await page.getByRole('button',{name:'Close tour',exact:true}).first().click();
  await page.getByRole('button',{name:'Chat',exact:true}).click();

@@ -1,15 +1,21 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check, LogOut } from "lucide-react";
-import { readState } from "../../domain";
+import { readState, today } from "../../domain";
+import { FitnessSetup } from '../progress/FitnessSetup';
+import { applyFitnessSetup, type FitnessSetupDraft } from '../progress/fitness-goal';
+import { NutritionSetup } from '../progress/NutritionSetup';
+import { applyNutritionSetup, type NutritionSetupDraft, type NutritionSetupResult } from '../progress/nutrition-setup';
 import {
   hydrateBrowserRecords,
   persistBrowserRecords,
 } from "../../platform/browser-records";
-import { introduction, focusChoices, ONBOARDING_KEY } from "./model";
+import { introduction, focusChoices, firstStepForFocus, ONBOARDING_KEY } from "./model";
 import { useOnboarding, type OnboardingAdapter } from "./useOnboarding";
 import { spotScenes } from "../spot/scenes";
 import "./onboarding.css";
 import { PasswordRecovery } from "../cloud/PasswordRecovery";
+import InteractionGuide from './InteractionGuide';
+import { interactionTitle } from './interaction-examples';
 
 const adapter: OnboardingAdapter = {
   read: async () => {
@@ -23,18 +29,25 @@ const adapter: OnboardingAdapter = {
   client: async () => (await import("../cloud/client")).getCloudClient(),
   verifyOwner: async (client, bind) =>
     (await import("../cloud/client")).requireBrowserOwner(client, bind),
+  readDraft: async key => localStorage.getItem(key),
+  writeDraft: async (key, value) => { if (value === null) localStorage.removeItem(key); else localStorage.setItem(key, value); },
 };
 export default function Onboarding({
   children,
 }: {
-  children: (replay: () => void) => ReactNode;
+  children: (replay: () => void, firstLog: string | null, dismissFirstLog: () => void) => ReactNode;
 }) {
   const flow = useOnboarding(adapter);
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState("");
-  const [name, setName] = useState(""),
-    [focus, setFocus] = useState(focusChoices[2]);
+  const { name, focus, fitness, nutrition, nutritionInput } = flow.draft;
+  const setName = (name: string) => flow.patchDraft({ name });
+  const setFocus = (focus: string) => flow.patchDraft({ focus });
+  const setFitness = (fitness: FitnessSetupDraft | null) => flow.patchDraft({ fitness });
+  const setNutrition = (nutrition: NutritionSetupResult | null) => flow.patchDraft({ nutrition });
+  const setNutritionInput = (nutritionInput: NutritionSetupDraft) => flow.patchDraft({ nutritionInput });
   const title = useRef<HTMLHeadingElement>(null);
+  const savedSetup = flow.step === 'nutrition' ? readState() : null;
   useEffect(() => {
     title.current?.focus({ preventScroll: true });
     window.scrollTo(0, 0);
@@ -49,27 +62,29 @@ export default function Onboarding({
           ? "shaker-ritual"
           : "press-conference";
   const complete = () =>
-    flow.finish(focus, async () => {
+    flow.finish(focus, name, async (normalizedName) => {
       const saved = readState();
-      const next = {
+      const named = {
         ...saved,
         profile: {
           ...saved.profile,
-          ...(name.trim() ? { name: name.trim() } : {}),
+          name: normalizedName,
         },
         spot: { ...saved.spot, introSeen: true },
       };
+      const started = fitness ? applyFitnessSetup(named, fitness, today(), flow.draft.weightEntry) : named;
+      const next = nutrition ? applyNutritionSetup(started, nutrition) : started;
       await persistBrowserRecords(next);
-      location.hash = "chat";
+      location.hash = focus === 'Groceries & dinner' ? 'receipt' : 'chat';
     });
   const show = !flow.entered || flow.replaying;
   return (
     <>
       {flow.entered && (
-        <div hidden={flow.replaying}>{children(flow.replay)}</div>
+        <div hidden={flow.replaying}>{children(flow.replay, flow.firstLog, flow.dismissFirstLog)}</div>
       )}
       {show && (
-        <main className="welcome-shell" aria-label="Welcome to Rep & Plate">
+        <main className={`welcome-shell welcome-shell-${flow.step}`} aria-label="Welcome to Rep & Plate">
           <header className="welcome-header">
             <span className="welcome-brand">
               Rep & Plate<span aria-hidden="true">®</span>
@@ -101,6 +116,8 @@ export default function Onboarding({
                 key={scene}
                 src={`/images/spot/scenes/${scene}.png`}
                 alt={spotScenes[scene].alt}
+                width={1024}
+                height={1024}
                 onError={(e) => {
                   e.currentTarget.style.visibility = "hidden";
                 }}
@@ -141,13 +158,15 @@ export default function Onboarding({
                       </span>
                       <span
                         className={
-                          ["setup", "ready"].includes(flow.step)
+                          flow.step === 'setup'
                             ? "current"
                             : ""
                         }
                       >
                         03 · Make it yours
                       </span>
+                      <span className={flow.step === 'goals' ? 'current' : ''}>04 · Your goals</span>
+                      <span className={['nutrition', 'ready'].includes(flow.step) ? 'current' : ''}>05 · Daily targets</span>
                     </div>
                   )}
                   {flow.step === "welcome" && (
@@ -156,16 +175,16 @@ export default function Onboarding({
                         YOUR NEW SIDEKICK HAS ARRIVED
                       </p>
                       <h1 ref={title} tabIndex={-1}>
-                        Good food.
+                        Track your food.
                         <br />
-                        Real life.
+                        Build your fitness.
                         <br />
-                        <em>A very invested plate.</em>
+                        <em>With a little help from Spot.</em>
                       </h1>
                       <p>
-                        Meet Spot. Your food and workout buddy with helpful
-                        ideas, questionable levels of enthusiasm, and absolutely
-                        no chill about your small wins.
+                        Tell Spot what you ate or how you moved. Review the details,
+                        track your calories and workouts, and see your day add up.
+                        Grocery receipts help keep the foods you buy handy for later.
                       </p>
                       <button
                         className="welcome-primary"
@@ -173,6 +192,8 @@ export default function Onboarding({
                       >
                         Meet Spot <ArrowRight size={19} />
                       </button>
+                      <button className="welcome-secondary" onClick={() => flow.setStep('guide')}>See what I can do</button>
+                      <button className="welcome-link" onClick={() => { setFocus('Groceries & dinner'); flow.user ? flow.setStep('setup') : flow.account('signup'); }}>Start with my groceries</button>
                       {flow.user ? (
                         <button
                           className="welcome-secondary"
@@ -189,8 +210,8 @@ export default function Onboarding({
                         </button>
                       )}
                       <p className="welcome-fine">
-                        A little introduction. A little setup. A lot of
-                        personality.
+                        Start with one meal or workout. Manual tracking works on this device.
+                        Connected AI needs an approved account during private preview.
                       </p>
                     </>
                   )}
@@ -215,7 +236,9 @@ export default function Onboarding({
                       <button
                         className="welcome-primary"
                         onClick={() =>
-                          flow.slide < introduction.length - 1
+                          flow.slide === 0
+                            ? flow.setStep('guide')
+                            : flow.slide < introduction.length - 1
                             ? flow.setSlide(flow.slide + 1)
                             : flow.nextAfterTour()
                         }
@@ -246,6 +269,15 @@ export default function Onboarding({
                       </div>
                     </>
                   )}
+                  {flow.step === 'guide' && <>
+                    <p className="welcome-eyebrow">A FEW WORDS. A USEFUL NEXT STEP.</p>
+                    <h1 ref={title} tabIndex={-1}>{interactionTitle}</h1>
+                    <InteractionGuide onTry={flow.nextAfterTour} tryLabel={flow.replaying ? 'Back to my app' : 'Set up my tracking'}/>
+                    <div className="welcome-text-actions">
+                      <button onClick={() => { flow.setSlide(0); flow.setStep('intro'); }}><ArrowLeft size={16}/>Back</button>
+                      <button onClick={() => { flow.setSlide(1); flow.setStep('intro'); }}>More about Spot</button>
+                    </div>
+                  </>}
                   {flow.step === "account" && (
                     <>
                       <p className="welcome-eyebrow">SPOT SAVED YOU A SEAT</p>
@@ -392,16 +424,18 @@ export default function Onboarding({
                       <form
                         onSubmit={(e) => {
                           e.preventDefault();
-                          void flow.prepare();
+                          void flow.prepare(name);
                         }}
                       >
                         <label>
-                          Your name <span>(optional)</span>
+                          Your name
                           <input
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             autoComplete="given-name"
                             maxLength={60}
+                            required
+                            pattern=".*\S.*"
                             placeholder="What you like to be called"
                             disabled={flow.busy}
                           />
@@ -444,7 +478,7 @@ export default function Onboarding({
                         <button
                           className="welcome-primary"
                           disabled={
-                            flow.busy || (!flow.localMode && !flow.confirmed)
+                            flow.busy || !name.trim() || (!flow.localMode && !flow.confirmed)
                           }
                         >
                           {flow.busy ? "One moment…" : "That’s me. Let’s go."}
@@ -460,6 +494,19 @@ export default function Onboarding({
                       </button>
                     </>
                   )}
+                  {flow.step === "goals" && <>
+                    <p className="welcome-eyebrow">YOUR STARTING POINT</p>
+                    <h1 ref={title} tabIndex={-1}>What are you working toward?</h1>
+                    <p>Let’s give your tracking a little direction. Start with what you know today.</p>
+                    <FitnessSetup initialDraft={flow.draft.fitnessInput ?? fitness ?? undefined} onDraftChange={fitnessInput => flow.patchDraft({ fitnessInput })} onSave={draft => { setFitness(draft); setNutrition(null); flow.patchDraft({ nutritionSession: undefined }); flow.setStep('nutrition'); }} onSkip={() => { setFitness(null); setNutrition(null); flow.patchDraft({ nutritionSession: undefined }); flow.setStep('nutrition'); }} busy={flow.busy} />
+                    <button className="welcome-link" disabled={flow.busy} onClick={() => flow.setStep('setup')}>Back to your introduction</button>
+                  </>}
+                  {flow.step === 'nutrition' && <>
+                    <p className="welcome-eyebrow">A STARTING POINT THAT FITS YOU</p>
+                    <h1 ref={title} tabIndex={-1}>Your daily targets.</h1>
+                    <NutritionSetup initialDraft={nutritionInput} onDraftChange={setNutritionInput} initialSession={flow.draft.nutritionSession} onSessionChange={nutritionSession => flow.patchDraft({ nutritionSession })} baseline={savedSetup?.profile.nutritionBaseline} kind={fitness?.kind} weight={fitness?.currentWeight.trim() ? {value:Number(fitness.currentWeight),unit:fitness.unit} : savedSetup?.bodyWeights?.filter(entry => entry.day <= today()).slice().sort((a,b) => a.day.localeCompare(b.day)).at(-1)} existingTargets={savedSetup?.profile.targetsConfigured ? savedSetup.profile : undefined} onSave={result => {setNutrition(result);flow.setStep('ready');}} onSkip={() => {setNutrition(null);flow.setStep('ready');}} busy={flow.busy} />
+                    <button className="welcome-link" disabled={flow.busy} onClick={() => flow.setStep('goals')}>Back to your goals</button>
+                  </>}
                   {flow.step === "ready" && (
                     <>
                       <p className="welcome-eyebrow">
@@ -477,13 +524,11 @@ export default function Onboarding({
                       <div className="welcome-ready">
                         <strong>Your first small step</strong>
                         <p>
-                          {focus === focusChoices[0]
-                            ? "Start with one meal. A few words are enough."
-                            : focus === focusChoices[1]
-                              ? "Start with a walk or a workout. It doesn’t have to be epic."
-                              : "Start with one meal or one bit of movement. Small is a perfectly good start."}
+                          {firstStepForFocus(focus)}
                         </p>
                       </div>
+                      {fitness && <div className="welcome-ready"><strong>Your progress starts here</strong><p>{fitness.currentWeight ? `${fitness.currentWeight} ${fitness.unit} will be saved as today’s starting weight. ` : 'Add your first weight from your profile when you’re ready. '}{fitness.cadence === 'none' ? 'Log again whenever you choose.' : `Your ${fitness.cadence} check-in appears in your profile.`}</p></div>}
+                      {nutrition && <div className="welcome-ready"><strong>{nutrition.targets ? 'Your daily starting targets' : 'Your details are ready'}</strong><p>{nutrition.targets ? `${nutrition.targets.calories} calories · ${nutrition.targets.protein}g protein · ${nutrition.targets.carbs}g carbs · ${nutrition.targets.fat}g fat. Change them anytime in your profile.` : 'Your age, height and usual activity will be saved. Your daily targets stay as they are.'}</p></div>}
                       {flow.localMode && (
                         <p className="welcome-fine">
                           You’re starting with manual tracking on this device.
@@ -508,7 +553,7 @@ export default function Onboarding({
                       <button
                         className="welcome-link"
                         disabled={flow.busy}
-                        onClick={() => flow.setStep("setup")}
+                        onClick={() => flow.setStep("nutrition")}
                       >
                         Back
                       </button>

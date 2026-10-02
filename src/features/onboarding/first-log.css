@@ -1,0 +1,47 @@
+.first-log {
+  background: #edf5ec;
+  border: 1px solid #c6d3c3;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #073f35;
+}
+.first-log h2 {
+  font-size: 24px;
+  margin: 6px 0;
+}
+.first-log p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+.first-log small {
+  color: #466459;
+  line-height: 1.5;
+}
+.first-log-actions {
+  min-width: 220px;
+  display: grid;
+  gap: 4px;
+}
+.first-log-actions .welcome-link {
+  margin: 0;
+  min-height: 44px;
+}
+.first-log-actions .welcome-primary {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .first-log {
+    display: block;
+    padding: 16px;
+  }
+  .first-log-actions {
+    margin-top: 12px;
+  }
+  .first-log h2 {
+    font-size: 21px;
+  }
+}

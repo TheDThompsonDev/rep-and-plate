@@ -25,7 +25,7 @@ import { setLoad, setWorkoutLoad } from "../../src/features/progress/set-loads";
 import { useHealth } from "./store";
 import { Button, Card, Choice, Field, Screen, Sheet, Sources, s } from "./ui";
 
-export function NativeWorkout() {
+export function NativeWorkout({ startWithMovement = false, onFirstMovementClose }: { startWithMovement?: boolean; onFirstMovementClose?: () => void }) {
   const h = useHealth(),
     w = h.state!.workout,
     unit = h.state!.profile.workoutUnit ?? "lb";
@@ -33,7 +33,7 @@ export function NativeWorkout() {
     [finish, setFinish] = useState(false),
     [adjust, setAdjust] = useState(false),
     [showTechnique, setShowTechnique] = useState(false);
-  const [activity, setActivity] = useState(false),
+  const [activity, setActivity] = useState(startWithMovement),
     [activityTitle, setActivityTitle] = useState("Walk"),
     [activityDate, setActivityDate] = useState(h.day),
     [minutes, setMinutes] = useState(""),
@@ -509,7 +509,7 @@ export function NativeWorkout() {
         </Sheet>
       )}
       {activity && (
-        <Sheet title="Log movement" onClose={() => setActivity(false)}>
+        <Sheet title="Log movement" onClose={() => {setActivity(false);if (startWithMovement) onFirstMovementClose?.();}}>
           <Field
             label="Activity"
             value={activityTitle}
@@ -551,6 +551,7 @@ export function NativeWorkout() {
               ) {
                 setActivity(false);
                 setMinutes("");
+                if (startWithMovement) onFirstMovementClose?.();
               }
             }}
           />

@@ -1,0 +1,99 @@
+.fitness-setup {
+  display: grid;
+  gap: 18px;
+}
+.fitness-setup label {
+  display: grid;
+  gap: 8px;
+  font-weight: 650;
+  color: var(--ink, #073f35);
+}
+.fitness-setup input,
+.fitness-setup select {
+  width: 100%;
+  min-height: 48px;
+  padding: 13px 15px;
+  border: 1px solid #bacebd;
+  border-radius: 14px;
+  background: #fff;
+  color: #073f35;
+  font: inherit;
+}
+.fitness-weight-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 14px;
+}
+.fitness-setup .fitness-hint {
+  margin: -4px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #57716a;
+}
+.fitness-payoff {
+  background: #eaf2df;
+  border-left: 3px solid #0b5948;
+  border-radius: 0 16px 16px 0;
+  padding: 18px;
+}
+.fitness-payoff p {
+  margin: 8px 0;
+  line-height: 1.6;
+  font-size: 15px;
+}
+.fitness-payoff small {
+  color: #57716a;
+  line-height: 1.5;
+  display: block;
+}
+.quick-account {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid #c5d6c1;
+  border-radius: 18px;
+  background: #eff4e9;
+  margin: 0 0 18px;
+}
+.quick-account p {
+  flex: 1 1 180px;
+  margin: 0;
+  color: #466459;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.quick-account button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #0b5948;
+  border-radius: 12px;
+  color: #fff;
+  background: #0b5948;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+.quick-account button.secondary {
+  background: transparent;
+  color: #0b5948;
+}
+.quick-account [role="alert"] {
+  flex-basis: 100%;
+  color: #803d2d;
+}
+.welcome-shell-goals .welcome-art { display: none; }
+.welcome-shell-goals .welcome-layout { grid-template-columns: 1fr; max-width: 620px; margin-inline: auto; }
+.welcome-shell-goals .welcome-content { width: 100%; }
+.welcome-shell-nutrition .welcome-art { display: none; }
+.welcome-shell-nutrition .welcome-layout { grid-template-columns: 1fr; max-width: 620px; margin-inline: auto; }
+.welcome-shell-nutrition .welcome-content { width: 100%; }
+.fitness-setup .fitness-checkbox { display: flex; align-items: flex-start; gap: 12px; }
+.fitness-setup .fitness-checkbox input { width: 22px; min-height: 22px; flex: 0 0 22px; margin-top: 2px; }
+
+.fitness-alternatives { border-top: 1px solid #c6d3c3; padding-top: 8px; }
+.fitness-alternatives summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 600; }
+.fitness-alternatives summary::after { content: '+'; margin-left: auto; }
+.fitness-alternatives[open] summary::after { content: '−'; }
+.fitness-alternatives summary:focus-visible { outline: 2px solid #0b5749; outline-offset: 4px; }

@@ -172,7 +172,10 @@ export async function signIn(page: Page) {
     .getByRole("textbox", { name: "Email", exact: true })
     .fill("fixture@example.test");
   await page.getByLabel("Password", { exact: true }).fill("test-password-only");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "Your account & saved records" })
+    .getByRole("button", { name: "Sign in", exact: true })
+    .click();
   await expect(page.getByRole("dialog")).toContainText("fixture@example.test");
   await expect(
     page.getByRole("button", { name: /Upload this device/ }),

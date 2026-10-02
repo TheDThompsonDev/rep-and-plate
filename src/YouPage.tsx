@@ -1,6 +1,11 @@
 import { SpotWeeklyReview } from "./features/spot/Spot";
 import SupportAndPrivacy from "./features/support/SupportAndPrivacy";
 import { BodyWeightHistory } from "./features/progress/BodyWeightHistory";
+import { QuickAccount } from './features/cloud/QuickAccount';
+import { FitnessSetup } from './features/progress/FitnessSetup';
+import { NutritionSetup } from './features/progress/NutritionSetup';
+import type { NutritionSetupResult } from './features/progress/nutrition-setup';
+import type { FitnessSetupDraft } from './features/progress/fitness-goal';
 import type { BodyWeightEntry } from "./features/progress/body-weight";
 import { useRef, useState } from "react";
 import {
@@ -26,6 +31,7 @@ import { PlateMark } from "./features/spot/Spot";
 import { MealRow, Modal } from "./components";
 import {
   personalMeals,
+  today,
   type AppState,
   type Meal,
   type Page,
@@ -43,7 +49,9 @@ import { sumProposalComponents } from "./features/meals/proposals";
 type Props = {
   state: AppState;
   aiAvailable: boolean;
-  onAccount: () => void;
+  onAccount: (mode?: 'signin' | 'signup') => void;
+  onSaveFitness: (draft: FitnessSetupDraft) => void;
+  onSaveNutrition: (result: NutritionSetupResult) => void;
   onConnections: () => void;
   onMeetSpot: () => void;
   onScan: () => void;
@@ -67,6 +75,8 @@ type Panel =
   | "privacy"
   | "about"
   | "weekly"
+  | "goals"
+  | "nutrition"
   | null;
 
 export default function YouPage({
@@ -87,6 +97,8 @@ export default function YouPage({
   onResolve,
   onAddMeal,
   onSaveBodyWeight,
+  onSaveFitness,
+  onSaveNutrition,
 }: Props) {
   const [panel, setPanel] = useState<Panel>(null);
   const [showAll, setShowAll] = useState(false);
@@ -319,11 +331,15 @@ export default function YouPage({
             <Pencil size={17} />
           </button>
         </section>
+        <QuickAccount onSignIn={() => onAccount('signin')} onCreateAccount={() => onAccount('signup')} />
+        <button className="you-row" onClick={() => setPanel('nutrition')}><span>Calorie starting point</span><ChevronRight size={18} /></button>
+        {state.profile.nutritionBaseline && <p className="you-goal-note">{state.profile.nutritionBaseline.age} years · {Math.round(state.profile.nutritionBaseline.heightCm)} cm · {state.profile.nutritionBaseline.activity} activity</p>}
+        {onSaveBodyWeight && <BodyWeightHistory key={state.profile.fitnessGoal?.unit ?? 'default'} entries={state.bodyWeights} goal={state.profile.fitnessGoal} onEditGoal={() => setPanel('goals')} onSave={onSaveBodyWeight} />}
         <div
           className="you-row-group you-account-shortcuts"
           aria-label="Account and introduction"
         >
-          <button className="you-row" onClick={onAccount}>
+          <button className="you-row" onClick={() => onAccount()}>
             <span className="you-row-icon neutral">
               <UserRound size={23} />
             </span>
@@ -576,12 +592,6 @@ export default function YouPage({
             ))}
           </div>}
         </section>
-        {onSaveBodyWeight && (
-          <BodyWeightHistory
-            entries={state.bodyWeights}
-            onSave={onSaveBodyWeight}
-          />
-        )}
         <button
           className="you-next-workout"
           onClick={() => onNavigate("Workouts")}
@@ -1065,6 +1075,8 @@ export default function YouPage({
           </div>
         </Modal>
       )}
+      {panel === 'goals' && <Modal title="Your goals & starting point" onClose={() => setPanel(null)}><FitnessSetup goal={state.profile.fitnessGoal} weight={state.bodyWeights?.slice().sort((a, b) => a.day.localeCompare(b.day)).at(-1)} onSave={draft => { onSaveFitness(draft); setPanel(null); }} /></Modal>}
+      {panel === 'nutrition' && <Modal title="Your calorie starting point" onClose={() => setPanel(null)}><NutritionSetup baseline={state.profile.nutritionBaseline} kind={state.profile.fitnessGoal?.kind} weight={state.bodyWeights?.filter(entry => entry.day <= today()).slice().sort((a,b) => a.day.localeCompare(b.day)).at(-1)} existingTargets={state.profile.targetsConfigured ? state.profile : undefined} onSave={result => {onSaveNutrition(result);setPanel(null);}} /></Modal>}
       {panel === "about" && (
         <Modal
           title="A little less to think about."

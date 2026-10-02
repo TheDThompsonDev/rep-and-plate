@@ -278,21 +278,116 @@ test("sample photo asks one portion question before adding a meal, including aft
   ).toContainText("Nothing here yet.");
 });
 
-test("unknown text can be reviewed and resolved without leaving chat", async ({
+test("chat help answers questions without creating tracking records", async ({
+  page,
+}) => {
+  const before = await stored(page);
+  await send(page, "What should I say?");
+  await expect(page.getByText(/Try “How am I doing today\?”/)).toBeVisible();
+  await expect(
+    page.getByText("Connected chat is unavailable.", { exact: true }),
+  ).toBeVisible();
+  const after = await stored(page);
+  expect(after.reviews).toEqual(before.reviews);
+  expect(after.meals).toEqual(before.meals);
+  expect(after.workout).toEqual(before.workout);
+  await page.reload();
+  await expect(page.getByText(/Try “How am I doing today\?”/)).toBeVisible();
+  await send(page, "Can you suggest something for dinner?");
+  await expect(
+    page.getByText(/I can’t answer freely while connected chat is unavailable/),
+  ).toBeVisible();
+  expect((await stored(page)).reviews).toEqual(before.reviews);
+});
+
+test("help works with connected chat and during a pending sample portion", async ({
+  page,
+}) => {
+  let calls = 0;
+  await page.route("**/api/status", (route) =>
+    route.fulfill({ json: { available: true, jev: false } }),
+  );
+  await page.route("**/api/chat", (route) => {
+    calls++;
+    return route.abort();
+  });
+  await page.reload();
+  await send(page, "Help me get started");
+  await expect(page.getByText(/For food, try “I ate/)).toBeVisible();
+  expect(calls).toBe(0);
+  await page.getByRole("button", { name: "Open chat menu" }).click();
+  await page.getByRole("button", { name: "Try a sample capture" }).click();
+  await page.getByRole("button", { name: /A home-cooked dinner/ }).click();
+  const pending = (await stored(page)).pendingMeal;
+  await send(page, "What can I ask you?");
+  await expect(
+    page.getByText(/Try “How am I doing today\?”/).last(),
+  ).toBeVisible();
+  expect((await stored(page)).pendingMeal).toEqual(pending);
+  await send(page, "2 cups");
+  expect((await stored(page)).pendingMeal).toBeUndefined();
+});
+
+test("connection retry enables chat after temporary unavailability", async ({
+  page,
+}) => {
+  await expect(
+    page.getByText("Connected chat is unavailable.", { exact: true }),
+  ).toBeVisible();
+  await page.route("**/api/status", (route) =>
+    route.fulfill({ json: { available: true, jev: false } }),
+  );
+  await page
+    .getByRole("button", { name: "Retry connection", exact: true })
+    .click();
+  await expect(
+    page.getByText("Connected chat is unavailable.", { exact: true }),
+  ).toHaveCount(0);
+  await send(page, "What should I say?");
+  await expect(page.getByText(/For food, try “I ate/)).toBeVisible();
+});
+
+test("account changes refresh chat status and rejected status cannot enable AI", async ({
+  page,
+}) => {
+  await expect(
+    page.getByText("Connected chat is unavailable.", { exact: true }),
+  ).toBeVisible();
+  await page.route("**/api/status", (route) =>
+    route.fulfill({ status: 401, json: { available: true } }),
+  );
+  await page
+    .getByRole("button", { name: "Retry connection", exact: true })
+    .click();
+  await expect(
+    page.getByText("Sign in to chat with Spot", { exact: true }),
+  ).toBeVisible();
+  await page.route("**/api/status", (route) =>
+    route.fulfill({ json: { available: true, jev: false } }),
+  );
+  await page.evaluate(async () => {
+    // Exercise the same event emitted when account binding changes.
+    const sync = await import("/src/features/cloud/sync-control.ts");
+    sync.invalidateCloudSync();
+  });
+  await expect(
+    page.getByText("Connected chat is unavailable.", { exact: true }),
+  ).toHaveCount(0);
+  await send(page, "What should I say?");
+  await expect(page.getByText(/For food, try “I ate/)).toBeVisible();
+});
+
+test("unsupported text stays in conversation without creating a review item", async ({
   page,
 }) => {
   await seedExamples(page);
   await send(page, "Something unfamiliar for lunch");
   await expect(
-    page.getByText("Saved your words for review.", { exact: false }),
+    page.getByText(/I can’t answer freely while connected chat is unavailable/),
   ).toBeVisible();
   expect((await stored(page)).meals).toHaveLength(4);
+  expect((await stored(page)).reviews).toHaveLength(2);
   await send(page, "What needs review?");
-  await page
-    .locator(".fuel-inline-review")
-    .getByRole("button", { name: "Keep as a note" })
-    .click();
-  expect((await stored(page)).reviews.at(-1).resolved).toBe(true);
   await page
     .locator(".fuel-inline-review")
     .getByRole("button", { name: "Chicken", exact: true })
@@ -466,7 +561,15 @@ test("You shows captured notes, editable meals, and real workout history", async
   page,
 }) => {
   await seedExamples(page, true);
-  await send(page, "A note about my walk today");
+  // Notes saved by earlier releases must remain usable after fallback changes.
+  const legacy = await stored(page);
+  legacy.reviews.push({
+    id: "legacy-capture-note", title: "A capture to come back to",
+    question: "A note about my walk today", source: "Text · 12:30 PM",
+    options: ["Keep as a note"], kind: "capture", resolved: false,
+  });
+  await seedBrowserRecords(page, legacy);
+  await page.reload();
   await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await page
     .getByRole("button", { name: "See all 3 reviews", exact: true })

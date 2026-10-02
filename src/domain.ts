@@ -2,6 +2,8 @@ import { z } from "zod";
 import { activityProposalSchema, activitySchema } from './activity-contract';
 import { agentResolutionSchema } from './features/connections/contracts';
 import { bodyWeightEntrySchema } from './features/progress/body-weight';
+import { fitnessGoalSchema } from './features/progress/fitness-goal';
+import { nutritionBaselineSchema } from './features/progress/nutrition-setup';
 import { spotPreferencesSchema, workoutCaptureSchema } from './features/spot/contracts';
 import { shoppingStateSchema } from './features/shopping/contracts';
 import { preferenceProposalSchema } from "./features/preferences/proposals";
@@ -58,6 +60,8 @@ const reviewSchema = z.object({
 });
 export type ReviewItem = z.infer<typeof reviewSchema>;
 const messageSchema = z.object({
+  captureIntent: z.literal('receipt').optional(),
+  captureReviewId: z.string().optional(),
   captureDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   activityProposal: activityProposalSchema.optional(),
   activityCaptureStatus: z.enum(['pending', 'accepted', 'dismissed']).optional(),
@@ -115,6 +119,8 @@ export const stateSchema = z.object({
     .object({ key: z.literal("dinner"), image: z.string().optional() })
     .optional(),
   profile: z.object({
+    nutritionBaseline: nutritionBaselineSchema.optional(),
+    fitnessGoal: fitnessGoalSchema.optional(),
     targetsConfigured: z.boolean().optional(),
     workoutUnit: z.enum(['lb','kg']).optional(),
     name: z.string().min(1),

@@ -3,12 +3,57 @@ import { readBrowserRecords } from "./record-fixture";
 import { mockCloud } from "./cloud-fixture";
 import { demoState } from "../src/domain";
 
+test('setup lists the combined choice last and requires a nonblank name', async ({ page }) => {
+  await mockCloud(page);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Create account', exact: true }).click();
+  await page.getByRole('button', { name: 'Try on this device first' }).click();
+  await expect(page.locator('.welcome-choice')).toHaveText([
+    'Food & meals', 'Movement & workouts', 'Groceries & dinner', 'A little of all three',
+  ]);
+  const name = page.getByRole('textbox', { name: 'Your name', exact: true });
+  const next = page.getByRole('button', { name: 'That’s me. Let’s go.', exact: true });
+  await expect(name).toHaveAttribute('required', '');
+  await expect(next).toBeDisabled();
+  await name.fill('   ');
+  await expect(next).toBeDisabled();
+  await page.locator('form').evaluate(form => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  await expect(page.getByRole('alert')).toContainText('Enter the name');
+  expect(await page.evaluate(() => localStorage.getItem('rep-and-plate.onboarding.v1'))).toBeNull();
+  await name.fill('  Alex  ');
+  await expect(next).toBeEnabled();
+  await next.click();
+  await page.getByRole('button', { name: 'Set this up later', exact: true }).click();
+  await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'We’re a team, Alex.', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Let’s do this' }).click();
+  expect((await readBrowserRecords(page)).profile.name).toBe('Alex');
+  await page.reload();
+  expect((await readBrowserRecords(page)).profile.name).toBe('Alex');
+});
+
+test('receipt-focused first use opens the photo journey after device setup', async ({ page }) => {
+  await mockCloud(page);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Start with my groceries', exact: true }).click();
+  await page.getByRole('button', { name: 'Try on this device first' }).click();
+  await expect(page.getByRole('radio', { name: 'Groceries & dinner' })).toBeChecked();
+  await page.getByLabel('Your name', { exact: true }).fill('Alex');
+  await page.getByRole('button', { name: 'That’s me. Let’s go.' }).click();
+  await page.getByRole('button', { name: 'Set this up later', exact: true }).click();
+  await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+
+  await page.getByRole('button', { name: 'Let’s do this' }).click();
+  await expect(page.getByRole('dialog', { name: 'Add a grocery receipt' })).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('Give this grocery trip a dinner plan.');
+});
+
 test("new users meet Spot outside the app, create an account, confirm, set up and return after sign-out", async ({
   page,
 }) => {
   const cloud = await mockCloud(page);
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: /Good food/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Track your food/ })).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Create account", exact: true }),
   ).toBeVisible();
@@ -22,6 +67,8 @@ test("new users meet Spot outside the app, create an account, confirm, set up an
   await page.getByRole("button", { name: "Meet Spot", exact: true }).click();
   for (const heading of [
     "Hey. I’m Spot.",
+    "Here’s what you can do with me.",
+    "Give your groceries a plan.",
     "Tell me what you ate.",
     "Tell me what you did.",
     "We do real life here.",
@@ -36,7 +83,9 @@ test("new users meet Spot outside the app, create an account, confirm, set up an
         return (el as HTMLImageElement).naturalWidth;
       }),
     ).toBeGreaterThan(500);
-    if (heading !== "We do real life here.")
+    if (heading === "Here’s what you can do with me.")
+      await page.getByRole("button", { name: "More about Spot", exact: true }).click();
+    else if (heading !== "We do real life here.")
       await page.getByRole("button", { name: "Next", exact: true }).click();
   }
   await page.getByRole("button", { name: "Let’s make this official" }).click();
@@ -62,6 +111,9 @@ test("new users meet Spot outside the app, create an account, confirm, set up an
     .getByRole("checkbox", { name: /These device records are mine/ })
     .check();
   await page.getByRole("button", { name: "That’s me. Let’s go." }).click();
+  await page.getByRole('button', { name: 'Set this up later', exact: true }).click();
+  await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+
   await expect(
     page.getByRole("heading", { name: "We’re a team, Alex." }),
   ).toBeVisible();
@@ -77,7 +129,7 @@ test("new users meet Spot outside the app, create an account, confirm, set up an
   await page.getByRole("button", { name: "Your profile", exact: true }).click();
   await page.getByRole("button", { name: /Account & backups/ }).click();
   await page.getByRole("button", { name: "Sign out on this device" }).click();
-  await expect(page.getByRole("heading", { name: /Good food/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Track your food/ })).toBeVisible();
   await expect(page.getByRole("navigation")).toHaveCount(0);
   await page.reload();
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
@@ -109,7 +161,13 @@ test("local setup preserves records, persists completion and replay preserves th
     .getByRole("button", { name: "Create account", exact: true })
     .click();
   await page.getByRole("button", { name: "Try on this device first" }).click();
+  await expect(page.getByRole('radio', { name: 'A little of all three', exact: true })).toBeChecked();
+  await page.getByLabel('Your name', { exact: true }).fill(state.profile.name);
   await page.getByRole("button", { name: "That’s me. Let’s go." }).click();
+  await page.getByRole('button', { name: 'Set this up later', exact: true }).click();
+  await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+
+  await expect(page.locator('.welcome-ready')).toContainText('meal, a workout, or a grocery receipt');
   await page.getByRole("button", { name: "Let’s do this" }).click();
   const saved = await readBrowserRecords(page);
   expect(saved.meals).toEqual(state.meals);
@@ -164,9 +222,13 @@ test("signing into a different account opens separate records and preserves the 
   await page
     .getByRole("checkbox", { name: /Open this account’s separate records/ })
     .check();
+  await page.getByLabel('Your name', { exact: true }).fill('Alex');
   await page.getByRole("button", { name: "That’s me. Let’s go." }).click();
+  await page.getByRole('button', { name: 'Set this up later', exact: true }).click();
+  await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+
   await expect(
-    page.getByRole("heading", { name: "We’re a team." }),
+    page.getByRole("heading", { name: "We’re a team, Alex." }),
   ).toBeVisible();
   await expect(page.getByRole("navigation")).toHaveCount(0);
   expect(

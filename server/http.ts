@@ -5,6 +5,7 @@ import {
   type AIResult,
 } from "../src/ai-contract.ts";
 import { runAI, type Config } from "./ai.ts";
+import { CHAT_POLICY_VERSION } from './chat-boundaries.ts';
 import { createProductSearchApi } from "./products/search.ts";
 import { createProductApi } from "./products/http.ts";
 import { createPlanApi } from "./plans.ts";
@@ -33,6 +34,8 @@ export const readConfig = (
   jevModel: env.JEV_MODEL || "jev-latest",
 });
 const errors: Record<string, string> = {
+  AI_BOUNDARY_UNAVAILABLE:
+    "I couldn’t complete the response check, so I haven’t shown an answer or changed your records. Please retry. For a personal medical concern, contact a qualified clinician; for immediate danger, call your local emergency number.",
   AI_NOT_CONFIGURED:
     "AI isn’t configured on the server yet. Your message is still here.",
   AI_INCOMPLETE:
@@ -198,7 +201,7 @@ export function createApi(
       const claim = await hosted.cache.claim(
         user,
         request.requestId,
-        createHash("sha256").update(JSON.stringify(request)).digest("hex"),
+        createHash("sha256").update(`${CHAT_POLICY_VERSION}:${JSON.stringify(request)}`).digest("hex"),
       );
       if (claim.status === "cached") {
         res.setHeader("Content-Type", "application/x-ndjson");

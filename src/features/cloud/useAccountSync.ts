@@ -102,7 +102,7 @@ export function useAccountSync(
       const instance = new SyncEngine({
         local,
         active,
-        empty: () => isFreshDevice(local()),
+        empty: (account) => isFreshDevice(local(), account?.profile.name),
         baseline: () => base,
         read: async () => {
           const saved = await loadSnapshot(client, user);

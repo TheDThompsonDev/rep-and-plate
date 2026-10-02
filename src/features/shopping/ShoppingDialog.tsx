@@ -33,6 +33,7 @@ import {
   remainingPlanNeeds,
 } from "./shopping";
 import ReceiptReview from "./ReceiptReview";
+import { receiptSourcePhoto } from '../receipts/journey';
 import PriceResearch from "./PriceResearch";
 import "./shopping.css";
 
@@ -396,6 +397,7 @@ export default function ShoppingDialog({
     return (
       <ReceiptReview
         receipt={reviewReceipt}
+        sourceImage={receiptSourcePhoto(state, reviewReceipt.id)}
         onSave={saveReceipt}
         onClose={() => setReview(null)}
       />

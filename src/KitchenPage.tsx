@@ -162,7 +162,7 @@ export default function KitchenPage({
           {budget&&currency&&<p>{spent===undefined?'No reviewed spending yet this week':`${formatMoney(spent,currency)} recorded this week`} · {formatMoney(budget,currency)} weekly budget. Uploaded receipts only; your full spending may differ.</p>}
           <div><button onClick={onShopping}>Swaps, list & spending <ArrowRight size={14}/></button><button onClick={onPreferences}>Shopping preferences</button></div>
         </section>
-        <FirstWeek state={state} onTargets={onTargets??(()=>onNavigate('You'))} onAction={action=>({preferences:onPreferences,receipt:onAddReceipt,pantry:onPantry,planner:onPlan,shopping:onShopping})[action]()}/>
+        <FirstWeek state={state} onDinner={() => onAsk('Help me choose dinner tonight using my available, checked pantry ingredients. Ask about unknown products and amounts, respect my food preferences, and list anything I need to buy. Do not log a meal or change inventory.')} onTargets={onTargets??(()=>onNavigate('You'))} onAction={action=>({preferences:onPreferences,receipt:onAddReceipt,pantry:onPantry,planner:onPlan,shopping:onShopping})[action]()}/>
         <section className="kitchen-section" aria-label="What you have">
           <div className="kitchen-heading">
             <h2>What you have</h2>

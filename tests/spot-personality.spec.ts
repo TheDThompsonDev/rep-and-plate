@@ -9,7 +9,7 @@ test('full Spot tour from You preserves records and the first draft when art fai
  await page.getByRole('button',{name:/Meet Spot/}).click();
  await expect(page.getByRole('heading',{name:'Hey. I’m Spot.'})).toBeVisible();
  await page.getByRole('button',{name:'Next',exact:true}).click();
- await expect(page.getByRole('heading',{name:'Tell me what you ate.'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Here’s what you can do with me.'})).toBeVisible();
  await page.getByRole('button',{name:'Back',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Hey. I’m Spot.'})).toBeVisible();
  await page.getByRole('button',{name:'Close tour',exact:true}).first().click();

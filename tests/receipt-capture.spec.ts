@@ -37,7 +37,7 @@ test('Kitchen receipt capture offers camera, previews a photo and saves grocerie
   await page.locator('input[capture=environment]').setInputFiles('tests/fixtures/grocery-receipt.png');
   await expect(dialog.getByRole('textbox', { name: 'Anything to add? (optional)' })).toHaveValue('For the family');
   if (info.project.name === 'mobile') await page.screenshot({ path: info.outputPath('receipt-preview.png') });
-  await dialog.getByRole('button', { name: 'Send to Rep & Plate', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Read my receipt', exact: true }).click();
   await expect(page).toHaveURL(/#chat$/);
   await expect(page.locator('.fuel-grocery-card')).toBeVisible();
   expect(requests).toHaveLength(1);

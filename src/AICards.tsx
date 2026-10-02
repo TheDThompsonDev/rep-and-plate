@@ -25,6 +25,7 @@ import {
   type MealProposal,
 } from "./ai-contract";
 import "./ai.css";
+import ReceiptSource from './features/receipts/ReceiptSource';
 
 export function AIText({
   text,
@@ -95,13 +96,19 @@ export function Sources({
 export function GroceryCard({
   receipt,
   onOpen,
+  readiness,
+  onDinner,
+  onSpending,
 }: {
   receipt: GroceryReceipt;
   onOpen: () => void;
+  readiness?: { ready: number; checks: number; available: number };
+  onDinner?: () => void;
+  onSpending?: () => void;
 }) {
   const review = receipt.items.filter((i) => i.needsReview).length;
   return (
-    <button className="fuel-grocery-card" onClick={onOpen}>
+    <section aria-label={`Next steps for ${receipt.store}`}><button className="fuel-grocery-card" onClick={onOpen}>
       <span className="fuel-grocery-symbol">
         <ShoppingBasket size={27} />
       </span>
@@ -122,6 +129,15 @@ export function GroceryCard({
       </span>
       <ChevronRight size={18} />
     </button>
+    {readiness && <div className="receipt-result-actions">
+      <p><strong>{readiness.ready} {readiness.ready === 1 ? 'food is' : 'foods are'} checked and on hand.</strong>{readiness.checks > 0 ? ` ${readiness.checks} still need a product or amount check.` : ' Ready for meal ideas; portions still need review.'}</p>
+      {readiness.checks > 0 && <button className="button secondary" onClick={onOpen}>Check groceries before planning</button>}
+      {onDinner && <button className="button primary" disabled={readiness.ready === 0} onClick={onDinner}>Choose dinner from these groceries <ArrowRight size={16}/></button>}
+      {readiness.ready > 0 && readiness.checks > 0 && <p>Start with checked groceries. Spot will ask about anything uncertain.</p>}
+      {onSpending && <button className="button secondary" onClick={onSpending}>Review receipt spending</button>}
+      <p>Only checked receipt amounts enter recorded spending. Dinner ideas don’t log food or change stock.</p>
+    </div>}
+    </section>
   );
 }
 export function ProposedMeal({
@@ -182,6 +198,8 @@ export function GroceriesDialog({
   onAsk,
   onReceiptUpdate,
   initialReview,
+  sourcePhotos = {},
+  onAdjustRemaining,
 }: {
   receipts: GroceryReceipt[];
   initialReview?: {receiptId:string;itemId:string};
@@ -189,6 +207,8 @@ export function GroceriesDialog({
   onUpdate: (receiptId: string, item: GroceryItem) => void;
   onAsk: (text: string) => void;
   onReceiptUpdate?: (receipt: GroceryReceipt) => void;
+  sourcePhotos?: Record<string, string | undefined>;
+  onAdjustRemaining?: (receiptId: string, itemId: string) => void;
 }) {
   const [editing, setEditing] = useState<{
     receiptId: string;
@@ -197,8 +217,9 @@ export function GroceriesDialog({
   } | null>(()=>{const receipt=receipts.find(value=>value.id===initialReview?.receiptId);const item=receipt?.items.find(value=>value.id===initialReview?.itemId);return receipt&&item&&!item.productCandidates?.length?{receiptId:receipt.id,item}:null;});
   const [matching, setMatching] = useState<{receiptId: string; item: GroceryItem;draft?:Record<string,string>} | null>(()=>{const receipt=receipts.find(value=>value.id===initialReview?.receiptId);const item=receipt?.items.find(value=>value.id===initialReview?.itemId);return receipt&&item&&item.productCandidates?.length?{receiptId:receipt.id,item}:null;});
   const [reviewing,setReviewing]=useState<GroceryReceipt|null>(null);
-  if(reviewing&&onReceiptUpdate)return <Suspense fallback={<Modal title="Review grocery trip" onClose={()=>setReviewing(null)}><p>Opening receipt…</p></Modal>}><ReceiptReview receipt={reviewing} onClose={()=>setReviewing(null)} onSave={receipt=>{onReceiptUpdate(receipt);setReviewing(null);}}/></Suspense>;
-  if (matching) return <Suspense fallback={<Modal title="Find this product" onClose={()=>setMatching(null)}><p>Opening product search…</p></Modal>}><ReceiptProductReview item={matching.item} onClose={()=>setMatching(null)} onManual={()=>{setEditing(matching);setMatching(null);}} onApply={(product,servingsPurchased)=>{
+  const [editError, setEditError] = useState('');
+  if(reviewing&&onReceiptUpdate)return <Suspense fallback={<Modal title="Review grocery trip" onClose={()=>setReviewing(null)}><p>Opening receipt…</p></Modal>}><ReceiptReview receipt={reviewing} sourceImage={sourcePhotos[reviewing.id]} onClose={()=>setReviewing(null)} onSave={receipt=>{onReceiptUpdate(receipt);setReviewing(null);}}/></Suspense>;
+  if (matching) return <Suspense fallback={<Modal title="Find this product" onClose={()=>setMatching(null)}><p>Opening product search…</p></Modal>}><ReceiptProductReview sourceImage={sourcePhotos[matching.receiptId]} item={matching.item} onClose={()=>setMatching(null)} onManual={()=>{setEditing(matching);setMatching(null);}} onApply={(product,servingsPurchased)=>{
     const latest = receipts.find(receipt=>receipt.id===matching.receiptId)?.items.find(item=>item.id===matching.item.id);
     if (!latest) throw new Error("This grocery item is no longer available.");
     onUpdate(matching.receiptId,applyReceiptProduct(latest,product,servingsPurchased));
@@ -211,6 +232,8 @@ export function GroceriesDialog({
           className="edit-form"
           onSubmit={(e) => {
             e.preventDefault();
+            setEditError('');
+            try {
             const form = new FormData(e.currentTarget);
             const fields = ["calories", "protein", "carbs", "fat"] as const;
             const hasAll = fields.every(
@@ -239,8 +262,13 @@ export function GroceriesDialog({
               note: "Details edited by you. Nutrition is per serving; purchase quantities are separate from food eaten.",
             });
             setEditing(null);
+            } catch (caught) {
+              setEditError(caught instanceof Error ? caught.message : 'These details need a check. Your edits are still here.');
+            }
           }}
         >
+          <ReceiptSource image={sourcePhotos[editing.receiptId]}/>
+          {editError && <><p role="alert">{editError}</p>{onAdjustRemaining && <button type="button" className="button secondary" onClick={() => onAdjustRemaining(editing.receiptId, editing.item.id)}>Adjust remaining amount instead</button>}</>}
           <p className="modal-intro">
             Use the package label when you have it. Leave unknown nutrition
             blank.
