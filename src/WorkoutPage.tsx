@@ -1,5 +1,16 @@
 import { SpotAvatar, SpotEmptyState, SpotMoment } from "./features/spot/Spot";
 import { setLoad, setWorkoutLoad } from "./features/progress/set-loads";
+import { FitnessSetup } from "./features/progress/FitnessSetup";
+import { fitnessDraft, type FitnessSetupDraft } from "./features/progress/fitness-goal";
+import {
+  clearTrainingProgram,
+  experienceLabels,
+  programEquipmentText,
+} from "./features/progress/training-program";
+import {
+  nextProgramSession,
+  startProgramSession,
+} from "./features/progress/training-week";
 import { addActivity } from "./activities";
 import {
   useEffect,
@@ -111,6 +122,7 @@ export default function WorkoutPage({
   onScan,
   startWithMovement = false,
   onFirstMovementClose,
+  onSaveFitness,
 }: {
   state: AppState;
   setState: Dispatch<SetStateAction<AppState>>;
@@ -121,9 +133,13 @@ export default function WorkoutPage({
   onScan: () => void;
   startWithMovement?: boolean;
   onFirstMovementClose?: () => void;
+  /** Saves the shared fitness setup (goal + training week). Without it the setup entry is hidden. */
+  onSaveFitness?: (draft: FitnessSetupDraft) => void;
 }) {
   const workout = state.workout;
   const unit = state.profile.workoutUnit ?? "lb";
+  const program = state.profile.trainingProgram;
+  const nextSession = program ? nextProgramSession(program, workout) : null;
   const [activityOpen, setActivityOpen] = useState(startWithMovement);
   const [editingActivity, setEditingActivity] = useState<
     NonNullable<AppState["activities"]>[number] | null
@@ -149,7 +165,22 @@ export default function WorkoutPage({
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, [restUntil,setState]);
-  const [selected, setSelected] = useState(workout.planId ?? "upper");
+  // The hero shows either a session of the saved training week or a starter plan. The default
+  // follows the week's next session; a manual choice is kept only while that basis is unchanged,
+  // so saving a week or finishing a session leads with the next session without an effect.
+  type Selection = { kind: "program"; index: number } | { kind: "plan"; id: string };
+  const selectionBasis = program
+    ? `${program.startedOn}:${program.daysPerWeek}:${program.equipment.join(",")}:${program.experience ?? ""}:${nextSession?.index ?? 0}`
+    : "plans";
+  const [chosen, setChosen] = useState<{ basis: string; value: Selection } | null>(null);
+  const selection: Selection =
+    chosen?.basis === selectionBasis
+      ? chosen.value
+      : program && nextSession
+        ? { kind: "program", index: nextSession.index }
+        : { kind: "plan", id: workout.planId ?? "upper" };
+  const setSelection = (value: Selection) => setChosen({ basis: selectionBasis, value });
+  const [setupOpen, setSetupOpen] = useState(false);
   const [browse, setBrowse] = useState(false);
   const [menu, setMenu] = useState(false);
   const [detail, setDetail] = useState<{ title: string; text: string } | null>(
@@ -164,7 +195,27 @@ export default function WorkoutPage({
   } | null>(null);
   const [composer, setComposer] = useState("");
   const scroll = useRef<HTMLDivElement>(null);
-  const plan = workoutPlans.find((p) => p.id === selected) ?? workoutPlans[0];
+  const programSession =
+    selection.kind === "program" && program ? program.sessions[selection.index] : undefined;
+  const plan =
+    workoutPlans.find((p) => selection.kind === "plan" && p.id === selection.id) ?? workoutPlans[0];
+  const hero = programSession
+    ? {
+        title: programSession.title,
+        minutes: programSession.minutes,
+        description: programSession.description,
+        exercises: programSession.exercises.map(
+          (exercise): Exercise => ({
+            name: exercise.name,
+            weight: 0,
+            weightConfirmed: false,
+            target: exercise.target,
+            previous: [],
+            sets: Array.from({ length: exercise.sets }, () => null),
+          }),
+        ),
+      }
+    : { title: plan.title, minutes: plan.minutes, description: plan.description, exercises: plan.exercises };
   const session = workout.status !== "ready" && !browse;
   const active = workout.status === "active";
   const historySessions = completedWorkoutHistory(workout);
@@ -197,7 +248,14 @@ export default function WorkoutPage({
     }));
   }
   function start() {
-    setState((s) => ({ ...s, workout: startPlan(s.workout, selected) }));
+    const chosen = selection;
+    setState((s) => ({
+      ...s,
+      workout:
+        chosen.kind === "program" && s.profile.trainingProgram?.sessions[chosen.index]
+          ? startProgramSession(s.workout, s.profile.trainingProgram, chosen.index)
+          : startPlan(s.workout, chosen.kind === "plan" ? chosen.id : plan.id),
+    }));
     setBrowse(false);
     scroll.current?.scrollTo(0, 0);
   }
@@ -304,15 +362,34 @@ export default function WorkoutPage({
         {!session ? (
           <>
             <div className="workout-heading">
-              <h1>What should you do today?</h1>
-              <p>Your next workout, with room for how you feel today.</p>
-              <button
-                className="button secondary"
-                disabled={active}
-                onClick={onBuild}
-              >
-                Create a workout for me
-              </button>
+              <h1>{program ? "Your week" : "What should you do today?"}</h1>
+              <p>
+                {program
+                  ? `${program.sessions.length} sessions · ${programEquipmentText(program)}${program.experience ? ` · ${experienceLabels[program.experience]}` : ""}. Do them on the days that fit you.`
+                  : "Your next workout, with room for how you feel today."}
+              </p>
+              <div className="workout-heading-actions">
+                <button
+                  className="button secondary"
+                  disabled={active}
+                  onClick={onBuild}
+                >
+                  Create a workout for me
+                </button>
+                {onSaveFitness && (
+                  <button
+                    className="button secondary"
+                    onClick={() => setSetupOpen(true)}
+                  >
+                    {program ? "Edit training week" : "Set up your training week"}
+                  </button>
+                )}
+              </div>
+              {!program && onSaveFitness && (
+                <p className="workout-setup-hint">
+                  Tell us your training days, equipment and experience to get a week of sessions matched to you.
+                </p>
+              )}
             </div>
             {active && (
               <section
@@ -331,34 +408,62 @@ export default function WorkoutPage({
                 </button>
               </section>
             )}
-            <div className="workout-choices" aria-label="Choose a workout">
-              {workoutPlans.map((p) => (
-                <button
-                  key={p.id}
-                  aria-pressed={selected === p.id}
-                  onClick={() => setSelected(p.id)}
-                >
-                  {p.title}
-                  <small>~{p.minutes} min</small>
-                </button>
-              ))}
-            </div>
+            {program && nextSession ? (
+              <div className="workout-choices workout-week" aria-label="Your week">
+                {program.sessions.map((item, index) => (
+                  <button
+                    key={`${item.title}:${index}`}
+                    aria-pressed={selection.kind === "program" && selection.index === index}
+                    onClick={() => setSelection({ kind: "program", index })}
+                  >
+                    {item.title}
+                    <small>{index === nextSession.index ? "Next up" : `~${item.minutes} min`}</small>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="workout-choices" aria-label="Choose a workout">
+                {workoutPlans.map((p) => (
+                  <button
+                    key={p.id}
+                    aria-pressed={selection.kind === "plan" && selection.id === p.id}
+                    onClick={() => setSelection({ kind: "plan", id: p.id })}
+                  >
+                    {p.title}
+                    <small>~{p.minutes} min</small>
+                  </button>
+                ))}
+              </div>
+            )}
             <section className="fuel-workout-hero">
               <div>
-                <span>Workout option</span>
+                <span>
+                  {programSession && nextSession && selection.kind === "program"
+                    ? selection.index === nextSession.index
+                      ? "Next session"
+                      : `Session ${selection.index + 1} of ${program?.sessions.length ?? 0}`
+                    : program
+                      ? "Starter plan"
+                      : "Workout option"}
+                </span>
                 <h2>
-                  {plan.title} · ~{plan.minutes} min
+                  {hero.title} · ~{hero.minutes} min
                 </h2>
-                <p>{plan.description}</p>
+                <p>{hero.description}</p>
                 <p className="workout-target-note">
-                  Example rep targets. Choose a comfortable load before logging;
-                  no weight is prescribed. Use 0 only for bodyweight work.
+                  {programSession
+                    ? "Starting targets you confirm. Choose each load yourself before recording a set; no weight is prescribed and nothing here is a record. Use 0 only for bodyweight work."
+                    : "Example rep targets. Choose a comfortable load before logging; no weight is prescribed. Use 0 only for bodyweight work."}
                 </p>
                 <button
                   className="workout-start"
                   onClick={active ? resume : start}
                 >
-                  {active ? "Continue current workout" : "Start workout"}{" "}
+                  {active
+                    ? "Continue current workout"
+                    : programSession
+                      ? "Start this session"
+                      : "Start workout"}{" "}
                   <ArrowRight size={21} />
                 </button>
               </div>
@@ -367,18 +472,18 @@ export default function WorkoutPage({
             <div className="workout-section-title">
               <h2>Exercises</h2>
               <span>
-                {plan.exercises.length} exercises · ~{plan.minutes} min
+                {hero.exercises.length} exercises · ~{hero.minutes} min
               </span>
             </div>
             <div className="workout-plan">
-              {plan.exercises.map((ex, i) => (
+              {hero.exercises.map((ex, i) => (
                 <button
                   className="workout-preview"
                   key={ex.name}
                   onClick={() =>
                     setDetail({
                       title: ex.name,
-                      text: `${exerciseTechnique(ex.name).cues.join(" ")} ${ex.sets.length} example sets of ${ex.target} reps. Choose your own load. Once you start, adjust or substitute the exercise.`,
+                      text: `${exerciseTechnique(ex.name).cues.join(" ")} ${ex.sets.length} ${programSession ? "starting" : "example"} sets of ${ex.target} reps. Choose your own load. Once you start, adjust or substitute the exercise.`,
                     })
                   }
                 >
@@ -395,6 +500,29 @@ export default function WorkoutPage({
                 </button>
               ))}
             </div>
+            {program && (
+              <>
+                <div className="workout-section-title">
+                  <h2>Starter plans</h2>
+                  <span>Available any time</span>
+                </div>
+                <div className="workout-choices" aria-label="Choose a workout">
+                  {workoutPlans.map((p) => (
+                    <button
+                      key={p.id}
+                      aria-pressed={selection.kind === "plan" && selection.id === p.id}
+                      onClick={() => {
+                        setSelection({ kind: "plan", id: p.id });
+                        scroll.current?.scrollTo(0, 0);
+                      }}
+                    >
+                      {p.title}
+                      <small>~{p.minutes} min</small>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
             <div className="workout-section-title">
               <h2>Your recent training</h2>
               <button onClick={() => setHistory(true)}>
@@ -933,6 +1061,39 @@ export default function WorkoutPage({
           {active&&<p>Finish your active session before starting another routine.</p>}
         </div>
       </Modal>}
+      {setupOpen && onSaveFitness && (
+        <Modal title="Your training week" onClose={() => setSetupOpen(false)}>
+          <FitnessSetup
+            goal={state.profile.fitnessGoal}
+            program={program}
+            // Coming from Workouts should not opt someone without a goal into weight check-ins.
+            initialDraft={
+              state.profile.fitnessGoal ? undefined : { ...fitnessDraft(undefined, program), cadence: "none" }
+            }
+            weight={state.bodyWeights
+              ?.filter((entry) => entry.day <= today())
+              .slice()
+              .sort((a, b) => a.day.localeCompare(b.day))
+              .at(-1)}
+            onSave={(draft) => {
+              onSaveFitness(draft);
+              setSetupOpen(false);
+            }}
+          />
+          {program && (
+            <button
+              type="button"
+              className="button secondary workout-remove-week"
+              onClick={() => {
+                setState((s) => clearTrainingProgram(s));
+                setSetupOpen(false);
+              }}
+            >
+              Remove training week
+            </button>
+          )}
+        </Modal>
+      )}
       {menu && (
         <Modal title="Your workouts" onClose={() => setMenu(false)}>
           <div className="fuel-menu">
@@ -949,7 +1110,7 @@ export default function WorkoutPage({
                 setMenu(false);
                 setDetail({
                   title: "About these workouts",
-                  text: "Choose a starter workout or create one with your preferences. Starter reps are example targets you can adjust. Choose your own load before recording a set. Exercise history and recent training use your recorded, finished sessions. Your sets, corrections, and completed sessions are saved on this device.",
+                  text: "Choose a starter workout, set up a training week, or create a workout with your preferences. A training week picks sessions from the starter plans to match your equipment; its rep targets are starting points you confirm, with no load prescribed and no automatic progression. Starter reps are example targets you can adjust. Choose your own load before recording a set. Exercise history and recent training use your recorded, finished sessions. Your sets, corrections, and completed sessions are saved on this device.",
                 });
               }}
             >

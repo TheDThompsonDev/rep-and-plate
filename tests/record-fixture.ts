@@ -28,3 +28,15 @@ export async function readBrowserRecords(page: Page) {
     );
   });
 }
+
+/** Replace the stored conversation with `messages` through the durable store
+ * and reload so the Chat thread renders exactly that history. Waits for the
+ * composer first so startup hydration cannot overwrite the seed (ledger: the
+ * legacy nutrition fixture raced it). */
+export async function seedConversation(page: Page, messages: unknown[]) {
+  await page.getByRole("textbox", { name: "Message Rep & Plate" }).waitFor();
+  const state = await readBrowserRecords(page);
+  await seedBrowserRecords(page, { ...state, messages });
+  await page.reload();
+  await page.getByRole("textbox", { name: "Message Rep & Plate" }).waitFor();
+}

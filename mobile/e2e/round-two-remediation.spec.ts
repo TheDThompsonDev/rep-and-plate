@@ -1,3 +1,4 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
 import { initialState, today } from "../../src/domain";
 import { shiftPlanDate } from "../../src/features/planning/recurring-plans";
@@ -293,7 +294,7 @@ test("guest saving copy and malformed backup explain current records correctly",
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Cloud & your records", exact: true })
     .click();

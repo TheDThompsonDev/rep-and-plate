@@ -1,0 +1,11 @@
+{
+  "name": "rep-and-plate-typescript-eslint",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "typescript-eslint pinned to the TypeScript 6 JS API, installed as its own small project. The root typescript@7 package ships only the native tsc wrapper (require('typescript') exposes just {version}), so typescript-eslint and ts-api-utils must resolve TypeScript 6 from a tree of their own; root `tsc` stays TypeScript 7. ESLint itself is not installed here: .npmrc skips peer installs so the plugin resolves the root eslint. Installed on first `npm run lint` by ensure.mjs. See docs/context/error-ledger.md (TypeScript 7 / Expo ESLint) and docs/audits/2026-10-10-repo-audit/notes/A6-hygiene.md.",
+  "dependencies": {
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.1"
+  }
+}

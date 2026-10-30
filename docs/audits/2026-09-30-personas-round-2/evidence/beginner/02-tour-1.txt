@@ -1,0 +1,14 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - text: SMALL PLATE. BIG PERSONALITY.
+  - img "Spot in sunglasses addressing far too many microphones."
+  - text: 01 · Meet Spot 02 · Your account 03 · Make it yours
+  - paragraph: MEET SPOT · 1 OF 4
+  - heading "Hey. I’m Spot." [level=1]
+  - heading "You opened the app. I called a press conference." [level=2]
+  - paragraph: Part dinner plate. Part weight plate. Your wildly invested sidekick for food, movement, and being a human.
+  - button "Next"
+  - button "Back"
+  - button "Skip to account"
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

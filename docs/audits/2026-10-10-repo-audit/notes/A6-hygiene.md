@@ -1,0 +1,68 @@
+# A6-hygiene — repository hygiene, Q4, Q11, F6 docs
+
+Findings: README section 4 rows 1–3 and 5 (row 4, native lint warnings, is mobile-owned and untouched), Q4, Q11, F6 (documentation half). No file under src/, server/, scripts/, tests/, mobile/ or supabase/ was edited.
+
+## Plan (written before editing)
+
+Goal: make the green checks enforceable and the repo honest about Node, tabs, docs and line endings, without touching source owned by other agents.
+Done when: `npm run lint` exits 0 with 0 errors on the current tree; `npx tsc --noEmit` and `npx vitest run src server` stay green; `node -e "require('./package.json')"` parses; `.gitignore` no longer ignores `docs/`; `tsconfig.tsbuildinfo` is out of the index; README matches the live shell; `docs/context/native.md` carries the parity table; `.github/workflows/ci.yml` exists.
+Approach: create (eslint config, gitattributes, CI) + repair (gitignore, README, package.json) + extend (native.md, INDEX.md).
+Context: ledger line 132 already records that `typescript@7` ships no JS compiler API (`require('typescript')` returns only `{version, versionMajorMinor}`), so typescript-eslint needs TypeScript 6; mobile keeps TS 6 for tooling and `typescript-compiler` (TS 7) for `tsc`. Root `tsc` must stay TS 7 (`npm run build`, `npx tsc --noEmit`, native.md line 3: TS 6 overflowed on the shared Zod types). Ledger line 344 warns a prior diagnostic mis-normalized CRLF; this pass adds `.gitattributes` and does not renormalize. `core.autocrlf=true` locally; 52 tracked files were `i/lf w/crlf`, 32 `w/mixed`, 0 `i/crlf`.
+
+## Reproduction (red before the change)
+
+- `git check-ignore -v docs/AGENT_CONNECTIONS.md` → `.gitignore:31:/docs` (rule added in commit 54e6c9a "work"). `git status --porcelain docs | wc -l` → 2 (only the two modified tracked context docs; the six untracked docs and all of `docs/audits` were invisible).
+- No `eslint.config.js`, no `lint` script, no `.github/`, no `.gitattributes`; `git ls-files tsconfig.tsbuildinfo` → tracked.
+- First strict ESLint run (all recommended rules at their shipped severity): 334 files, **67 errors**, 6 warnings, 0 parse failures. Error rules: `@typescript-eslint/no-explicit-any` 34, `@typescript-eslint/no-unused-vars` 11, `react-hooks/set-state-in-effect` 11, `react-hooks/refs` 9, `react-hooks/purity` 1, `@typescript-eslint/no-unused-expressions` 1.
+- Two failed toolchain shapes, recorded so nobody retries them: (1) root devDep `typescript-eslint` + `overrides: {"typescript-eslint": {"typescript": "~6.0.3"}}` → `npm ERESOLVE` (a peer must resolve from the dependent's own location; a top-level dependent only sees root `typescript@7`). (2) `file:` link package holding `typescript@6` + `typescript-eslint` → npm nests typescript-eslint correctly but hoists `ts-api-utils` (peer `typescript >=4.8.4`, nominally satisfied by 7) to root, which crashes at load (`Cannot read properties of undefined (reading 'Intrinsic')`); npm does not apply `overrides` through a link target (verified with a fresh `--package-lock-only` resolution in a scratch project). The lockfile was restored from HEAD before the final install.
+
+## Change and mechanism
+
+1. `.gitignore`: removed `/docs`; added `*.tsbuildinfo`. `git status --porcelain docs | wc -l` → **11** after (4 modified tracked docs incl. my two, plus `docs/AGENT_CONNECTIONS.md`, `docs/agent-meal.example.json`, `docs/audits/`, `docs/context/{agent-connections,chat-boundaries,onboarding,receipt-journey}.md`). `git check-ignore docs/AGENT_CONNECTIONS.md` → not ignored.
+   **No narrower evidence ignore was added.** `docs/audits` is 61 MB in 1,723 files (579 PNG = 46 MB, plus 904 .txt, 130 .log, 176 .json, 99 .md; no video). The PNGs are screenshots of the app at past commits and Playwright failure folders from past runs; they are not regenerable (the app has changed) and the error ledger and INDEX.md cite them by path, so ignoring them would reproduce the very problem the audit flagged. Whether to commit 61 MB, move evidence to LFS or external storage, or prune the four 2026-09-30 folders (54 MB of the 61) is the orchestrator's call; nothing was `git add`ed. Paths that remain untracked: everything listed above. README links to `docs/audits/2026-09-30-personas/report.md`, `docs/audits/2026-09-30-remediation/` and `docs/audits/2026-09-30-round-2-remediation/deployment/report.md` resolve on disk but stay broken on a fresh clone until those paths are committed.
+2. `.gitattributes` (new): `* text=auto eol=lf`, CRLF for `.bat/.cmd/.ps1`, `binary` for images, fonts, archives, media, sqlite. Toggle test: `git status --porcelain | grep -c "^ M"` = 80 with the file and 80 without, so it introduces no spurious modifications. Warning direction flipped as expected: 0 "LF will be replaced by CRLF", 22 "CRLF will be replaced by LF the next time Git touches it" (the files whose working copies are CRLF/mixed). **One-time follow-up, not done here:** on a clean tree, `git add --renormalize . && git commit -m "Normalize line endings"` rewrites those 84 files to LF in the index; afterwards every collaborator should delete and re-checkout (or `git rm -r --cached . && git reset --hard`) so working copies become LF and the warnings stop permanently.
+3. `git rm --cached tsconfig.tsbuildinfo` → staged `D tsconfig.tsbuildinfo`; file remains on disk (26,680 bytes) and is now ignored (`.gitignore:32`).
+4. `package.json`: `engines.node` `24.x` → `>=22.14`. Evidence: no Node-24-only dependency (`@vercel/functions` engines `>= 20`; `vercel.json` has no runtime pin; `node:sqlite` in `server/products/catalog.ts:1` and `server/agents/sqlite.ts:1` needs ≥ 22.13; `scripts/build-api.mjs` `target: 'node24'` is an esbuild syntax target, left as is). Added `lint`, `prelint`, `format:check`; added `@eslint/js`, `eslint@^9.39.5` (same major as mobile), `eslint-plugin-react-hooks@^7.1.1`, `globals`; removed `agent-browser` (the grep over `*.ts/*.mjs/*.json` outside node_modules and docs hit only `package.json:51`; `.claude`, `.cyc`, `.agents`, `.codex`, `.cursor`, `scripts` have no reference; `package-lock.json` now has 0 occurrences). `package-lock.json`: +1,547/−23 lines, all from the eslint additions and the agent-browser removal.
+5. Lint gate. `eslint.config.js` (flat, ESM): `@eslint/js` recommended + `typescript-eslint` recommended for `**/*.{js,mjs,cjs,ts,tsx,mts,cts}`, `eslint-plugin-react-hooks` recommended for `src/**`; ignores build output, `mobile/` (own Expo config), `docs/`, `public/`, `supabase/`, tool dirs, `scripts/claude-hooks/` (CYC-installed), and the `.gitignore`d scratch files (`.ai-*.ts|mjs`, `.jev-smoke.ts`, `.receipt-fixture.mjs`) so local and CI results match.
+   **Toolchain (new directory `tools/typescript-eslint/`, outside the listed scope; smallest shape that works):** a separate tiny project with its own `package-lock.json` holding `typescript@~6.0.3` + `typescript-eslint@^8.71.1`; `.npmrc` `legacy-peer-deps=true` so no second `eslint` is installed and the plugin resolves root eslint by the normal upward walk; `index.js` re-exports typescript-eslint (with a readable error if not installed); `ensure.mjs` is the root `prelint` hook and runs `npm ci` there on first use (one `stat` afterwards). Verified: `@typescript-eslint/typescript-estree` → typescript 6.0.3, `ts-api-utils` lives inside the toolchain tree, no nested eslint, root `npx tsc --version` → 7.0.2 unchanged.
+   **Downgraded to warn (documented in the config):** `@typescript-eslint/no-explicit-any` (34: 33 in tests/, 1 in src/features/cloud/sync.ts = Q9), `@typescript-eslint/no-unused-vars` (9: src 4, server 4, tests 1), `@typescript-eslint/no-unused-expressions` (1, src/features/onboarding/Onboarding.tsx), `react-hooks/set-state-in-effect` (11), `react-hooks/refs` (9, six in src/features/connections/useConnections.ts), `react-hooks/purity` (1, ConnectionsHub.tsx). `react-hooks/exhaustive-deps` ships as warn (6). Every other recommended rule, including `react-hooks/rules-of-hooks`, stays an error with 0 hits. Final: **329 files, 0 errors, 71 warnings**. No `--fix` was run.
+   `format:check` is informational: Prettier would change 235 files; it is not in CI (adding it would fail on the current tree).
+6. `.github/workflows/ci.yml` (new; parsed with PyYAML): Node 22, npm cache keyed on the three lockfiles. `checks` job: `npm ci`, `npx tsc --noEmit`, `npm run lint`, `npx vitest run src server`, `npx vitest run scripts/agents`, `npm run agents:check`, `npm --prefix mobile ci`, `npm --prefix mobile run check`, `npm --prefix mobile run lint`, `npm run build`. `browser` job: `npm ci`, `npx playwright install --with-deps chromium`, `npx playwright test`, report upload on failure. Provider-key claim verified: `tests/app-fixture.ts` only seeds localStorage; `playwright.config.ts` starts `npm run dev`, and `vite.config.ts` mounts `createApi(readConfig(env))` in-process, so with no `.env` the API reports providers unavailable, which is the state the 13 non-mocking specs (of 55) rely on; 42 specs mock routes; the only `process.env` use in `tests/` is `agent-connections.spec.ts:52`, which sets `REP_PLATE_URL/TOKEN` itself against an in-memory SQLite server. No spec needs secrets. Not executed in CI yet (no push in this pass).
+7. README: tabs sentence (line 33) now names Chat, Nutrition, Scan, Workouts, Kitchen with You behind the header control; Node statement (line 39) says 22.14+, `>=22.14`, Node 22 locally/CI, Node 24 bundle target hosted; "The fourth tab opens `#you`" → header control; added `npm run lint`, `npm run format:check` and a CI sentence. All `docs/...` links were checked: every target exists on disk; none needed rewording, they only needed the ignore rule gone. CRLF endings preserved (`file README.md` → CRLF).
+8. F6 docs: `docs/context/native.md` gained a "Web/native parity" table with the four audit gaps marked **Pending decision** (none invented as intentional) plus the Expo-web e2e target as a known limit; `docs/context/INDEX.md` gained a "Native client" row pointing at it.
+
+## Consumers checked
+
+- Root `tsc` (build, verify command, shared Zod types): still TypeScript 7.0.2 (`npx tsc --version`).
+- Hosting: `vercel.json` unchanged; `engines >=22.14` lets Vercel keep its current Node 24 selection; `.vercelignore` still excludes `docs`, so un-ignoring docs ships nothing extra.
+- Mobile lint: untouched; root config ignores `mobile/`.
+- `.gitignore` `node_modules/` pattern covers `tools/typescript-eslint/node_modules` (`git check-ignore` confirmed).
+- Playwright and dev server: no config change.
+
+## Commands run (final file state)
+
+| Command | Result |
+| --- | --- |
+| `npm run lint` | exit 0; 71 problems (0 errors, 71 warnings) |
+| `npx tsc --noEmit` | exit 0 |
+| `npx vitest run src server` | 71 files, 472 tests passed |
+| `node -e "require('./package.json')"` | parses; engines `>=22.14`, no `agent-browser`, no `overrides` |
+| `npm run build` | exit 0 (built in 1.07 s after tsc) |
+| `npm run format:check` | exit 1, 235 files (informational) |
+| `python -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yml'))"` | ok; jobs `checks`, `browser` |
+| `git status --porcelain docs \| wc -l` | 2 before → 11 after |
+| `git status --porcelain \| grep -c "^ M"` with / without `.gitattributes` | 80 / 80 |
+| `git diff --stat` (owned files) | `.gitignore` 3, `README.md` 10, `docs/context/INDEX.md` 1, `docs/context/native.md` 14, `package.json` 12, `package-lock.json` +1547/−23; staged `D tsconfig.tsbuildinfo` |
+
+New untracked files: `.gitattributes`, `eslint.config.js`, `.github/workflows/ci.yml`, `tools/typescript-eslint/{package.json,package-lock.json,.npmrc,index.js,ensure.mjs}`, this note.
+
+## Not checked
+
+- The workflow has not run on GitHub (nothing pushed). Risks: `npm --prefix mobile ci` on Linux, the `expo lint` step there, and browser-suite wall time with 3 workers on a 2-core runner.
+- `npx vitest run scripts/agents`, `npm run agents:check`, mobile check/lint were not rerun here (unchanged by this pass; the audit ran them green).
+- No browser suite run (per brief).
+- Line-ending renormalization is deliberately deferred (step 2).
+
+## Ledger-ready paragraph
+
+HYGIENE-001 (2026-10-10). `/docs` had been git-ignored since 54e6c9a, hiding six context docs and all audit evidence; the rule is removed and `tsconfig.tsbuildinfo` (noEmit root config) is untracked and ignored. The 61 MB `docs/audits` evidence tree stays untracked pending a decision (commit, LFS, or prune the 2026-09-30 folders); it is not regenerable, so no evidence ignore was added. `.gitattributes` now forces LF for text; adding it changed no file status, and the remaining 22 "CRLF will be replaced by LF" notices disappear after a one-time `git add --renormalize .` commit plus fresh checkouts. `engines.node` is `>=22.14` (node:sqlite unflagged in 22.13; `@vercel/functions` needs ≥ 20; hosted bundle still targets Node 24). A root ESLint gate exists: because `typescript@7` exposes no compiler API, typescript-eslint runs from `tools/typescript-eslint/`, a separate lockfile with TypeScript 6 that root `prelint` installs on first use; npm `overrides` and `file:` links were both tried and cannot do this (peers resolve from the dependent's location; overrides do not cross link targets). The gate passes with 0 errors and 71 warnings; six recommended rules are at warn and listed in `eslint.config.js` with counts, to be promoted as counts reach zero. `.github/workflows/ci.yml` runs type, lint, unit, agents, native and build checks plus a Playwright job on Node 22 without provider keys. `agent-browser` was removed as unused. README tabs/Node copy and the F6 parity table in `docs/context/native.md` are updated; parity rows are "pending decision", not intentional.

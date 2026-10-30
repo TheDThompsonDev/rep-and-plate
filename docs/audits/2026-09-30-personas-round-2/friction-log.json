@@ -1,0 +1,642 @@
+{
+  "date": "2026-09-30",
+  "method": "Five simulated personas, actual local UI inspection; wishes/expectations/reuse are hypotheses, not human testimony",
+  "status": "Open recommendations; no product edits",
+  "priorityDefinitions": {
+    "P1": "Correct before public reliance on affected records",
+    "P2": "Next correction/usability batch",
+    "P3": "Lower urgency polish or convenience, validate demand",
+    "Research": "Gather production evidence; not a demonstrated defect"
+  },
+  "counts": {
+    "friction": 12,
+    "opportunity": 6,
+    "investigation": 1
+  },
+  "records": [
+    {
+      "id": "R2-01",
+      "originId": "SH-R2-01",
+      "originReport": "shared/report.md",
+      "kind": "friction",
+      "priority": "P1",
+      "title": "Untouched manual macro defaults become confirmed zero nutrition",
+      "personas": [
+        "complete beginner",
+        "fit but new to calorie tracking"
+      ],
+      "classification": "reproduced data-confidence defect",
+      "trigger": "",
+      "observed": "Open Enter meal manually. All four nutrient fields initially contain numeric 0. Enter only a name and 170 calories from a hypothetical menu; leave protein, carbs and fat untouched. Save succeeds, displaying Confirmed 170 cal 0g protein 0g carbs 0g fat. The only instruction is Your own values, saved exactly as entered. Weekly review counts this as non-estimated nutrition. Reproduced independently in both contexts.",
+      "expectationHypothesis": "A novice who knows menu calories but not macros may expect omitted knowledge to remain unknown, rather than being treated as measured zero.",
+      "wishHypothesis": "Require deliberate nutrient entry or provide explicit unknown macros with incomplete-data treatment in totals. Preserve valid deliberately entered zeros.",
+      "availabilityCheck": "src/App.tsx:239 initializes all nutrients at0 and confidence confirmed; MealEditor:2378-2383 parses all fields and sets confirmed. Required inputs already have defaultValue0. Native parity differs: other audit agent verified native starts blank and rejects missing values.",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F26"
+      ],
+      "evidence": [
+        "shared/evidence/beginner/11-manual-meal-empty.txt",
+        "shared/evidence/beginner/raw-manual-defaults.json",
+        "shared/evidence/beginner/21-calories-only-before-save.png",
+        "shared/evidence/beginner/22-calories-only-saved.txt",
+        "shared/evidence/beginner/51-weekly-review.txt",
+        "shared/evidence/fit-new-tracker/22-calories-only-saved.txt",
+        "native/06-calories-only-rejected.txt"
+      ],
+      "source": [],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-02",
+      "originId": "SH-R2-02",
+      "originReport": "shared/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Unconfigured sample targets still become progress criteria",
+      "personas": [
+        "complete beginner",
+        "fit but new to calorie tracking"
+      ],
+      "classification": "reproduced cross-surface copy/behavior inconsistency; improvement hypothesis",
+      "trigger": "",
+      "observed": "Neither persona configured targets. The new Nutrition banner correctly labels samples and target guide explicitly allows logging without a calorie goal. After one215cal meal the prominent ring still says1785 calories left of2000. You labels them Your saved daily targets. Weekly review says0 of2 logged days reached your current110g target, even though the only reviewed goals were explicitly left unconfigured.",
+      "expectationHypothesis": "A logger who intentionally has no goal may expect descriptive recorded totals rather than progress toward an untouched example.",
+      "wishHypothesis": "Use a goal-free view until targets are explicitly configured, or consistently label every comparison as illustrative. This is not a request for automatic calorie prescriptions.",
+      "availabilityCheck": "NutritionPage.tsx:199 renders calories left based on meals.length, not targetsConfigured; YouPage.tsx:556 always says saved daily targets; features/insights/insights.ts:162 generates reached-current-target text. No hide-goals control found in target editor.",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F08"
+      ],
+      "evidence": [
+        "shared/evidence/beginner/10-targets-expanded.txt",
+        "shared/evidence/beginner/13-manual-saved.txt",
+        "shared/evidence/beginner/50-you.txt",
+        "shared/evidence/beginner/51-weekly-review.txt",
+        "shared/evidence/fit-new-tracker/50-you.txt"
+      ],
+      "source": [],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-03",
+      "originId": "DEV-01",
+      "originReport": "native/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Persistent notification intercepts Chat Send",
+      "personas": [
+        "developer"
+      ],
+      "classification": "observed and separately reproduced",
+      "trigger": "Save a manual meal, switch to Chat, type and click Send without dismissing saved notice",
+      "observed": "Send center hit-tests to Dismiss notification and normal pointer click fails; dismissing notice permits Send",
+      "expectationHypothesis": "Keep notifications clear of composer actions and define dismissal/expiry behavior",
+      "wishHypothesis": "Keep notifications clear of composer actions and define dismissal/expiry behavior",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "Recoverable extra action blocks a central workflow",
+      "confidence": "observed and separately reproduced",
+      "oldFindings": [],
+      "evidence": [
+        "native/40-toast-over-composer.png",
+        "native/failures.json",
+        "native/failure.png"
+      ],
+      "source": "mobile/App.tsx:237",
+      "suggestedAcceptance": "",
+      "platform": "Expo-web native preview; physical device behavior unverified"
+    },
+    {
+      "id": "R2-04",
+      "originId": "DEV-02",
+      "originReport": "native/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Older manual meals cannot be retrieved through native diary",
+      "personas": [
+        "developer"
+      ],
+      "classification": "observed plus alternate-route source review",
+      "trigger": "Save a meal dated August31 while current day is September30",
+      "observed": "Meal persists and exports, but selectable diary days are September24–30. You/review/chat/pantry supply no alternate full food archive or manual meal editor",
+      "expectationHypothesis": "Expose arbitrary day selection or searchable full history and a post-save link to chosen date",
+      "wishHypothesis": "Expose arbitrary day selection or searchable full history and a post-save link to chosen date",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "Ordinary history eventually cannot be corrected, repeated or deleted through the app",
+      "confidence": "observed plus alternate-route source review",
+      "oldFindings": [
+        "F18"
+      ],
+      "evidence": [
+        "native/09-old-meal-disappears.png",
+        "native/10-week-history-controls.txt",
+        "native/journey.json",
+        "native/synthetic-guest-backup.json"
+      ],
+      "source": "mobile/src/screens.tsx:59",
+      "suggestedAcceptance": "",
+      "platform": "Expo-web native preview; physical device behavior unverified"
+    },
+    {
+      "id": "R2-05",
+      "originId": "DEV-03",
+      "originReport": "native/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Workout detail and correction history stops after twelve sessions",
+      "personas": [
+        "developer"
+      ],
+      "classification": "observed 13 actual UI sessions",
+      "trigger": "Start, log and finish thirteen sessions",
+      "observed": "Thirteen sessions are persisted; only twelve correction cards render, without pagination/full history",
+      "expectationHypothesis": "Keep recent summary but provide all history",
+      "wishHypothesis": "Keep recent summary but provide all history",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "Returning users lose UI access to older set details/corrections even though data remains",
+      "confidence": "observed 13 actual UI sessions",
+      "oldFindings": [
+        "F28"
+      ],
+      "evidence": [
+        "native/31-thirteen-workouts.png",
+        "native/returning.json"
+      ],
+      "source": "mobile/src/NativeWorkout.tsx:258",
+      "suggestedAcceptance": "",
+      "platform": "Expo-web native preview; physical device behavior unverified"
+    },
+    {
+      "id": "R2-06",
+      "originId": "DEV-04",
+      "originReport": "native/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Guest backup tool promises automatic account saving",
+      "personas": [
+        "developer"
+      ],
+      "classification": "observed fresh guest",
+      "trigger": "Fresh guest without server/account opens Cloud & your records",
+      "observed": "Unconditional account saves automatically copy appears above missing-server instruction",
+      "expectationHypothesis": "Render storage/sync status from actual connection/account state",
+      "wishHypothesis": "Render storage/sync status from actual connection/account state",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "User can misunderstand recovery and cross-device availability",
+      "confidence": "observed fresh guest",
+      "oldFindings": [
+        "F03"
+      ],
+      "evidence": [
+        "native/13-guest-cloud-copy.png",
+        "native/13-guest-cloud-copy.txt",
+        "native/02-guest-storage-copy.txt"
+      ],
+      "source": "mobile/src/Cloud.tsx:88",
+      "suggestedAcceptance": "",
+      "platform": "Expo-web native preview; physical device behavior unverified"
+    },
+    {
+      "id": "R2-07",
+      "originId": "R01",
+      "originReport": "root-findings.json",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Pantry review queue bypasses the available product-match comparison",
+      "personas": [
+        "six-months",
+        "fit-new-tracker",
+        "beginner"
+      ],
+      "classification": "existing capability difficult to discover",
+      "trigger": "Receipt capture → pantry food-review queue",
+      "observed": "A live synthetic receipt saved two food items and one nonfood item. The queue correctly excluded nonfood. Review Kroger Vitamin D Whole Milk opened a manual details form without the saved USDA candidates. Closing that form returned to Your groceries; expanding the item exposed Review USDA matches and the retained candidates.",
+      "expectationHypothesis": "A request to confirm product and nutrition offers the candidates already found for that receipt item.",
+      "wishHypothesis": "Put product matching and manual label correction together at the queue entry, so confirming a package does not require discovering a second review path.",
+      "availabilityCheck": "Product matching is present, including barcode, text search and package-serving calculator. This is a routing/discoverability issue, not a request to build product search.",
+      "workaround": "Close the manual editor, expand the item in Your groceries, choose Review USDA matches.",
+      "recurringUseHypothesis": "Potential weekly cost for receipt/pantry users; not relevant to people who only log meals.",
+      "confidence": "High for observed routing/source; unvalidated for human preference or severity",
+      "oldFindings": [
+        "F27"
+      ],
+      "evidence": [
+        "evidence/capture-deep/03-receipt-details.txt",
+        "evidence/capture-deep/04-product-review.txt",
+        "evidence/capture-deep/06-expanded-product.txt",
+        "evidence/capture-deep/07-usda-candidates.txt"
+      ],
+      "source": [
+        "src/features/pantry/PantryDialog.tsx:343",
+        "src/AICards.tsx:195",
+        "src/AICards.tsx:199"
+      ],
+      "suggestedAcceptance": "For an uncertain food with saved candidates, the queue entry exposes match comparison and manual correction without backing out into a different list; purchase quantity remains explicitly reviewed."
+    },
+    {
+      "id": "R2-08",
+      "originId": "K01",
+      "originReport": "kitchen/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Kilogram workouts switch back to pounds in conversation",
+      "personas": [
+        "expert"
+      ],
+      "classification": "reproduced-product-defect",
+      "trigger": "Select kg, start Upper Body, Adjust Bench Press to 80 kg, save, record 8 reps. Compare set with reply. Reproduced using per-set load and upfront adjustment.",
+      "observed": "Two separate sessions display 80 kg in the set/history but append Got it. Bench Press, set 1: 176.3698 lb × 8 reps. Corrections also report pounds. UI numeric data remains correct.",
+      "expectationHypothesis": "Conversation uses the chosen workout unit with sensible display precision.",
+      "wishHypothesis": "Conversation uses the chosen workout unit with sensible display precision.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F13"
+      ],
+      "evidence": [
+        "kitchen/expert/16-refinished-correction.txt",
+        "kitchen/expert/17-return-to-options-history.txt",
+        "kitchen/expert/37-kg-reproduction-adjust.txt",
+        "kitchen/expert/41-kg-chat-visible.png"
+      ],
+      "source": [
+        "src/workouts.ts:188"
+      ],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-09",
+      "originId": "K02",
+      "originReport": "kitchen/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Planner invents a purchase date for manually entered stock",
+      "personas": [
+        "expert",
+        "six-months"
+      ],
+      "classification": "reproduced-product-defect",
+      "trigger": "Add a manual ingredient with quantity and label nutrition, open planner. No purchase-date field exists. Reopen after reload: purchase language remains. Open spending to see manual-stock records in the receipt-review list.",
+      "observed": "Manual stock is entered without purchase information. Kitchen correctly says Captured Sep 30. Planner says 6 labeled servings remain from your 2026-09-30 purchase. Spending also lists each manual ingredient as a grocery trip with a purchase date needing review, despite no receipt.",
+      "expectationHypothesis": "Keep capture/on-hand dates distinct from purchases, including suggestions and spending-review eligibility.",
+      "wishHypothesis": "Keep capture/on-hand dates distinct from purchases, including suggestions and spending-review eligibility.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F14"
+      ],
+      "evidence": [
+        "kitchen/six-months/29-add-Rolled-oats.txt",
+        "kitchen/six-months/35-planner-settings.txt",
+        "kitchen/six-months/37-generated-dinner-week.txt",
+        "kitchen/six-months/43-spending-without-receipts.txt",
+        "kitchen/six-months/final-state.json"
+      ],
+      "source": [
+        "src/features/pantry/manual-ingredient.ts:10",
+        "src/features/planning/meal-plans.ts:127",
+        "src/features/shopping/ShoppingDialog.tsx"
+      ],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-10",
+      "originId": "K03",
+      "originReport": "kitchen/report.md",
+      "kind": "friction",
+      "priority": "P2",
+      "title": "Rest timer is lost when navigating within the app",
+      "personas": [
+        "expert"
+      ],
+      "classification": "reproduced-product-defect",
+      "trigger": "Start timer, immediately open another bottom-navigation page, return to Workouts, expand Rest timer. No timer remains. Two reproductions were well inside 90 seconds.",
+      "observed": "Start 90-second rest, navigate Nutrition then Workouts: timer becomes Ready when you are. Repeated through Kitchen with the same result while the active workout persists.",
+      "expectationHypothesis": "A running countdown remains tied to its end time across ordinary tab navigation.",
+      "wishHypothesis": "Custom rest duration could help an experienced lifter; only the 90-second preset is present. This preference is a hypothesis, not a participant request.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F11"
+      ],
+      "evidence": [
+        "kitchen/expert/39-rest-running.txt",
+        "kitchen/expert/40-rest-navigation-result.txt",
+        "kitchen/expert/42a-rest-live.txt",
+        "kitchen/expert/42-rest-navigation-reproduction.txt"
+      ],
+      "source": [
+        "src/WorkoutPage.tsx:123",
+        "src/WorkoutPage.tsx:504"
+      ],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-11",
+      "originId": "SH-R2-03",
+      "originReport": "shared/report.md",
+      "kind": "friction",
+      "priority": "P3",
+      "title": "Clarification footer forgets already-clear meal intent",
+      "personas": [
+        "fit but new to calorie tracking"
+      ],
+      "classification": "observed secondary-copy mismatch in real provider conversation",
+      "trigger": "",
+      "observed": "After explicitly describing peanut butter eaten for breakfast and inability to remember amount, assistant helpfully offers an assumed portion or note-only option. Footer nevertheless says it needs more context before treating this as a meal or grocery purchase. Main answer is useful; interaction does not dead-end.",
+      "expectationHypothesis": "The uncertainty should remain about portion, not whether the already-described breakfast was eaten.",
+      "wishHypothesis": "Use the known conversation intent when selecting clarification footer, or omit redundant generic footer when the assistant already explains the open choice.",
+      "availabilityCheck": "server/ai.ts:172 contains the generic fallback. One live conversational occurrence; source-confirmed fallback, not claimed deterministic provider repeatability.",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F30"
+      ],
+      "evidence": [
+        "shared/evidence/fit-new-tracker/25-first-live-reply.txt",
+        "shared/evidence/fit-new-tracker/26-uncertain-followup-reply.txt",
+        "shared/evidence/fit-new-tracker/28-portion-estimate.txt"
+      ],
+      "source": [],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-12",
+      "originId": "DEV-05",
+      "originReport": "native/report.md",
+      "kind": "friction",
+      "priority": "P3",
+      "title": "Invalid backup exposes raw parser error",
+      "personas": [
+        "developer"
+      ],
+      "classification": "observed deliberate malformed file",
+      "trigger": "Select malformed synthetic JSON via Import a backup file",
+      "observed": "Records remain unchanged and restore is unavailable, but raw syntax error is displayed",
+      "expectationHypothesis": "Explain invalid backup and invite another file with optional technical detail",
+      "wishHypothesis": "Explain invalid backup and invite another file with optional technical detail",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "Recovery explanation is technical and lacks a next step",
+      "confidence": "observed deliberate malformed file",
+      "oldFindings": [],
+      "evidence": [
+        "native/50-invalid-import.png",
+        "native/import-rejection.json"
+      ],
+      "source": "mobile/src/storage.ts:295",
+      "suggestedAcceptance": "",
+      "platform": "Expo-web native preview; physical device behavior unverified"
+    },
+    {
+      "id": "R2-13",
+      "originId": "K04",
+      "originReport": "kitchen/report.md",
+      "kind": "opportunity",
+      "priority": "P2",
+      "title": "Reuse a personal workout instead of reconstructing it",
+      "personas": [
+        "expert",
+        "six-months"
+      ],
+      "classification": "missing-capability-hypothesis",
+      "trigger": "",
+      "observed": "Expert substituted OHP, changed its sets/target/load, and moved Row earlier. After finishing, Choose your next workout and Start workout returns the original Upper Body starter with Incline Press and original ordering. History and last actual loads persist, but no Save routine or Repeat session action was found in workout choices/history/builder source.",
+      "expectationHypothesis": "A repeat-use lifter may want the same exercise lineup with fresh unlogged sets.",
+      "wishHypothesis": "Save as a personal routine or repeat this workout, explicitly reviewing loads and clearing completion. Do not auto-prescribe progression.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Actual reset observed; absence checked in these UI/source surfaces, not every possible conversation phrasing. AI workout generation was not invoked in this lane.",
+      "oldFindings": [
+        "F11",
+        "F28"
+      ],
+      "evidence": [
+        "kitchen/expert/11-customize-unstarted-exercise.txt",
+        "kitchen/expert/17-return-to-options-history.txt",
+        "kitchen/expert/18-next-session-customization-not-reused.txt",
+        "kitchen/expert/37-kg-reproduction-adjust.txt"
+      ],
+      "source": [
+        "src/workouts.ts:126",
+        "src/WorkoutPage.tsx:317",
+        "src/WorkoutPage.tsx:926",
+        "src/features/workout-planning/WorkoutBuilder.tsx"
+      ],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-14",
+      "originId": "K05",
+      "originReport": "kitchen/report.md",
+      "kind": "opportunity",
+      "priority": "P2",
+      "title": "Same-load setup works through Adjust exercise but is easy to miss",
+      "personas": [
+        "expert",
+        "six-months"
+      ],
+      "classification": "found-but-hard-to-discover",
+      "trigger": "",
+      "observed": "Entering 80 kg in the first set leaves the next set without a confirmed load. Before logging anything, Adjust exercise to 80 kg confirms all sets; verified in expert second session and tracker Goblet Squat at 35 lb. After a recorded set, exercise-level weight is disabled and per-set editing remains available.",
+      "expectationHypothesis": "Efficient repeated sets without losing the ability to record differing loads.",
+      "wishHypothesis": "Expose Apply this load to remaining sets near the first set, or point to the existing upfront Adjust exercise path. Do not describe bulk load setup as missing.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F22"
+      ],
+      "evidence": [
+        "kitchen/expert/08-second-set-load-required.txt",
+        "kitchen/expert/10-adjust-after-recording.txt",
+        "kitchen/expert/37-kg-reproduction-adjust.txt",
+        "kitchen/six-months/45-adjust-before-logging-and-alternate.txt"
+      ],
+      "source": [
+        "src/features/progress/set-loads.ts:7",
+        "src/WorkoutPage.tsx:1337"
+      ],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-15",
+      "originId": "K07",
+      "originReport": "kitchen/report.md",
+      "kind": "opportunity",
+      "priority": "P2",
+      "title": "Generated meal plans stop at ingredients, not a cooking method",
+      "personas": [
+        "six-months",
+        "expert"
+      ],
+      "classification": "missing-capability-hypothesis",
+      "trigger": "",
+      "observed": "One real HTTP 200 dinner week provides seven titles, ingredient quantities and partial nutrition but no preparation directions. Stew, bake, casserole, gratin and skillet names have no heat/time/method. In this request minutes were null because no cooking-time constraint was supplied.",
+      "expectationHypothesis": "A person trying a newly suggested dish may need enough method to prepare it.",
+      "wishHypothesis": "Offer a separate reviewed cooking-method view with instructions that cannot make inventory claims. Current generated-note removal is an intentional truthfulness tradeoff, not a failed request.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Did not cook the meals or assess taste/nutritional adequacy. One request cannot characterize all generations.",
+      "oldFindings": [
+        "F19"
+      ],
+      "evidence": [
+        "kitchen/six-months/planner-response.json",
+        "kitchen/six-months/37-generated-dinner-week.txt",
+        "kitchen/six-months/49-planned-meal-detail-no-method.png"
+      ],
+      "source": [
+        "src/features/planning/meal-plans.ts:57",
+        "src/features/planning/MealPlanner.tsx:118"
+      ],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-16",
+      "originId": "SH-R2-04",
+      "originReport": "shared/report.md",
+      "kind": "opportunity",
+      "priority": "P3",
+      "title": "Changing the portion of a repeated manual meal requires four calculations",
+      "personas": [
+        "fit but new to calorie tracking",
+        "expert",
+        "six-months"
+      ],
+      "classification": "validated missing convenience in this specific path; not blocked functionality",
+      "trigger": "",
+      "observed": "Same-portion repeat works and exposes editable date and nutrition. To repeat yogurt as two original servings, the auditor had to double215/18.3/33/0.4 into430/36.6/66/0.8 and edit the note. Save correctly succeeded. The repeat dialog offers no portion multiplier.",
+      "expectationHypothesis": "A new tracker repeating a familiar food in a different amount may think in one or two servings rather than independently calculating four nutrient values.",
+      "wishHypothesis": "Offer0.5x/1x/2x or a serving multiplier on repeated saved meals, with a review before saving. Keep stock effects explicit.",
+      "availabilityCheck": "App.tsx MealEditor and domain.ts:320 repeatMeal copy the same values; no multiplier parameter/control. This is not globally missing: recipe portion logging and barcode servings already support amount-based nutrition. Scope is repeated generic/manual meals.",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [
+        "F16"
+      ],
+      "evidence": [
+        "shared/evidence/fit-new-tracker/16-repeat-review.txt",
+        "shared/evidence/fit-new-tracker/63-repeat-portion-choice.txt",
+        "shared/evidence/fit-new-tracker/64-double-manual-math.txt",
+        "shared/evidence/fit-new-tracker/65-double-repeat-saved.txt",
+        "kitchen/expert/26-correct-synthetic-food-and-repeat.txt",
+        "kitchen/expert/27-repeat-today-persists.txt",
+        "kitchen/six-months/26-correct-synthetic-food-and-repeat.txt",
+        "kitchen/six-months/34-log-correct-portion.txt"
+      ],
+      "source": [],
+      "suggestedAcceptance": "",
+      "corroboratingOrigin": "K06"
+    },
+    {
+      "id": "R2-17",
+      "originId": "DEV-W03",
+      "originReport": "native/report.md",
+      "kind": "opportunity",
+      "priority": "P3",
+      "title": "Use the same account-data tool name in privacy help and navigation",
+      "personas": [
+        "developer"
+      ],
+      "classification": "Exists but wording differs",
+      "trigger": "",
+      "observed": "Privacy refers to Account & saved data; native entry is Cloud & your records",
+      "expectationHypothesis": "",
+      "wishHypothesis": "Use the same account-data tool name in navigation and help so the existing recovery tool is easier to find.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [],
+      "evidence": [
+        "native/12-data-help.txt"
+      ],
+      "source": [],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-18",
+      "originId": "K08",
+      "originReport": "kitchen/report.md",
+      "kind": "opportunity",
+      "priority": "P3",
+      "title": "Named variety can still mean the same pantry base every day",
+      "personas": [
+        "six-months"
+      ],
+      "classification": "quality-limit-observation-with-hypothesis",
+      "trigger": "",
+      "observed": "Variety mode returned seven different titles, but every dinner was one serving oats plus one serving milk plus a different vegetable. This satisfies the current at-least-three-title check and truthfully discloses partial nutrition and shortages.",
+      "expectationHypothesis": "A person selecting variety may mean different primary ingredients or meal patterns.",
+      "wishHypothesis": "Explore a clearer variety preference or stronger ingredient-pattern diversity, while retaining an explicit repeat-friendly choice.",
+      "availabilityCheck": "",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Single sparse-pantry generation. No claim that users dislike oats or that all plans behave this way; no additional paid generation was needed.",
+      "oldFindings": [
+        "F19"
+      ],
+      "evidence": [
+        "kitchen/six-months/planner-response.json",
+        "kitchen/six-months/37-generated-dinner-week.txt"
+      ],
+      "source": [
+        "src/features/planning/meal-plans.ts:62"
+      ],
+      "suggestedAcceptance": ""
+    },
+    {
+      "id": "R2-19",
+      "originId": "DEV-W02",
+      "originReport": "native/report.md",
+      "kind": "investigation",
+      "priority": "Research",
+      "title": "Optimize and budget cold-start images and JS",
+      "personas": [
+        "developer"
+      ],
+      "classification": "Engineering investigation supported by measured payload",
+      "trigger": "",
+      "observed": "About15.3MB initial resource transfer from uncompressed loopback static server; principal JS4.06MB and multiple2.2–2.35MBPNGillustrations",
+      "expectationHypothesis": "",
+      "wishHypothesis": "Check production transfer size and slow-network startup before choosing an optimization.",
+      "availabilityCheck": "Loopback transfer was uncompressed; the observed interface remained usable. No production latency defect established.",
+      "workaround": "",
+      "recurringUseHypothesis": "",
+      "confidence": "Observed behavior as described; hypothetical wishes unvalidated with humans",
+      "oldFindings": [],
+      "evidence": [
+        "native/baseline.json",
+        "native/journey.json"
+      ],
+      "source": [],
+      "suggestedAcceptance": ""
+    }
+  ],
+  "mergedNotes": [
+    "Native calories-only wish DEV-W01 is discussed with the web unknown-macro defect, not counted again.",
+    "Kitchen K06 portion-scaling opportunity corroborates SH-R2-04; evidence/personas merged into one record.",
+    "Kitchen opportunity priority descriptions normalized to P2/P3; opportunities are not declared release blockers."
+  ],
+  "humanAvoidance": "Not measured; directed exhaustive walkthroughs cannot establish natural avoidance"
+}

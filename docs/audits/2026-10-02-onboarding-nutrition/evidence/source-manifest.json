@@ -1,0 +1,114 @@
+[
+  {
+    "path": "src/domain.ts",
+    "sha256": "0f5f7006c2f863e87b07e1cd5c2f1f00f232977fcd918760a94b73963386f5c3"
+  },
+  {
+    "path": "src/ai-client.ts",
+    "sha256": "07d62836cc58ce8a1f5f91d939c8fe1e6ce0b5b5c64a10f1bb9f866487975136"
+  },
+  {
+    "path": "src/ai-contract.ts",
+    "sha256": "555c97d770eb24373ddece9507ec5be5cf9856818e41c4f12b5edfc9eb81a94b"
+  },
+  {
+    "path": "server/ai.ts",
+    "sha256": "f44560efb85d48fe2560dedb7d67adedbb7e68f17e1b922989816c83f9fd23f7"
+  },
+  {
+    "path": "src/App.tsx",
+    "sha256": "5eee4ae02d945053effb8053380a98bf86428305fa26d3245b6e2e2e07982ccc"
+  },
+  {
+    "path": "src/YouPage.tsx",
+    "sha256": "83f34caaa118e9a45a7aa446c749707f4b08dea75c01b181719695ffe3f5a3c7"
+  },
+  {
+    "path": "src/features/onboarding/Onboarding.tsx",
+    "sha256": "8551143bc709a108108c559e19bce8191b1cec12ff8c642b041d740af760dda0"
+  },
+  {
+    "path": "src/features/onboarding/useOnboarding.ts",
+    "sha256": "ce3a95c6e5baf4f7c6208d3d221b3516e96a404ab3d50aaed00e9b0047b02fd1"
+  },
+  {
+    "path": "src/features/progress/nutrition-setup.ts",
+    "sha256": "7600c59487bf11650cb8ecb3b890351d7a99bc2ff11b6ec1203788839c12349d"
+  },
+  {
+    "path": "src/features/progress/nutrition-setup.test.ts",
+    "sha256": "2262b81bb8e11ce8755999d6c56ea1987f76827418db1aff47aaa4bce763b03d"
+  },
+  {
+    "path": "src/features/progress/useNutritionSetup.ts",
+    "sha256": "69cfc6f185b6f3c66f120993075d43976b4315853ce6c874be4c15c463a164b0"
+  },
+  {
+    "path": "src/features/progress/NutritionSetup.tsx",
+    "sha256": "f6ed7451706d05d8b7c3dca1972ee3a383fb2a65c9b2d85726325c9e900d8ea7"
+  },
+  {
+    "path": "src/features/progress/fitness-setup.css",
+    "sha256": "aa9654dd818e8d45fecde6bc31ec14995ce04f3f21f4e09fe4a304c773a68b87"
+  },
+  {
+    "path": "mobile/src/NutritionSetup.tsx",
+    "sha256": "b6f9a9a90eb9fafad3a5f66cb73593a4e444b77f36f8f3136dd9f283541c1821"
+  },
+  {
+    "path": "mobile/src/Onboarding.tsx",
+    "sha256": "3b2cbf7656a17f3687aacda5246f65c30faca536e1526d14b5aa993f6ccff1bd"
+  },
+  {
+    "path": "mobile/src/store.tsx",
+    "sha256": "74ce8adab9d86e294045726a589fc879bf339a82fa8831fab59a82e13d72b088"
+  },
+  {
+    "path": "mobile/src/screens.tsx",
+    "sha256": "56328e992e715ea8a83c8b4a3512d46f4be8d83a769bad1222243829edef0fe6"
+  },
+  {
+    "path": "tests/onboarding-nutrition.spec.ts",
+    "sha256": "efb04c534e41d3582854c842aa02f4ca2f6498c9b911a1d8bd44e8f180b6655b"
+  },
+  {
+    "path": "tests/fitness-setup.spec.ts",
+    "sha256": "bf30ccb279359c97581579c0ea5ef5c3d2e09c0488af7d6e4922891982b381cb"
+  },
+  {
+    "path": "tests/onboarding.spec.ts",
+    "sha256": "7ec2f28881b4c9f4499141d1ea1987c6a6c8bd96ab7348847036ebd2f1f4a870"
+  },
+  {
+    "path": "tests/account-sync.spec.ts",
+    "sha256": "1f1ae95a981e131629f855c0fe90d8910bc820ad79f6ff40e7cea293be602f4f"
+  },
+  {
+    "path": "tests/interaction-guide.spec.ts",
+    "sha256": "f789785901e714ba185aa17cf7cda6f69b54258e1973f653297585a03fb72e0f"
+  },
+  {
+    "path": "mobile/e2e/onboarding-nutrition.spec.ts",
+    "sha256": "142248526ed8b98930f111d6b2366a933d258cc113962dbfd32a4886c6c918bd"
+  },
+  {
+    "path": "mobile/e2e/fitness-setup.spec.ts",
+    "sha256": "c389231ea5852a2f04094421f050001a368a2c1325160e8d02391b3a7b3105c4"
+  },
+  {
+    "path": "mobile/e2e/onboarding.spec.ts",
+    "sha256": "175871ac8711ef0ba6d63b74ca75780bd2ed870fed69d6e4ca412e399f186702"
+  },
+  {
+    "path": "mobile/e2e/account-sync.spec.ts",
+    "sha256": "4bacc62a65e5fcb9ed99dfccd8c6e14cb02c595b89ccd0f8a30e268c3753aed4"
+  },
+  {
+    "path": "docs/context/error-ledger.md",
+    "sha256": "bbee559e2e9d37d3fdf6f32ddc958d43698affd141f3972671493538f1694fdb"
+  },
+  {
+    "path": "docs/audits/2026-10-02-onboarding-nutrition/report.md",
+    "sha256": "134dd3b80b4f90a8dba6f0fecd0ca67e5c378531216bd37b6802a267eb71f4cf"
+  }
+]

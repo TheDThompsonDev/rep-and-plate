@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "Real hosted account and beta authentication work",
+    "Hosted Connections creates scoped access",
+    "Connection token authenticates with exact scope",
+    "Revocation immediately rejects the connection",
+    "Synthetic account and cascading records removed; no email sent"
+  ],
+  "passed": true
+}

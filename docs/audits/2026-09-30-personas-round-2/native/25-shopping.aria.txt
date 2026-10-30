@@ -1,0 +1,56 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: YOUR KITCHEN What sounds good tonight? What you have. What you can make. A little less to figure out.
+- button "Explore your meal plan": MAKE SOMETHING GOOD A little inspiration for your next meal. Explore your meal plan →
+- button "Scan a food"
+- button "Add a receipt"
+- text: What you have SPOT’S PLAN FOR YOUR GROCERIES A receipt today. Less “what’s for dinner?” tomorrow. Daily nutrition targets start as generic values. Set your own before using them to assess a meal plan.
+- button "Review daily nutrition targets"
+- text: 0 of 6 steps complete. Make it your kind of week Set household size, food restrictions, cooking time and budget.
+- 'button "Start: Make it your kind of week"'
+- button "See the whole journey"
+- text: 0 items on hand From your grocery receipts and pantry updates
+- button "Open pantry"
+- text: What you can make
+- button "Recipes & leftovers":
+  - text: Recipes & leftovers Make once. Enjoy it again.
+  - img
+- button "Your week of meals":
+  - text: Your week of meals Suggestions based on your groceries and household
+  - img
+- text: GOOD FOOD. YOUR KIND OF BUDGET. Make your next shop work for you. Find swaps, keep a list, and see what you spend.
+- button "Swaps, list & spending"
+- button "Shopping preferences"
+- text: Recent grocery trips Your receipts will live here, ready when you need them.
+- button "Show me what you picked up"
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen
+- button "Dismiss notification": Meal saved for 2026-08-31.
+- dialog:
+  - heading "Make your next shop work for you" [level=1]
+  - button "Close":
+    - img
+  - button "Dismiss notification": Meal saved for 2026-08-31.
+  - button "List"
+  - button "Swaps"
+  - button "Spending"
+  - text: Add to shopping list
+  - textbox "Add to shopping list"
+  - text: Quantity or note
+  - textbox "Quantity or note"
+  - button "Add item" [disabled]
+  - text: From your meal plan

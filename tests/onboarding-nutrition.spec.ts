@@ -1,5 +1,6 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { expect, test } from '@playwright/test';
-import { mockCloud } from './cloud-fixture';
+import { mockCloud } from '../e2e-shared/cloud-fixture';
 import { readBrowserRecords } from './record-fixture';
 
 test('onboarding collects body inputs, reviews editable targets, and preserves them through reload and profile edits', async ({ page }) => {
@@ -46,7 +47,7 @@ test('onboarding collects body inputs, reviews editable targets, and preserves t
   await page.getByRole('button',{name:'Let’s do this',exact:true}).click();
   await expect(page.getByRole('button',{name:'Log my first meal',exact:true})).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem('rep-and-plate.onboarding.draft.v1.guest'))).toBeNull();
-  await page.getByRole('button',{name:'Your profile',exact:true}).click();
+  await openProfile(page);
   await page.getByRole('button',{name:'Calorie starting point',exact:true}).click();
   const dialog=page.getByRole('dialog',{name:'Your calorie starting point'});
   await expect(dialog.getByLabel('Age (years)',{exact:true})).toHaveValue('30');

@@ -1,0 +1,20 @@
+{
+  "startedAt": "2026-09-30T18:27:59.548Z",
+  "mode": "UI guest, synthetic receipt image, unmocked local provider",
+  "steps": [
+    "01-receipt-preview",
+    "02-receipt-result",
+    "03-receipt-details",
+    "04-product-review",
+    "05-purchase-details",
+    "06-expanded-product",
+    "07-usda-candidates",
+    "08-serving-calculator",
+    "09-price-review",
+    "09-price-review-ready",
+    "10-reviewed-spending",
+    "11-reload-spending"
+  ],
+  "pageErrors": [],
+  "consoleErrors": []
+}

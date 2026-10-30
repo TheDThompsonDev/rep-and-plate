@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Image, Text, View, Platform, Linking } from "react-native";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Image, Text, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { CameraView, useCameraPermissions } from "expo-camera";
@@ -12,7 +12,7 @@ import {
 } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
 import { Button, Card, Field, Sheet, Sources, s } from "./ui";
-import { useHealth } from "./store";
+import { useHealth, useLoadedHealth } from "./store";
 import { jsonApi } from "./api";
 import { clockTime, id } from "../../src/domain";
 import {
@@ -170,14 +170,14 @@ export function Scanner({
   onSelect?: (p: FoodProduct) => void;
   onClose?: () => void;
 }) {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     [permission, requestPermission] = useCameraPermissions(),
     [camera, setCamera] = useState(false),
     [barcode, setBarcode] = useState(h.labelBarcode),
     [products, setProducts] = useState<FoodProduct[]>([]),
     [selected, setSelected] = useState<FoodProduct | null>(
       () =>
-        h.state!.products?.find(
+        h.state.products?.find(
           (p) => p.gtin === normalizeGTIN(h.labelBarcode),
         ) ?? null,
     ),
@@ -203,7 +203,7 @@ export function Scanner({
     setSelected(null);
     setProducts([]);
     try {
-      const privateProduct = h.state!.products?.find((p) => p.gtin === gtin);
+      const privateProduct = h.state.products?.find((p) => p.gtin === gtin);
       if (privateProduct) {
         setProducts([privateProduct]);
         setSelected(privateProduct);
@@ -354,7 +354,7 @@ export function Scanner({
   );
 }
 export function Voice() {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY),
     status = useAudioRecorderState(recorder),
     [text, setText] = useState(""),
@@ -363,14 +363,19 @@ export function Voice() {
     active = useRef(true),
     abort = useRef<AbortController | null>(null),
     stopping = useRef(false);
-  const remove = async () => {
+  const remove = useCallback(async () => {
     if (recorder.uri && Platform.OS !== "web")
       await FileSystem.deleteAsync(recorder.uri, { idempotent: true }).catch(
         () => {},
       );
-  };
-  useEffect(
-    () => () => {
+  }, [recorder]);
+  // Release the microphone when the sheet closes. expo-audio memoizes the
+  // recorder for a constant preset and `remove` only changes with it, so this
+  // effect still runs once per mount; the dependencies are complete rather
+  // than silenced.
+  useEffect(() => {
+    active.current = true;
+    return () => {
       active.current = false;
       abort.current?.abort();
       void recorder
@@ -378,10 +383,9 @@ export function Voice() {
         .catch(() => {})
         .finally(remove);
       void setAudioModeAsync({ allowsRecording: false });
-    },
-    [],
-  );
-  async function stop() {
+    };
+  }, [recorder, remove]);
+  const stop = useCallback(async () => {
     if (stopping.current) return;
     stopping.current = true;
     setBusy(true);
@@ -420,10 +424,10 @@ export function Voice() {
       stopping.current = false;
       if (active.current) setBusy(false);
     }
-  }
+  }, [recorder, remove]);
   useEffect(() => {
     if (status.isRecording && status.durationMillis >= 60000) void stop();
-  }, [status.durationMillis, status.isRecording]);
+  }, [status.durationMillis, status.isRecording, stop]);
   return (
     <Sheet title="Tell me what happened" onClose={() => h.setTool(null)}>
       <Text style={s.muted}>
@@ -475,9 +479,11 @@ export function Voice() {
       />
       <Button
         label="Send message"
-        disabled={!text.trim() || busy || status.isRecording || h.busy}
+        // Not gated on h.busy: while a reply is processing the store holds the
+        // transcript in the Chat composer instead of leaving it stuck here.
+        disabled={!text.trim() || busy || status.isRecording}
         onPress={() => {
-          if (h.tab === "Workouts" && h.state!.workout.status === "active") {
+          if (h.tab === "Workouts" && h.state.workout.status === "active") {
             h.change((s) => ({
               ...s,
               workout: replyToWorkout(

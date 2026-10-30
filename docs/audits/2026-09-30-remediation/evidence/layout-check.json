@@ -1,0 +1,122 @@
+[
+  {
+    "width": 320,
+    "tab": "Chat",
+    "viewport": 320,
+    "documentWidth": 320,
+    "overflows": []
+  },
+  {
+    "width": 320,
+    "tab": "Nutrition",
+    "viewport": 320,
+    "documentWidth": 320,
+    "overflows": []
+  },
+  {
+    "width": 320,
+    "tab": "Workouts",
+    "viewport": 320,
+    "documentWidth": 320,
+    "overflows": []
+  },
+  {
+    "width": 320,
+    "tab": "Kitchen",
+    "viewport": 320,
+    "documentWidth": 320,
+    "overflows": []
+  },
+  {
+    "width": 320,
+    "tab": "You",
+    "viewport": 320,
+    "documentWidth": 320,
+    "overflows": []
+  },
+  {
+    "width": 320,
+    "check": "modal escape restores focus",
+    "result": "Edit daily targets"
+  },
+  {
+    "width": 390,
+    "tab": "Chat",
+    "viewport": 390,
+    "documentWidth": 390,
+    "overflows": []
+  },
+  {
+    "width": 390,
+    "tab": "Nutrition",
+    "viewport": 390,
+    "documentWidth": 390,
+    "overflows": []
+  },
+  {
+    "width": 390,
+    "tab": "Workouts",
+    "viewport": 390,
+    "documentWidth": 390,
+    "overflows": []
+  },
+  {
+    "width": 390,
+    "tab": "Kitchen",
+    "viewport": 390,
+    "documentWidth": 390,
+    "overflows": []
+  },
+  {
+    "width": 390,
+    "tab": "You",
+    "viewport": 390,
+    "documentWidth": 390,
+    "overflows": []
+  },
+  {
+    "width": 390,
+    "check": "modal escape restores focus",
+    "result": "Edit daily targets"
+  },
+  {
+    "width": 1440,
+    "tab": "Chat",
+    "viewport": 1440,
+    "documentWidth": 1440,
+    "overflows": []
+  },
+  {
+    "width": 1440,
+    "tab": "Nutrition",
+    "viewport": 1440,
+    "documentWidth": 1440,
+    "overflows": []
+  },
+  {
+    "width": 1440,
+    "tab": "Workouts",
+    "viewport": 1440,
+    "documentWidth": 1440,
+    "overflows": []
+  },
+  {
+    "width": 1440,
+    "tab": "Kitchen",
+    "viewport": 1440,
+    "documentWidth": 1440,
+    "overflows": []
+  },
+  {
+    "width": 1440,
+    "tab": "You",
+    "viewport": 1440,
+    "documentWidth": 1440,
+    "overflows": []
+  },
+  {
+    "width": 1440,
+    "check": "modal escape restores focus",
+    "result": "Edit daily targets"
+  }
+]

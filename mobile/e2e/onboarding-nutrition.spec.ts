@@ -1,5 +1,6 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { expect, test } from '@playwright/test';
-import { mockCloud } from '../../tests/cloud-fixture';
+import { mockCloud } from '../../e2e-shared/cloud-fixture';
 
 test('native onboarding collects personal inputs, reviews calorie targets and restores them in the profile', async ({page}) => {
   await mockCloud(page);
@@ -32,13 +33,13 @@ test('native onboarding collects personal inputs, reviews calorie targets and re
   await page.getByRole('button',{name:'Use these daily targets',exact:true}).click();
   await page.getByRole('button',{name:'Let’s do this',exact:true}).click();
   await expect(page.getByRole('button',{name:'Log my first meal',exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'Your profile',exact:true}).click();
+  await openProfile(page);
   await page.getByRole('button',{name:'Calorie starting point',exact:true}).click();
   await expect(page.getByRole('textbox',{name:'Age (years)',exact:true})).toHaveValue('30');
   await page.getByRole('textbox',{name:'Age (years)',exact:true}).fill('31');
   await page.getByRole('button',{name:'Save details without targets',exact:true}).click();
   await page.reload();
-  await page.getByRole('button',{name:'Your profile',exact:true}).click();
+  await openProfile(page);
   await expect(page.getByRole('button',{name:'Calorie starting point',exact:true})).toBeVisible();
   const saved=await page.evaluate(() => JSON.parse(localStorage.getItem('dannys-health.native.v1')!));
   expect(saved.profile.nutritionBaseline).toEqual({age:31,heightCm:180,sex:'male',activity:'light',calorieApproach:'lose'});

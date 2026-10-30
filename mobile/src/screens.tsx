@@ -13,7 +13,7 @@ import { useState, useRef } from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
 import { Plus } from "lucide-react-native";
 import Svg, { Circle } from "react-native-svg";
-import { useHealth } from "./store";
+import { useLoadedHealth } from "./store";
 import {
   Button,
   Card,
@@ -42,8 +42,8 @@ import { MealEditor } from "./tools";
 import { ManualMeal } from "./ManualMeal";
 export function NutritionScreen() {
   const dayStrip = useRef<ScrollView>(null);
-  const h = useHealth(),
-    state = h.state!;
+  const h = useLoadedHealth(),
+    state = h.state;
   const [date, setDate] = useState<string | null>(null),
     [browseDate, setBrowseDate] = useState(h.day),
     [browsing, setBrowsing] = useState(false),
@@ -341,8 +341,8 @@ export function NutritionScreen() {
   );
 }
 export function KitchenScreen() {
-  const h = useHealth(),
-    state = h.state!,
+  const h = useLoadedHealth(),
+    state = h.state,
     lots = getPantryLots(state).filter(
       (l) =>
         l.item.availability !== "used" &&
@@ -488,8 +488,8 @@ export function YouScreen() {
   const [editingGoal, setEditingGoal] = useState(false);
   const [editingNutrition, setEditingNutrition] = useState(false);
   const weightEntry = useRef(id());
-  const h = useHealth(),
-    state = h.state!,
+  const h = useLoadedHealth(),
+    state = h.state,
     review = weeklyReview(state);
   return (
     <Screen>
@@ -511,7 +511,7 @@ export function YouScreen() {
         setEditingNutrition(false);
       }} /></Sheet>}
       <BodyWeightHistory key={state.profile.fitnessGoal?.unit ?? 'default'} onEditGoal={() => { weightEntry.current = id(); setEditingGoal(true); }} />
-      {editingGoal && <Sheet title="Your goals & starting point" onClose={() => setEditingGoal(false)}><FitnessSetup goal={state.profile.fitnessGoal} weight={state.bodyWeights?.slice().sort((a, b) => a.day.localeCompare(b.day)).at(-1)} onSave={draft => {
+      {editingGoal && <Sheet title="Your goals & starting point" onClose={() => setEditingGoal(false)}><FitnessSetup goal={state.profile.fitnessGoal} program={state.profile.trainingProgram} weight={state.bodyWeights?.slice().sort((a, b) => a.day.localeCompare(b.day)).at(-1)} onSave={draft => {
         applyFitnessSetup(state, draft, today(), weightEntry.current);
         if (!h.change(current => applyFitnessSetup(current, draft, today(), weightEntry.current))) throw Error('Your goal could not be saved. Check your account and try again.');
         setEditingGoal(false);

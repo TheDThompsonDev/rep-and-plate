@@ -1,6 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
-import { type Exercise } from "../../src/domain";
+import { id, today, type Exercise } from "../../src/domain";
+import { FitnessSetup } from "./FitnessSetup";
+import { applyFitnessSetup, fitnessDraft } from "../../src/features/progress/fitness-goal";
+import {
+  clearTrainingProgram,
+  experienceLabels,
+  programEquipmentText,
+} from "../../src/features/progress/training-program";
+import {
+  nextProgramSession,
+  startProgramSession,
+} from "../../src/features/progress/training-week";
 import {
   adjustWorkoutExercise,
   displayLoad,
@@ -22,13 +33,13 @@ import {
 } from "../../src/workouts";
 import { addActivity } from "../../src/activities";
 import { setLoad, setWorkoutLoad } from "../../src/features/progress/set-loads";
-import { useHealth } from "./store";
+import { useLoadedHealth } from "./store";
 import { Button, Card, Choice, Field, Screen, Sheet, Sources, s } from "./ui";
 
 export function NativeWorkout({ startWithMovement = false, onFirstMovementClose }: { startWithMovement?: boolean; onFirstMovementClose?: () => void }) {
-  const h = useHealth(),
-    w = h.state!.workout,
-    unit = h.state!.profile.workoutUnit ?? "lb";
+  const h = useLoadedHealth(),
+    w = h.state.workout,
+    unit = h.state.profile.workoutUnit ?? "lb";
   const [focus, setFocus] = useState(0),
     [finish, setFinish] = useState(false),
     [adjust, setAdjust] = useState(false),
@@ -46,6 +57,10 @@ export function NativeWorkout({ startWithMovement = false, onFirstMovementClose 
     [routineId, setRoutineId] = useState<string | null>(null),
     [deletingRoutine, setDeletingRoutine] = useState(false);
   const routine = w.routines?.find((r) => r.id === routineId);
+  const [setupOpen, setSetupOpen] = useState(false);
+  const weightEntry = useRef(id());
+  const program = h.state.profile.trainingProgram;
+  const nextSession = program ? nextProgramSession(program, w) : null;
   const active = Math.min(focus, Math.max(0, w.exercises.length - 1)),
     e = w.exercises[active];
   const technique = e ? exerciseTechnique(e.name) : undefined;
@@ -80,6 +95,66 @@ export function NativeWorkout({ startWithMovement = false, onFirstMovementClose 
       )}
       {w.status !== "active" ? (
         <>
+          {program && nextSession ? (
+            <>
+              <Text style={s.h2}>Your week</Text>
+              <Text style={s.muted}>
+                {`${program.sessions.length} sessions · ${programEquipmentText(program)}${program.experience ? ` · ${experienceLabels[program.experience]}` : ""}. Do them on the days that fit you.`}
+              </Text>
+              <Text style={s.tiny}>
+                Starting targets you confirm. Choose each load yourself before recording a set; no weight is
+                prescribed and nothing here is a record.
+              </Text>
+              {program.sessions.map((session, index) => (
+                <Card key={`${session.title}:${index}`}>
+                  <Text style={s.h3}>
+                    {session.title}
+                    {index === nextSession.index ? " · Next up" : ""}
+                  </Text>
+                  <Text style={s.muted}>
+                    {session.exercises.map((e) => `${e.name} ${e.sets} × ${e.target}`).join(" · ")}
+                  </Text>
+                  <Button
+                    label={`Start ${session.title}`}
+                    secondary={index !== nextSession.index}
+                    onPress={() => {
+                      if (
+                        h.change((s) =>
+                          s.profile.trainingProgram
+                            ? { ...s, workout: startProgramSession(s.workout, s.profile.trainingProgram, index) }
+                            : s,
+                        )
+                      )
+                        setFocus(0);
+                    }}
+                  />
+                </Card>
+              ))}
+              <Button
+                label="Edit training week"
+                secondary
+                onPress={() => {
+                  weightEntry.current = id();
+                  setSetupOpen(true);
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={s.h2}>Your training week</Text>
+              <Text style={s.muted}>
+                Tell us your training days, equipment and experience to get a week of sessions matched to you.
+              </Text>
+              <Button
+                label="Set up your training week"
+                secondary
+                onPress={() => {
+                  weightEntry.current = id();
+                  setSetupOpen(true);
+                }}
+              />
+            </>
+          )}
           {!!w.routines?.length && (
             <Text style={s.h2}>Your saved routines</Text>
           )}
@@ -279,7 +354,7 @@ export function NativeWorkout({ startWithMovement = false, onFirstMovementClose 
         }}
       />
       <Text style={s.h2}>Your recent sessions</Text>
-      {(h.state!.activities ?? [])
+      {(h.state.activities ?? [])
         .slice(-activityLimit)
         .reverse()
         .map((a) => (
@@ -302,7 +377,7 @@ export function NativeWorkout({ startWithMovement = false, onFirstMovementClose 
             />
           </Card>
         ))}
-      {(h.state!.activities?.length ?? 0) > activityLimit && (
+      {(h.state.activities?.length ?? 0) > activityLimit && (
         <Button
           label="Load older activities"
           secondary
@@ -360,6 +435,38 @@ export function NativeWorkout({ startWithMovement = false, onFirstMovementClose 
         <Text style={s.tiny}>
           Finish the active session before reopening a previous session.
         </Text>
+      )}
+      {setupOpen && (
+        <Sheet title="Your training week" onClose={() => setSetupOpen(false)}>
+          <FitnessSetup
+            goal={h.state.profile.fitnessGoal}
+            program={program}
+            // Coming from Workouts should not opt someone without a goal into weight check-ins.
+            initialDraft={
+              h.state.profile.fitnessGoal ? undefined : { ...fitnessDraft(undefined, program), cadence: "none" }
+            }
+            weight={h.state.bodyWeights
+              ?.filter((entry) => entry.day <= today())
+              .slice()
+              .sort((a, b) => a.day.localeCompare(b.day))
+              .at(-1)}
+            onSave={(draft) => {
+              applyFitnessSetup(h.state, draft, today(), weightEntry.current);
+              if (!h.change((current) => applyFitnessSetup(current, draft, today(), weightEntry.current)))
+                throw Error("Your training week could not be saved. Check your account and try again.");
+              setSetupOpen(false);
+            }}
+          />
+          {program && (
+            <Button
+              label="Remove training week"
+              secondary
+              onPress={() => {
+                if (h.change((s) => clearTrainingProgram(s))) setSetupOpen(false);
+              }}
+            />
+          )}
+        </Sheet>
       )}
       {savingRoutine && (
         <Sheet
@@ -785,8 +892,8 @@ function AdjustExercise({
 }
 
 function RestTimer() {
-  const h = useHealth(),
-    until = h.state!.workout.restUntil;
+  const h = useLoadedHealth(),
+    until = h.state.workout.restUntil;
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     if (!until) return;

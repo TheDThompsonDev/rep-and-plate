@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { commitSeededRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
@@ -69,7 +70,7 @@ test("refined tabs use personal records, allow dated browsing and keep their las
   await page.getByRole("button", { name: "Day", exact: true }).click();
   if (info.project.name === "mobile")
     await page.screenshot({ path: info.outputPath("refined-nutrition.png") });
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByRole("heading", { name: "Looking ahead, Avery." }),
   ).toBeVisible();

@@ -30,13 +30,13 @@ currently handles one capture at a time, not bulk historical reconstruction.
 See the [implementation and verification notes](docs/design/SPOT.md) and
 [six-pose asset library with its generation prompt](public/images/spot/README.md).
 
-A local fitness application with **Chat as the homepage**. Meals, groceries, planning, questions and workout logging share the same conversation. The four tabs are **Chat, Nutrition, Workouts, and You**, following the supplied mobile references.
+A local fitness application with **Chat as the homepage**. Meals, groceries, planning, questions and workout logging share the same conversation. The bottom bar has five destinations: **Chat, Nutrition, Scan, Workouts, and Kitchen** (`src/FuelNavigation.tsx`); **You** (reviews, profile, connections, data) opens from the account control in the header.
 
 See [Agent execution status](docs/AGENT_EXECUTION_STATUS.md) for the honest, per-ticket implementation record and remaining work from the [24-ticket backlog](docs/AGENT_BACKLOG.md).
 
 ## Run locally
 
-Requires Node.js 22.14+ (the catalog uses built-in SQLite).
+Requires Node.js 22.14 or newer (`engines.node` is `>=22.14`; the USDA catalog and the agent store use the built-in `node:sqlite` module, which is unflagged from 22.13). Local development and CI run Node 22. The hosted API bundle (`scripts/build-api.mjs`) targets Node 24, which is what Vercel runs; nothing in the code requires Node 24 locally.
 
 ```sh
 npm install
@@ -62,9 +62,13 @@ npm run build       # Type-check and create dist/
 npm start           # Serve build and API on loopback port 5173
 npm run preview     # Build preview with API
 npm test            # Unit/domain/provider tests
+npm run lint        # ESLint (typescript-eslint + react-hooks); first run installs tools/typescript-eslint. mobile/ has its own `npm --prefix mobile run lint`
+npm run format:check # Prettier check (reports only; the tree is not yet uniformly formatted)
 npx playwright install chromium
 npm run test:e2e    # Desktop and mobile flows with mocked providers
 ```
+
+`.github/workflows/ci.yml` runs the type check, lint, unit and agent suites, the native check/lint and the production build on every push and pull request, with the Playwright browser suite as a separate job; the specs mock providers, so CI needs no API keys.
 
 `PORT` overrides the standalone port. The browser app is deployed at [repandplate.com](https://repandplate.com) behind its existing invitation gate. Native builds use the separate mobile project.
 
@@ -181,4 +185,4 @@ Generation prompt: “Create a perfectly aligned 2 by 2 photographic contact she
 
 ### Your space
 
-The fourth tab opens `#you`, a full page using the same Rep & Plate header, navigation, colors, and card styling. `src/YouPage.tsx` and `src/you.css` bring together pending and completed reviews, editable daily goals, meals and captures, actual workout history, profile preferences, and data/privacy information. Existing `#review` links open the same page. Reviews and meal corrections use the existing shared state; revisiting or refreshing does not duplicate resolved records. Chat remains the default homepage. The history panels include saved records only; no fictional wearable activity is added.
+The header account control opens `#you`, a full page using the same Rep & Plate header, navigation, colors, and card styling. `src/YouPage.tsx` and `src/you.css` bring together pending and completed reviews, editable daily goals, meals and captures, actual workout history, profile preferences, and data/privacy information. Existing `#review` links open the same page. Reviews and meal corrections use the existing shared state; revisiting or refreshing does not duplicate resolved records. Chat remains the default homepage. The history panels include saved records only; no fictional wearable activity is added.

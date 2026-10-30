@@ -4,6 +4,7 @@ const Markdown = lazy(() => import("react-markdown"));
 const ReceiptProductReview = lazy(() => import("./features/products/ReceiptProductReview"));
 const ReceiptReview = lazy(() => import('./features/shopping/ReceiptReview'));
 import { applyReceiptProduct } from "./features/products/receipt-match";
+import { sumPurchasedNutrition } from "./features/products/quantities";
 import {isPurchaseReceipt} from './features/pantry/receipt-origin';
 import ProposalBreakdown from "./features/meals/ProposalBreakdown";
 import { sumProposalComponents } from "./features/meals/proposals";
@@ -174,22 +175,9 @@ export function ProposedMeal({
 }
 export function groceryTotals(receipt: GroceryReceipt) {
   const foods = receipt.items.filter((i) => i.match !== "nonfood");
-  const known = foods.filter(
-    (i) =>
-      i.nutrition &&
-      i.servingsPurchased &&
-      (!i.needsReview || i.match === "user"),
-  );
-  const total = known.reduce(
-    (s, item) => ({
-      calories: s.calories + item.nutrition!.calories * item.servingsPurchased!,
-      protein: s.protein + item.nutrition!.protein * item.servingsPurchased!,
-      carbs: s.carbs + item.nutrition!.carbs * item.servingsPurchased!,
-      fat: s.fat + item.nutrition!.fat * item.servingsPurchased!,
-    }),
-    { calories: 0, protein: 0, carbs: 0, fat: 0 },
-  );
-  return { total, known: known.length, foods: foods.length };
+  const reviewed = foods.filter((i) => !i.needsReview || i.match === "user");
+  const { total, counted } = sumPurchasedNutrition(reviewed);
+  return { total, known: counted, foods: foods.length };
 }
 export function GroceriesDialog({
   receipts,

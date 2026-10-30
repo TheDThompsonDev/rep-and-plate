@@ -1,6 +1,6 @@
 import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
-import { resultFixture } from './ai-fixtures';
+import { resultFixture } from '../e2e-shared/ai-fixtures';
 
 test('Kitchen receipt capture offers camera, previews a photo and saves groceries without intake', async ({ page }, info) => {
   const requests: any[] = [];

@@ -1,5 +1,6 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
-import { resultFixture } from "../../tests/ai-fixtures";
+import { resultFixture } from "../../e2e-shared/ai-fixtures";
 const key = "dannys-health.native.v1";
 test("native shell preserves chat draft, opens receipt capture and saves household settings", async ({
   page,
@@ -26,7 +27,7 @@ test("native shell preserves chat draft, opens receipt capture and saves househo
   await expect(
     page.getByRole("textbox", { name: "Message Rep & Plate" }),
   ).toHaveValue("Keep my draft");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Food & household preferences", exact: true })
     .click();
@@ -196,7 +197,7 @@ test("native barcode confirmation keeps purchases separate and exports a portabl
   await page
     .getByRole("button", { name: "Add to groceries", exact: true })
     .click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Cloud & your records", exact: true })
     .click();

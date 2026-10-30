@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
@@ -36,11 +37,11 @@ test("Kitchen replaces the You tab and keeps profile, workouts and food tools co
       .getByRole("button", { name: "Close dialog", exact: true })
       .click();
   }
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(page).toHaveURL(/#you$/);
   await expect(
-    page.getByRole("button", { name: "Your profile", exact: true }),
-  ).toHaveAttribute("aria-current", "page");
+    page.getByRole("button", { name: "Open account menu", exact: true }),
+  ).toHaveAttribute("aria-haspopup", "dialog");
   await expect(page.locator(".fuel-tabs [aria-current=page]")).toHaveCount(0);
   await page.getByRole("button", { name: "Workouts", exact: true }).click();
   await expect(page).toHaveURL(/#workouts$/);

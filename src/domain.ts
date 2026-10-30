@@ -3,6 +3,7 @@ import { activityProposalSchema, activitySchema } from './activity-contract';
 import { agentResolutionSchema } from './features/connections/contracts';
 import { bodyWeightEntrySchema } from './features/progress/body-weight';
 import { fitnessGoalSchema } from './features/progress/fitness-goal';
+import { trainingProgramSchema } from './features/progress/training-program';
 import { nutritionBaselineSchema } from './features/progress/nutrition-setup';
 import { spotPreferencesSchema, workoutCaptureSchema } from './features/spot/contracts';
 import { shoppingStateSchema } from './features/shopping/contracts';
@@ -60,7 +61,7 @@ const reviewSchema = z.object({
 });
 export type ReviewItem = z.infer<typeof reviewSchema>;
 const messageSchema = z.object({
-  captureIntent: z.literal('receipt').optional(),
+  captureIntent: z.enum(['receipt', 'meal']).optional(),
   captureReviewId: z.string().optional(),
   captureDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   activityProposal: activityProposalSchema.optional(),
@@ -75,6 +76,10 @@ const messageSchema = z.object({
   role: z.enum(["user", "assistant"]),
   text: z.string(),
   time: z.string(),
+  /** ISO instant the message was created; stamped since the date-divider
+   * release. Older records carry only the clock `time` and render without
+   * day dividers. Additive: snapshot version stays 1. */
+  at: z.string().optional(),
   image: z.string().optional(),
   mealId: z.string().optional(),
   ai: z.boolean().optional(),
@@ -115,12 +120,10 @@ export const stateSchema = z.object({
   mealPlans: z.array(mealPlanSchema).optional(),
   groceries: z.array(groceryReceiptSchema).optional(),
   chatRevision: z.number().optional(),
-  pendingMeal: z
-    .object({ key: z.literal("dinner"), image: z.string().optional() })
-    .optional(),
   profile: z.object({
     nutritionBaseline: nutritionBaselineSchema.optional(),
     fitnessGoal: fitnessGoalSchema.optional(),
+    trainingProgram: trainingProgramSchema.optional(),
     targetsConfigured: z.boolean().optional(),
     workoutUnit: z.enum(['lb','kg']).optional(),
     name: z.string().min(1),
@@ -172,7 +175,7 @@ export const stateSchema = z.object({
 });
 export type AppState = z.infer<typeof stateSchema>;
 export type Page =
-  "Today" | "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "Review" | "You";
+  "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "Review" | "You";
 export const id = () => crypto.randomUUID();
 export const today = () => {
   const d = new Date();
@@ -183,6 +186,8 @@ export const clockTime = () =>
     hour: "numeric",
     minute: "2-digit",
   });
+/** ISO instant for a message's optional `at`; pairs with `clockTime()`. */
+export const timestamp = () => new Date().toISOString();
 export function sumNutrition(meals: Meal[], day = today()): Nutrition {
   return personalMeals(meals, day)
     .reduce(
@@ -252,7 +257,21 @@ export function demoState(): AppState {
         confidence: "estimated",
         note: "A sweetened iced latte. Milk and syrup quantities are estimated.",
       },
-      referenceDinner(),
+      {
+        id: "chat-demo-dinner",
+        title: "Grilled Chicken, Rice, Broccoli",
+        category: "Dinner",
+        calories: 610,
+        protein: 49,
+        carbs: 58,
+        fat: 20,
+        time: "6:29 PM",
+        day: today(),
+        source: "Sample conversation · estimated meal",
+        confidence: "estimated",
+        image: "/images/chicken-dinner.png",
+        note: "High confidence on chicken and broccoli. Lower confidence on sauce quantity. Sample nutrition, not an analyzed image.",
+      },
     ],
     reviews: [
       {
@@ -275,7 +294,7 @@ export function demoState(): AppState {
         resolved: false,
       },
     ],
-    messages: referenceConversation(),
+    messages: [],
     workout: {
       status: "ready",
       startedAt: null,
@@ -361,133 +380,74 @@ export function initialState(): AppState {
     workout: {...state.workout,exercises:state.workout.exercises.map(exercise => ({...exercise,weight:0,weightConfirmed:false,previous:[],sets:exercise.sets.map(()=>null)}))},
     meals: [],
     reviews: [],
-    messages: [{
-      id: "welcome",
-      role: "assistant",
-      text: "I’m Spot. Tell me what you ate or what you did. Photo, text, voice, screenshot — start anywhere.",
-      time: clockTime(),
-    }],
+    // Spot's welcome is rendered by SpotWelcome, never stored as a message.
+    // Records saved by earlier releases still carry a `welcome` message; the
+    // renderers skip it because `upgradeChat` never rewrites conversations.
+    messages: [],
   };
+}
+export const STATE_VERSION = 1;
+type StoredSnapshot = Record<string, unknown>;
+export type UnreadableReason = 'invalid' | 'unsupported-version';
+/** Version-keyed upgrades for stored snapshots. Each entry brings a snapshot
+ * written at that version forward to STATE_VERSION. Versions missing from the
+ * table are unrecognized: they are never parsed, guessed at, or replaced.
+ * When the schema reaches version 2: bump STATE_VERSION, change `version` to
+ * z.literal(2), turn entry 1 into the 1 → 2 transform and add `2: identity`. */
+export const stateMigrations: Partial<Record<number, (snapshot: StoredSnapshot) => StoredSnapshot>> = {
+  1: (snapshot) => snapshot,
+};
+export type StoredStateParse =
+  | { ok: true; state: AppState }
+  | { ok: false; reason: UnreadableReason; version?: number };
+/** Every schema parse of a stored snapshot goes through the migration table. */
+export function parseStoredState(raw: string): StoredStateParse {
+  let value: unknown;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    return { ok: false, reason: 'invalid' };
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return { ok: false, reason: 'invalid' };
+  const { version } = value as StoredSnapshot;
+  if (typeof version !== 'number') return { ok: false, reason: 'invalid' };
+  const migrate = stateMigrations[version];
+  if (!migrate) return { ok: false, reason: 'unsupported-version', version };
+  const parsed = stateSchema.safeParse(migrate(value as StoredSnapshot));
+  return parsed.success ? { ok: true, state: upgradeChat(parsed.data) } : { ok: false, reason: 'invalid' };
+}
+export type StoredStateResult =
+  | { status: 'fresh' | 'loaded'; state: AppState }
+  | { status: 'unreadable'; state: AppState; raw: string; reason: UnreadableReason };
+/** `fresh` (no snapshot) may be written over; `unreadable` must not be. The raw
+ * blob of an unreadable snapshot is copied aside as soon as it is detected, so
+ * the copy is queued ahead of any later save. */
+export function readStoredState(): StoredStateResult {
+  let saved: string | null = null;
+  try {
+    saved = currentBrowserRaw();
+  } catch {
+    /* No usable device storage behaves like a fresh device, as before. */
+  }
+  if (!saved) return { status: 'fresh', state: initialState() };
+  const parsed = parseStoredState(saved);
+  if (parsed.ok) return { status: 'loaded', state: parsed.state };
+  void preserveUnreadableBrowserRecords(saved, parsed.reason);
+  return { status: 'unreadable', state: initialState(), raw: saved, reason: parsed.reason };
 }
 export function readState(): AppState {
-  try {
-    const saved = currentBrowserRaw();
-    if (saved) return upgradeChat(stateSchema.parse(JSON.parse(saved)));
-  } catch {
-    /* Invalid or outdated snapshots fall back to an empty personal state. */
-  }
-  return initialState();
-}
-function referenceDinner(): Meal {
-  return {
-    id: "chat-demo-dinner",
-    title: "Grilled Chicken, Rice, Broccoli",
-    category: "Dinner",
-    calories: 610,
-    protein: 49,
-    carbs: 58,
-    fat: 20,
-    time: "6:29 PM",
-    day: today(),
-    source: "Sample conversation · estimated meal",
-    confidence: "estimated",
-    image: "/images/chicken-dinner.png",
-    note: "High confidence on chicken and broccoli. Lower confidence on sauce quantity. Sample nutrition, not an analyzed image.",
-  };
-}
-function referenceConversation(): Message[] {
-  return [
-    {
-      id: "demo-dinner-photo",
-      role: "user",
-      text: "Made this for dinner",
-      image: "/images/chicken-dinner.png",
-      time: "6:28 PM",
-    },
-    {
-      id: "demo-dinner-recognized",
-      role: "assistant",
-      text: "Looks like grilled chicken breast, rice, broccoli, and a light sauce.",
-      time: "6:28 PM",
-    },
-    {
-      id: "demo-dinner-question",
-      role: "assistant",
-      text: "Was that about 1 cup of rice?",
-      time: "6:28 PM",
-    },
-    { id: "demo-dinner-confirmed", role: "user", text: "Yep", time: "6:29 PM" },
-    {
-      id: "demo-dinner-card",
-      role: "assistant",
-      text: "",
-      time: "6:29 PM",
-      mealId: "chat-demo-dinner",
-    },
-    {
-      id: "demo-dinner-insight",
-      role: "assistant",
-      text: "You’re on track to hit your protein goal today.",
-      time: "6:29 PM",
-      kind: "insight",
-    },
-  ];
+  return readStoredState().state;
 }
 // A migration records its version only. Never replace old conversations or add meals.
 export function upgradeChat(state: AppState): AppState {
   return state.chatRevision === 3 ? state : { ...state, chatRevision: 3 };
 }
-export const demoMeals = {
-  dinner: {
-    title: "Grilled chicken, rice & broccoli",
-    category: "Dinner" as const,
-    calories: 610,
-    protein: 49,
-    carbs: 58,
-    fat: 20,
-    note: "Demo photo estimate. High confidence on chicken and broccoli; lower confidence on sauce quantity.",
-  },
-  takeout: {
-    title: "Chicken shawarma bowl + sides",
-    category: "Lunch" as const,
-    calories: 870,
-    protein: 52,
-    carbs: 96,
-    fat: 31,
-    note: "Demo order estimate: chicken shawarma, hummus, pita, and Diet Coke. Restaurant nutrition has not been looked up.",
-  },
-  shake: {
-    title: "Protein shake",
-    category: "Snack" as const,
-    calories: 160,
-    protein: 30,
-    carbs: 5,
-    fat: 2,
-    note: "Demo estimate for one scoop with water. Edit to match your brand and portion.",
-  },
-};
-export function makeMeal(
-  key: keyof typeof demoMeals,
-  source: string,
-  image?: string,
-): Meal {
-  return {
-    ...demoMeals[key],
-    example: true,
-    id: id(),
-    source,
-    image,
-    time: clockTime(),
-    day: today(),
-    confidence: "estimated",
-  };
-}
 export type Interpretation =
-  | { kind: "meal"; key: keyof typeof demoMeals }
-  | { kind: "repeat" }
   | { kind: "workout"; weight: number; reps: number[] }
   | { kind: "unknown" };
-// Deliberately small local parser. Unrecognized captures enter Review; no model is called.
+/** Deliberately small local parser: only the bench set capture, which feeds the
+ * real set recorder. Everything else is `unknown`; without connected chat the
+ * caller answers with manual-logging guidance and never invents a meal. */
 export function interpretText(text: string): Interpretation {
   const t = text.trim().toLowerCase();
   const bench = t.match(
@@ -503,16 +463,6 @@ export function interpretText(text: string): Interpretation {
       weight: Number(bench[1]),
       reps: bench.slice(2).map(Number),
     };
-  if (/^(?:a |had a |i had a )?protein shake(?: after the gym)?[.!]?$/.test(t))
-    return { kind: "meal", key: "shake" };
-  if (
-    /^(?:had |i had )?(?:grilled )?chicken,? (?:and |with )?rice (?:and |& )broccoli(?: for dinner)?[.!]?$/.test(
-      t,
-    )
-  )
-    return { kind: "meal", key: "dinner" };
-  if (/^same breakfast as (?:yesterday|before)[.!]?$/.test(t))
-    return { kind: "repeat" };
   return { kind: "unknown" };
 }
 export function resolveReview(
@@ -526,13 +476,23 @@ export function resolveReview(
   yesterday.setDate(yesterday.getDate() - 1);
   const day = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
   let meal: Meal | undefined;
+  // `protein` and `fries` reviews only ever came from the sample fixture, but
+  // persisted accounts may still hold them unresolved; their meals stay examples.
   if (item.kind === "protein")
     meal = {
-      ...makeMeal("dinner", item.source, item.image),
-      day,
+      id: id(),
       title: `${answer} dinner bowl`,
+      category: "Dinner",
+      day,
+      time: clockTime(),
+      source: item.source,
+      image: item.image,
+      example: true,
+      confidence: "estimated",
       calories: answer === "Chicken" ? 610 : 700,
       protein: answer === "Chicken" ? 49 : 46,
+      carbs: 58,
+      fat: 20,
       note: `${answer} confirmed by you. Remaining portions are estimates.`,
     };
   if (item.kind === "fries" && answer !== "None") {
@@ -560,4 +520,4 @@ export function resolveReview(
     ),
   };
 }
-import {currentBrowserRaw} from './platform/browser-records';
+import {currentBrowserRaw,preserveUnreadableBrowserRecords} from './platform/browser-records';

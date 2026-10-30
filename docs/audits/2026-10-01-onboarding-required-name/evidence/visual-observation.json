@@ -1,0 +1,12 @@
+{
+  "choices": [
+    "Food & meals",
+    "Movement & workouts",
+    "Groceries & dinner",
+    "A little of all three"
+  ],
+  "required": "",
+  "blankDisabled": true,
+  "whitespaceDisabled": true,
+  "namedEnabled": true
+}

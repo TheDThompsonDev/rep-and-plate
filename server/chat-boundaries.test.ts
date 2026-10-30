@@ -4,15 +4,23 @@ import { requestFixture } from "../tests/ai-fixtures";
 import { applyAIResult } from "../src/ai-client";
 import { initialState } from "../src/domain";
 import { createServer } from "node:http";
-import { createApi } from "./http";
+import { createApi, publicError } from "./http";
 import { aiResultSchema } from "../src/ai-contract";
 import { createHash } from "node:crypto";
 import type { ChatCache } from "./chat-cache";
 
-const mocks = vi.hoisted(() => ({ parse: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  parse: vi.fn(),
+  timeouts: [] as number[],
+  clientFailure: undefined as Error | undefined,
+}));
 vi.mock("./generation.ts", () => ({
   generationAvailable: () => true,
-  createGenerationClient: () => ({ responses: { parse: mocks.parse } }),
+  createGenerationClient: (_config: unknown, timeout: number) => {
+    mocks.timeouts.push(timeout);
+    if (mocks.clientFailure) throw mocks.clientFailure;
+    return { responses: { parse: mocks.parse } };
+  },
 }));
 const config = { openaiKey: "fixture", model: "fixture", jevModel: "fixture" };
 const safe = { decision: "allow", allowRecords: false };
@@ -56,6 +64,8 @@ const ask = (
   );
 beforeEach(() => {
   mocks.parse.mockReset();
+  mocks.timeouts.length = 0;
+  mocks.clientFailure = undefined;
 });
 
 it("redirects stock advice before generation even when the user demands an exception", async () => {
@@ -283,4 +293,180 @@ it("does not replay a response cached before the conversation policy existed", a
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
+});
+
+// C3: a denied record review must not leave a reply or warnings describing a card that is gone.
+const mealDraft = {
+  ...draft,
+  intent: "meal" as const,
+  reply: "Here’s my estimate. Check the card before adding it.",
+  meal: {
+    calories: 140,
+    protein: 12,
+    carbs: 1,
+    fat: 10,
+    title: "Eggs",
+    category: "Breakfast" as const,
+    portion: "2 eggs",
+    note: "",
+    sources: [],
+    components: null,
+    day: null,
+  },
+};
+it("does not describe a review card after a boundary review denies record proposals", async () => {
+  setup(safe, safe, mealDraft);
+  const result = await ask("I ate 2 eggs for breakfast.");
+  expect(result.meal).toBeNull();
+  expect(result.decision).toBe("conversation");
+  expect(result.reply).not.toMatch(/\bcard\b/i);
+  expect(result.reply).not.toMatch(/before (?:adding|saving) it/i);
+  expect(result.reply).toContain("Nothing was saved");
+  expect(aiResultSchema.safeParse(result).success).toBe(true);
+});
+it("drops receipt-candidate warnings together with the denied receipt", async () => {
+  setup(safe, safe, {
+    ...draft,
+    intent: "grocery",
+    store: "Kroger",
+    items: [
+      {
+        price: null,
+        receiptText: "OATS",
+        name: "Oats",
+        quantity: "1 package",
+        serving: "",
+        servingsPurchased: null,
+        nutrition: null,
+        match: "unresolved",
+        note: "",
+        sources: [],
+        needsReview: true,
+      },
+    ],
+  });
+  const result = await ask("These are groceries I bought.");
+  expect(result.receipt).toBeNull();
+  expect(result.warnings.join(" ")).not.toMatch(/product match|USDA|captured details/i);
+  expect(result.reply).toContain("Nothing was saved");
+});
+it("keeps the record card and its reply when both reviews allow records", async () => {
+  setup({ ...safe, allowRecords: true }, { ...safe, allowRecords: true }, mealDraft);
+  const result = await ask("I ate 2 eggs for breakfast.");
+  expect(result.meal?.title).toBe("Eggs");
+  expect(result.reply).toMatch(/\bcard\b/);
+  expect(result.reply).not.toContain("Nothing was saved");
+});
+
+// C4: provider configuration and quota failures must keep their class through the review.
+it.each([
+  [401, "authenticate"],
+  [403, "authenticate"],
+  [429, "usage limit"],
+])(
+  "preserves a provider %s through the boundary review without leaking provider text",
+  async (status, copy) => {
+    setup();
+    const normal = mocks.parse.getMockImplementation()!;
+    mocks.parse.mockImplementation(async (params) => {
+      if (params.text.format.name === "chat_boundary_input")
+        throw Object.assign(Error("Incorrect API key provided: sk-secret-123"), {
+          status,
+        });
+      return normal(params);
+    });
+    const failure: unknown = await ask("How should I start strength training?").catch(
+      (error: unknown) => error,
+    );
+    expect(failure).toBeInstanceOf(Error);
+    expect((failure as { status?: number }).status).toBe(status);
+    expect((failure as Error).message).not.toContain("sk-secret");
+    const message = publicError(failure);
+    expect(message).toContain(copy);
+    expect(message).not.toContain("sk-secret");
+    expect(message).not.toContain("Please retry. For a personal medical concern");
+  },
+);
+it("reports a missing provider key as configuration rather than a retryable review outage", async () => {
+  mocks.clientFailure = Error("AI_NOT_CONFIGURED");
+  await expect(ask("How should I start strength training?")).rejects.toThrow(
+    "AI_NOT_CONFIGURED",
+  );
+  expect(publicError(Error("AI_NOT_CONFIGURED"))).toContain("isn’t configured");
+});
+it("still fails closed with the generic review error for an unclassified provider failure", async () => {
+  setup();
+  const normal = mocks.parse.getMockImplementation()!;
+  mocks.parse.mockImplementation(async (params) => {
+    if (params.text.format.name === "chat_boundary_output")
+      throw Object.assign(Error("socket hang up"), { status: 502 });
+    return normal(params);
+  });
+  await expect(ask("How should I start strength training?")).rejects.toThrow(
+    "AI_BOUNDARY_UNAVAILABLE",
+  );
+});
+
+// C5: one deadline is shared by every stage; the output review is named when it cannot fit.
+const deadlineAsk = (deadline: number) =>
+  runAI(
+    { ...requestFixture(), day: "2026-09-30", text: "What does protein do?" },
+    config,
+    () => {},
+    new AbortController().signal,
+    deadline,
+  );
+function elapse(stage: Record<string, number>) {
+  const normal = mocks.parse.getMockImplementation()!;
+  mocks.parse.mockImplementation(async (params) => {
+    const spent = stage[params.text.format.name];
+    if (spent) vi.setSystemTime(Date.now() + spent);
+    return normal(params);
+  });
+}
+it("gives later stages only the time that remains before the shared deadline", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  try {
+    setup();
+    elapse({ chat_boundary_input: 15000, fuel_answer: 140000 });
+    const result = await deadlineAsk(Date.now() + 180000);
+    expect(result.reply).toBe(draft.reply);
+    // input review ≤ 20 s; generation ≤ remaining minus the reserved output review; output review ≤ remaining.
+    expect(mocks.timeouts).toEqual([20000, 145000, 20000]);
+  } finally {
+    vi.useRealTimers();
+  }
+});
+it("names the output review instead of a generic timeout when generation used the whole budget", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  try {
+    setup();
+    elapse({ chat_boundary_input: 15000, fuel_answer: 162000 });
+    const failure: unknown = await deadlineAsk(Date.now() + 180000).catch(
+      (error: unknown) => error,
+    );
+    expect((failure as Error).message).toBe("AI_BOUNDARY_TIMEOUT_OUTPUT");
+    expect(mocks.timeouts).toHaveLength(2);
+    expect(
+      mocks.parse.mock.calls.map((call) => call[0].text.format.name),
+    ).toEqual(["chat_boundary_input", "fuel_answer"]);
+    const message = publicError(failure);
+    expect(message).toContain("final response check");
+    expect(message).not.toContain("took longer than expected");
+  } finally {
+    vi.useRealTimers();
+  }
+});
+it("names the stage when a review itself runs out of time", async () => {
+  setup();
+  const normal = mocks.parse.getMockImplementation()!;
+  mocks.parse.mockImplementation(async (params) => {
+    if (params.text.format.name === "chat_boundary_input")
+      throw new DOMException("AI time limit reached", "TimeoutError");
+    return normal(params);
+  });
+  await expect(ask("How should I start strength training?")).rejects.toThrow(
+    "AI_BOUNDARY_TIMEOUT_INPUT",
+  );
+  expect(publicError(Error("AI_BOUNDARY_TIMEOUT_INPUT"))).toContain("question check");
 });

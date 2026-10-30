@@ -1,0 +1,119 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Kitchen":
+    - button "Open kitchen tools"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: YOUR KITCHEN
+    - heading "What sounds good tonight?" [level=1]
+    - paragraph: What you have. What you can make. A little less to figure out.
+    - button "Open meal planner":
+      - text: MAKE SOMETHING GOOD
+      - strong: Start with what’s already here.
+      - text: Explore your meal plan
+    - button "Scan a food"
+    - button "Add a receipt"
+    - region "Shopping for your household":
+      - text: GOOD FOOD. YOUR KIND OF BUDGET.
+      - heading "Make your next shop work for you." [level=2]
+      - paragraph: Saving money, feeding a family, or finding a little more protein? Let’s start with what matters to you.
+      - button "Swaps, list & spending"
+      - button "Shopping preferences"
+    - region "Your first useful week":
+      - text: SPOT’S PLAN FOR YOUR GROCERIES
+      - heading "A receipt today. Less “what’s for dinner?” tomorrow." [level=2]
+      - paragraph: Daily nutrition targets start as generic values. Set your own before using them to assess a meal plan.
+      - button "Review daily nutrition targets"
+      - paragraph: 2 of 6 steps complete. Start with your real groceries and build a week that works for you.
+      - list:
+        - listitem:
+          - strong: Make it your kind of week
+          - paragraph: Set household size, food restrictions, cooking time and budget.
+          - 'button "Start: Make it your kind of week"'
+      - button "See the whole journey"
+    - region "What you have":
+      - heading "What you have" [level=2]
+      - button "Open pantry": Your pantry
+      - strong: 2 items on hand
+      - text: From your saved groceries and pantry updates
+      - button "Rolled oats 6 labeled servings left · Ingredients entered by you 150 cal · 5g protein per 40 g":
+        - strong: Rolled oats
+        - text: 6 labeled servings left · Ingredients entered by you 150 cal · 5g protein per 40 g
+      - button "Whole milk 6 labeled servings left · Ingredients entered by you 150 cal · 8g protein per 1 cup":
+        - strong: Whole milk
+        - text: 6 labeled servings left · Ingredients entered by you 150 cal · 8g protein per 1 cup
+      - paragraph: Groceries are what you bought. Only portions you log as eaten count toward daily nutrition.
+    - region "What you can make":
+      - heading "What you can make" [level=2]
+      - button "Open recipes": Recipes
+      - button "Tracker overnight oats 4 prepared portions left ~225 cal · 9g protein per portion":
+        - strong: Tracker overnight oats
+        - text: 4 prepared portions left ~225 cal · 9g protein per portion
+      - button "Think of a meal with me"
+    - region "What you need to buy":
+      - heading "What you need to buy" [level=2]
+      - button "Review shopping list": View plan
+      - paragraph: Build a meal plan and we’ll show the ingredients you still need, after checking your pantry.
+    - region "Recent grocery trips":
+      - heading "Recent grocery trips" [level=2]
+      - button "Ingredients entered by you Captured Sep 30, 2026 · 1 food items":
+        - strong: Ingredients entered by you
+        - text: Captured Sep 30, 2026 · 1 food items
+      - button "Ingredients entered by you Captured Sep 30, 2026 · 1 food items":
+        - strong: Ingredients entered by you
+        - text: Captured Sep 30, 2026 · 1 food items
+    - button "Just got groceries? Show me what you picked up."
+    - navigation "Kitchen navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Recipes & leftovers":
+  - heading "Recipes & leftovers" [level=2]
+  - button "Close dialog"
+  - heading "Cook once. Log each portion." [level=3]
+  - paragraph: Save what you actually prepared, then track a serving whenever you eat it.
+  - heading "Your prepared batches" [level=3]
+  - button "Cancel new batch" [disabled]
+  - heading "What did you make?" [level=3]
+  - text: Batch name
+  - textbox "Batch name" [disabled]:
+    - /placeholder: For example, overnight oats
+    - text: Tracker overnight oats
+  - text: How many portions did the whole batch make?
+  - spinbutton "How many portions did the whole batch make?" [disabled]: "4"
+  - paragraph: Choose the ingredients you used. Enter amounts in each product’s serving size; the finished batch can have a different portion size.
+  - checkbox "Rolled oats Ingredients entered by you · 2026-09-30" [checked] [disabled]
+  - strong: Rolled oats
+  - text: Ingredients entered by you · 2026-09-30
+  - paragraph: "6 servings left · One serving: 40 g"
+  - text: Servings of Rolled oats used
+  - spinbutton "Servings of Rolled oats used" [disabled]: "4"
+  - checkbox "Whole milk Ingredients entered by you · 2026-09-30" [checked] [disabled]
+  - strong: Whole milk
+  - text: Ingredients entered by you · 2026-09-30
+  - paragraph: "6 servings left · One serving: 1 cup"
+  - text: Servings of Whole milk used
+  - spinbutton "Servings of Whole milk used" [disabled]: "2"
+  - strong: Confirm the batch you already prepared
+  - paragraph: This transfers the selected ingredients out of your pantry once. It does not log anything as eaten.
+  - button "Confirm prepared batch" [disabled]
+  - region "Tracker overnight oats":
+    - heading "Tracker overnight oats" [level=3]
+    - paragraph: Prepared 9/30/2026
+    - text: 4 / 4 portions left
+    - paragraph: ~225 cal · 9g protein per portion
+    - group: Saved ingredients & nutrition
+    - text: How many portions did you eat?
+    - spinbutton "How many portions did you eat?" [disabled]
+    - text: Add to
+    - combobox "Add to" [disabled]:
+      - option "Breakfast"
+      - option "Lunch" [selected]
+      - option "Dinner"
+      - option "Snack"
+    - button "Log eaten portion" [disabled]
+    - button "Undo preparation" [disabled]

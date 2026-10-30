@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   demoState,
   initialState,
-  makeMeal,
   readState,
   stateSchema,
   STORAGE_KEY,
@@ -24,7 +23,7 @@ describe("personal days and example records", () => {
     const personal = { ...meal, title: 'Sample platter', source: 'User entry', note: 'My own portions' };
     expect(domain.isExampleMeal(personal)).toBe(false);
   });
-  it("starts fresh with zero personal nutrition, no reviews, and a welcome instead of a sample conversation", () => {
+  it("starts fresh with zero personal nutrition, no reviews, and no conversation", () => {
     const state = initialState();
     expect(sumNutrition(state.meals)).toEqual({
       calories: 0,
@@ -34,10 +33,9 @@ describe("personal days and example records", () => {
     });
     expect(state.meals).toEqual([]);
     expect(state.reviews).toEqual([]);
-    expect(state.messages).toHaveLength(1);
-    expect(state.messages[0]).toMatchObject({ role: "assistant" });
-    expect(state.messages[0].mealId).toBeUndefined();
-    expect(state.messages[0].text).toMatch(/photo|message|tell/i);
+    // Spot's welcome is rendered by SpotWelcome, not stored as a message.
+    expect(state.messages).toEqual([]);
+    expect("pendingMeal" in state).toBe(false);
     expect(state.chatRevision).toBe(3);
   });
   it("never counts persisted examples while preserving personal meals across days and migration", () => {
@@ -122,8 +120,8 @@ describe("personal days and example records", () => {
       domain.isExampleMeal({ ...base, source: "Demo estimate · nutrition" }),
     ).toBe(true);
     expect(domain.isExampleMeal({ ...base, example: true })).toBe(true);
-    const generated = makeMeal("shake", "Typed locally");
-    expect(generated.example).toBe(true);
+    // Explicitly flagged examples (persisted by earlier releases) stay excluded.
+    const generated = { ...base, id: "generated", source: "Typed locally", example: true };
     expect(
       stateSchema.parse({ ...initialState(), meals: [generated] }).meals[0]
         .example,

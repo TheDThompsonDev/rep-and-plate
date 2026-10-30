@@ -591,6 +591,10 @@
 .workout-resume button, .workout-browse { display: inline-flex; align-items: center; gap: 8px; color: #11624c; background: transparent; padding: 7px 0; font-weight: 600; }
 .workout-browse { margin: -3px 0 8px; }
 .fuel-workout-hero .workout-target-note { color: #506f63; font-size: 12px; }
+.workout-heading-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.workout-setup-hint { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: #506f63; }
+.workout-week button small { color: #0b5948; }
+.workout-remove-week { margin-top: 14px; }
 .workout-history-empty { display: flex; align-items: flex-start; gap: 14px; padding: 18px; border-radius: 17px; border: 1px solid #e2ebe7; background: #f7fbf9; }
 .workout-history-empty > svg { flex-shrink: 0; color: #4b927a; }
 .workout-history-empty strong { font-size: 16px; line-height: 1.35; }

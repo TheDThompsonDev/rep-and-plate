@@ -1,0 +1,30 @@
+{
+  "persona": "Software developer auditing the app",
+  "simulation": true,
+  "date": "2026-09-30",
+  "productEdits": false,
+  "platform": "Expo-web native preview, Chromium 390x844, localhost:8081",
+  "confidenceBoundary": "No real account/provider/device tests. Existing export timestamp and 95 reachable source hashes captured in baseline.json; timestamp corroboration is not a reproducible build attestation.",
+  "findings": [
+    {"id":"DEV-01","severity":"medium","status":"observed and separately reproduced","title":"Persistent notification intercepts Chat Send","oldIds":[],"trigger":"Save a manual meal, switch to Chat, type and click Send without dismissing saved notice","actual":"Send center hit-tests to Dismiss notification and normal pointer click fails; dismissing notice permits Send","impact":"Recoverable extra action blocks a central workflow","suggestedRemedy":"Keep notifications clear of composer actions and define dismissal/expiry behavior","evidence":["40-toast-over-composer.png","failures.json","failure.png"],"source":"mobile/App.tsx:237"},
+    {"id":"DEV-02","severity":"medium","status":"observed plus alternate-route source review","title":"Older manual meals cannot be retrieved through native diary","oldIds":["F18"],"trigger":"Save a meal dated August31 while current day is September30","actual":"Meal persists and exports, but selectable diary days are September24–30. You/review/chat/pantry supply no alternate full food archive or manual meal editor","impact":"Ordinary history eventually cannot be corrected, repeated or deleted through the app","suggestedRemedy":"Expose arbitrary day selection or searchable full history and a post-save link to chosen date","evidence":["09-old-meal-disappears.png","10-week-history-controls.txt","journey.json","synthetic-guest-backup.json"],"source":"mobile/src/screens.tsx:59"},
+    {"id":"DEV-03","severity":"medium","status":"observed 13 actual UI sessions","title":"Workout detail and correction history stops after twelve sessions","oldIds":["F28"],"trigger":"Start, log and finish thirteen sessions","actual":"Thirteen sessions are persisted; only twelve correction cards render, without pagination/full history","impact":"Returning users lose UI access to older set details/corrections even though data remains","suggestedRemedy":"Keep recent summary but provide all history","evidence":["31-thirteen-workouts.png","returning.json"],"source":"mobile/src/NativeWorkout.tsx:258"},
+    {"id":"DEV-04","severity":"medium","status":"observed fresh guest","title":"Guest backup tool promises automatic account saving","oldIds":["F03"],"trigger":"Fresh guest without server/account opens Cloud & your records","actual":"Unconditional account saves automatically copy appears above missing-server instruction","impact":"User can misunderstand recovery and cross-device availability","suggestedRemedy":"Render storage/sync status from actual connection/account state","evidence":["13-guest-cloud-copy.png","13-guest-cloud-copy.txt","02-guest-storage-copy.txt"],"source":"mobile/src/Cloud.tsx:88"},
+    {"id":"DEV-05","severity":"low","status":"observed deliberate malformed file","title":"Invalid backup exposes raw parser error","oldIds":[],"trigger":"Select malformed synthetic JSON via Import a backup file","actual":"Records remain unchanged and restore is unavailable, but raw syntax error is displayed","impact":"Recovery explanation is technical and lacks a next step","suggestedRemedy":"Explain invalid backup and invite another file with optional technical detail","evidence":["50-invalid-import.png","import-rejection.json"],"source":"mobile/src/storage.ts:295"}
+  ],
+  "wishes": [
+    {"id":"DEV-W01","classification":"Missing optional capability; analyst hypothesis","title":"Explicit calories-only meal with unknown macros","evidence":"06-calories-only-rejected.txt","observation":"Native requires all four values and leaves macros blank; no invented zeros saved","recurringImportance":"Potentially frequent for users with calorie-only labels; must preserve unknown versus zero semantics"},
+    {"id":"DEV-W02","classification":"Engineering investigation supported by measured payload","title":"Optimize and budget cold-start images and JS","evidence":["baseline.json","journey.json.initialResources"],"observation":"About15.3MB initial resource transfer from uncompressed loopback static server; principal JS4.06MB and multiple2.2–2.35MBPNGillustrations","limit":"No production latency or slow-network claim"},
+    {"id":"DEV-W03","classification":"Exists but wording differs","title":"Use the same account-data tool name in privacy help and navigation","observation":"Privacy refers to Account & saved data; native entry is Cloud & your records","evidence":"12-data-help.txt"}
+  ],
+  "positiveEvidence": [
+    "Offline loaded-app save and name-only edit preserve18.3protein and0.4fat through reconnect/reload",
+    "Actual UI export and filechooser import restore fictional records after review",
+    "Injected storage quota warning explains risk and export includes unsaved in-memory meal",
+    "Malformed backup leaves saved records unchanged",
+    "Unconnected Chat preserves submitted message and provides retry/instructions; planner provides connection instruction",
+    "15keyboardTabs remained within ingredient childdialog; fields have accessible names",
+    "Privacy and guest-agent copy explain processing/sync boundaries; safe diagnostics uses field allowlist"
+  ],
+  "limitations": ["No recruited participants or actual emotions/avoidance","No iOS/Android physical device or screen reader","No live authentication, email, account deletion or multidevice sync","No live provider nutrition/plan correctness","No production performance benchmark","No camera/microphone/OS sharing validation in this targeted pass"]
+}

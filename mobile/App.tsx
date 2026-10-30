@@ -23,7 +23,8 @@ import {
   Menu,
 } from "lucide-react-native";
 import { HealthProvider, useHealth, type Tab } from "./src/store";
-import { colors, s, IconButton } from "./src/ui";
+import { colors, s, IconButton, Button, Sheet } from "./src/ui";
+import { QuickAccount } from './src/QuickAccount';
 import { ChatScreen } from "./src/ChatScreen";
 import {
   NutritionScreen,
@@ -51,6 +52,7 @@ import { Connections } from "./src/Connections";
 function HealthApp() {
   const h = useHealth();
   const welcome = useWelcome();
+  const [headerAccountOpen, setHeaderAccountOpen] = useState(false);
   const [firstMeal, setFirstMeal] = useState(false), [firstMovement, setFirstMovement] = useState(false);
   const tracked = h.state ? hasFirstLog(h.state) : false;
   useEffect(() => { if (welcome.firstLog && tracked) welcome.dismissFirstLog(); }, [welcome.firstLog, tracked, welcome.dismissFirstLog]);
@@ -116,12 +118,17 @@ function HealthApp() {
           >
             <SpotWordmark />
           </Pressable>
-          <IconButton label="Your profile" onPress={() => h.setTab("You")}>
+          <IconButton label="Open account menu" onPress={() => setHeaderAccountOpen(true)}>
             <View style={[s.avatar, { width: 38, height: 38 }]}>
               <UserRound color={colors.green} />
             </View>
           </IconButton>
         </View>
+        {headerAccountOpen && <Sheet title="Your account" onClose={() => setHeaderAccountOpen(false)}>
+          <QuickAccount onSignIn={() => { setHeaderAccountOpen(false); h.setTool('cloud'); }} />
+          <Button label="View your profile" secondary onPress={() => { setHeaderAccountOpen(false); h.setTab('You'); }} />
+          <Button label="Account settings & backups" secondary onPress={() => { setHeaderAccountOpen(false); h.setTool('cloud'); }} />
+        </Sheet>}
         <AccountSync />
         {welcome.firstLog && !tracked && <FirstLog focus={welcome.firstLog} onMeal={() => setFirstMeal(true)} onMovement={() => {setFirstMovement(true);h.setTab('Workouts');}} onLater={welcome.dismissFirstLog} />}
         {firstMeal && <ManualMeal day={h.day} onClose={() => setFirstMeal(false)} onSaved={() => {setFirstMeal(false);h.setTab('Nutrition');}} />}

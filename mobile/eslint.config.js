@@ -9,7 +9,10 @@ module.exports = defineConfig([
   {
     // Shared domain files live outside mobile/, so resolve their parser from
     // this package instead of from the parent web app's dependencies.
-    settings: { 'import/parsers': {
+    // Vitest unit tests beside native modules import `vitest` from the root
+    // package; its exports-only dependencies defeat the node resolver and the
+    // configured `typescript` fallback is not installed, so skip resolving it.
+    settings: { 'import/core-modules': ['vitest'], 'import/parsers': {
       '@typescript-eslint/parser': [],
       [require.resolve('@typescript-eslint/parser')]: ['.ts', '.tsx'],
     } },

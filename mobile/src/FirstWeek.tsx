@@ -1,11 +1,11 @@
 import { Text, View } from "react-native";
 import { useState } from "react";
 import { firstWeekSteps } from "../../src/features/planning/first-week";
-import { useHealth } from "./store";
+import { useLoadedHealth } from "./store";
 import { Button, Card, s } from "./ui";
 export function FirstWeek() {
-  const h = useHealth(),
-    steps = firstWeekSteps(h.state!);
+  const h = useLoadedHealth(),
+    steps = firstWeekSteps(h.state);
   const [expanded, setExpanded] = useState(false);
   const next = steps.find((step) => !step.done) ?? steps[steps.length - 1];
   return (

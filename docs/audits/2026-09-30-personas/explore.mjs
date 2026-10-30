@@ -1,0 +1,10 @@
+import { chromium } from '@playwright/test';
+import fs from 'node:fs/promises';
+const browser = await chromium.launch({headless:true,args:['--remote-debugging-port=9224']});
+const context=await browser.newContext({viewport:{width:390,height:844},timezoneId:'America/Chicago'});
+const page=await context.newPage();
+page.on('pageerror',e=>console.log('PAGEERROR',e.message));
+await page.goto('http://127.0.0.1:5173');
+console.log(await page.locator('body').ariaSnapshot());
+await fs.writeFile(new URL('./evidence/browser-endpoint.txt',import.meta.url),'http://127.0.0.1:9224');
+await new Promise(()=>{});

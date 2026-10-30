@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-10-02T15:07:46.247Z",
+  "unit": {
+    "passed": 432,
+    "files": 69
+  },
+  "webJourneys": 344,
+  "nativeExpoWebJourneys": 29,
+  "build": 0,
+  "nativeTypes": 0,
+  "nativeLint": {
+    "exitCode": 0,
+    "existingWarnings": 9
+  },
+  "diffCheck": 0,
+  "semanticReview": "Direct auth actions, focus and route/draft continuity, unchanged local logout, preserved ownership/archive and backup destinations",
+  "visuals": "Guest and signed-in phone panels inspected; auth and navigation links fit without scrolling",
+  "managedCyc": "Source fingerprint limit; direct configured checks",
+  "limits": [
+    "Uncommitted and not pushed",
+    "No physical phones or hosted UI"
+  ],
+  "manifest": "source-manifest.json"
+}

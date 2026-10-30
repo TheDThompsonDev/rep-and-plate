@@ -1,5 +1,6 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "@playwright/test";
-import { mockCloud } from "../../tests/cloud-fixture";
+import { mockCloud } from "../../e2e-shared/cloud-fixture";
 test.setTimeout(60000);
 
 test('native interaction guide previews are isolated and lead to a real saved meal', async ({ page }, info) => {
@@ -135,7 +136,7 @@ test("native first launch introduces Spot, creates an account, confirms and sign
   await expect(
     page.getByRole("textbox", { name: "Message Rep & Plate" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Cloud & your records", exact: true })
     .click();

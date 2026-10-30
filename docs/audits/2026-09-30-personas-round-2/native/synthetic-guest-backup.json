@@ -1,0 +1,125 @@
+{
+  "format": "fuel-snapshot",
+  "exportedAt": "2026-09-30T18:29:36.450Z",
+  "state": {
+    "spot": {
+      "introSeen": true
+    },
+    "version": 1,
+    "chatRevision": 3,
+    "profile": {
+      "targetsConfigured": false,
+      "name": "Developer audit",
+      "calories": 2000,
+      "protein": 110,
+      "carbs": 250,
+      "fat": 78
+    },
+    "meals": [
+      {
+        "calories": 215,
+        "protein": 18.3,
+        "carbs": 33,
+        "fat": 0.4,
+        "id": "cb138efd-f013-4252-8e5c-13d7c1cc56e5",
+        "title": "Audit yogurt renamed offline",
+        "category": "Breakfast",
+        "time": "1:29 PM",
+        "day": "2026-09-30",
+        "source": "Manual entry",
+        "confidence": "confirmed",
+        "note": ""
+      },
+      {
+        "calories": 200,
+        "protein": 10,
+        "carbs": 30,
+        "fat": 4,
+        "id": "4c2b9ae1-002f-4c9e-aee7-fd37ff447357",
+        "title": "Month-old meal",
+        "category": "Breakfast",
+        "time": "1:29 PM",
+        "day": "2026-08-31",
+        "source": "Manual entry",
+        "confidence": "confirmed",
+        "note": ""
+      }
+    ],
+    "reviews": [],
+    "messages": [
+      {
+        "id": "welcome",
+        "role": "assistant",
+        "text": "I’m Spot. Tell me what you ate or what you did. Photo, text, voice, screenshot — start anywhere.",
+        "time": "1:29 PM"
+      }
+    ],
+    "workout": {
+      "status": "ready",
+      "exercises": [
+        {
+          "weightConfirmed": false,
+          "name": "Bench Press",
+          "weight": 0,
+          "target": 8,
+          "previous": [],
+          "sets": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "weightConfirmed": false,
+          "name": "Incline Dumbbell Press",
+          "weight": 0,
+          "target": 10,
+          "previous": [],
+          "sets": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "weightConfirmed": false,
+          "name": "Seated Cable Row",
+          "weight": 0,
+          "target": 12,
+          "previous": [],
+          "sets": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "weightConfirmed": false,
+          "name": "Lateral Raise",
+          "weight": 0,
+          "target": 12,
+          "previous": [],
+          "sets": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "weightConfirmed": false,
+          "name": "Triceps Pushdown",
+          "weight": 0,
+          "target": 12,
+          "previous": [],
+          "sets": [
+            null,
+            null,
+            null
+          ]
+        }
+      ],
+      "startedAt": null,
+      "finishedAt": null
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { expect, test, type Page } from "./app-fixture";
 
@@ -221,7 +222,7 @@ test("You counts pending Chat reviews and focuses an older proposal without acce
     .click();
   expect((await stored(page)).meals).toHaveLength(1);
   expect((await stored(page)).meals[0].calories).toBe(320);
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByText("3 little things to review", { exact: true }),
   ).toBeVisible();
@@ -243,7 +244,7 @@ test("You counts pending Chat reviews and focuses an older proposal without acce
   await preference
     .getByRole("button", { name: "Not now", exact: true })
     .click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByText("2 little things to review", { exact: true }),
   ).toBeVisible();

@@ -1,0 +1,9 @@
+- text: Rep & Plate
+- button "Sign in"
+- img "Spot summoning a shaker bottle in a beam of golden light."
+- text: OFFICIALLY IN YOUR CORNER
+- heading "We’re a team, Developer audit." [level=1]
+- text: You bring the real life. Spot brings the backup dancers nobody asked for. Your first small step Start with one meal or one bit of movement. Small is a perfectly good start. You’re starting with manual tracking on this device. Create an account from your profile when you’re ready for connected features.
+- button "Let’s do this"
+- button "Back"
+- text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

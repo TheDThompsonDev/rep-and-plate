@@ -1,7 +1,8 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { commitSeededRecords,readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
 import type { FoodProduct } from "../src/features/products/contracts";
-import { resultFixture } from "./ai-fixtures";
+import { resultFixture } from "../e2e-shared/ai-fixtures";
 
 const original: FoodProduct = {
   id: "usda:100",
@@ -130,7 +131,7 @@ test("Shopping preferences save, survive reload and remain accessible from You",
     shoppingCurrency: "CAD",
     preferredStores: ["Costco", "Kroger"],
   });
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(page).toHaveURL(/#you$/);
 });
 

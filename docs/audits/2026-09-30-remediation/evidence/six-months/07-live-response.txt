@@ -1,0 +1,45 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: "I ate lunch today: 150 g cooked white rice, 150 g cooked chicken breast and 1 tablespoon olive oil. Show the components before I log it."
+      - text: 10:24 AM
+      - paragraph: "Here’s my estimate for Lunch: 490 kcal · 35 g protein · 45 g carbs · 18 g fat. Review the portions and details on the card before adding it."
+      - text: 10:24 AM PLATE
+      - heading "Spot Check" [level=3]
+      - text: MEAL ESTIMATE · CHECK THE PORTION
+      - heading "Lunch" [level=3]
+      - paragraph: 150 g rice, 150 g chicken, 1 tbsp olive oil
+      - paragraph: For 2026-09-30
+      - strong: ~490 cal · 35g protein
+      - text: 45g carbs · 18g fat
+      - paragraph: Estimate based on standard nutritional values; verify with your specific products.
+      - group: What's in this estimate 3 components
+      - button "Yep, add to Lunch"
+      - button "Fix it"
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "groceries": [
+    {
+      "id": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5",
+      "fingerprint": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+          "receiptText": "Rolled oats",
+          "name": "Rolled oats",
+          "quantity": "6 servings on hand",
+          "serving": "40 g",
+          "servingsPurchased": 6,
+          "nutrition": {
+            "calories": 150,
+            "protein": 5,
+            "carbs": 27,
+            "fat": 3
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    },
+    {
+      "id": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4",
+      "fingerprint": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+          "receiptText": "Whole milk",
+          "name": "Whole milk",
+          "quantity": "6 servings on hand",
+          "serving": "1 cup",
+          "servingsPurchased": 6,
+          "nutrition": {
+            "calories": 150,
+            "protein": 8,
+            "carbs": 12,
+            "fat": 8
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    }
+  ],
+  "chatRevision": 3,
+  "profile": {
+    "targetsConfigured": false,
+    "name": "friend",
+    "calories": 2000,
+    "protein": 110,
+    "carbs": 250,
+    "fat": 78
+  },
+  "meals": [],
+  "reviews": [],
+  "messages": [
+    {
+      "id": "welcome",
+      "role": "assistant",
+      "text": "I’m Spot. Tell me what you ate or what you did. Photo, text, voice, screenshot — start anywhere.",
+      "time": "2:41 PM"
+    }
+  ],
+  "workout": {
+    "status": "ready",
+    "exercises": [
+      {
+        "weightConfirmed": false,
+        "name": "Bench Press",
+        "weight": 0,
+        "target": 8,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Incline Dumbbell Press",
+        "weight": 0,
+        "target": 10,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Seated Cable Row",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Lateral Raise",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Triceps Pushdown",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      }
+    ],
+    "startedAt": null,
+    "finishedAt": null
+  }
+}

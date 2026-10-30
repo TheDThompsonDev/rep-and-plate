@@ -1,0 +1,72 @@
+{
+  "recordedAt": "2026-10-02T14:25:47.431Z",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "unit",
+      "passed": 432,
+      "files": 69,
+      "log": "docs/audits/2026-10-02-onboarding-polish/evidence/unit.log"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "log": "docs/audits/2026-10-02-onboarding-polish/evidence/build.log"
+    },
+    {
+      "name": "native-types",
+      "exitCode": 0,
+      "log": "docs/audits/2026-10-02-onboarding-polish/evidence/native-types.log"
+    },
+    {
+      "name": "native-lint",
+      "exitCode": 0,
+      "existingWarnings": 9,
+      "log": "docs/audits/2026-10-02-onboarding-polish/evidence/native-lint.log"
+    },
+    {
+      "name": "web-browser",
+      "passed": 338,
+      "log": "docs/audits/2026-10-02-onboarding-polish/evidence/browser.log"
+    },
+    {
+      "name": "native-expo-web",
+      "passed": 10,
+      "log": "docs/audits/2026-10-02-onboarding-polish/evidence/native-browser.log"
+    },
+    {
+      "name": "diff-check",
+      "exitCode": 0,
+      "log": "docs/audits/2026-10-02-onboarding-polish/evidence/diff-check.log"
+    }
+  ],
+  "criteria": {
+    "resumableSetup": "Guest goal fields, edited target review and final confirmation survive reload. Account setup survives reload and later sign-in after project/account ownership verification. Credentials excluded and unrelated/corrupt drafts ignored.",
+    "actionHierarchy": "Set up my tracking labels the real next step. Onboarding target alternatives are collapsed; primary estimate/confirm and explicit deferral remain. Name/body data retained.",
+    "firstRealEntry": "Web/native existing manual meal and movement forms save durable real records. Prompt survives reload/cancel, then clears after real tracking or explicit later. Examples and purchases do not qualify.",
+    "boundaries": "Rejected deletion preserves records/draft; confirmed deletion removes only that account draft. Missing art retains usable tour and records. Rejected prompt-marker writes do not automatically retry on unrelated navigation."
+  },
+  "sourceManifest": "docs/audits/2026-10-02-onboarding-polish/evidence/source-manifest.json",
+  "review": "docs/audits/2026-10-02-onboarding-polish/report.md",
+  "previousFailures": [
+    "docs/audits/2026-10-02-onboarding-polish/evidence/browser-first-failure.log",
+    "docs/audits/2026-10-02-onboarding-polish/evidence/marker-red.log"
+  ],
+  "recovery": "docs/audits/2026-10-02-onboarding-polish/evidence/recovery.log",
+  "managedCyc": {
+    "started": false,
+    "reason": "Existing source fingerprint file/asset limit",
+    "verification": "Direct configured commands"
+  },
+  "limits": [
+    "No human usability study or conversion/retention measurement",
+    "No physical iOS/Android check",
+    "No live AI personalization",
+    "Existing bundle and native lint warnings"
+  ],
+  "learning": {
+    "disposition": "Recorded as working implementation awaiting user acceptance",
+    "context": "docs/context/onboarding.md",
+    "ledger": "docs/context/error-ledger.md"
+  }
+}

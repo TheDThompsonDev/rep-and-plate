@@ -1,0 +1,21 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - text: SMALL PLATE. BIG PERSONALITY.
+  - img "Spot in sunglasses addressing far too many microphones."
+  - paragraph: I have been preparing for this my entire shelf life.
+  - text: 01 · Meet Spot 02 · Your account 03 · Make it yours
+  - paragraph: SPOT SAVED YOU A SEAT
+  - heading "Make it official." [level=1]
+  - paragraph: Create your Rep & Plate account. Spot is already rehearsing your welcome speech.
+  - text: Email
+  - textbox "Email"
+  - text: Password
+  - textbox "Password"
+  - text: At least 8 characters.
+  - button "Create account"
+  - button "Already have an account? Sign in"
+  - button "Try on this device first"
+  - paragraph: Manual tracking works without an account. AI and connected tools need an approved account during private preview.
+  - button "Meet Spot first"
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

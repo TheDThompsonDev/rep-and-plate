@@ -1,0 +1,106 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Nutrition":
+    - button "Open nutrition menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - heading "Your day is coming together." [level=1]
+    - paragraph: A clear picture of what fuels you.
+    - paragraph:
+      - text: You’re tracking without daily targets. Your recorded totals are shown below.
+      - button "Set daily targets"
+    - button "Previous day"
+    - text: Today · Sep 30
+    - button "Next day" [disabled]
+    - button "Day" [pressed]
+    - button "Week"
+    - region "Today’s nutrition":
+      - heading "Today’s nutrition" [level=2]
+      - paragraph: Recorded calories · no daily target
+      - button "View and edit today’s meals":
+        - strong: "215"
+        - text: cal recorded
+      - text: Protein
+      - strong: 18.3g
+      - text: Carbs
+      - strong: 33g
+      - text: Fats
+      - strong: 0.4g
+      - text: From 1 meal you logged
+      - button "Edit daily targets": Edit targets
+    - button "Scan a food barcode":
+      - strong: Have a label? Scan it.
+      - text: Check the portion, then add it to your day.
+    - region "Today's logged meals":
+      - heading "What you’ve had" [level=2]
+      - button "Log a meal"
+      - button "Enter meal manually"
+      - region "Breakfast meals":
+        - heading "Breakfast" [level=3]
+        - text: 215 cal
+        - button "Edit Verification yogurt":
+          - strong: Verification yogurt
+          - text: 9:00 AM · Confirmed 215 cal 18.3g protein 33g carbs 0.4g fat
+    - heading "A little inspiration for later" [level=2]
+    - paragraph: Make room for something you’ll enjoy.
+    - button "MEALS AHEAD What sounds good for your next meal? Explore your meal plan":
+      - text: MEALS AHEAD
+      - strong: What sounds good for your next meal?
+      - text: Explore your meal plan
+    - heading "Your insights" [level=2]
+    - button "See all"
+    - 'button "1 meal across 1 logged day. Average recorded intake: 215 calories per logged day."':
+      - strong: 1 meal across 1 logged day.
+      - text: "Average recorded intake: 215 calories per logged day."
+    - heading "Your food, organized" [level=2]
+    - navigation "Food planning tools":
+      - button "Pantry What you have":
+        - strong: Pantry
+        - text: What you have
+      - button "Meal plan Your week":
+        - strong: Meal plan
+        - text: Your week
+      - button "Recipes Meals & leftovers":
+        - strong: Recipes
+        - text: Meals & leftovers
+    - heading "Smart swaps" [level=2]
+    - text: Your foods. Your portions.
+    - button "Compare foods in your pantry Add two foods with confirmed serving details to compare them here.":
+      - strong: Compare foods in your pantry
+      - text: Add two foods with confirmed serving details to compare them here.
+    - navigation "Nutrition navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Add a meal estimate.":
+  - heading "Add a meal estimate." [level=2]
+  - button "Close dialog"
+  - text: Your own values, saved exactly as entered.
+  - paragraph: Enter calories, protein, carbs and fat from a label or your own estimate. Use 0 only when you know the value is zero. If you don’t know a value, ask Spot for a reviewed estimate instead.
+  - text: Meal name
+  - textbox "Meal name":
+    - /placeholder: What did you have?
+  - text: Meal date
+  - textbox "Meal date": 2026-09-30
+  - text: Meal
+  - combobox "Meal":
+    - option "Breakfast"
+    - option "Lunch" [selected]
+    - option "Dinner"
+    - option "Snack"
+  - text: Calories
+  - spinbutton "Calories"
+  - text: Protein (g)
+  - spinbutton "Protein (g)"
+  - text: Carbs (g)
+  - spinbutton "Carbs (g)"
+  - text: Fat (g)
+  - spinbutton "Fat (g)"
+  - text: Notes
+  - textbox "Notes"
+  - text: "Source: Manual entry"
+  - button "Save changes"

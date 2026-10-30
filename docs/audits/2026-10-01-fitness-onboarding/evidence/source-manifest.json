@@ -1,0 +1,146 @@
+[
+  {
+    "path": "docs/audits/2026-10-01-fitness-onboarding/report.md",
+    "sha256": "c6584812f66ddfc05f7332b46bb7114ff478fe9c825b83949b7125042335c7f8"
+  },
+  {
+    "path": "docs/context/error-ledger.md",
+    "sha256": "68369a78afb6b114e3b3027685e05d83eeca61d61372aab361c0fc2b6bef0315"
+  },
+  {
+    "path": "mobile/App.tsx",
+    "sha256": "5bbea84e634fed86edb9a6a730fe7ffedb65e653718b07bb1ca30bd328b0e2df"
+  },
+  {
+    "path": "mobile/e2e/account-security.spec.ts",
+    "sha256": "723895dd7407e7aa0b9d7eaff86f621fdea65067db88125cda181793ade5631c"
+  },
+  {
+    "path": "mobile/e2e/account-sync.spec.ts",
+    "sha256": "3c4bf8c09551578843958b8ca8f162a41aefac2b5092248493bd5758c48c9231"
+  },
+  {
+    "path": "mobile/e2e/fitness-setup.spec.ts",
+    "sha256": "3f3e34f75269b3327b78c8541586f5c963aa15bc4cdfbcc508017938cababee8"
+  },
+  {
+    "path": "mobile/e2e/onboarding.spec.ts",
+    "sha256": "dec7e5296ce890f6cf510d766d029117fe6db61704a8b3e27c51a546f83c124d"
+  },
+  {
+    "path": "mobile/src/BodyWeightHistory.tsx",
+    "sha256": "d321322184b454d3ec1ec50509e22fa0181a02209c75cf7d44fabd6cad383aa0"
+  },
+  {
+    "path": "mobile/src/Cloud.tsx",
+    "sha256": "78f939ee06fda51ebff453aedd4cf80a9dae0015b4d29152342520731e9a5709"
+  },
+  {
+    "path": "mobile/src/FitnessSetup.tsx",
+    "sha256": "87e3b27a117190241a739821abc92eb51e0165f3c8aea8869553cf4fa2aa5f3a"
+  },
+  {
+    "path": "mobile/src/Onboarding.tsx",
+    "sha256": "7836b2894ab2e7a4ca06bd124e59645624012ef526f3bfd3f199785cf0717773"
+  },
+  {
+    "path": "mobile/src/QuickAccount.tsx",
+    "sha256": "a51f7d1af6f4d100c1c660b689c9133f14909aa9bde5ad228fea4d4ac3d20493"
+  },
+  {
+    "path": "mobile/src/screens.tsx",
+    "sha256": "7cfe587fc17baf35565fcd5215965d7971a3d8d9e509f179815c87e20927646d"
+  },
+  {
+    "path": "mobile/src/store.tsx",
+    "sha256": "15fac27364985bbf4190cb75a68c0762604bb6bfb6f3ec3736540d05f92103ab"
+  },
+  {
+    "path": "server/ai.ts",
+    "sha256": "861b769822f460e79002828daef5754218b32acad9490f77b90f6f830b82eb68"
+  },
+  {
+    "path": "src/ai-client.ts",
+    "sha256": "55007347f816f2c5b88b9eeca75b324398aa733c6cec6e12b114b3a99148143d"
+  },
+  {
+    "path": "src/ai-contract.ts",
+    "sha256": "dbeed93f695649ad527273facaa062d765e4f9ba01876a48b113ffe7f31af3ba"
+  },
+  {
+    "path": "src/App.tsx",
+    "sha256": "835cfdb433c4117812beea07036deac48d7e3f822a05cb3e9260404aeece38de"
+  },
+  {
+    "path": "src/domain.ts",
+    "sha256": "b5ab9ffd3c24b70c5e80ea639756d32f9d13a707ace379b4caf4b443529704d9"
+  },
+  {
+    "path": "src/features/cloud/QuickAccount.tsx",
+    "sha256": "9e1e4f25bf1e1f774291f55f01c3efdf35a77dafec80a50fe30b9f553ed6ee16"
+  },
+  {
+    "path": "src/features/cloud/useQuickAccount.ts",
+    "sha256": "ca44917570f6030984de3bcbf63908452a4c611d12dfb753c3e3bb434f59fcbc"
+  },
+  {
+    "path": "src/features/onboarding/Onboarding.tsx",
+    "sha256": "d57de2ba4e3543df662fa62fb6328b030df350586c473b3fcda3acbf9bcf48c0"
+  },
+  {
+    "path": "src/features/onboarding/useOnboarding.ts",
+    "sha256": "701733652f03ac6c6499d1b9298c0dfe49d3016e6ff6445cc4ce08a44e2986a6"
+  },
+  {
+    "path": "src/features/progress/body-weight.ts",
+    "sha256": "9f1cb501b5930aeeac0a5c14bd74098b9795d09b7010792e87bd9108a676cec0"
+  },
+  {
+    "path": "src/features/progress/BodyWeightHistory.tsx",
+    "sha256": "0f245b13265a17d8eb687b621b468b16bef4819179183e9b3d481001ad20cb80"
+  },
+  {
+    "path": "src/features/progress/fitness-goal.test.ts",
+    "sha256": "542c03460b95c3fd1fc8b1a146f0c5c60631f9f503203132110ac20266a793ab"
+  },
+  {
+    "path": "src/features/progress/fitness-goal.ts",
+    "sha256": "9a433db5016fce7bca57d1fc3f9a38f9f1a785b3a032adc64a6f879e87525210"
+  },
+  {
+    "path": "src/features/progress/fitness-setup.css",
+    "sha256": "94339d4587e28402f19b3548e2982251672a418d50930923c3ba4168f77476c8"
+  },
+  {
+    "path": "src/features/progress/FitnessSetup.tsx",
+    "sha256": "c3c6d7a7b69b4fc18584157215ed4c239ea63d55f76c31f9ca6ca93fcff17d01"
+  },
+  {
+    "path": "src/YouPage.tsx",
+    "sha256": "ea3dea6f46cbddefd00c32644347448846051d6253388c5b099cdd82b5b15e00"
+  },
+  {
+    "path": "tests/account-sync.spec.ts",
+    "sha256": "a5fc8f0016da29fc2aa240515fd965b1796bc672c7c83d697dafe58f6190f12e"
+  },
+  {
+    "path": "tests/cloud-fixture.ts",
+    "sha256": "f3d44b69b7747bfa1e8863894aeb6f809519ba2a434007062cdc5dc6879e256d"
+  },
+  {
+    "path": "tests/cloud.spec.ts",
+    "sha256": "ca2a14955cdaa02d8444160bc0a332f2ff4191ecdf957a226e1c91b16489d655"
+  },
+  {
+    "path": "tests/fitness-setup.spec.ts",
+    "sha256": "b6327372cbc7b27b82633a6bdc3f8d86aee9f11af640fd0d9fbab816afc881ad"
+  },
+  {
+    "path": "tests/interaction-guide.spec.ts",
+    "sha256": "b2b7cfb1fc1ce458ae89db5390a7282bb733a76b54b17a685ecfb4856ed16520"
+  },
+  {
+    "path": "tests/onboarding.spec.ts",
+    "sha256": "3e11d770e8132937769530ba59f6beed4088e89a6ab79c83381507025408e9ff"
+  }
+]

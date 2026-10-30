@@ -1,0 +1,41 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: YOUR NUTRITION A little more in tune with your day. Your meals, your rhythm. One day at a time.
+- button "Day"
+- button "Week"
+- button "2026-09-24": 24 Thu
+- button "2026-09-25": 25 Fri
+- button "2026-09-26": 26 Sat
+- button "2026-09-27": 27 Sun
+- button "2026-09-28": 28 Mon
+- button "2026-09-29": 29 Tue
+- button "Today"
+- text: Today’s nutrition 2,000 calories left
+- img
+- text: 0 of 2000 cal Protein · 0/110g Carbs · 0/250g Fats · 0/78g
+- button "Your daily targets": Sample targets — choose your own →
+- text: Today’s meals
+- button "Log a meal":
+  - img
+- button "Enter meal manually"
+- img "Spot connecting pasta photos with red string on a conspiracy board."
+- text: No logs. Just vibes. Tell me what you ate. I’ll retire the red string. Nothing here yet. Tell Spot what you ate.
+- button "Tell Spot"
+- text: What we’re learning Your next meal starts the picture. Log your own meals to see a weekly review here. 2026-09-24 to 2026-09-30 · 0 saved meals · sample records excluded
+- button "Plan meals from your pantry"
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen

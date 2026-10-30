@@ -1,0 +1,101 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: Workout units
+    - combobox "Workout units":
+      - option "lb" [selected]
+      - option "kg"
+    - button "Log walk or cardio"
+    - strong: Tell Spot what you did.
+    - text: Workout · Talk, type, or tap your sets.
+    - group: Walks & cardio · 1 recorded
+    - heading "Upper Body saved" [level=1]
+    - paragraph: 0 of 4 exercises completed.
+    - progressbar "Workout progress"
+    - text: 8%
+    - complementary "A moment with Spot":
+      - img "Spot in sunglasses addressing far too many microphones."
+      - text: VERY MUCH IN YOUR CORNER
+      - strong: Get my publicist.
+      - paragraph: Workout logged. I’ve prepared a completely unnecessary press conference.
+    - button "Correct this workout"
+    - region "Bench Press":
+      - img "Bench Press illustration"
+      - heading "Bench Press" [level=2]
+      - button "Adjust Bench Press" [disabled]: Choose load · 3 × 8
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 1 of 4
+      - group:
+        - text: How to approach Bench Press
+        - list:
+          - listitem: Set your feet firmly on the floor and keep your hips supported by the bench.
+          - listitem: Grip the bar just outside shoulder width; lower it slowly toward your chest.
+          - listitem: Press the bar up with control. Ask a qualified trainer to show you the setup and spotting before your first session.
+        - link "ACE exercise guide":
+          - /url: https://www.acefitness.org/resources/everyone/exercise-library/5/chest-press/
+      - strong: Set 1
+      - text: 15 lb × 8 reps 2
+      - strong: Set 2
+      - text: Choose load · Not recorded 3
+      - strong: Set 3
+      - text: Choose load · Not recorded
+    - paragraph: Got 8
+    - text: 1:32 PM
+    - paragraph: "Got it. Bench Press, set 1: 15 lb × 8 reps."
+    - text: 1:32 PM
+    - region "Incline Dumbbell Press":
+      - img "Incline Dumbbell Press illustration"
+      - heading "Incline Dumbbell Press" [level=2]
+      - button "Adjust Incline Dumbbell Press" [disabled]: Choose load · 3 × 10
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 2 of 4
+      - group: How to approach Incline Dumbbell Press
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · Not recorded 2
+      - strong: Set 2
+      - text: Choose load · Not recorded 3
+      - strong: Set 3
+      - text: Choose load · Not recorded
+    - region "Seated Cable Row":
+      - img "Seated Cable Row illustration"
+      - heading "Seated Cable Row" [level=2]
+      - button "Adjust Seated Cable Row" [disabled]: Choose load · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 3 of 4
+      - group: How to approach Seated Cable Row
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · Not recorded 2
+      - strong: Set 2
+      - text: Choose load · Not recorded 3
+      - strong: Set 3
+      - text: Choose load · Not recorded
+    - region "Triceps Pushdown":
+      - img "Triceps Pushdown illustration"
+      - heading "Triceps Pushdown" [level=2]
+      - button "Adjust Triceps Pushdown" [disabled]: Choose load · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 4 of 4
+      - group: How to approach Triceps Pushdown
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · Not recorded 2
+      - strong: Set 2
+      - text: Choose load · Not recorded 3
+      - strong: Set 3
+      - text: Choose load · Not recorded
+    - strong: Session saved. Every recorded set is here.
+    - paragraph: 1 of 12 sets recorded. Your session is saved on this device.
+    - button "Choose your next workout"
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

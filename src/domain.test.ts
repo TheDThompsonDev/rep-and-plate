@@ -3,7 +3,10 @@ import {
   initialState,
   demoState,
   interpretText,
+  parseStoredState,
   resolveReview,
+  STATE_VERSION,
+  stateMigrations,
   stateSchema,
   sumNutrition,
   today,
@@ -56,30 +59,27 @@ describe("daily records", () => {
   });
 });
 
-describe("bounded demo interpretation", () => {
-  it("parses only supported affirmative captures", () => {
-    expect(interpretText("Protein shake after the gym")).toEqual({
-      kind: "meal",
-      key: "shake",
-    });
+describe("bounded local interpretation", () => {
+  it("parses only the bench set capture and never invents a meal", () => {
     expect(interpretText("Bench was 185 for 8, 8, 7")).toEqual({
       kind: "workout",
       weight: 185,
       reps: [8, 8, 7],
     });
-    expect(interpretText("I did not have a protein shake")).toEqual({
-      kind: "unknown",
-    });
-    expect(interpretText("Two protein shakes and a banana")).toEqual({
-      kind: "unknown",
-    });
     expect(interpretText("Bench was 9999 for 8, 8, 7")).toEqual({
       kind: "unknown",
     });
-    expect(interpretText("Chicken rice and broccoli")).toEqual({
-      kind: "meal",
-      key: "dinner",
-    });
+    // Former demo phrases are ordinary text: without connected chat they get
+    // the manual-logging guidance instead of a preset sample meal.
+    for (const text of [
+      "Protein shake after the gym",
+      "I did not have a protein shake",
+      "Two protein shakes and a banana",
+      "Chicken rice and broccoli",
+      "Had grilled chicken, rice and broccoli for dinner",
+      "Same breakfast as yesterday",
+    ])
+      expect(interpretText(text)).toEqual({ kind: "unknown" });
   });
   it("validates snapshots and rejects invalid nutrition", () => {
     expect(stateSchema.safeParse(initialState()).success).toBe(true);
@@ -112,5 +112,30 @@ describe("chat upgrade", () => {
       0,
     );
     expect(upgradeChat(next)).toBe(next);
+  });
+});
+
+describe("stored snapshot versions", () => {
+  it("has a migration entry for every supported version and parses version 1 unchanged", () => {
+    for (let version = 1; version <= STATE_VERSION; version++)
+      expect(typeof stateMigrations[version]).toBe("function");
+    const raw = JSON.stringify(initialState());
+    const parsed = parseStoredState(raw);
+    expect(parsed.ok).toBe(true);
+    if (parsed.ok)
+      expect(parsed.state).toEqual(upgradeChat(stateSchema.parse(JSON.parse(raw))));
+  });
+  it("never guesses at a version it does not know and rejects malformed snapshots", () => {
+    expect(
+      parseStoredState(JSON.stringify({ ...initialState(), version: STATE_VERSION + 1 })),
+    ).toEqual({ ok: false, reason: "unsupported-version", version: STATE_VERSION + 1 });
+    expect(parseStoredState(JSON.stringify({ ...initialState(), version: undefined }))).toEqual({
+      ok: false,
+      reason: "invalid",
+    });
+    expect(parseStoredState("{")).toEqual({ ok: false, reason: "invalid" });
+    expect(parseStoredState("[]")).toEqual({ ok: false, reason: "invalid" });
+    expect(parseStoredState("null")).toEqual({ ok: false, reason: "invalid" });
+    expect(parseStoredState(JSON.stringify({ version: 1 }))).toEqual({ ok: false, reason: "invalid" });
   });
 });

@@ -19,6 +19,7 @@ export function QuickAccount({
             ? `Signed in as ${account.user.email ?? "your account"}`
             : "Using this device. Sign in to connect your account."}
       </p>
+      {!account.loading && account.user && <p>Signing out keeps your records on this device.</p>}
       {account.user ? (
         <button
           disabled={account.busy || account.loading}

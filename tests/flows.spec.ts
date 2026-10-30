@@ -1,6 +1,8 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { test, expect, type Page } from "./app-fixture";
 import { demoState } from "../src/domain";
 import { seedBrowserRecords, readBrowserRecords } from "./record-fixture";
+import { sendAndWaitForReply as send } from "../e2e-shared/chat";
 
 async function seedExamples(page: Page, includePersonalDinner = false) {
   const state = demoState();
@@ -41,13 +43,6 @@ async function seedPersonalDinner(page: Page) {
   expect((await readBrowserRecords(page)).meals).toEqual([dinner]);
 }
 
-async function send(page: Page, text: string) {
-  await page.getByRole("textbox", { name: "Message Rep & Plate" }).fill(text);
-  await page.getByRole("button", { name: "Send message", exact: true }).click();
-  await expect(
-    page.getByRole("status").filter({ hasText: "Rep & Plate is responding" }),
-  ).toHaveCount(0);
-}
 const stored = readBrowserRecords;
 async function chooseLoad(page: Page, name: string, load: string) {
   await page
@@ -187,7 +182,8 @@ test("Chat starts clean with four destinations and direct barcode scanning", asy
     "Workouts",
     "Kitchen",
   ]);
-  await expect(page.locator(".sidebar")).toBeHidden();
+  // The legacy dashboard shell (sidebar, topbar, bottom nav) no longer ships.
+  await expect(page.locator(".sidebar, .topbar, .bottom-nav")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Use voice", exact: true }),
   ).toBeVisible();
@@ -250,34 +246,6 @@ test("chat meal corrections recalculate nutrition and survive refresh", async ({
   ).toBeVisible();
 });
 
-test("sample photo asks one portion question before adding a meal, including after refresh", async ({
-  page,
-}) => {
-  await page.getByRole("button", { name: "Open chat menu" }).click();
-  await page.getByRole("button", { name: "Try a sample capture" }).click();
-  await page.getByRole("button", { name: /A home-cooked dinner/ }).click();
-  expect((await stored(page)).meals).toHaveLength(0);
-  await expect(
-    page.getByText("Was that about 1 cup of rice?", { exact: true }).last(),
-  ).toBeVisible();
-  await page.reload();
-  await send(page, "2 cups");
-  const state = await stored(page);
-  expect(state.meals).toHaveLength(1);
-  expect(state.meals.at(-1).calories).toBe(815);
-  expect(state.meals.at(-1).example).toBe(true);
-  expect(state.pendingMeal).toBeUndefined();
-  await expect(page.locator(".fuel-meal-card").last()).toBeInViewport();
-  await expect(page.locator(".fuel-meal-card").last()).toContainText(
-    "Example · not counted",
-  );
-  await page.getByRole("button", { name: "Nutrition", exact: true }).click();
-  await expect(page.locator(".nutrition-ring-label strong")).toHaveText("0");
-  await expect(
-    page.getByRole("region", { name: "Today's logged meals" }),
-  ).toContainText("Nothing here yet.");
-});
-
 test("chat help answers questions without creating tracking records", async ({
   page,
 }) => {
@@ -300,7 +268,7 @@ test("chat help answers questions without creating tracking records", async ({
   expect((await stored(page)).reviews).toEqual(before.reviews);
 });
 
-test("help works with connected chat and during a pending sample portion", async ({
+test("help works with connected chat without calling the provider", async ({
   page,
 }) => {
   let calls = 0;
@@ -312,20 +280,18 @@ test("help works with connected chat and during a pending sample portion", async
     return route.abort();
   });
   await page.reload();
+  const before = await stored(page);
   await send(page, "Help me get started");
   await expect(page.getByText(/For food, try “I ate/)).toBeVisible();
   expect(calls).toBe(0);
-  await page.getByRole("button", { name: "Open chat menu" }).click();
-  await page.getByRole("button", { name: "Try a sample capture" }).click();
-  await page.getByRole("button", { name: /A home-cooked dinner/ }).click();
-  const pending = (await stored(page)).pendingMeal;
   await send(page, "What can I ask you?");
   await expect(
     page.getByText(/Try “How am I doing today\?”/).last(),
   ).toBeVisible();
-  expect((await stored(page)).pendingMeal).toEqual(pending);
-  await send(page, "2 cups");
-  expect((await stored(page)).pendingMeal).toBeUndefined();
+  expect(calls).toBe(0);
+  const after = await stored(page);
+  expect(after.meals).toEqual(before.meals);
+  expect(after.reviews).toEqual(before.reviews);
 });
 
 test("connection retry enables chat after temporary unavailability", async ({
@@ -472,7 +438,7 @@ test("secondary screens return home to Chat and profile is keyboard accessible",
     .getByRole("navigation", { name: navName, exact: true })
     .getByRole("button", { name: "Chat", exact: true })
     .click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByRole("heading", { name: /^Looking ahead, / }),
   ).toBeVisible();
@@ -491,11 +457,11 @@ test("You reviews and goals update shared records and persist", async ({
   page,
 }) => {
   await seedExamples(page);
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(page).toHaveURL(/#you$/);
   await expect(
-    page.getByRole("button", { name: "Your profile", exact: true }),
-  ).toHaveAttribute("aria-current", "page");
+    page.getByRole("button", { name: "Open account menu", exact: true }),
+  ).toHaveAttribute("aria-haspopup", "dialog");
   await expect(
     page.getByText("2 little things to review", { exact: true }),
   ).toBeVisible();
@@ -570,7 +536,7 @@ test("You shows captured notes, editable meals, and real workout history", async
   });
   await seedBrowserRecords(page, legacy);
   await page.reload();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "See all 3 reviews", exact: true })
     .click();
@@ -616,7 +582,7 @@ test("You shows captured notes, editable meals, and real workout history", async
   await page
     .getByRole("button", { name: "Bench Press set 1: 8 reps", exact: true })
     .click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page.getByRole("button", { name: /Workout history/ }).click();
   await expect(page.getByRole("dialog")).toContainText("1 sets recorded");
   await expect(page.getByRole("dialog")).toContainText("In progress");

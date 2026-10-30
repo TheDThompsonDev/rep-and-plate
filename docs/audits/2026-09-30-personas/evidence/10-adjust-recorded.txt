@@ -1,0 +1,77 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - strong: Tell Spot what you did.
+    - text: Workout · Talk, type, or tap your sets.
+    - heading "Upper Body in progress" [level=1]
+    - paragraph: 0 of 4 exercises completed.
+    - progressbar "Workout progress"
+    - text: 8%
+    - button "Browse workout options"
+    - region "Bench Press":
+      - img "Bench Press illustration"
+      - heading "Bench Press" [level=2]
+      - button "Adjust Bench Press": 185 lb · 3 × 8
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 1 of 4
+      - strong: Set 1
+      - text: 45 lb × 5 reps
+      - button "Edit Bench Press set 1": Edit
+      - text: Bench Press set 1 weight (lb)
+      - spinbutton "Bench Press set 1 weight (lb)": "45"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 2
+      - strong: Set 2
+      - text: 185 lb · How many reps? Bench Press set 2 weight (lb)
+      - spinbutton "Bench Press set 2 weight (lb)": "185"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Bench Press set 2: 6 reps"': "6"
+      - 'button "Bench Press set 2: 7 reps"': "7"
+      - 'button "Bench Press set 2: 8 reps"': "8"
+      - 'button "Bench Press set 2: 9 reps"': "9"
+      - button "Use voice"
+      - text: "3"
+      - strong: Set 3
+      - text: 185 lb · Not recorded Bench Press set 3 weight (lb)
+      - spinbutton "Bench Press set 3 weight (lb)": "185"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+    - paragraph: Got 5
+    - text: 9:29 AM
+    - paragraph: "Got it. Bench Press, set 1: 45 lb × 5 reps."
+    - text: 9:29 AM
+    - img "Incline Dumbbell Press illustration"
+    - text: UP NEXT
+    - strong: Incline Dumbbell Press
+    - text: 60 lb · 3 × 10
+    - strong: One set at a time. You’ve got this.
+    - paragraph: 1 of 12 sets recorded. Keep going at your pace.
+    - button "Finish workout"
+    - textbox "Message about your workout":
+      - /placeholder: Tell me how that set went…
+    - button "Use voice"
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+    - dialog "Adjust Bench Press":
+      - heading "Adjust Bench Press" [level=2]
+      - button "Close dialog"
+      - text: Exercise name or substitution
+      - textbox "Exercise name or substitution" [disabled]: Bench Press
+      - text: Weight (lb)
+      - spinbutton "Weight (lb)" [disabled]: "185"
+      - paragraph: Name and weight stay fixed after a set is logged. Your recorded reps stay as they are; targets apply to your remaining sets.
+      - text: Number of sets
+      - spinbutton "Number of sets": "3"
+      - text: Target reps
+      - spinbutton "Target reps": "8"
+      - button "Save exercise"

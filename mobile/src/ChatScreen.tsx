@@ -12,9 +12,10 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { FlatList, View, Text, Image, TextInput } from "react-native";
 import { Camera, Mic, Send, ScanBarcode } from "lucide-react-native";
-import { useHealth } from "./store";
+import { useLoadedHealth } from "./store";
 import { Button, Card, IconButton, Sources, colors, s } from "./ui";
 import { type Message } from "../../src/domain";
+import { visibleWarnings } from "./chat-warnings";
 import {
   addProposedMeal,
   resolvePreferenceProposal,
@@ -24,9 +25,10 @@ import { ManualMeal } from "./ManualMeal";
 import { resolveActivityProposal } from "../../src/activities";
 import { InteractionGuide } from './InteractionGuide';
 function ChatMessage({ message: m }: { message: Message }) {
-  const h = useHealth(),
-    state = h.state!;
+  const h = useLoadedHealth(),
+    state = h.state;
   const [editing, setEditing] = useState(false);
+  const warnings = visibleWarnings(m);
   return (
     <View style={{ gap: 9, marginBottom: 16 }}>
       <View
@@ -133,7 +135,7 @@ function ChatMessage({ message: m }: { message: Message }) {
         <Card>
           <Text style={s.h3}>{m.activityProposal.title}</Text>
           <Text style={s.muted}>
-            {m.activityProposal.day} � {m.activityProposal.minutes} minutes
+            {m.activityProposal.day} · {m.activityProposal.minutes} minutes
           </Text>
           <Text style={s.tiny}>{m.activityProposal.note}</Text>
           {m.activityCaptureStatus === "pending" ? (
@@ -234,6 +236,15 @@ function ChatMessage({ message: m }: { message: Message }) {
           )}
         </Card>
       )}
+      {warnings.length > 0 && (
+        <Card>
+          {warnings.map((warning, i) => (
+            <Text key={i} style={s.muted}>
+              {warning}
+            </Text>
+          ))}
+        </Card>
+      )}
       {m.mealId && (
         <>
           <Text style={[s.muted, { color: colors.green, marginLeft: 46 }]}>
@@ -320,7 +331,7 @@ function ChatMessage({ message: m }: { message: Message }) {
   );
 }
 export function ChatScreen() {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     list = useRef<FlatList<Message>>(null);
   const input = useRef<TextInput>(null);
   useEffect(() => {
@@ -356,7 +367,7 @@ export function ChatScreen() {
       )}
       <FlatList
         ref={list}
-        data={h.state!.messages.filter((m) => m.id !== "welcome")}
+        data={h.state.messages.filter((m) => m.id !== "welcome")}
         ListHeaderComponent={
           <>
             <SpotWelcome
@@ -398,7 +409,7 @@ export function ChatScreen() {
         renderItem={({ item }) => <ChatMessage message={item} />}
         contentContainerStyle={{ padding: 18, paddingTop: 8 }}
         onContentSizeChange={() =>
-          !examplesOpen && h.state!.messages.some((m) => m.role === "user") &&
+          !examplesOpen && h.state.messages.some((m) => m.role === "user") &&
           list.current?.scrollToEnd({ animated: false })
         }
         keyboardShouldPersistTaps="handled"
@@ -461,10 +472,11 @@ export function ChatScreen() {
           <IconButton
             label="Send message"
             onPress={() => {
-              if (!h.busy) {
-                void h.send(h.draft);
-                h.setDraft("");
-              }
+              // While a reply is processing the store keeps the draft and
+              // shows the notice, so only clear it when the send is taken.
+              const text = h.draft;
+              if (!h.busy) h.setDraft("");
+              void h.send(text);
             }}
           >
             <Send color={colors.green} />

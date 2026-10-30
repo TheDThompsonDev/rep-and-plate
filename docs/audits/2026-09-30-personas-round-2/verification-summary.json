@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-09-30T18:46:21.201Z",
+  "sourceUnchanged": true,
+  "sourceFiles": 288,
+  "simulatedPersonas": 5,
+  "commonCheckpoints": 177,
+  "commonPageErrors": 0,
+  "commonConsoleErrors": 0,
+  "focusedFixturePasses": 16,
+  "counts": {
+    "friction": 12,
+    "opportunity": 6,
+    "investigation": 1
+  },
+  "linkedEvidenceExists": true,
+  "reportLinksValid": true,
+  "artifactFiles": 741,
+  "limitations": "Simulated personas; physical devices/live auth/hosted release/human wishes unverified. This script validates evidence consistency, not product correctness."
+}

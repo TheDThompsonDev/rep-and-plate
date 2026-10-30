@@ -1,6 +1,14 @@
 import { z } from "zod";
 import type { AppState } from "../../domain.ts";
 import { saveBodyWeight, type BodyWeightEntry } from "./body-weight.ts";
+import {
+  deriveTrainingProgram,
+  equipmentChoices,
+  trainingDayChoices,
+  type EquipmentChoice,
+  type Experience,
+  type TrainingProgram,
+} from "./training-program.ts";
 
 export const goalLabels = {
   lose: "Lose weight",
@@ -27,6 +35,10 @@ export type FitnessSetupDraft = {
   cadence: FitnessGoal["cadence"];
   currentWeight: string;
   targetWeight: string;
+  /** "" leaves the training week as it is (none during onboarding; existing program in the editor). */
+  trainingDays: string;
+  equipment: EquipmentChoice[];
+  experience: Experience | "";
 };
 export const emptyFitnessSetup: FitnessSetupDraft = {
   kind: "habits",
@@ -34,21 +46,50 @@ export const emptyFitnessSetup: FitnessSetupDraft = {
   cadence: "weekly",
   currentWeight: "",
   targetWeight: "",
+  trainingDays: "",
+  equipment: [],
+  experience: "",
 };
-export function fitnessDraft(goal?: FitnessGoal): FitnessSetupDraft {
+export function fitnessDraft(goal?: FitnessGoal, program?: TrainingProgram): FitnessSetupDraft {
+  const week = program
+    ? {
+        trainingDays: String(program.daysPerWeek),
+        equipment: program.equipment.filter((item): item is EquipmentChoice => item !== "bodyweight"),
+        experience: program.experience ?? ("" as const),
+      }
+    : {};
   return goal
     ? {
+        ...emptyFitnessSetup,
         ...goal,
         currentWeight: "",
         targetWeight:
           goal.targetWeight === undefined ? "" : String(goal.targetWeight),
+        ...week,
       }
-    : { ...emptyFitnessSetup };
+    : { ...emptyFitnessSetup, ...week };
+}
+/** The training-week answers in a draft, or undefined when the person left them alone. */
+export function parseTrainingAnswers(draft: Pick<FitnessSetupDraft, "trainingDays" | "equipment" | "experience">) {
+  const raw = (draft.trainingDays ?? "").trim();
+  if (!raw) return undefined;
+  const daysPerWeek = Number(raw);
+  if (!(trainingDayChoices as readonly number[]).includes(daysPerWeek))
+    throw Error("Choose between 2 and 6 training days per week.");
+  const equipment = (draft.equipment ?? []).filter((item): item is EquipmentChoice =>
+    (equipmentChoices as readonly string[]).includes(item),
+  );
+  return {
+    daysPerWeek,
+    equipment,
+    ...(draft.experience ? { experience: draft.experience } : {}),
+  };
 }
 export function parseFitnessSetup(
   draft: FitnessSetupDraft,
   knownWeight?: BodyWeightEntry,
 ) {
+  const program = parseTrainingAnswers(draft);
   const currentWeight = draft.currentWeight.trim()
     ? Number(draft.currentWeight)
     : undefined;
@@ -92,7 +133,7 @@ export function parseFitnessSetup(
     cadence: draft.cadence,
     ...(targetWeight === undefined ? {} : { targetWeight }),
   });
-  return { goal, currentWeight };
+  return { goal, currentWeight, program };
 }
 export function applyFitnessSetup(
   state: AppState,
@@ -105,10 +146,15 @@ export function applyFitnessSetup(
     .slice()
     .sort((a, b) => a.day.localeCompare(b.day))
     .at(-1);
-  const { goal, currentWeight } = parseFitnessSetup(draft, latest);
+  const { goal, currentWeight, program } = parseFitnessSetup(draft, latest);
   return {
     ...state,
-    profile: { ...state.profile, fitnessGoal: goal },
+    profile: {
+      ...state.profile,
+      fitnessGoal: goal,
+      // Answers given → a fresh deterministic week. No answers → whatever week already exists stays.
+      ...(program ? { trainingProgram: deriveTrainingProgram(program, day) } : {}),
+    },
     ...(currentWeight === undefined
       ? {}
       : {

@@ -1,0 +1,40 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: I went for a 20 minute walk today. I would like to record it.
+      - text: 10:23 AM WORKOUT
+      - heading "Spot Check" [level=3]
+      - heading "Walking" [level=4]
+      - paragraph: 20 minutes · 2026-09-30
+      - paragraph: Completed walk
+      - button "Yep, log activity"
+      - button "Not now"
+      - paragraph: Here’s your 20-minute walking for 2026-09-30. Check the card before saving it.
+      - text: 10:23 AM
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

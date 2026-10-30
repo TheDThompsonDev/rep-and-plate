@@ -21,3 +21,17 @@ The installed `com.dannyshealth.app` debug build opened the native Chat screen, 
 The exported Expo-web target passed all four native interaction tests. Running Gradle compilation, two Metro bundlers, and both browser suites together caused timeouts; run the final suites sequentially. A scan of exported artifacts found no configured server API/database secrets. Native hardware scanning, microphone transcription, Supabase OTP, and physical iOS verification remain release checks.
 
 Read `mobile/README.md` for startup, migration, cloud OTP requirements, and remaining distribution work. The existing web application remains independently runnable.
+
+## Web/native parity
+
+Recorded from the 2026-10-10 repository audit (finding F6). Every row below is a verified gap in the working tree; none of the "pending decision" rows has a recorded product decision yet, so do not treat them as intentional until the owner marks them so here.
+
+| Capability | Web | Native | Status |
+| --- | --- | --- | --- |
+| Meal → pantry link suggestions ("Which pantry ingredients did you use?") | `src/features/pantry/PantryLinkReview.tsx` | No counterpart | Pending decision |
+| Smart swaps nutrition comparison | `src/features/planning/SmartSwaps.tsx` | No counterpart | Pending decision |
+| Receipt-first entry card and worked example | `src/features/receipts/*` | No counterpart (native keeps receipt camera capture through Chat) | Pending decision |
+| Agent connections management | Local server or hosted account | Hosted account required (`mobile/src/Connections.tsx:25`); README already documents this as current behavior | Pending decision on whether native should also reach a local gateway |
+| Native end-to-end suite target | Browser suite on the Vite dev server | Expo web target (`mobile/playwright.config.ts`), not devices | Known limit; physical-device checks remain release gates (see above) |
+
+When a row is decided, change its status to "Intentional (date, reason)" or link the implementing change, and update the ledger entry the orchestrator consolidates from this audit.

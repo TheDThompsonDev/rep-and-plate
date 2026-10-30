@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "unit": 420,
+  "browser": 314,
+  "nativeExpoWebOnboarding": 4,
+  "build": "passed",
+  "nativeTypes": "passed",
+  "nativeLint": {
+    "errors": 0,
+    "existingWarnings": 9
+  },
+  "sourceFilesUnchanged": 7,
+  "browserLog": "evidence/web-exclusive.log",
+  "retainedTimeout": "evidence/web-final.log; 313 passed, one existing Connections setup timeout; three focused repeats and entire exclusive suite passed without app changes",
+  "limits": [
+    "No physical-device verification",
+    "CYC managed startup unavailable at existing fingerprint size limit"
+  ],
+  "reviewer": "self",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "migration": "20260929_agents.sql",
+  "sha256": "0316b7058ae8930d4349ecc8c3134e57a4955ee94882efdce6718b3a40ba00d9",
+  "checks": [
+    "Additive migration applied",
+    "Three tables enforce RLS and deny browser roles",
+    "Both RPCs restricted to server role",
+    "Create and stale-write protection work",
+    "Connection owner collision rejected",
+    "Separate agent admission works",
+    "All synthetic rows rolled back"
+  ]
+}

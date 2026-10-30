@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
 import { initialState, today } from "../src/domain";
 import { readBrowserRecords } from "./record-fixture";
@@ -134,7 +135,7 @@ test("reset clears the temporary recipe setup without retaining private draft te
     .getByLabel("Batch name", { exact: true })
     .fill("Private unfinished batch");
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Edit your profile", exact: true })
     .click();
@@ -289,7 +290,7 @@ test("manual movement is saved once and participates in the activity view", asyn
   await page
     .getByRole("button", { name: "Save activity", exact: true })
     .click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByRole("region", { name: "Your recorded activity" }),
   ).toContainText("1of 7 days");

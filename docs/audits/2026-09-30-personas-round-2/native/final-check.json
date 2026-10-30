@@ -1,0 +1,31 @@
+{
+  "at": "2026-09-30T18:37:42.047Z",
+  "sourceChanges": [],
+  "runs": [
+    {
+      "name": "journey",
+      "steps": 26,
+      "pageErrors": 0,
+      "consoleErrors": 0
+    },
+    {
+      "name": "returning",
+      "steps": 5,
+      "pageErrors": 0,
+      "consoleErrors": 0
+    },
+    {
+      "name": "failures",
+      "steps": 7,
+      "pageErrors": 0,
+      "consoleErrors": 0
+    },
+    {
+      "name": "import-rejection",
+      "steps": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0
+    }
+  ],
+  "resourceTransferBytes": 15313988
+}

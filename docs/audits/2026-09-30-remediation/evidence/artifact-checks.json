@@ -1,0 +1,50 @@
+{
+  "at": "2026-09-30T16:07:44.891Z",
+  "checks": [
+    {
+      "criterion": "Every original finding has exactly one acceptance-map row",
+      "result": "passed",
+      "evidence": "31 original findings; 31 implementation rows"
+    },
+    {
+      "criterion": "evidence/web-final.json completed without failure, skip or flake",
+      "result": "passed",
+      "evidence": {
+        "startTime": "2026-09-30T16:02:29.183Z",
+        "duration": 300222.13,
+        "expected": 266,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "criterion": "native-suite.json completed without failure, skip or flake",
+      "result": "passed",
+      "evidence": {
+        "startTime": "2026-09-30T15:43:30.628Z",
+        "duration": 45951.518000000004,
+        "expected": 23,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "criterion": "Five persona walkthroughs completed without page errors",
+      "result": "passed",
+      "evidence": "177 retained checkpoints"
+    },
+    {
+      "criterion": "Final server output has no React render-loop diagnostic",
+      "result": "passed",
+      "evidence": "Server output drained after source freeze, then collected after the final complete browser run; legacy planner regression additionally asserts no console/page errors."
+    },
+    {
+      "criterion": "All report links resolve locally",
+      "result": "passed",
+      "evidence": "README, verification and all three agent notes checked"
+    }
+  ],
+  "hashedFiles": 429
+}

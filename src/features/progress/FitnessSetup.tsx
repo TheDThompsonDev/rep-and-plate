@@ -10,9 +10,19 @@ import {
 } from "./fitness-goal";
 import "./fitness-setup.css";
 import type { BodyWeightEntry } from "./body-weight";
+import {
+  equipmentChoices,
+  equipmentLabels,
+  experienceLabels,
+  trainingDayChoices,
+  type Equipment,
+  type Experience,
+  type TrainingProgram,
+} from "./training-program";
 
 export function FitnessSetup({
   goal,
+  program,
   weight,
   initialDraft,
   onDraftChange,
@@ -21,6 +31,8 @@ export function FitnessSetup({
   busy = false,
 }: {
   goal?: FitnessGoal;
+  /** Existing training week; pre-fills the week fields so re-saving the goal keeps it. */
+  program?: TrainingProgram;
   weight?: BodyWeightEntry;
   initialDraft?: FitnessSetupDraft;
   onDraftChange?: (draft: FitnessSetupDraft) => void;
@@ -28,8 +40,9 @@ export function FitnessSetup({
   onSkip?: () => void;
   busy?: boolean;
 }) {
-  const [draft, setDraft] = useState(() => initialDraft ?? fitnessDraft(goal)),
+  const [draft, setDraft] = useState(() => initialDraft ?? fitnessDraft(goal, program)),
     [error, setError] = useState("");
+  const weekChosen = draft.trainingDays.trim() !== "";
   const patch = (value: Partial<FitnessSetupDraft>) => {
     const next = { ...draft, ...value };
     setDraft(next);
@@ -141,6 +154,72 @@ export function FitnessSetup({
           ))}
         </select>
       </label>
+      <fieldset className="fitness-week">
+        <legend>Your training week (optional)</legend>
+        <label>
+          Training days per week
+          <select
+            aria-label="Training days per week"
+            value={draft.trainingDays}
+            onChange={(event) => patch({ trainingDays: event.target.value })}
+            disabled={busy}
+          >
+            <option value="">{program ? "Keep my current week" : "Not now"}</option>
+            {trainingDayChoices.map((days) => (
+              <option key={days} value={String(days)}>
+                {days} days
+              </option>
+            ))}
+          </select>
+        </label>
+        {weekChosen && (
+          <>
+            <div className="fitness-equipment" role="group" aria-label="Available equipment">
+              <span>Available equipment</span>
+              {equipmentChoices.map((item) => (
+                <label className="fitness-checkbox" key={item}>
+                  <input
+                    type="checkbox"
+                    checked={draft.equipment.includes(item)}
+                    disabled={busy}
+                    onChange={(event) =>
+                      patch({
+                        equipment: event.target.checked
+                          ? [...draft.equipment, item]
+                          : draft.equipment.filter((value) => value !== item),
+                      })
+                    }
+                  />
+                  {equipmentLabels[item as Equipment]}
+                </label>
+              ))}
+            </div>
+            <p className="fitness-hint">
+              Bodyweight movements are always included. Leave these unchecked if you train without equipment.
+            </p>
+            <label>
+              Strength training experience
+              <select
+                aria-label="Strength training experience"
+                value={draft.experience}
+                onChange={(event) => patch({ experience: event.target.value as Experience | "" })}
+                disabled={busy}
+              >
+                <option value="">Prefer not to say</option>
+                {Object.entries(experienceLabels).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="fitness-hint">
+              Your week uses the starter plans, matched to your equipment. Rep targets are starting points you
+              confirm, and you choose every load yourself; nothing is prescribed or treated as a record.
+            </p>
+          </>
+        )}
+      </fieldset>
       <div className="fitness-payoff">
         <strong>A small check-in. A clearer picture.</strong>
         <p>

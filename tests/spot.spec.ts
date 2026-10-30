@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 import { initialState, today } from "../src/domain";
@@ -151,7 +152,7 @@ test("workout capture confirms once, survives reload and retains an active sessi
   await expect(
     page.getByRole("button", { name: "Yep, log workout" }),
   ).toHaveCount(0);
-  await page.getByRole("button", { name: "Your profile" }).click();
+  await openProfile(page);
   await page.getByRole("button", { name: "Open your weekly review" }).click();
   await page
     .getByRole("button", { name: "Rep · Training", exact: true })

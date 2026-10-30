@@ -11,6 +11,8 @@ import {
   forgetBrowserCache,
   browserRecordTransaction,
   browserKeys,
+  corruptRecordsOwner,
+  corruptRecordsPrefix,
 } from "../../platform/browser-records";
 export const accountStorageKey = (identity: string) =>
   `health.account.${encodeURIComponent(identity)}`;
@@ -43,9 +45,12 @@ export async function clearBrowserAccount(expectedUserId?: string) {
     const owner = localStorage.getItem("health.records.owner");
     if (expectedUserId) {
       localStorage.removeItem(draftKey(expectedUserId));
+      // Preserved copies of that account's unreadable snapshots end with the
+      // same encoded owner as its archive; a guest copy has no owner suffix.
       for (const key of await browserKeys())
         if (
-          /^(health\.account\.|health\.sync\.|health\.pending\.)/.test(key) &&
+          (/^(health\.account\.|health\.sync\.|health\.pending\.)/.test(key) ||
+            key.startsWith(corruptRecordsPrefix)) &&
           key.endsWith(encodeURIComponent(`:${expectedUserId}`))
         )
           await browserRemove(key);
@@ -58,6 +63,8 @@ export async function clearBrowserAccount(expectedUserId?: string) {
       await browserRemove(syncStorageKey(owner));
       await browserRemove(`health.sync.recovery.${encodeURIComponent(owner)}`);
       await browserRemove(`health.pending.${encodeURIComponent(owner)}`);
+      for (const key of await browserKeys())
+        if (corruptRecordsOwner(key) === owner) await browserRemove(key);
     }
     await browserRemove(STORAGE_KEY);
     forgetBrowserCache();

@@ -1,0 +1,944 @@
+{
+  "spot": {
+    "introSeen": true
+  },
+  "shopping": {
+    "list": [
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Rolled oats:40 g",
+        "name": "Rolled oats",
+        "quantity": "1 × 40 g",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Whole milk:1 cup",
+        "name": "Whole milk",
+        "quantity": "1 × 1 cup",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Carrots:1 medium",
+        "name": "Carrots",
+        "quantity": "1 × 1 medium",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Button mushrooms:5 medium",
+        "name": "Button mushrooms",
+        "quantity": "1 × 5 medium",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Fresh spinach:2 cups",
+        "name": "Fresh spinach",
+        "quantity": "1 × 2 cups",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Broccoli florets:1 cup",
+        "name": "Broccoli florets",
+        "quantity": "1 × 1 cup",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Zucchini:1 medium",
+        "name": "Zucchini",
+        "quantity": "1 × 1 medium",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Cauliflower:1 cup",
+        "name": "Cauliflower",
+        "quantity": "1 × 1 cup",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "plan:plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97:Bell peppers:1 medium",
+        "name": "Bell peppers",
+        "quantity": "1 × 1 medium",
+        "checked": false,
+        "createdAt": "2026-09-30T18:36:40.882Z"
+      },
+      {
+        "id": "257289e9-4497-4d01-8afa-d0a74f88df54",
+        "name": "Apples",
+        "quantity": "6 pieces",
+        "checked": true,
+        "createdAt": "2026-09-30T18:36:41.499Z"
+      }
+    ],
+    "dismissed": [],
+    "prices": {}
+  },
+  "recipeBatches": [
+    {
+      "id": "16845f05-8e03-43e9-8421-c15ba871a5de",
+      "name": "Tracker overnight oats",
+      "createdAt": "2026-09-30T18:33:34.435Z",
+      "totalPortions": 4,
+      "ingredients": [
+        {
+          "id": "recipe-ingredient:16845f05-8e03-43e9-8421-c15ba871a5de:0",
+          "name": "Rolled oats",
+          "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+          "servings": 4,
+          "servingLabel": "40 g",
+          "nutrition": {
+            "calories": 600,
+            "protein": 20,
+            "carbs": 108,
+            "fat": 12
+          },
+          "sourceUrls": []
+        },
+        {
+          "id": "recipe-ingredient:16845f05-8e03-43e9-8421-c15ba871a5de:1",
+          "name": "Whole milk",
+          "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+          "servings": 2,
+          "servingLabel": "1 cup",
+          "nutrition": {
+            "calories": 300,
+            "protein": 16,
+            "carbs": 24,
+            "fat": 16
+          },
+          "sourceUrls": []
+        }
+      ],
+      "nutrition": {
+        "calories": 900,
+        "protein": 36,
+        "carbs": 132,
+        "fat": 28
+      },
+      "preparationEventIds": [
+        "recipe-prep:16845f05-8e03-43e9-8421-c15ba871a5de:0",
+        "recipe-prep:16845f05-8e03-43e9-8421-c15ba871a5de:1"
+      ],
+      "consumptions": [
+        {
+          "id": "0b2fbd33-d622-4172-b7b1-40b30e40ceca",
+          "mealId": "recipe-meal:0b2fbd33-d622-4172-b7b1-40b30e40ceca",
+          "portions": 1.5,
+          "createdAt": "2026-09-30T18:33:34.681Z",
+          "reversedAt": "2026-09-30T18:33:35.547Z"
+        },
+        {
+          "id": "973f6b64-c2f0-4985-9c93-8a0cc3258086",
+          "mealId": "recipe-meal:973f6b64-c2f0-4985-9c93-8a0cc3258086",
+          "portions": 1,
+          "createdAt": "2026-09-30T18:33:35.833Z"
+        }
+      ]
+    }
+  ],
+  "version": 1,
+  "pantryEvents": [
+    {
+      "id": "recipe-prep:16845f05-8e03-43e9-8421-c15ba871a5de:0",
+      "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+      "kind": "prepared",
+      "servings": -4,
+      "createdAt": "2026-09-30T18:33:34.435Z",
+      "note": "Transferred to prepared batch: Tracker overnight oats. Not logged as eaten."
+    },
+    {
+      "id": "recipe-prep:16845f05-8e03-43e9-8421-c15ba871a5de:1",
+      "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+      "kind": "prepared",
+      "servings": -2,
+      "createdAt": "2026-09-30T18:33:34.435Z",
+      "note": "Transferred to prepared batch: Tracker overnight oats. Not logged as eaten."
+    }
+  ],
+  "mealPlans": [
+    {
+      "id": "62c52176-ab9d-4aaf-91f1-0030268a2155",
+      "createdAt": "2026-09-30T18:34:29.519Z",
+      "status": "approved",
+      "days": [
+        {
+          "date": "2026-10-01",
+          "meals": [
+            {
+              "id": "meal-20261001-dinner-01",
+              "title": "My reviewed oat dinner",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Carrots",
+                  "servings": 1,
+                  "servingLabel": "1 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-02",
+          "meals": [
+            {
+              "id": "meal-20261002-dinner-02",
+              "title": "Creamy Oat Risotto with Mushrooms",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Button mushrooms",
+                  "servings": 1,
+                  "servingLabel": "5 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-03",
+          "meals": [
+            {
+              "id": "meal-20261003-dinner-03",
+              "title": "Savory Oat Porridge with Spinach",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Fresh spinach",
+                  "servings": 1,
+                  "servingLabel": "2 cups"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-04",
+          "meals": [
+            {
+              "id": "meal-20261004-dinner-04",
+              "title": "Hearty Oat and Broccoli Bake",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Broccoli florets",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-05",
+          "meals": [
+            {
+              "id": "meal-20261005-dinner-05",
+              "title": "Oat and Zucchini Casserole",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Zucchini",
+                  "servings": 1,
+                  "servingLabel": "1 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-06",
+          "meals": [
+            {
+              "id": "meal-20261006-dinner-06",
+              "title": "Oat and Cauliflower Gratin",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Cauliflower",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-07",
+          "meals": [
+            {
+              "id": "meal-20261007-dinner-07",
+              "title": "Oat and Bell Pepper Skillet",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Bell peppers",
+                  "servings": 1,
+                  "servingLabel": "1 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "plan-e968cf54-4564-49b0-b33d-c04ad7dfcb97",
+      "createdAt": "2026-09-30T18:35:11.524Z",
+      "status": "draft",
+      "days": [
+        {
+          "date": "2026-10-08",
+          "meals": [
+            {
+              "id": "planned-meal-13bfaa79-34a2-4bf0-a1fa-e7c17510bb4a",
+              "title": "My reviewed oat dinner",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Carrots",
+                  "servings": 1,
+                  "servingLabel": "1 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-09",
+          "meals": [
+            {
+              "id": "planned-meal-094e6cb4-2a47-4b3c-807a-2a729c1cb279",
+              "title": "Creamy Oat Risotto with Mushrooms",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Button mushrooms",
+                  "servings": 1,
+                  "servingLabel": "5 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-10",
+          "meals": [
+            {
+              "id": "planned-meal-0b987058-0622-41f0-a197-36549996eb72",
+              "title": "Savory Oat Porridge with Spinach",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Fresh spinach",
+                  "servings": 1,
+                  "servingLabel": "2 cups"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-11",
+          "meals": [
+            {
+              "id": "planned-meal-f7e79fd3-ccaf-4434-b43c-530d1aa9c952",
+              "title": "Hearty Oat and Broccoli Bake",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Broccoli florets",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-12",
+          "meals": [
+            {
+              "id": "planned-meal-ee3390b7-e03d-49e0-9cc8-6ba71c63075e",
+              "title": "Oat and Zucchini Casserole",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Zucchini",
+                  "servings": 1,
+                  "servingLabel": "1 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-13",
+          "meals": [
+            {
+              "id": "planned-meal-726013eb-b1c8-4a98-a0f4-66e0413bb283",
+              "title": "Oat and Cauliflower Gratin",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Cauliflower",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-10-14",
+          "meals": [
+            {
+              "id": "planned-meal-81488d65-67c7-4c36-b8ad-c960b8415797",
+              "title": "Oat and Bell Pepper Skillet",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": null,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e::manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5::manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Bell peppers",
+                  "servings": 1,
+                  "servingLabel": "1 medium"
+                }
+              ],
+              "notes": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "groceries": [
+    {
+      "id": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e",
+      "fingerprint": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:2a530fe4-c132-4d5e-ace0-e3f549f9968e:item",
+          "receiptText": "Rolled oats",
+          "name": "Rolled oats",
+          "quantity": "10 servings on hand",
+          "serving": "40 g",
+          "servingsPurchased": 10,
+          "nutrition": {
+            "calories": 150,
+            "protein": 5,
+            "carbs": 27,
+            "fat": 3
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    },
+    {
+      "id": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5",
+      "fingerprint": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:dc0209a2-22bc-4b50-9080-585d3a3cd2f5:item",
+          "receiptText": "Whole milk",
+          "name": "Whole milk",
+          "quantity": "8 servings on hand",
+          "serving": "1 cup",
+          "servingsPurchased": 8,
+          "nutrition": {
+            "calories": 150,
+            "protein": 8,
+            "carbs": 12,
+            "fat": 8
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    }
+  ],
+  "chatRevision": 3,
+  "profile": {
+    "targetsConfigured": true,
+    "name": "Six month tracker audit",
+    "calories": 2300,
+    "protein": 150,
+    "carbs": 250,
+    "fat": 77
+  },
+  "meals": [
+    {
+      "calories": 650,
+      "protein": 45,
+      "carbs": 70,
+      "fat": 20,
+      "id": "7dc4fedf-225e-4e3d-9502-7075b140e197",
+      "title": "Yesterday chicken lunch",
+      "category": "Lunch",
+      "time": "1:30 PM",
+      "day": "2026-09-29",
+      "source": "Manual entry",
+      "confidence": "confirmed",
+      "note": ""
+    },
+    {
+      "calories": 650,
+      "protein": 45,
+      "carbs": 70,
+      "fat": 20,
+      "example": false,
+      "id": "0a5cad69-c4ea-4ca5-80fa-f08bb4dff5b0",
+      "title": "Today chicken rice repeated",
+      "category": "Lunch",
+      "time": "1:32 PM",
+      "day": "2026-09-30",
+      "source": "Repeated saved meal",
+      "confidence": "confirmed",
+      "note": "Same portions and nutrition as Yesterday chicken lunch. Pantry and prepared portions were not changed."
+    },
+    {
+      "calories": 225,
+      "protein": 9,
+      "carbs": 33,
+      "fat": 7,
+      "recipeBatchId": "16845f05-8e03-43e9-8421-c15ba871a5de",
+      "recipePortions": 1,
+      "components": [
+        {
+          "id": "recipe-meal:973f6b64-c2f0-4985-9c93-8a0cc3258086:0",
+          "name": "Rolled oats",
+          "servings": 1,
+          "servingLabel": "40 g",
+          "nutrition": {
+            "calories": 150,
+            "protein": 5,
+            "carbs": 27,
+            "fat": 3
+          },
+          "sourceUrls": []
+        },
+        {
+          "id": "recipe-meal:973f6b64-c2f0-4985-9c93-8a0cc3258086:1",
+          "name": "Whole milk",
+          "servings": 0.5,
+          "servingLabel": "1 cup",
+          "nutrition": {
+            "calories": 75,
+            "protein": 4,
+            "carbs": 6,
+            "fat": 4
+          },
+          "sourceUrls": []
+        }
+      ],
+      "id": "recipe-meal:973f6b64-c2f0-4985-9c93-8a0cc3258086",
+      "title": "Tracker overnight oats",
+      "category": "Lunch",
+      "time": "1:33 PM",
+      "day": "2026-09-30",
+      "source": "Your prepared batch",
+      "confidence": "estimated",
+      "note": "1 of 4 prepared portions. Nutrition uses the ingredient snapshots saved when you prepared this batch. Pantry ingredients were deducted at preparation, not again here."
+    }
+  ],
+  "reviews": [],
+  "messages": [
+    {
+      "id": "welcome",
+      "role": "assistant",
+      "text": "I’m Spot. Tell me what you ate or what you did. Photo, text, voice, screenshot — start anywhere.",
+      "time": "1:27 PM"
+    },
+    {
+      "id": "recipe-prepared:16845f05-8e03-43e9-8421-c15ba871a5de",
+      "role": "assistant",
+      "text": "Your Tracker overnight oats batch is saved with 4 portions. Its ingredients moved out of the pantry. Nothing has been added to your food log.",
+      "time": "1:33 PM"
+    },
+    {
+      "id": "recipe-meal:0b2fbd33-d622-4172-b7b1-40b30e40ceca:message",
+      "role": "assistant",
+      "text": "Meal removed. Any linked pantry or recipe portions have been restored.",
+      "time": "1:33 PM"
+    },
+    {
+      "id": "recipe-meal:973f6b64-c2f0-4985-9c93-8a0cc3258086:message",
+      "role": "assistant",
+      "text": "Logged 1 portion of Tracker overnight oats. 3 portions remain.",
+      "time": "1:33 PM",
+      "mealId": "recipe-meal:973f6b64-c2f0-4985-9c93-8a0cc3258086"
+    }
+  ],
+  "workout": {
+    "planId": "lower",
+    "title": "Lower Body",
+    "conversation": [
+      {
+        "id": "2d59e177-b39b-41bb-9923-f2c71fa0ef03",
+        "role": "user",
+        "text": "Got 10",
+        "time": "1:37 PM",
+        "exerciseIndex": 0
+      },
+      {
+        "id": "a2459a3e-989e-4a1e-a4be-0c902f3f15d2",
+        "role": "assistant",
+        "text": "Got it. Goblet Squat, set 1: 35 lb × 10 reps.",
+        "time": "1:37 PM",
+        "exerciseIndex": 0
+      },
+      {
+        "id": "33a7e11a-e873-40bf-a754-5dd13e62227e",
+        "role": "user",
+        "text": "Got 9",
+        "time": "1:37 PM",
+        "exerciseIndex": 0
+      },
+      {
+        "id": "ed61f320-e6c9-460b-b164-97ff5b92fd4c",
+        "role": "assistant",
+        "text": "Got it. Goblet Squat, set 2: 35 lb × 9 reps.",
+        "time": "1:37 PM",
+        "exerciseIndex": 0
+      },
+      {
+        "id": "ff5b0d4e-fa81-4bec-b055-72d9330bc7c2",
+        "role": "user",
+        "text": "Got 15",
+        "time": "1:38 PM",
+        "exerciseIndex": 3
+      },
+      {
+        "id": "ffbaaf3e-0ad5-470b-8d46-c73c9ef9159a",
+        "role": "assistant",
+        "text": "Got it. Standing Calf Raise, set 1: 15 reps.",
+        "time": "1:38 PM",
+        "exerciseIndex": 3
+      },
+      {
+        "id": "5c2be246-2ccd-43f6-8f85-779452994940",
+        "role": "user",
+        "text": "Got 8",
+        "time": "1:38 PM",
+        "exerciseIndex": 0
+      },
+      {
+        "id": "de9a545a-823e-47f1-a357-3750039d116c",
+        "role": "assistant",
+        "text": "Updated. Goblet Squat, set 2: 35 lb × 8 reps.",
+        "time": "1:38 PM",
+        "exerciseIndex": 0
+      }
+    ],
+    "history": [],
+    "status": "finished",
+    "exercises": [
+      {
+        "weightConfirmed": true,
+        "name": "Goblet Squat",
+        "weight": 35,
+        "target": 10,
+        "previous": [],
+        "sets": [
+          10,
+          8,
+          null
+        ],
+        "setWeights": [
+          35,
+          35,
+          null
+        ],
+        "setEffort": [
+          null,
+          8,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Dumbbell Romanian Deadlift",
+        "weight": 0,
+        "target": 10,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Reverse Lunge",
+        "weight": 0,
+        "target": 10,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": true,
+        "name": "Standing Calf Raise",
+        "weight": 0,
+        "target": 15,
+        "previous": [],
+        "sets": [
+          15,
+          null,
+          null
+        ],
+        "setWeights": [
+          0,
+          null,
+          null
+        ]
+      }
+    ],
+    "startedAt": "2026-09-30T18:36:43.669Z",
+    "finishedAt": "2026-09-30T18:38:01.996Z"
+  }
+}

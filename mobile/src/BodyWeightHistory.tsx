@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Text, View } from "react-native";
-import { useHealth } from "./store";
+import { useLoadedHealth } from "./store";
 import { Button, Card, Choice, Field, s } from "./ui";
 import { id, today } from "../../src/domain";
 import {
@@ -9,9 +9,9 @@ import {
 } from "../../src/features/progress/body-weight";
 import { cadenceLabels, goalLabels, weightCheckIn } from '../../src/features/progress/fitness-goal';
 export function BodyWeightHistory({ onEditGoal }: { onEditGoal?: () => void } = {}) {
-  const h = useHealth(),
-    entries = h.state!.bodyWeights ?? [];
-  const goal = h.state!.profile.fitnessGoal;
+  const h = useLoadedHealth(),
+    entries = h.state.bodyWeights ?? [];
+  const goal = h.state.profile.fitnessGoal;
   const [unit, setUnit] = useState<"lb" | "kg">(goal?.unit ?? entries.at(-1)?.unit ?? "lb"),
     [day, setDay] = useState(today()),
     [value, setValue] = useState(""),

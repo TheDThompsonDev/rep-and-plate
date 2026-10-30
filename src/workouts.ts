@@ -1,5 +1,6 @@
-import { clockTime, id, type AppState, type Exercise } from "./domain";
+import { clockTime, id, timestamp, type AppState, type Exercise } from "./domain";
 import { setLoad } from './features/progress/set-loads';
+import { workoutPlans } from './workout-plans';
 export { exerciseTechnique, type ExerciseTechnique } from './exercise-technique';
 
 export type Workout = AppState["workout"];
@@ -82,50 +83,12 @@ export function adjustWorkoutExercise(
     ),
   };
 }
-const exercise = (
-  name: string,
-  target: number,
-): Exercise => ({ name, weight:0, weightConfirmed:false, target, previous:[], sets: [null, null, null] });
-export const workoutPlans = [
-  {
-    id: "upper",
-    title: "Upper Body",
-    minutes: 42,
-    description: "A balanced session for your chest, back, and arms.",
-    exercises: [
-      exercise("Bench Press", 8),
-      exercise("Incline Dumbbell Press", 10),
-      exercise("Seated Cable Row", 12),
-      exercise("Triceps Pushdown", 12),
-    ],
-  },
-  {
-    id: "lower",
-    title: "Lower Body",
-    minutes: 35,
-    description: "Build your session around legs and glutes.",
-    exercises: [
-      exercise("Goblet Squat", 10),
-      exercise("Dumbbell Romanian Deadlift", 10),
-      exercise("Reverse Lunge", 10),
-      exercise("Standing Calf Raise", 15),
-    ],
-  },
-  {
-    id: "full",
-    title: "Full Body",
-    minutes: 30,
-    description: "A little of everything, with room in your day.",
-    exercises: [
-      exercise("Goblet Squat", 10),
-      exercise("Bench Press", 10),
-      exercise("Seated Cable Row", 12),
-    ],
-  },
-];
-export function startPlan(workout: Workout, planId: string): Workout {
+export { workoutPlans, type WorkoutPlan } from './workout-plans';
+export type SessionTemplate = { planId: string; title: string; exercises: Exercise[] };
+/** Every new session (starter plan or program session) starts the same way: the previous
+ * session moves to history, sets are empty, and loads stay whatever the template says. */
+export function startSessionTemplate(workout: Workout, template: SessionTemplate): Workout {
   if (workout.status === "active") return workout;
-  const plan = workoutPlans.find((p) => p.id === planId) ?? workoutPlans[0];
   const history = [...(workout.history ?? [])];
   if (workout.startedAt)
     history.push({
@@ -138,17 +101,21 @@ export function startPlan(workout: Workout, planId: string): Workout {
     routines: workout.routines,
     restUntil: null,
     status: "active",
-    planId: plan.id,
-    title: plan.title,
+    planId: template.planId,
+    title: template.title,
     startedAt: new Date().toISOString(),
     finishedAt: null,
-    exercises: plan.exercises.map((ex) => ({
+    exercises: template.exercises.map((ex) => ({
       ...ex,
       sets: ex.sets.map(() => null),
     })),
     history,
     conversation: [],
   };
+}
+export function startPlan(workout: Workout, planId: string): Workout {
+  const plan = workoutPlans.find((p) => p.id === planId) ?? workoutPlans[0];
+  return startSessionTemplate(workout, { planId: plan.id, title: plan.title, exercises: plan.exercises });
 }
 export function recordSet(
   workout: Workout,
@@ -184,12 +151,13 @@ export function recordSet(
     ),
     conversation: [
       ...(workout.conversation ?? []),
-      { id: id(), role: "user", text, time: clockTime(), exerciseIndex },
+      { id: id(), role: "user", text, time: clockTime(), at: timestamp(), exerciseIndex },
       {
         id: id(),
         role: "assistant",
         text: `${correction ? "Updated" : "Got it"}. ${ex.name}, set ${setIndex + 1}: ${setLoad(ex,setIndex) ? `${displayLoad(setLoad(ex,setIndex),unit)} ${unit} × ` : "Bodyweight · "}${reps} reps.`,
         time: clockTime(),
+        at: timestamp(),
         exerciseIndex,
       },
     ],
@@ -204,7 +172,7 @@ export function replyToWorkout(workout: Workout, text: string, unit: 'lb' | 'kg'
     .match(/^(?:got |did |i got |i did )?(\d{1,3})(?: reps)?[.!]?$/i);
   if(workout.status==='active' && match && exIndex>=0 && Number(match[1])<=100){
     const exercise=workout.exercises[exIndex], set=exercise.sets.indexOf(null);
-    if(exercise.weightConfirmed===false&&exercise.setWeights?.[set]==null)return {...workout,conversation:[...(workout.conversation??[]),{id:id(),role:'user',text,time:clockTime(),exerciseIndex:exIndex},{id:id(),role:'assistant',text:`Choose the load for ${exercise.name}, set ${set+1}, then record your ${Number(match[1])} reps. Use 0 only for bodyweight work. Nothing was logged yet.`,time:clockTime(),exerciseIndex:exIndex}]};
+    if(exercise.weightConfirmed===false&&exercise.setWeights?.[set]==null)return {...workout,conversation:[...(workout.conversation??[]),{id:id(),role:'user',text,time:clockTime(),at:timestamp(),exerciseIndex:exIndex},{id:id(),role:'assistant',text:`Choose the load for ${exercise.name}, set ${set+1}, then record your ${Number(match[1])} reps. Use 0 only for bodyweight work. Nothing was logged yet.`,time:clockTime(),at:timestamp(),exerciseIndex:exIndex}]};
   }
   if (match && exIndex >= 0 && Number(match[1]) <= 100)
     return recordSet(
@@ -242,7 +210,7 @@ export function replyToWorkout(workout: Workout, text: string, unit: 'lb' | 'kg'
     ...workout,
     conversation: [
       ...(workout.conversation ?? []),
-      { id: id(), role: "user", text, time: clockTime() },
+      { id: id(), role: "user", text, time: clockTime(), at: timestamp() },
       {
         id: id(),
         role: "assistant",
@@ -251,6 +219,7 @@ export function replyToWorkout(workout: Workout, text: string, unit: 'lb' | 'kg'
             ? "All your planned sets are recorded. Tap Finish workout to save this session."
             : "Tell me the reps for your next set, like “Got 8”. To correct your last exercise, say “Set 2 was 7”. You can also tap a recorded set to edit it.",
         time: clockTime(),
+        at: timestamp(),
       },
     ],
   };

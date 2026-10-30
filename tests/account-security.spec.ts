@@ -1,5 +1,5 @@
 import { test, expect } from "./app-fixture";
-import { mockCloud, openAccount, signIn, stored } from "./cloud-fixture";
+import { mockCloud, openAccount, signIn, stored } from "../e2e-shared/cloud-fixture";
 
 test("full account deletion requires confirmation and preserves records after failed reauthentication", async ({
   page,

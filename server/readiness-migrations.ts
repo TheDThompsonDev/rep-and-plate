@@ -1,17 +1,22 @@
 import { createHash } from "node:crypto";
 
+// Order is load-bearing: scripts/setup-readiness.ts guards the first three by position,
+// and the agents migration calls functions/tables from the account and beta migrations.
 export const readinessMigrations = [
   "20260929_account.sql",
   "20260929_operations.sql",
   "20260929_sync.sql",
   "20260929_snapshot_conflicts.sql",
+  "20260929_agents.sql",
 ] as const;
 export function migrationBody(source: string) {
   const normalized = source.replace(/\r\n/g, "\n").trim();
-  if (!/^begin;\s/i.test(normalized) || !/\scommit;$/i.test(normalized))
+  // Header comments may precede the envelope; the hash still covers the whole file.
+  const envelope = normalized.replace(/^(?:--[^\n]*\n)+/, "");
+  if (!/^begin;\s/i.test(envelope) || !/\scommit;$/i.test(envelope))
     throw Error("MIGRATION_ENVELOPE");
   // Strip only the file-level envelope. Function BEGIN/END blocks remain intact.
-  const body = normalized
+  const body = envelope
     .replace(/^begin;\s*/i, "")
     .replace(/\s*commit;$/i, "");
   return {

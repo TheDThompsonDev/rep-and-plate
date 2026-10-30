@@ -1,0 +1,14 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - text: SMALL PLATE. BIG PERSONALITY.
+  - img "Spot in sunglasses addressing far too many microphones."
+  - paragraph: YOUR NEW SIDEKICK HAS ARRIVED
+  - heading "Good food. Real life. A very invested plate." [level=1]:
+    - text: Good food. Real life.
+    - emphasis: A very invested plate.
+  - paragraph: Meet Spot. Your food and workout buddy with helpful ideas, questionable levels of enthusiasm, and absolutely no chill about your small wins.
+  - button "Meet Spot"
+  - button "Create account"
+  - paragraph: A little introduction. A little setup. A lot of personality.
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

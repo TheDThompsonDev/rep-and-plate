@@ -53,3 +53,12 @@ it('stops applying remote records after sign-out',async()=>{
  let active=true;let local=initialState(); const engine=new SyncEngine({local:()=>local,replace:async s=>{local=s},read:async()=>{active=false;return {state:{...local,profile:{...local.profile,name:'Foreign'}},revision:3}},write:async()=>4,checkpoint:async()=>{},baseline:()=>null,empty:()=>true,active:()=>active});
  await engine.tick();expect(local.profile.name).not.toBe('Foreign');
 });
+it('reports nested object and array conflicts instead of inventing a value, while unrelated nested edits still merge',()=>{
+ const b=initialState();
+ const left={...b,profile:{...b.profile,name:'Local'}};const right={...b,profile:{...b.profile,name:'Remote'}};
+ expect(mergeRecords(b,left,right)).toBeNull();
+ const walk=[{id:'walk',title:'Walk',day:'2026-10-01',minutes:20,note:''}];const run=[{id:'run',title:'Run',day:'2026-10-01',minutes:10,note:''}];
+ expect(mergeRecords(b,{...b,activities:walk},{...b,activities:run})).toBeNull();
+ const merged=mergeRecords(b,left,{...b,activities:run});
+ expect(merged?.profile.name).toBe('Local');expect(merged?.activities).toEqual(run);
+});

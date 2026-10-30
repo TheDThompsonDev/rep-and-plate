@@ -1,4 +1,5 @@
 import { apiFetch } from "../../api-fetch";
+import { CHAT_INPUT_LIMIT } from '../../ai-contract'
 import { useEffect, useRef, useState } from 'react'
 import { Mic, Square, Send, RotateCcw } from 'lucide-react'
 import { Modal } from '../../components'
@@ -43,7 +44,7 @@ export function VoiceCapture({ onClose, onSend }: { onClose: () => void; onSend:
             if (!mounted.current || controller.signal.aborted) return
             const result = data as { text?: unknown; error?: unknown }
             if (!response.ok) throw new Error(typeof result.error === 'string' ? result.error : 'Voice transcription is unavailable. Please try again.')
-            if (typeof result.text !== 'string' || !result.text.trim() || result.text.length > 4000) throw new Error('No usable transcript was returned. Please try again or type your message.')
+            if (typeof result.text !== 'string' || !result.text.trim() || result.text.length > CHAT_INPUT_LIMIT) throw new Error('No usable transcript was returned. Please try again or type your message.')
             setTranscript(result.text); setStage('review')
           } catch (problem) {
             if (mounted.current) { setError(controller.signal.aborted ? 'Transcription took too long. Please try again or type your message.' : problem instanceof Error ? problem.message : 'Voice transcription failed. Please try again.'); setStage('error') }
@@ -63,7 +64,7 @@ export function VoiceCapture({ onClose, onSend }: { onClose: () => void; onSend:
       {stage === 'opening' && <p role="status">Waiting for microphone permission…</p>}
       {stage === 'recording' && <div className="voice-recording"><span className="voice-pulse" aria-hidden="true" /><strong aria-live="off">Recording · 0:{String(seconds).padStart(2, '0')} / 1:00</strong><progress value={seconds} max={60} aria-label="Recording time" /><button className="primary-button" onClick={() => recorder.current?.stop()}><Square size={17} /> Stop recording</button></div>}
       {stage === 'transcribing' && <p role="status">Turning your words into a message…</p>}
-      {stage === 'review' && <><label className="voice-transcript">Review your message<textarea aria-label="Voice transcript" rows={5} maxLength={4000} value={transcript} onChange={event => setTranscript(event.target.value)} /></label><p className="voice-privacy">Check quantities, food names, weights, and reps before sending.</p><div className="voice-actions"><button className="secondary-button" onClick={start}><RotateCcw size={16} /> Record again</button><button className="primary-button" disabled={!transcript.trim()} onClick={() => { if (sent.current) return; sent.current = true; onSend(transcript.trim()); close() }}><Send size={16} /> Send message</button></div></>}
+      {stage === 'review' && <><label className="voice-transcript">Review your message<textarea aria-label="Voice transcript" rows={5} maxLength={CHAT_INPUT_LIMIT} value={transcript} onChange={event => setTranscript(event.target.value)} /></label><p className="voice-privacy">Check quantities, food names, weights, and reps before sending.</p><div className="voice-actions"><button className="secondary-button" onClick={start}><RotateCcw size={16} /> Record again</button><button className="primary-button" disabled={!transcript.trim()} onClick={() => { if (sent.current) return; sent.current = true; onSend(transcript.trim()); close() }}><Send size={16} /> Send message</button></div></>}
       {(stage === 'idle' || stage === 'error') && <button className="primary-button" onClick={start}><Mic size={18} /> {stage === 'error' ? 'Try recording again' : 'Start recording'}</button>}
       <button className="text-button voice-cancel" onClick={close}>Cancel</button>
     </div>

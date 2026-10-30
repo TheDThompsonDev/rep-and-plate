@@ -1,0 +1,80 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Kitchen":
+    - button "Open kitchen tools"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: YOUR KITCHEN
+    - heading "What sounds good tonight?" [level=1]
+    - paragraph: What you have. What you can make. A little less to figure out.
+    - button "Open meal planner":
+      - text: MAKE SOMETHING GOOD
+      - strong: A little inspiration for your next meal.
+      - text: Explore your meal plan
+    - button "Scan a food"
+    - button "Add a receipt"
+    - region "Shopping for your household":
+      - text: GOOD FOOD. YOUR KIND OF BUDGET.
+      - heading "Make your next shop work for you." [level=2]
+      - paragraph: Saving money, feeding a family, or finding a little more protein? Let’s start with what matters to you.
+      - button "Swaps, list & spending"
+      - button "Shopping preferences"
+    - region "Your first useful week":
+      - text: SPOT’S PLAN FOR YOUR GROCERIES
+      - heading "A receipt today. Less “what’s for dinner?” tomorrow." [level=2]
+      - paragraph: Daily nutrition targets start as generic values. Set your own before using them to assess a meal plan.
+      - button "Review daily nutrition targets"
+      - paragraph: 0 of 6 steps complete. Start with your real groceries and build a week that works for you.
+      - list:
+        - listitem:
+          - strong: Make it your kind of week
+          - paragraph: Set household size, food restrictions, cooking time and budget.
+          - 'button "Start: Make it your kind of week"'
+      - button "See the whole journey"
+    - region "What you have":
+      - heading "What you have" [level=2]
+      - button "Open pantry": Your pantry
+      - strong: 0 items on hand
+      - text: From your saved groceries and pantry updates
+      - strong: Let’s see what’s in your kitchen.
+      - paragraph: Add a grocery receipt, or scan a food to start adding what you have.
+      - paragraph: Groceries are what you bought. Only portions you log as eaten count toward daily nutrition.
+    - region "What you can make":
+      - heading "What you can make" [level=2]
+      - button "Open recipes": Recipes
+      - button "Make once. Enjoy it again. Save a recipe, track its ingredients, and keep count of portions left.":
+        - strong: Make once. Enjoy it again.
+        - text: Save a recipe, track its ingredients, and keep count of portions left.
+      - button "Think of a meal with me"
+    - region "What you need to buy":
+      - heading "What you need to buy" [level=2]
+      - button "Review shopping list": View plan
+      - paragraph: Build a meal plan and we’ll show the ingredients you still need, after checking your pantry.
+    - region "Recent grocery trips":
+      - heading "Recent grocery trips" [level=2]
+      - paragraph: Your receipts will live here, ready when you need them.
+    - button "Just got groceries? Show me what you picked up."
+    - navigation "Kitchen navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Shop your way":
+  - heading "Shop your way" [level=2]
+  - button "Close dialog"
+  - strong: A little more for your groceries.
+  - paragraph: A little of everything · Cooking for 1
+  - button "Edit shopping preferences"
+  - tablist "Shopping tools":
+    - tab "Smart swaps"
+    - tab "Shopping list"
+    - tab "Your spending" [selected]
+  - region "Grocery spending":
+    - heading "Your grocery trips, together." [level=3]
+    - paragraph: Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.
+    - strong: No reviewed totals yet
+    - text: 0 reviewed · 0 with missing or unchecked totals
+    - paragraph: Your shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.

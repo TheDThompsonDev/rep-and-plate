@@ -1,0 +1,32 @@
+[
+  {
+    "name": "title",
+    "value": "",
+    "required": true
+  },
+  {
+    "name": "day",
+    "value": "2026-09-30",
+    "required": true
+  },
+  {
+    "name": "calories",
+    "value": "0",
+    "required": true
+  },
+  {
+    "name": "protein",
+    "value": "0",
+    "required": true
+  },
+  {
+    "name": "carbs",
+    "value": "0",
+    "required": true
+  },
+  {
+    "name": "fat",
+    "value": "0",
+    "required": true
+  }
+]

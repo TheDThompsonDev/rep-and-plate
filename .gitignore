@@ -28,4 +28,5 @@ mobile/web-build/
 .cursor/
 .cyc/
 
-/docs
+# TypeScript build info (root tsconfig is noEmit, not incremental)
+*.tsbuildinfo

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
-import { Button, Choice, Field, s } from "./ui";
+import { Pressable, Text, View } from "react-native";
+import { Button, Choice, Field, colors, s } from "./ui";
 import {
   cadenceLabels,
   convertSetupUnit,
@@ -11,9 +11,20 @@ import {
   type FitnessSetupDraft,
 } from "../../src/features/progress/fitness-goal";
 import type { BodyWeightEntry } from "../../src/features/progress/body-weight";
+import {
+  equipmentChoices,
+  equipmentLabels,
+  experienceLabels,
+  trainingDayChoices,
+  type Experience,
+  type TrainingProgram,
+} from "../../src/features/progress/training-program";
+
+const dayLabels = Object.fromEntries(trainingDayChoices.map((days) => [String(days), `${days} days`]));
 
 export function FitnessSetup({
   goal,
+  program,
   weight,
   initialDraft,
   onDraftChange,
@@ -22,6 +33,8 @@ export function FitnessSetup({
   busy = false,
 }: {
   goal?: FitnessGoal;
+  /** Existing training week; pre-fills the week fields so re-saving the goal keeps it. */
+  program?: TrainingProgram;
   weight?: BodyWeightEntry;
   initialDraft?: FitnessSetupDraft;
   onDraftChange?: (draft: FitnessSetupDraft) => void;
@@ -29,8 +42,9 @@ export function FitnessSetup({
   onSkip?: () => void;
   busy?: boolean;
 }) {
-  const [draft, setDraft] = useState(() => initialDraft ?? fitnessDraft(goal)),
+  const [draft, setDraft] = useState(() => initialDraft ?? fitnessDraft(goal, program)),
     [error, setError] = useState("");
+  const weekChosen = draft.trainingDays.trim() !== "";
   const patch = (value: Partial<FitnessSetupDraft>) => {
     const next = { ...draft, ...value };
     setDraft(next);
@@ -92,6 +106,59 @@ export function FitnessSetup({
           patch({ cadence: cadence as FitnessGoal["cadence"] })
         }
       />
+      <Text style={s.h3}>Your training week (optional)</Text>
+      <Text style={s.muted}>Training days per week</Text>
+      <Choice
+        values={["", ...trainingDayChoices.map(String)]}
+        labels={{ "": program ? "Keep my current week" : "Not now", ...dayLabels }}
+        value={draft.trainingDays}
+        onChange={(trainingDays) => patch({ trainingDays })}
+      />
+      {weekChosen && (
+        <>
+          <Text style={s.muted}>Available equipment</Text>
+          <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
+            {equipmentChoices.map((item) => {
+              const checked = draft.equipment.includes(item);
+              return (
+                <Pressable
+                  key={item}
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked }}
+                  accessibilityLabel={equipmentLabels[item]}
+                  disabled={busy}
+                  onPress={() =>
+                    patch({
+                      equipment: checked
+                        ? draft.equipment.filter((value) => value !== item)
+                        : [...draft.equipment, item],
+                    })
+                  }
+                  style={[s.pill, checked && { backgroundColor: colors.mint, borderColor: colors.green }]}
+                >
+                  <Text style={[s.muted, checked && { color: colors.green, fontWeight: "600" }]}>
+                    {equipmentLabels[item]}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <Text style={s.tiny}>
+            Bodyweight movements are always included. Leave these unchecked if you train without equipment.
+          </Text>
+          <Text style={s.muted}>Strength training experience</Text>
+          <Choice
+            values={["", ...Object.keys(experienceLabels)]}
+            labels={{ "": "Prefer not to say", ...experienceLabels }}
+            value={draft.experience}
+            onChange={(experience) => patch({ experience: experience as Experience | "" })}
+          />
+          <Text style={s.tiny}>
+            Your week uses the starter plans, matched to your equipment. Rep targets are starting points you
+            confirm, and you choose every load yourself; nothing is prescribed or treated as a record.
+          </Text>
+        </>
+      )}
       <View style={s.hero}>
         <Text style={s.h3}>A small check-in. A clearer picture.</Text>
         <Text style={s.muted}>

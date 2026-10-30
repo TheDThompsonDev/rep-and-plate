@@ -1,0 +1,71 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - img "Your captured photo or screenshot"
+      - paragraph: This is a grocery receipt for items I purchased. Identify the store and items, research their nutrition, and save the grocery list separately from meals I ate. Do not log these purchases as food eaten.
+      - text: 1:28 PM
+      - paragraph: Got it. I read the receipt and researched the items — here’s what I found. I’ll save this as groceries (not eaten).
+      - text: 1:28 PM
+      - link "Kroger product page — Kroger® Vitamin D Whole Milk Gallon (Nutrition Facts)":
+        - /url: https://www.kroger.com/p/kroger-vitamin-d-whole-milk-gallon/0001111040156
+      - link "Quaker SmartLabel — Quaker Old Fashioned Oats (product & nutrition)":
+        - /url: https://smartlabel.pepsico.info/030000010402-0008-en-US/index.html
+      - link "Dawn product page / retailer listings":
+        - /url: https://dawn-dish.com/en-us/products/dawn-platinum-ez-squeeze-fresh-rain-scent/
+      - button "Kroger 3 grocery items saved 2 matches need a check Saved to groceries · not today’s intake":
+        - strong: Kroger
+        - text: 3 grocery items saved 2 matches need a check
+        - emphasis: Saved to groceries · not today’s intake
+      - paragraph: Some product matches need a check. Unknown nutrition is left blank.
+      - paragraph: USDA candidates are ready for 2 receipt items. Compare your package before applying a match.
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Find this receipt item":
+  - heading "Find this receipt item" [level=2]
+  - button "Close dialog"
+  - text: On your receipt
+  - strong: KROGER WHOLE MILK 1 GAL 1 @ $3.49
+  - text: "1"
+  - paragraph: Receipt names are often shortened. Search with the full product name or brand, then compare your package.
+  - button "Scan this package barcode"
+  - text: Product name or receipt description
+  - textbox "Product name or receipt description": Kroger Vitamin D Whole Milk (1 gal)
+  - button "Search USDA"
+  - status: Possible USDA matches from your receipt description. None has been selected. Check the brand, package and serving, or refine the search.
+  - group "Choose a possible product":
+    - text: Choose a possible product
+    - radio "KROGER, VITAMIN D WHOLE MILK, GRADE A KROGER 8 OZA · Nutrition per serving 149 kcal · Protein 7.99 g"
+    - strong: KROGER, VITAMIN D WHOLE MILK, GRADE A
+    - text: KROGER 8 OZA · Nutrition per serving 149 kcal · Protein 7.99 g
+    - radio "VITAMIN D WHOLE MILK Rouse's Enterprises, Inc. 1 cup · Nutrition per serving 149 kcal · Protein 7.99 g"
+    - strong: VITAMIN D WHOLE MILK
+    - text: Rouse's Enterprises, Inc. 1 cup · Nutrition per serving 149 kcal · Protein 7.99 g
+    - radio "VITAMIN D WHOLE MILK MEADOW GOLD 1 cup · Nutrition per serving 149 kcal · Protein 7.99 g"
+    - strong: VITAMIN D WHOLE MILK
+    - text: MEADOW GOLD 1 cup · Nutrition per serving 149 kcal · Protein 7.99 g
+  - button "Keep current details"

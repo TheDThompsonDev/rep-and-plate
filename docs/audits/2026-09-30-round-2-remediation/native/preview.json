@@ -1,0 +1,104 @@
+{
+  "mode": "Fresh synthetic guest, actual production Expo-web export, no API/provider mocks",
+  "pageErrors": [],
+  "console": [
+    {
+      "type": "warning",
+      "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+    }
+  ],
+  "checkpoints": [
+    {
+      "name": "01-welcome",
+      "overflow": false
+    },
+    {
+      "name": "02-chat",
+      "overflow": false
+    },
+    {
+      "name": "03-optional-targets",
+      "overflow": false
+    },
+    {
+      "name": "04-saved-older-day",
+      "overflow": false
+    },
+    {
+      "name": "05-chat-with-notice",
+      "overflow": false
+    },
+    {
+      "name": "06-guest-records",
+      "overflow": false
+    }
+  ],
+  "initialResources": [
+    {
+      "name": "http://127.0.0.1:8081/_expo/static/js/web/index-a87299bb3dc9c74a27990050b449e153.js",
+      "bytes": 4084124,
+      "initiator": "script"
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/scenes/press-conference.ca32f798e3b5a917eb43afdfef8e1c5f.png",
+      "bytes": 2184576,
+      "initiator": "img"
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/spot-lean.7f379b83c5087fbeb3655eb8586033b6.png",
+      "bytes": 1238647,
+      "initiator": "img"
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/spot-peek.782f98b8874bbd5eae68057e8a35fd3c.png",
+      "bytes": 948541,
+      "initiator": "img"
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/spot-atlas.eb2f4844abe29db022fe27e9c4e0581e.png",
+      "bytes": 2208513,
+      "initiator": "img"
+    }
+  ],
+  "initialTransferBytes": 10664401,
+  "beforeTransferBytes": 15313988,
+  "reductionBytes": 4649587,
+  "hit": "Send message",
+  "bundles": [
+    {
+      "platform": "web",
+      "name": "index-a636726a15785f5ca3b0f27aef936592.js",
+      "bytes": 45266,
+      "sha256": "1ad13c504ea7ba2a921e2d751d8fd341559e1e8575716f118b862a3b6b0a7704",
+      "gzipEstimateBytes": 14813,
+      "brotliEstimateBytes": 13015
+    },
+    {
+      "platform": "web",
+      "name": "index-a87299bb3dc9c74a27990050b449e153.js",
+      "bytes": 4083824,
+      "sha256": "55cf8bf3ae67b07752ec1012d75acd33dee658b9fc80d801b851f6a587a31b1c",
+      "gzipEstimateBytes": 681770,
+      "brotliEstimateBytes": 529279
+    },
+    {
+      "platform": "ios",
+      "name": "index-e43711a134842da0920ad174ce7a2737.hbc",
+      "bytes": 5837332,
+      "sha256": "1639ab3141d03d4f9552242969579558d0bcd6e838312349ccd81762627369b9"
+    },
+    {
+      "platform": "android",
+      "name": "index-d2758d20790f72b94676e54d2d9c7c25.hbc",
+      "bytes": 5847038,
+      "sha256": "f0f36be2e01378c79f0f7a6f23b1d9c11b0ab0c7e5ec6711317457f94bc8943c"
+    }
+  ],
+  "compressionNote": "Compression sizes are local estimates, not evidence that production serves those encodings. Static preview uses no compression; physical networks/device startup were not benchmarked.",
+  "budgets": {
+    "guestOnboardingRawTransferMax": 11000000,
+    "combinedWebJavaScriptMax": 4300000
+  },
+  "webJavaScriptBytes": 4129090,
+  "budgetsPassed": true
+}

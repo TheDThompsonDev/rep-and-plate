@@ -1,0 +1,13 @@
+import {chromium} from '@playwright/test';
+import fs from 'node:fs/promises';
+const browser=await chromium.launch();
+const page=await browser.newPage({viewport:{width:390,height:844}});
+await page.addInitScript(()=>localStorage.setItem('rep-and-plate.onboarding.v1',JSON.stringify({version:1,mode:'guest',focus:'A little of both'})));
+await page.route('**/api/status',route=>route.fulfill({json:{available:false,jev:false}}));
+await page.goto('http://127.0.0.1:5173/#workouts');
+await page.getByRole('button',{name:'Start workout',exact:true}).click();
+await page.getByLabel('Bench Press set 1 weight (lb)',{exact:true}).waitFor();
+await page.screenshot({path:new URL('./evidence/web-workout-first-set.png',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1')});
+const result={viewport:390,firstSet:await page.getByLabel('Bench Press set 1 weight (lb)',{exact:true}).boundingBox(),documentWidth:await page.evaluate(()=>document.documentElement.scrollWidth)};
+await fs.writeFile(new URL('./evidence/web-workout-layout.json',import.meta.url),JSON.stringify(result,null,2));
+console.log(result);await browser.close();

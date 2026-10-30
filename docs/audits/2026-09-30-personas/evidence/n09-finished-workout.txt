@@ -1,0 +1,29 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: YOUR MOVEMENT What should you do today? A workout that meets you here. Choose a starter session or build one around your goals and equipment.
+- button "Build my workout"
+- text: Upper Body 4 exercises · starter template
+- button "Start Upper Body"
+- text: Lower Body 4 exercises · starter template
+- button "Start Lower Body"
+- text: Full Body 3 exercises · starter template
+- button "Start Full Body"
+- text: Your recent sessions Logged. Solid work.
+- img "Spot in sunglasses addressing far too many microphones."
+- text: Get my publicist. Workout logged. I’ve prepared a completely unnecessary press conference. Upper Body 2026-09-30 · 1 sets
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen

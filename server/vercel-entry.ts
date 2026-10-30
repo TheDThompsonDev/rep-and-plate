@@ -5,6 +5,7 @@ import { handlePreview } from './preview-node.ts';
 import {handleMaintenance} from './operations.ts';
 import {createOperationsServices} from './operations-services.ts';
 import { hostedAgentHandler } from './agents/hosted.ts';
+import { AGENT_ROUTE_PREFIX, MAINTENANCE_ROUTE } from './routes.ts';
 let handler: ReturnType<typeof betaHandler> | undefined;
 let agents: ReturnType<typeof hostedAgentHandler> | undefined;
 export default async function health(req: IncomingMessage, res: ServerResponse) {
@@ -12,11 +13,11 @@ export default async function health(req: IncomingMessage, res: ServerResponse) 
     const url = new URL(req.url ?? '/', 'http://localhost');
     const endpoint = url.searchParams.get('endpoint');
     if (endpoint) req.url = `/api/${endpoint}`;
-    if(req.url?.split('?')[0]==='/api/maintenance'){
+    if(req.url?.split('?')[0]===MAINTENANCE_ROUTE){
       await handleMaintenance(req,res,process.env.CRON_SECRET,{maintenance:()=>createOperationsServices(process.env).maintenance()});return;
     }
     if (await handlePreview(req, res, { ...process.env, VERCEL: '1' })) return;
-    if ((req.url ?? '').split('?')[0].startsWith('/api/agents/')) {
+    if ((req.url ?? '').split('?')[0].startsWith(AGENT_ROUTE_PREFIX)) {
       agents ??= hostedAgentHandler(process.env);
       await agents(req, res);
       return;
@@ -25,7 +26,7 @@ export default async function health(req: IncomingMessage, res: ServerResponse) 
     await handler(req, res);
   } catch {
     if (!res.headersSent) res.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify((req.url ?? '').startsWith('/api/agents/')
+    res.end(JSON.stringify((req.url ?? '').startsWith(AGENT_ROUTE_PREFIX)
       ? { error: { code: 'UNAVAILABLE', message: 'Connections service is not configured yet.', retryable: true } }
       : { error: 'Beta service is not configured yet.' }));
   }

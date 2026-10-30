@@ -1,0 +1,44 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: I ate peanut butter for breakfast, but I do not know how much. How can I log that?
+      - text: 1:31 PM PLATE
+      - heading "Spot Check" [level=3]
+      - paragraph: I need one detail.
+      - paragraph: Got it. To log your peanut butter breakfast, I just need to know how much you ate (e.g., one tablespoon, two tablespoons, or a specific weight in grams). Once you give me that amount, I can provide an estimate for you to review.
+      - text: 1:31 PM
+      - paragraph: The food amount needs a check before an estimate can be proposed.
+      - paragraph: I already ate it and cannot measure it now; I genuinely cannot remember how much. What can I do?
+      - text: 1:31 PM PLATE
+      - heading "Spot Check" [level=3]
+      - paragraph: I need one detail.
+      - paragraph: No worries. Since you can't recall the exact amount, I can give you a Spot Check estimate based on a common serving size (like 2 tablespoons), but you'll need to review it and adjust if needed. Alternatively, we can skip logging it for now and just note that peanut butter was eaten. Which would you prefer?
+      - text: 1:31 PM
+      - paragraph: I need a little more context before treating this as a meal or a grocery purchase.
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

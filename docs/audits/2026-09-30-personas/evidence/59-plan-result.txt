@@ -1,0 +1,268 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Kitchen":
+    - button "Open kitchen tools"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: YOUR KITCHEN
+    - heading "What sounds good tonight?" [level=1]
+    - paragraph: What you have. What you can make. A little less to figure out.
+    - button "Open meal planner":
+      - text: MAKE SOMETHING GOOD
+      - strong: Start with what’s already here.
+      - text: Explore your meal plan
+    - button "Scan a food"
+    - button "Add a receipt"
+    - region "Shopping for your household":
+      - text: GOOD FOOD. YOUR KIND OF BUDGET.
+      - heading "Make your next shop work for you." [level=2]
+      - paragraph: Saving money, feeding a family, or finding a little more protein? Let’s start with what matters to you.
+      - button "Swaps, list & spending"
+      - button "Shopping preferences"
+    - region "Your first useful week":
+      - text: SPOT’S PLAN FOR YOUR GROCERIES
+      - heading "A receipt today. Less “what’s for dinner?” tomorrow." [level=2]
+      - paragraph: Daily nutrition targets start as generic values. Set your own before using them to assess a meal plan.
+      - button "Review daily nutrition targets"
+      - paragraph: 1 of 6 steps complete. Start with your real groceries and build a week that works for you.
+      - list:
+        - listitem:
+          - strong: Make it your kind of week
+          - paragraph: Set household size, food restrictions, cooking time and budget.
+          - 'button "Start: Make it your kind of week"'
+      - button "See the whole journey"
+    - region "What you have":
+      - heading "What you have" [level=2]
+      - button "Open pantry": Your pantry
+      - strong: 1 item on hand
+      - text: 2 quantities need a check
+      - button "Audit oats 3 labeled servings left · Scanned groceries 400 cal · 15g protein per 100 g":
+        - strong: Audit oats
+        - text: 3 labeled servings left · Scanned groceries 400 cal · 15g protein per 100 g
+      - button "Kroger whole milk, 1 gal (as printed) Check remaining amount · KROGER Nutrition needs a check":
+        - strong: Kroger whole milk, 1 gal (as printed)
+        - text: Check remaining amount · KROGER Nutrition needs a check
+      - button "Quaker Old Fashioned Oats, 42 oz (canister) Check remaining amount · KROGER Nutrition needs a check":
+        - strong: Quaker Old Fashioned Oats, 42 oz (canister)
+        - text: Check remaining amount · KROGER Nutrition needs a check
+      - paragraph: Groceries are what you bought. Only portions you log as eaten count toward daily nutrition.
+    - region "What you can make":
+      - heading "What you can make" [level=2]
+      - button "Open recipes": Recipes
+      - button "Audit oat batch 4 prepared portions left ~200 cal · 8g protein per portion":
+        - strong: Audit oat batch
+        - text: 4 prepared portions left ~200 cal · 8g protein per portion
+      - button "Think of a meal with me"
+    - region "What you need to buy":
+      - heading "What you need to buy" [level=2]
+      - button "Review shopping list": View plan
+      - paragraph: Build a meal plan and we’ll show the ingredients you still need, after checking your pantry.
+    - region "Recent grocery trips":
+      - heading "Recent grocery trips" [level=2]
+      - button "Scanned groceries Sep 30, 2026 · 1 food items":
+        - strong: Scanned groceries
+        - text: Sep 30, 2026 · 1 food items
+      - button "KROGER Sep 30, 2026 · 2 food items":
+        - strong: KROGER
+        - text: Sep 30, 2026 · 2 food items
+    - button "Just got groceries? Show me what you picked up."
+    - navigation "Kitchen navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Your week of meals":
+  - heading "Your week of meals" [level=2]
+  - button "Close dialog"
+  - paragraph:
+    - text: Start with what’s in your kitchen.
+    - strong: Make room for meals you enjoy.
+  - paragraph: A seven-day draft for 1 person. Review ingredients and portions before approving.
+  - group "Meals to plan each day":
+    - text: Meals to plan each day
+    - checkbox "Breakfast"
+    - text: Breakfast
+    - checkbox "Lunch"
+    - text: Lunch
+    - checkbox "Dinner" [checked] [disabled]
+    - text: Dinner
+    - checkbox "Snack"
+    - text: Snack Choose at least one meal type. Each gets a place on all seven days.
+  - text: Week starting
+  - textbox "Week starting": 2026-09-30
+  - button "Create a new draft"
+  - strong: Draft to review
+  - text: Planning does not change your pantry or daily intake.
+  - heading "Wednesday, Sep 30" [level=3]
+  - article:
+    - heading "Oatmeal with Milk" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Audit oats 100 g
+        - strong: 1 × 100 g
+      - listitem:
+        - text: Kroger whole milk, 1 gal (as printed) 1 cup (240 ml)
+        - strong: 1 × 1 cup (240 ml)
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Replace pantry ingredient"
+    - paragraph: At least 400 cal · 15g protein per portion · partial estimate
+    - paragraph: Nutrition available for 1 of 2 ingredients. Missing ingredients are not counted as zero.
+    - paragraph: "Cook 100g Audit oats in 240g milk over medium heat for 5 minutes until thickened. Stir occasionally. Note: Verify if the milk lot is Whole or Lowfat as per label review; adjust cooking time slightly if using skim/lowfat (may require more liquid). No other ingredients available in pantry for this meal."
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Thursday, Oct 1" [level=3]
+  - article:
+    - heading "Oatmeal with Milk" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Audit oats 100 g
+        - strong: 1 × 100 g
+      - listitem:
+        - text: Kroger whole milk, 1 gal (as printed) 1 cup (240 ml)
+        - strong: 1 × 1 cup (240 ml)
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Replace pantry ingredient"
+    - paragraph: At least 400 cal · 15g protein per portion · partial estimate
+    - paragraph: Nutrition available for 1 of 2 ingredients. Missing ingredients are not counted as zero.
+    - paragraph: Repeat previous preparation. Ensure remaining Audit oats stock is sufficient (2 servings left after Day 1).
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Friday, Oct 2" [level=3]
+  - article:
+    - heading "Oatmeal with Milk" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Audit oats 100 g
+        - strong: 1 × 100 g
+      - listitem:
+        - text: Kroger whole milk, 1 gal (as printed) 1 cup (240 ml)
+        - strong: 1 × 1 cup (240 ml)
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Replace pantry ingredient"
+    - paragraph: At least 400 cal · 15g protein per portion · partial estimate
+    - paragraph: Nutrition available for 1 of 2 ingredients. Missing ingredients are not counted as zero.
+    - paragraph: Repeat preparation. Audit oats will be depleted after this day (0 remaining). Milk quantity remains sufficient.
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Saturday, Oct 3" [level=3]
+  - article:
+    - heading "Oatmeal with Milk" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Oats 100 g
+        - strong: 1 × 100 g
+      - listitem:
+        - text: Kroger whole milk, 1 gal (as printed) 1 cup (240 ml)
+        - strong: 1 × 1 cup (240 ml)
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Connect purchased ingredient"
+    - button "Replace pantry ingredient"
+    - paragraph: Nutrition will be available when ingredient amounts and labels are confirmed.
+    - paragraph: "Audit oats are exhausted. Purchase 100g of Oats (equivalent to 1 serving) from preferred store. Cook as before. Optional: Add honey or fruit if desired, but not included in budget plan."
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Sunday, Oct 4" [level=3]
+  - article:
+    - heading "Oatmeal with Milk" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Oats 100 g
+        - strong: 1 × 100 g
+      - listitem:
+        - text: Kroger whole milk, 1 gal (as printed) 1 cup (240 ml)
+        - strong: 1 × 1 cup (240 ml)
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Connect purchased ingredient"
+    - button "Replace pantry ingredient"
+    - paragraph: Nutrition will be available when ingredient amounts and labels are confirmed.
+    - paragraph: Continue purchasing and preparing oatmeal. Ensure purchased oats match the 100g serving size requirement.
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Monday, Oct 5" [level=3]
+  - article:
+    - heading "Oatmeal with Milk" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Oats 100 g
+        - strong: 1 × 100 g
+      - listitem:
+        - text: Kroger whole milk, 1 gal (as printed) 1 cup (240 ml)
+        - strong: 1 × 1 cup (240 ml)
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Connect purchased ingredient"
+    - button "Replace pantry ingredient"
+    - paragraph: Nutrition will be available when ingredient amounts and labels are confirmed.
+    - paragraph: Final days of the week plan using purchased oats. Maintain consistent portion sizes.
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Tuesday, Oct 6" [level=3]
+  - article:
+    - heading "Oatmeal with Milk" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Oats 100 g
+        - strong: 1 × 100 g
+      - listitem:
+        - text: Kroger whole milk, 1 gal (as printed) 1 cup (240 ml)
+        - strong: 1 × 1 cup (240 ml)
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Connect purchased ingredient"
+    - button "Replace pantry ingredient"
+    - paragraph: Nutrition will be available when ingredient amounts and labels are confirmed.
+    - paragraph: Last dinner of the week. Ensure all purchased oats have been used. Milk supply remains adequate.
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Your shopping & pantry check" [level=3]
+  - paragraph: Amounts below account for every meal in the week, including repeat ingredients.
+  - list:
+    - listitem:
+      - strong: Kroger whole milk, 1 gal (as printed)
+      - text: Check how much remains
+    - listitem:
+      - strong: Oats
+      - text: 4 additional servings · 100 g
+  - region "Basket cost coverage":
+    - heading "What might the remaining ingredients cost?" [level=3]
+    - paragraph: No priced additional quantities yet.
+    - paragraph: 1 of 3 ingredients covered by pantry stock; 0 additional ingredients priced; 2 need a price or quantity check.
+    - text: Based on reviewed receipt prices from the last 30 days. Shelf prices, full packages, tax and other groceries can change the checkout total.
+  - button "Save draft"
+  - button "Approve this plan"
+  - paragraph: Approval saves the plan. Log a portion only after eating it. Check package ingredients for your restrictions; recipe suggestions cannot verify allergen handling.
+  - heading "Make the most of your groceries" [level=3]
+  - article:
+    - strong: Audit oats
+    - paragraph: 3 labeled servings remain from your 2026-09-30 purchase.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - article:
+    - strong: Kroger whole milk, 1 gal (as printed)
+    - paragraph: Check how much you have, then include it in a meal.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - article:
+    - strong: Quaker Old Fashioned Oats, 42 oz (canister)
+    - paragraph: Check how much you have, then include it in a meal.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - paragraph: Purchase dates help organize ideas. They do not tell us whether food is fresh or spoiled.

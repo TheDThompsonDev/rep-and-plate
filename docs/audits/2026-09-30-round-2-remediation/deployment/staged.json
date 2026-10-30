@@ -1,0 +1,11 @@
+{
+  "deployment": "https://dannys-health-nk1dywnjv-dthompsondev.vercel.app",
+  "checks": [
+    "Existing invitation unlocks staged production build",
+    "App HTML served after invitation",
+    "Bundled hosted API and cloud configuration load",
+    "Account authentication remains required",
+    "Public native bootstrap config remains available without private records",
+    "Cookie-free status request remains invitation protected"
+  ]
+}

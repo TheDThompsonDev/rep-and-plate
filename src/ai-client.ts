@@ -1,4 +1,5 @@
 import { apiFetch } from "./api-fetch";
+import { programAnswers } from "./features/progress/training-program";
 import { aiResultSchema, aiNutritionSchema, type AIRequest, type AIResult } from "./ai-contract";
 import { applyPreferenceProposal } from "./features/preferences/proposals";
 import { defaultPreferences } from "./features/preferences/contracts";
@@ -11,6 +12,7 @@ import {
   clockTime,
   sumNutrition,
   personalMeals,
+  timestamp,
   today,
   type AppState,
   type Message,
@@ -20,10 +22,12 @@ export function buildAIRequest(state: AppState, message: Message, selectedDay?: 
   const captureDay = selectedDay ?? message.captureDay ?? today();
   const index = state.messages.findIndex((m) => m.id === message.id);
   const previous = index < 0 ? state.messages : state.messages.slice(0, index);
+  const image = message.image?.startsWith("data:") ? message.image : undefined;
   return {
     requestId: message.id,
     text: message.text,
-    image: message.image?.startsWith("data:") ? message.image : undefined,
+    image,
+    captureIntent: image && message.captureIntent === "meal" ? "meal" : undefined,
     day: today(),
     captureDay,
     history: previous
@@ -32,6 +36,7 @@ export function buildAIRequest(state: AppState, message: Message, selectedDay?: 
       .map((m) => ({ role: m.role, text: m.text.slice(0, 18000) })),
     context: {
       fitnessGoal: state.profile.fitnessGoal,
+      trainingProgram: state.profile.trainingProgram ? programAnswers(state.profile.trainingProgram) : undefined,
       nutritionBaseline: state.profile.nutritionBaseline,
       bodyWeights: state.bodyWeights?.filter(entry => entry.day <= today()).slice().sort((a, b) => a.day.localeCompare(b.day)).slice(-30),
       goalsConfigured: state.profile.targetsConfigured,
@@ -150,6 +155,7 @@ export function applyAIResult(state: AppState, result: AIResult): AppState {
           ? "This receipt is already in your groceries. I’ve kept your saved items and edits."
           : result.reply,
         time: clockTime(),
+        at: timestamp(),
         ai: true,
         aiStatus: "complete",
         spotCheck: result.decision === 'uncertain',
@@ -170,6 +176,31 @@ export function applyAIResult(state: AppState, result: AIResult): AppState {
     ],
   };
 }
+/** Shown when a preset or transcript arrives while a reply is still processing. */
+export const PROCESSING_DRAFT_NOTICE =
+  "Spot is finishing the current response. Your message stays in the composer to send next.";
+/** Matches the native stop copy in mobile/src/store.tsx. */
+export const STOPPED_CAPTURE_MESSAGE = "Stopped. Your capture is saved; you can retry.";
+/** Keep every word: an incoming preset or transcript joins any draft already in the composer. */
+export function retainComposerDraft(current: string, incoming: string): string {
+  const draft = current.trim();
+  const next = incoming.trim();
+  if (!draft || draft === next) return next;
+  return `${draft} ${next}`;
+}
+/** A user-initiated stop marks only the still-pending capture as a retryable error. */
+export function markCaptureStopped(state: AppState, messageId: string): AppState {
+  const message = state.messages.find((m) => m.id === messageId);
+  if (!message || message.aiStatus !== "pending") return state;
+  return {
+    ...state,
+    messages: state.messages.map((m) =>
+      m.id === messageId
+        ? { ...m, aiStatus: "error" as const, aiError: STOPPED_CAPTURE_MESSAGE }
+        : m,
+    ),
+  };
+}
 export function resolvePreferenceProposal(state: AppState, messageId: string, accept: boolean): AppState {
   const message=state.messages.find(entry=>entry.id===messageId);
   if (!message?.preferenceProposal || message.preferenceStatus !== "pending") return state;
@@ -182,6 +213,8 @@ export function addProposedMeal(state: AppState, messageId: string): AppState {
   if (!message || !meal || message.mealId) return state;
   const mealId = `ai-meal-${messageId}`;
   const totals = meal.components ? sumProposalComponents(meal.components) : meal;
+  // A photo estimate keeps the user's photo; the capture message keeps its copy too.
+  const image = state.messages.find((m) => m.id === message.requestId)?.image;
   return {
     ...state,
     meals: [
@@ -199,6 +232,7 @@ export function addProposedMeal(state: AppState, messageId: string): AppState {
         time: clockTime(),
         source: "AI estimate · checked by you",
         confidence: "estimated",
+        ...(image ? { image } : {}),
         note: `${meal.portion}. ${meal.note}`,
       },
     ],

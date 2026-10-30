@@ -1,0 +1,61 @@
+Rep & Plate
+Meal saved for 2026-08-31.
+Dismiss
+A LITTLE MORE YOU
+Native final review, this is your space.
+Your progress, preferences, and the little things that make this work for you.
+A LITTLE PERSPECTIVE
+Weekly Spot Check
+2026-09-24 – 2026-09-30
+Plate · Food
+Rep · Training
+— avg recorded cal
+— avg recorded protein
+Across 0 days with meals logged. Recorded amounts, not estimates of everything you ate.
+Unlogged days are unknown. Start wherever you are.
+Meet Spot
+Replay the welcome tour. Your records stay here.
+Hide Spot illustrations
+The same tools work either way.
+THE WEEK YOU’RE BUILDING
+0 meals. 0 days with food logged.
+Based on what you logged. Missing days stay unknown.
+Your weekly review
+Your profile & daily targets
+Review generic starting targets and choose your own
+Your weight, over time
+Optional measurements from you. Starting nutrition targets are generic; edit them in Your profile. Weight entries do not change them automatically.
+Add measurements on two dates to see the change.
+Measurement date (YYYY-MM-DD)
+Body weight
+lb
+kg
+Save measurement
+No measurements recorded yet.
+Food & household preferences
+Favorites, restrictions, budget, and equipment
+Reviews & captured moments
+0 items to check
+Cloud & your records
+Bring your web records to your phone
+Connection
+Beta server or local development
+Agent connections
+Choose agent access and review proposed meals
+Help & your data
+Tell us what you were trying to do and what happened. Keep receipts, passwords and private meal details out of your report.
+Contact support
+Share safe diagnostics
+Includes app version, platform, time and available request IDs. No account email, messages, photos or health records.
+How your data is handled +
+Chat
+Nutrition
+Scan
+Workouts
+Kitchen
+Cloud & your records
+Meal saved for 2026-08-31.
+Your records are on this device. Sign in and check account saving status before relying on another device. Export a backup or review a saved copy here. Other accounts keep separate records.
+Export this device
+Import a backup file
+Set your server address in Connection first.

@@ -100,4 +100,39 @@ describe("receipt journey boundaries", () => {
     expect(upgradeSavedReceiptCaptures(next)).toBe(next);
     expect(next.reviews).toEqual(state.reviews);
   });
+  it("stamps receipt capture messages with an ISO instant for day dividers", () => {
+    const isoStamp = (at: string | undefined) => {
+      expect(at).toEqual(expect.any(String));
+      expect(new Date(at!).toISOString()).toBe(at);
+    };
+    const saved = saveReceiptCapture(initialState(), "data:image/png;base64,YQ==", "trip.png", "");
+    isoStamp(saved.messages.at(-1)!.at);
+    // A fresh upgrade record (no source photo message) is stamped now.
+    const state = initialState();
+    state.reviews = [
+      {
+        id: "old",
+        kind: "capture",
+        resolved: false,
+        question: "Your grocery receipt is saved for review.",
+        title: "Receipt",
+        source: "Image",
+        image: "original-photo",
+        options: ["Keep as a note"],
+      },
+    ];
+    isoStamp(upgradeSavedReceiptCaptures(state).messages.at(-1)!.at);
+    // Rewriting an existing photo message keeps that message's own stamp.
+    const sourced = {
+      ...state,
+      messages: [
+        { id: "photo", role: "user" as const, text: "", image: "original-photo", time: "9:00 AM", at: "2026-01-02T09:00:00.000Z" },
+      ],
+    };
+    expect(upgradeSavedReceiptCaptures(sourced).messages[0]).toMatchObject({
+      id: "photo",
+      captureReviewId: "old",
+      at: "2026-01-02T09:00:00.000Z",
+    });
+  });
 });

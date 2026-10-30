@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { initialState, sumNutrition, stateSchema } from "./domain";
-import { addProposedMeal, applyAIResult, buildAIRequest, resolvePreferenceProposal } from "./ai-client";
-import { safeUrl } from "./ai-contract";
-import { resultFixture } from "../tests/ai-fixtures";
+import { addProposedMeal, applyAIResult, buildAIRequest, resolvePreferenceProposal, retainComposerDraft, markCaptureStopped, requestAI, STOPPED_CAPTURE_MESSAGE } from "./ai-client";
+import { aiRequestSchema, safeUrl } from "./ai-contract";
+import { requestFixture, resultFixture } from "../tests/ai-fixtures";
 function stateWithRequest() {
   const state = initialState();
   const id = crypto.randomUUID();
@@ -70,9 +70,27 @@ describe("AI record transitions", () => {
     expect(proposed.meals).toHaveLength(state.meals.length);
     const saved = addProposedMeal(proposed, `answer-${id}`);
     expect(saved.meals.at(-1)?.calories).toBe(180);
+    expect(saved.meals.at(-1)?.image).toBeUndefined();
     expect(addProposedMeal(saved, `answer-${id}`).meals).toHaveLength(
       saved.meals.length,
     );
+  });
+  it("keeps the meal camera photo on the estimate it produced", () => {
+    const { state, id } = stateWithRequest();
+    const photo = "data:image/jpeg;base64,cGxhdGU=";
+    state.messages[state.messages.length - 1] = { ...state.messages.at(-1)!, image: photo, captureIntent: "meal" };
+    const meal = { title: "Salmon bowl", category: "Dinner" as const, portion: "1 bowl", note: "Visual estimate.", calories: 640, protein: 42, carbs: 58, fat: 24, sources: [] };
+    const proposed = applyAIResult(state, { ...resultFixture(id), decision: "meal", receipt: null, meal });
+    const saved = addProposedMeal(proposed, `answer-${id}`);
+    expect(saved.meals.at(-1)).toMatchObject({ title: "Salmon bowl", image: photo });
+    expect(stateSchema.parse(saved).meals.at(-1)?.image).toBe(photo);
+  });
+  it("forwards only the meal camera intent with its photo", () => {
+    const { state } = stateWithRequest();
+    const capture = { ...state.messages.at(-1)!, image: "data:image/jpeg;base64,cGxhdGU=", captureIntent: "meal" as const };
+    expect(aiRequestSchema.parse(buildAIRequest(state, capture)).captureIntent).toBe("meal");
+    expect(buildAIRequest(state, { ...capture, captureIntent: "receipt" }).captureIntent).toBeUndefined();
+    expect(buildAIRequest(state, { ...capture, image: undefined }).captureIntent).toBeUndefined();
   });
   it("saves the reviewed breakdown once without consuming pantry stock", () => {
     const {state,id}=stateWithRequest();
@@ -120,4 +138,49 @@ describe("preference confirmation lifecycle",()=>{
   const accepted=resolvePreferenceProposal(proposed,messageId,true);expect(accepted.preferences?.dislikes).toEqual(["mushrooms"]);expect(resolvePreferenceProposal(accepted,messageId,true)).toBe(accepted);expect(stateSchema.parse(accepted).messages.at(-1)?.preferenceStatus).toBe("accepted");
   const dismissed=resolvePreferenceProposal(proposed,messageId,false);expect(dismissed.preferences).toEqual(state.preferences);expect(resolvePreferenceProposal(dismissed,messageId,true)).toBe(dismissed);
  });
+});
+describe("composer retention and stop helpers", () => {
+  it("keeps an incoming preset or transcript while a reply is processing", () => {
+    expect(retainComposerDraft("", "How am I doing today?")).toBe("How am I doing today?");
+    expect(retainComposerDraft("   ", "Start my workout")).toBe("Start my workout");
+    expect(retainComposerDraft("two eggs", "two eggs")).toBe("two eggs");
+    expect(retainComposerDraft("two eggs", "and toast")).toBe("two eggs and toast");
+  });
+  it("marks only the pending capture as stopped with a retryable error", () => {
+    const { state, id } = stateWithRequest();
+    const next = markCaptureStopped(state, id);
+    const message = next.messages.find((m) => m.id === id)!;
+    expect(message.aiStatus).toBe("error");
+    expect(message.aiError).toBe(STOPPED_CAPTURE_MESSAGE);
+    const done = applyAIResult(state, resultFixture(id));
+    expect(markCaptureStopped(done, id)).toBe(done);
+    expect(markCaptureStopped(state, "missing")).toBe(state);
+  });
+});
+describe("requestAI transport guards", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  it("rejects when the caller aborts instead of resolving a later result", async () => {
+    const controller = new AbortController();
+    vi.stubGlobal(
+      "fetch",
+      (_url: string, init?: RequestInit) =>
+        new Promise<Response>((_, reject) => {
+          init?.signal?.addEventListener("abort", () => reject(init.signal!.reason));
+        }),
+    );
+    const pending = requestAI(requestFixture(), () => {}, controller.signal);
+    controller.abort();
+    await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+  });
+  it("rejects a result whose request id does not match this capture", async () => {
+    vi.stubGlobal(
+      "fetch",
+      async () =>
+        new Response(
+          JSON.stringify({ type: "result", result: resultFixture(crypto.randomUUID()) }) + "\n",
+          { status: 200, headers: { "Content-Type": "application/x-ndjson" } },
+        ),
+    );
+    await expect(requestAI(requestFixture(), () => {})).rejects.toThrow("did not match this capture");
+  });
 });

@@ -528,6 +528,7 @@ export default function Onboarding({
                         </p>
                       </div>
                       {fitness && <div className="welcome-ready"><strong>Your progress starts here</strong><p>{fitness.currentWeight ? `${fitness.currentWeight} ${fitness.unit} will be saved as today’s starting weight. ` : 'Add your first weight from your profile when you’re ready. '}{fitness.cadence === 'none' ? 'Log again whenever you choose.' : `Your ${fitness.cadence} check-in appears in your profile.`}</p></div>}
+                      {fitness?.trainingDays && <div className="welcome-ready"><strong>Your training week</strong><p>{`${fitness.trainingDays} sessions a week from the starter plans, matched to your equipment. Open Workouts to start the first one; you choose every load.`}</p></div>}
                       {nutrition && <div className="welcome-ready"><strong>{nutrition.targets ? 'Your daily starting targets' : 'Your details are ready'}</strong><p>{nutrition.targets ? `${nutrition.targets.calories} calories · ${nutrition.targets.protein}g protein · ${nutrition.targets.carbs}g carbs · ${nutrition.targets.fat}g fat. Change them anytime in your profile.` : 'Your age, height and usual activity will be saved. Your daily targets stay as they are.'}</p></div>}
                       {flow.localMode && (
                         <p className="welcome-fine">

@@ -1,0 +1,16 @@
+{
+  "method": "Isolated Playwright mobile walkthrough with controlled status and receipt response; no live AI or customer data",
+  "guestPreview": "Shows AI unavailable and Save my image for review; no sign-in CTA in dialog",
+  "savedPhoto": "Keep as a note visible; does not extract groceries",
+  "successCard": "Saved receipt observed before opening pantry; text retained in receipt-result.txt",
+  "usedUnresolvedStock": {
+    "pantryStepDone": false,
+    "hypothesis": "Used unresolved stock remains in all-lots completion predicate"
+  },
+  "pageErrors": [],
+  "focusedExistingTests": {
+    "command": "node node_modules/@playwright/test/cli.js test tests/receipt-capture.spec.ts tests/receipt-products.spec.ts tests/shopping.spec.ts tests/onboarding.spec.ts --reporter=list",
+    "passed": 36,
+    "failed": 0
+  }
+}

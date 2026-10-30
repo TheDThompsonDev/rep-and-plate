@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { Text, View, Image } from "react-native";
+import { useEffect, useState } from "react";
+import { Text, Image } from "react-native";
 import { Button, Card, Choice, Field, Sheet, s } from "./ui";
-import { useHealth } from "./store";
+import { useHealth, useLoadedHealth } from "./store";
 import { connect, loadConnection } from "./api";
-import { useEffect } from "react";
 import { id, type Meal, mealSchema, resolveReview } from "../../src/domain";
 import {
   deleteMealWithPantry,
@@ -29,7 +28,7 @@ export function MealEditor({
   onRepeat?: () => void;
   onSaved?: (day: string) => void;
 }) {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     [value, setValue] = useState(meal),
     [nutrition, setNutrition] = useState(() => ({
       calories: String(meal.calories),
@@ -150,7 +149,7 @@ export function MealEditor({
       {onRepeat && <Button label="Repeat meal" secondary onPress={onRepeat} />}
       <Text style={s.h3}>Ingredients from your pantry</Text>
       {!linked &&
-        getPantryLots(h.state!)
+        getPantryLots(h.state)
           .filter(
             (l) =>
               l.remaining !== null &&
@@ -230,8 +229,8 @@ export function MealEditor({
   );
 }
 export function Profile() {
-  const h = useHealth(),
-    [value, setValue] = useState(h.state!.profile),
+  const h = useLoadedHealth(),
+    [value, setValue] = useState(h.state.profile),
     [nutrition, setNutrition] = useState(() => ({
       calories: String(value.calories),
       protein: String(value.protein),
@@ -306,10 +305,10 @@ export function Profile() {
   );
 }
 export function Preferences() {
-  const h = useHealth(),
-    [p, setP] = useState(h.state!.preferences ?? defaultPreferences()),
+  const h = useLoadedHealth(),
+    [p, setP] = useState(h.state.preferences ?? defaultPreferences()),
     [budget, setBudget] = useState(
-      h.state!.preferences?.weeklyBudget?.toString() ?? "",
+      h.state.preferences?.weeklyBudget?.toString() ?? "",
     ),
     [section, setSection] = useState("Food"),
     [lists, setLists] = useState(() =>
@@ -554,8 +553,8 @@ export function Connection() {
   );
 }
 export function Review() {
-  const h = useHealth(),
-    review = weeklyReview(h.state!);
+  const h = useLoadedHealth(),
+    review = weeklyReview(h.state);
   return (
     <Sheet title="Your weekly review" onClose={() => h.setTool(null)}>
       <Text style={s.muted}>
@@ -578,7 +577,7 @@ export function Review() {
       ))}
       <Text style={s.h2}>Captured moments to review</Text>
       {h
-        .state!.reviews.filter((r) => !r.resolved)
+        .state.reviews.filter((r) => !r.resolved)
         .map((r) => (
           <Card key={r.id}>
             <Text style={s.h3}>{r.title}</Text>

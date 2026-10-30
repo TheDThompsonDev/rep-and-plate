@@ -1,0 +1,14 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - text: SMALL PLATE. BIG PERSONALITY.
+  - img "Spot holding a dramatic funeral for his legs after squats."
+  - text: 01 · Meet Spot 02 · Your account 03 · Make it yours
+  - paragraph: MEET SPOT · 3 OF 4
+  - heading "Tell me what you did." [level=1]
+  - heading "Three squats. A full memorial service." [level=2]
+  - paragraph: A walk counts. A workout counts. Showing up counts. I supply the dramatic reactions; you set the pace.
+  - button "Next"
+  - button "Back"
+  - button "Skip to account"
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

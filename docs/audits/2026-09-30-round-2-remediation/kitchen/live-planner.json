@@ -1,0 +1,6 @@
+{
+  "status": 422,
+  "body": {
+    "error": "A planned ingredient no longer exists in your pantry. Please regenerate the plan."
+  }
+}

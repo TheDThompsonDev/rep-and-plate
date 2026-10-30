@@ -1,0 +1,133 @@
+{
+  "verifiedAt": "2026-09-30T19:44:14.932Z",
+  "scope": {
+    "friction": 12,
+    "opportunities": 6,
+    "performanceInvestigation": 1
+  },
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "passed": 408,
+      "log": "evidence/full-unit-final.log"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "evidence/build-final.log"
+    },
+    {
+      "command": "npm run agents:check",
+      "exitCode": 0,
+      "log": "evidence/agents-check.log"
+    },
+    {
+      "command": "npx playwright test --workers=2 --reporter=json",
+      "exitCode": 0,
+      "startTime": "2026-09-30T19:32:32.902Z",
+      "duration": 273205.082,
+      "expected": 284,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0,
+      "log": "evidence/full-web-final.json"
+    }
+  ],
+  "nativeVerification": "native/verification.json",
+  "nativeSuite": {
+    "command": "npx playwright test --config mobile/playwright.config.ts --reporter=json",
+    "cwd": "repository root",
+    "exitCode": 0,
+    "log": "full-suite.json",
+    "startTime": "2026-09-30T19:33:33.945Z",
+    "duration": 54187.703,
+    "expected": 32,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "performance": {
+    "pageErrors": [],
+    "consoleErrors": [],
+    "consoleWarnings": [
+      {
+        "type": "warning",
+        "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+      }
+    ],
+    "horizontalOverflow": false,
+    "sendHit": "Send message",
+    "initialTransferBytes": 10664401,
+    "baselineTransferBytes": 15313988,
+    "reductionBytes": 4649587,
+    "reductionPercent": 30.36,
+    "webJavaScriptBytes": 4129090,
+    "budgets": {
+      "guestOnboardingRawTransferMax": 11000000,
+      "combinedWebJavaScriptMax": 4300000
+    },
+    "budgetsPassed": true
+  },
+  "kitchenVerification": "kitchen/verification.json",
+  "liveProvider": [
+    {
+      "status": 422,
+      "error": "Unknown pantry lot reference",
+      "file": "live-planner.json",
+      "coreValidationRetained": true
+    },
+    {
+      "status": 422,
+      "error": "Optional cooking method missing ingredient coverage",
+      "file": "live-planner-second.json",
+      "recoveryImplementedAndDeterministicallyVerified": true
+    },
+    {
+      "status": 422,
+      "error": "Unknown pantry lot reference after optional method recovery",
+      "file": "live-planner-final.json",
+      "recordsUnchanged": true,
+      "recovery": "Exact server-local aliases and request-local response enum"
+    },
+    {
+      "status": 200,
+      "file": "live-planner-alias.json",
+      "summary": {
+        "status": 200,
+        "details": {
+          "retainedMethods": 6,
+          "omittedMethods": 1,
+          "methodsReviewed": 0,
+          "variety": [
+            {
+              "category": "Dinner",
+              "meals": 7,
+              "patterns": 7,
+              "repeated": false,
+              "message": "Dinner: 7 ingredient patterns across 7 meals."
+            }
+          ]
+        },
+        "effects": {
+          "intakeUnchanged": true,
+          "pantryEventsUnchanged": true,
+          "groceriesUnchanged": true,
+          "plansBefore": 0,
+          "plansAfter": 1,
+          "planStatuses": [
+            "draft"
+          ]
+        },
+        "errors": []
+      }
+    }
+  ],
+  "sourceManifest": "source-manifest.json",
+  "notes": [
+    "Original audit remains unchanged.",
+    "Initial full web run had five failing cases; retained evidence and corrections are described in the shared report.",
+    "Synthetic automated checks do not prove human satisfaction, physical-device behavior, hosted release readiness or live provider reliability.",
+    "CYC managed run did not start due to the existing source-fingerprint asset limit; direct checks and delivery gate are used."
+  ]
+}

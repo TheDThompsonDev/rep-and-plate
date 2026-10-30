@@ -1,0 +1,45 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: "I ate lunch today: 150 g cooked white rice, 150 g cooked chicken breast and 1 tablespoon olive oil. Show the components before I log it."
+      - text: 9:34 AM
+      - paragraph: "Got it. Here’s my estimate for your lunch components: - White rice (cooked): 150 g ≈ 195 kcal, 4 g protein, 44 g carbs, 0.4 g fat - Chicken breast (cooked, no skin): 150 g ≈ 165 kcal, 31 g protein, 0 g carbs, 3.6 g fat - Olive oil: 1 tbsp (≈14 g) ≈ 120 kcal, 0 g protein, 0 g carbs, 13.5 g fat Totals: ~480 kcal, 35 g protein, 44 g carbs, 17.5 g fat. Want me to pull USDA sources for each item, or shall we log this as is?"
+      - text: 9:35 AM PLATE
+      - heading "Spot Check" [level=3]
+      - text: MEAL ESTIMATE · CHECK THE PORTION
+      - heading "Lunch" [level=3]
+      - paragraph: 150 g rice + 150 g chicken + 1 tbsp olive oil
+      - paragraph: For 2026-09-30
+      - strong: ~480 cal · 35g protein
+      - text: 44g carbs · 17.5g fat
+      - paragraph: Estimate based on standard cooked values; review before adding.
+      - group: What's in this estimate 3 components
+      - button "Yep, add to Lunch"
+      - button "Fix it"
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

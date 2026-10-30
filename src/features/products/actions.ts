@@ -1,5 +1,5 @@
 import type { AppState } from "../../domain";
-import { today, clockTime } from "../../domain";
+import { today, clockTime, timestamp } from "../../domain";
 import { nutritionForServing, type FoodProduct } from "./contracts";
 
 export function savePrivateProduct(state: AppState, product: FoodProduct): AppState {
@@ -14,7 +14,7 @@ export function captureProduct(state: AppState, product: FoodProduct, action: "g
   const receiptId = `product-${actionId}`, mealId = `product-meal-${actionId}`;
   const saved = {
     ...state,
-    messages: [...state.messages, {id: actionId, role: "assistant" as const, time: clockTime(), ai: true, aiStatus:"complete" as const,
+    messages: [...state.messages, {id: actionId, role: "assistant" as const, time: clockTime(), at: timestamp(), ai: true, aiStatus:"complete" as const,
       text: action === "grocery" ? `${product.name} saved to your groceries. This doesn't count toward today's intake.` : `${product.name} added to your day. ${servings} serving${servings === 1 ? "" : "s"}.`,
       receiptId: action === "grocery" ? receiptId : undefined, mealId: action === "meal" ? mealId : undefined, sources }],
   };

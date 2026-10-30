@@ -9,7 +9,7 @@ import { syncLabels } from "../../src/features/cloud/sync";
 import { cloudClient, hostedConnection } from "./api";
 import { requireDeviceOwner } from "./auth";
 import { accountFiles, deviceOwnership, exportRecords } from "./storage";
-import { useHealth } from "./store";
+import { useLoadedHealth } from "./store";
 import { Button, s } from "./ui";
 const platform: SyncPlatform = {
   account: async () => {
@@ -30,7 +30,7 @@ const platform: SyncPlatform = {
     Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, value),
 };
 export function AccountSync() {
-  const h = useHealth();
+  const h = useLoadedHealth();
   const {readyRecords,waitForRecords}=h;
   const ownedPlatform = useMemo<SyncPlatform>(
     () => ({
@@ -75,7 +75,7 @@ export function AccountSync() {
           <Button
             label="Export this device"
             secondary
-            onPress={() => void exportRecords(h.state!)}
+            onPress={() => void exportRecords(h.state)}
           />
           <Button
             label="Use account copy"

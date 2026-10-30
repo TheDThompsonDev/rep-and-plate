@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 test("optional dated body measurements edit and survive reload without changing nutrition targets", async ({
@@ -8,7 +9,7 @@ test("optional dated body measurements edit and survive reload without changing 
   );
   await page.goto("/");
   const profile = (await readBrowserRecords(page)).profile;
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   const region = page.getByRole("region", { name: "Body weight history" });
   await expect(region).toContainText("Add measurements on two dates");
   await region

@@ -1,6 +1,6 @@
 import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture"
-import { resultFixture } from './ai-fixtures'
+import { resultFixture } from '../e2e-shared/ai-fixtures'
 import type { FoodProduct } from '../src/features/products/contracts'
 
 const candidate = (incomplete = false): FoodProduct => ({

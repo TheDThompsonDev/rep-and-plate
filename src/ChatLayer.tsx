@@ -10,10 +10,10 @@ import {
 import { isComeback, messageSpot } from "./features/spot/model";
 import PreferenceProposalCard from "./features/preferences/PreferenceProposalCard";
 import { defaultPreferences } from "./features/preferences/contracts";
-import type { ChatAction } from "./ai-contract";
 import RecipePortionProposalCard from "./features/recipes/RecipePortionProposalCard";
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
+  ArrowDown,
   ArrowUp,
   BarChart3,
   Camera,
@@ -30,119 +30,83 @@ import {
 import { Modal } from "./components";
 import { FuelHeader, FuelTabs } from "./FuelNavigation";
 import { AIText, Sources, GroceryCard, ProposedMeal } from "./AICards";
-import {
-  sumNutrition,
-  isExampleMeal,
-  type AppState,
-  type Meal,
-  type Page,
-} from "./domain";
+import { sumNutrition, isExampleMeal } from "./domain";
 import "./chat.css";
+import {
+  CHAT_INPUT_LIMIT,
+  dayDividerLabel,
+  isNearBottom,
+  remainingCharacters,
+  scrollBehavior,
+  showRemaining,
+} from "./chat-thread";
 import ReceiptEntry from './features/receipts/ReceiptEntry';
 import ReceiptExample from './features/receipts/ReceiptExample';
 import { receiptReadiness } from './features/receipts/journey';
 import { displayLoad } from "./workouts";
 import InteractionGuide from './features/onboarding/InteractionGuide';
+import { useChatContext } from './features/chat/ChatContext';
 
-type Props = {
-  firstTrackingStep?: ReactNode;
-  replayIntro: boolean;
-  onReplayIntro: (replay: boolean) => void;
-  onCorrectMeal: (messageId: string) => void;
-  captureDay: string | null;
-  onClearCaptureDay: () => void;
-  onActivityCapture: (messageId: string, accept: boolean) => void;
-  onSpotSettings: (patch: Partial<NonNullable<AppState["spot"]>>) => void;
-  onWorkoutCapture: (messageId: string, accept: boolean) => void;
-  reviewMessageId?: string | null;
-  onReviewFocused?: () => void;
-  state: AppState;
-  composer: string;
-  processing: boolean;
-  aiAvailable: boolean;
-  connectionChecking: boolean;
-  chatAccess?: 'signin' | 'setup' | 'restricted';
-  onChatAccount: (mode?: 'signin' | 'signup') => void;
-  onReconnect: () => void;
-  onAccount: () => void;
-  aiStage: string;
-  onRetry: (messageId: string) => void;
-  onGroceries: (receiptId: string) => void;
-  onAddReceipt: () => void;
-  onReceiptDinner: (receiptId: string) => void;
-  onReceiptSpending: () => void;
-  onScan: () => void;
-  onPlan: () => void;
-  onPreferences: () => void;
-  onRecipes: () => void;
-  onAction: (action: ChatAction) => void;
-  onManualMeal: () => void;
-  onRecipePortion: (messageId: string, accept: boolean) => void;
-  onAddMeal: (messageId: string) => void;
-  onComposerChange: (value: string) => void;
-  onSend: (event?: FormEvent, preset?: string) => void;
-  onCamera: () => void;
-  onAttach: () => void;
-  onVoice: () => void;
-  onProfile: () => void;
-  onNavigate: (page: Page) => void;
-  onEditMeal: (meal: Meal) => void;
-  onPantryLinks: (mealId: string) => void;
-  onPreferenceProposal: (messageId: string, accept: boolean) => void;
-  onSample: () => void;
-  onSetReps: (exercise: number, set: number, reps: number | null) => void;
-  onResolve: (id: string, answer: string) => void;
+const prefersReducedMotion = () =>
+  typeof window.matchMedia === "function" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const scrollToBottom = (
+  el: HTMLElement | null,
+  behavior: ScrollBehavior = scrollBehavior(prefersReducedMotion()),
+) => {
+  if (el) el.scrollTo({ top: el.scrollHeight, behavior });
 };
 
-export default function ChatLayer({
-  firstTrackingStep,
-  replayIntro,
-  onReplayIntro: setReplayIntro,
-  onCorrectMeal,
-  captureDay,
-  onClearCaptureDay,
-  onActivityCapture,
-  onSpotSettings,
-  onWorkoutCapture,
-  reviewMessageId,
-  onReviewFocused,
-  state,
-  composer,
-  processing,
-  aiAvailable,
-  connectionChecking,
-  chatAccess,
-  onChatAccount,
-  onReconnect,
-  onAccount,
-  aiStage,
-  onRetry,
-  onGroceries,
-  onAddReceipt,
-  onReceiptDinner,
-  onReceiptSpending,
-  onScan,
-  onPlan,
-  onPreferences,
-  onRecipes,
-  onAction,
-  onManualMeal,
-  onRecipePortion,
-  onAddMeal,
-  onComposerChange,
-  onSend,
-  onCamera,
-  onAttach,
-  onVoice,
-  onProfile,
-  onNavigate,
-  onEditMeal,
-  onPantryLinks,
-  onPreferenceProposal,
-  onSample,
-  onSetReps,
-  onResolve,
-}: Props) {
+export default function ChatLayer() {
+  const {
+    firstTrackingStep,
+    replayIntro,
+    onReplayIntro: setReplayIntro,
+    onCorrectMeal,
+    captureDay,
+    onClearCaptureDay,
+    onActivityCapture,
+    onSpotSettings,
+    onWorkoutCapture,
+    reviewMessageId,
+    onReviewFocused,
+    state,
+    composer,
+    processing,
+    aiAvailable,
+    connectionChecking,
+    chatAccess,
+    onChatAccount,
+    onReconnect,
+    onAccount,
+    aiStage,
+    onStop,
+    onRetry,
+    onGroceries,
+    onAddReceipt,
+    onReceiptDinner,
+    onReceiptSpending,
+    onScan,
+    onPlan,
+    onPreferences,
+    onRecipes,
+    onAction,
+    onManualMeal,
+    onRecipePortion,
+    onAddMeal,
+    onComposerChange,
+    onSend,
+    onCamera,
+    onAttach,
+    onVoice,
+    onProfile,
+    onNavigate,
+    onEditMeal,
+    onPantryLinks,
+    onPreferenceProposal,
+    onSetReps,
+    onResolve,
+  } = useChatContext();
   const [receiptExample, setReceiptExample] = useState(false);
   const [comeback, setComeback] = useState(() => {
     try {
@@ -182,30 +146,67 @@ export default function ChatLayer({
   const threadRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const examplesRef = useRef<HTMLDetailsElement>(null);
-  const lastCount = useRef(
-    state.messages.some((message) => message.ai) ? 0 : state.messages.length,
-  );
+  // Records saved by earlier releases carry a stored `welcome` message;
+  // Spot's welcome is SpotWelcome below, and migrations never rewrite conversations.
+  const visibleMessages = state.messages.filter((m) => m.id !== "welcome");
+  const visibleCount = visibleMessages.length;
+  const latestRole = visibleMessages.at(-1)?.role;
+  // Scroll anchoring: follow new messages only while the reader is at (or
+  // near) the bottom or just sent one; otherwise keep their place and offer
+  // "Jump to latest" with the number of messages they have not seen.
+  const lastCount = useRef(visibleCount);
+  const stickToBottom = useRef(true);
+  const opened = useRef(false);
+  const [nearBottom, setNearBottom] = useState(true);
+  const [seenCount, setSeenCount] = useState(visibleCount);
   const totals = sumNutrition(state.meals);
   const pending = state.reviews.filter((item) => !item.resolved);
+  const onThreadScroll = () => {
+    const el = threadRef.current;
+    if (!el) return;
+    const near = isNearBottom(el);
+    stickToBottom.current = near;
+    if (near) setSeenCount(visibleCount);
+    setNearBottom(near);
+  };
   useEffect(() => {
     if (intro) {
-      lastCount.current = state.messages.length;
+      lastCount.current = visibleCount;
+      opened.current = true;
       threadRef.current?.scrollTo({ top: 0 });
       return;
     }
     if (reviewMessageId) {
-      lastCount.current = state.messages.length;
+      lastCount.current = visibleCount;
+      opened.current = true;
       return;
     }
-    // Open at the start of the reference conversation; follow new captures as they arrive.
-    if (state.messages.length === lastCount.current && !processing) return;
-    lastCount.current = state.messages.length;
+    const added = visibleCount - lastCount.current;
+    lastCount.current = visibleCount;
+    if (!opened.current) {
+      // Open at the latest message once a conversation exists; a new reader
+      // (no messages) lands on the welcome. The synchronous scroll survives
+      // StrictMode's effect replay, which cancels the frame below.
+      if (visibleCount === 0) return;
+      opened.current = true;
+      scrollToBottom(threadRef.current, "auto");
+      const frame = requestAnimationFrame(() => {
+        scrollToBottom(threadRef.current, "auto");
+        setSeenCount(visibleCount);
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+    if (added <= 0 && !processing) return;
+    const ownMessage = added > 0 && latestRole === "user";
+    if (!stickToBottom.current && !ownMessage) return;
     const frame = requestAnimationFrame(() => {
-      const el = threadRef.current;
-      if (el) el.scrollTop = el.scrollHeight;
+      scrollToBottom(threadRef.current);
+      setSeenCount(visibleCount);
     });
     return () => cancelAnimationFrame(frame);
-  }, [state.messages.length, processing, reviewMessageId, intro]);
+  }, [visibleCount, latestRole, processing, reviewMessageId, intro]);
+  const unseen = Math.max(0, visibleCount - seenCount);
+  const showJump = !nearBottom && !intro && visibleCount > 0;
 
   useEffect(() => {
     if (!reviewMessageId) return;
@@ -238,7 +239,10 @@ export default function ChatLayer({
         isHome
         onHome={() => {
           onNavigate("Chat");
-          threadRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+          threadRef.current?.scrollTo({
+            top: 0,
+            behavior: scrollBehavior(prefersReducedMotion()),
+          });
         }}
         onMenu={() => setMenuOpen(true)}
         onNutrition={() => onSend(undefined, "How am I doing today?")}
@@ -247,9 +251,7 @@ export default function ChatLayer({
       <div
         className="fuel-conversation"
         ref={threadRef}
-        role="log"
-        aria-label="Capture conversation"
-        aria-live="polite"
+        onScroll={onThreadScroll}
       >
         {firstTrackingStep}
         <SpotWelcome
@@ -348,16 +350,27 @@ export default function ChatLayer({
             </button>
           </p>
         )}
-        {state.messages
-          .filter((m) => m.id !== "welcome")
+        {/* Only conversation messages live in the polite log, so each new
+            message is announced once; discovery content, notices and the
+            processing status sit outside it. */}
+        <div
+          className="fuel-messages"
+          role="log"
+          aria-label="Capture conversation"
+          aria-live="polite"
+        >
+        {visibleMessages
           .map((message, index) => {
             if (
               processing &&
               !message.ai &&
               message.role === "assistant" &&
-              index === state.messages.length - 1
+              index === visibleCount - 1
             )
               return null;
+            const action = message.suggestedAction;
+            const previous = visibleMessages[index - 1];
+            const divider = dayDividerLabel(previous, message);
             const meal = state.meals.find((m) => m.id === message.mealId);
             const receipt = (state.groceries ?? []).find(
               (g) => g.id === message.receiptId,
@@ -368,7 +381,6 @@ export default function ChatLayer({
               !state.messages.some(m => m.requestId === message.id && m.receiptId);
             const isInsight =
               message.kind === "insight" || message.kind === "summary";
-            const previous = state.messages[index - 1];
             const grouped =
               previous?.role === "assistant" &&
               message.role === "assistant" &&
@@ -376,8 +388,17 @@ export default function ChatLayer({
               !isInsight &&
               !previous.mealId;
             return (
+              <Fragment key={message.id}>
+              {divider && (
+                <div
+                  className="fuel-day-divider"
+                  role="separator"
+                  aria-label={divider}
+                >
+                  <span aria-hidden="true">{divider}</span>
+                </div>
+              )}
               <div
-                key={message.id}
                 data-message-id={message.id}
                 tabIndex={-1}
                 className={`fuel-message ${message.role} ${grouped ? "grouped" : ""} ${meal ? "with-meal" : ""} ${isInsight ? "with-insight" : ""}`}
@@ -398,11 +419,7 @@ export default function ChatLayer({
                     <img
                       className="fuel-message-photo"
                       src={message.image}
-                      alt={
-                        message.id === "demo-dinner-photo"
-                          ? "Grilled chicken, rice, and broccoli dinner"
-                          : "Your captured photo or screenshot"
-                      }
+                      alt="Your captured photo or screenshot"
                     />
                   )}
                   {message.spotCheck && (
@@ -506,10 +523,10 @@ export default function ChatLayer({
                       onDismiss={() => onRecipePortion(message.id, false)}
                     />
                   )}
-                  {message.suggestedAction && (
+                  {action && (
                     <button
                       className="fuel-pantry-link-action"
-                      onClick={() => onAction(message.suggestedAction!)}
+                      onClick={() => onAction(action)}
                     >
                       {
                         {
@@ -519,7 +536,7 @@ export default function ChatLayer({
                           preferences: "Review your preferences",
                           workout: "Build a workout",
                           shopping: "Open swaps, list & spending",
-                        }[message.suggestedAction]
+                        }[action]
                       }
                       <ChevronRight size={15} />
                     </button>
@@ -542,10 +559,20 @@ export default function ChatLayer({
                       {message.aiError ??
                         "This response was interrupted. Your capture is saved."}
                       <button
-                        disabled={processing}
-                        onClick={() => onRetry(message.id)}
+                        disabled={processing || connectionChecking}
+                        onClick={() =>
+                          aiAvailable
+                            ? onRetry(message.id)
+                            : chatAccess === "signin" || chatAccess === "setup"
+                              ? onChatAccount()
+                              : onReconnect()
+                        }
                       >
-                        Retry this capture
+                        {aiAvailable
+                          ? "Retry this capture"
+                          : chatAccess === "signin" || chatAccess === "setup"
+                            ? "Sign in to retry this capture"
+                            : "Reconnect to retry this capture"}
                       </button>
                     </div>
                   ) : null}
@@ -569,19 +596,13 @@ export default function ChatLayer({
                           </span>
                         )}
                         <span className="fuel-meal-details">
-                          <strong>
-                            {!isExampleMeal(meal) && meal.category === "Dinner"
-                              ? "Dinner added"
-                              : meal.title}
-                          </strong>
+                          <strong>{meal.title}</strong>
                           <span className="fuel-meal-description">
                             {isExampleMeal(meal)
                               ? "Sample capture"
-                              : meal.category === "Dinner"
-                                ? meal.title
-                                : meal.category === "Lunch"
-                                  ? "Lunch · estimated portions"
-                                  : "Saved to your day"}
+                              : meal.confidence === "estimated"
+                                ? `${meal.category} · estimated portions`
+                                : "Saved to your day"}
                           </span>
                           <b>
                             {meal.confidence === "estimated" ? "~" : ""}
@@ -602,20 +623,10 @@ export default function ChatLayer({
                         </span>
                       </span>
                       <span className="fuel-card-time">{message.time}</span>
-                      {meal.category === "Dinner" && (
+                      {meal.note && (
                         <span className="fuel-confidence">
                           <Info size={18} fill="currentColor" />
-                          <span>
-                            {meal.source.startsWith("AI") ? (
-                              meal.note
-                            ) : (
-                              <>
-                                High confidence on chicken and broccoli.
-                                <br />
-                                Lower confidence on sauce quantity.
-                              </>
-                            )}
-                          </span>
+                          <span>{meal.note}</span>
                         </span>
                       )}
                     </button>
@@ -748,13 +759,40 @@ export default function ChatLayer({
                   )}
                 </div>
               </div>
+              </Fragment>
             );
           })}
+        </div>
         {processing && (
-          <SpotProcessing side={latestSpot.side} detail={aiStage} />
+          <div className="fuel-processing">
+            <SpotProcessing side={latestSpot.side} detail={aiStage} />
+            <button
+              type="button"
+              className="fuel-stop-response"
+              onClick={onStop}
+            >
+              Stop response
+            </button>
+          </div>
         )}
       </div>
       <div className="fuel-compose-wrap">
+        {showJump && (
+          <button
+            type="button"
+            className="fuel-jump-latest"
+            onClick={() => scrollToBottom(threadRef.current)}
+          >
+            <ArrowDown size={16} strokeWidth={2.2} />
+            Jump to latest
+            {unseen > 0 && <span className="fuel-jump-count">{unseen} new</span>}
+          </button>
+        )}
+        {showRemaining(composer) && (
+          <p className="fuel-composer-count" role="status">
+            {remainingCharacters(composer)} characters left
+          </p>
+        )}
         <form className="fuel-composer" onSubmit={onSend}>
           <button
             type="button"
@@ -784,7 +822,7 @@ export default function ChatLayer({
             ref={inputRef}
             aria-label="Message Rep & Plate"
             placeholder="What happened?"
-            maxLength={2000}
+            maxLength={CHAT_INPUT_LIMIT}
             value={composer}
             onChange={(event) => onComposerChange(event.target.value)}
           />
@@ -905,16 +943,6 @@ export default function ChatLayer({
             <button
               onClick={() => {
                 setMenuOpen(false);
-                onSample();
-              }}
-            >
-              <Camera size={21} />
-              <span>Try a sample capture</span>
-              <ChevronRight size={17} />
-            </button>
-            <button
-              onClick={() => {
-                setMenuOpen(false);
                 setAboutOpen(true);
               }}
             >
@@ -925,7 +953,7 @@ export default function ChatLayer({
             <p>
               {aiAvailable
                 ? "AI connected · Image reading & web research"
-                : "Local demo · AI unavailable"}
+                : "AI unavailable · local tracking only"}
               <br />
               Saved records stay on this device.
             </p>
@@ -941,14 +969,13 @@ export default function ChatLayer({
             <p>
               {aiAvailable
                 ? "Chat and images are processed by our configured AI provider, QwenCloud or OpenAI. Nutrition research can search the web, and TypeSafe JEV checks the type of capture. Uploaded images and the relevant conversation are sent for processing. Voice transcription uses OpenAI."
-                : "AI is not connected. Sample flows and local tracking still work."}
+                : "AI is not connected. Local tracking still works."}
             </p>
             <p>
               Save groceries from a receipt, ask for meal ideas, or estimate a
               meal or drink. Nutrition estimates are editable. Voice recordings
               can be transcribed and reviewed before sending. Device connections
-              aren’t connected yet. The sample captures are excluded from your
-              daily totals.
+              aren’t connected yet.
             </p>
             <button onClick={() => setAboutOpen(false)}>
               <Check size={17} />

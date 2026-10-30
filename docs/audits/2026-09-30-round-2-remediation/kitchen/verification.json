@@ -1,0 +1,92 @@
+{
+  "scope": [
+    "R2-07",
+    "R2-09",
+    "R2-15",
+    "R2-18"
+  ],
+  "sourceFrozen": true,
+  "units": {
+    "passed": 73,
+    "failed": 0
+  },
+  "targetedBrowser": {
+    "startTime": "2026-09-30T19:23:17.694Z",
+    "duration": 27917.386,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "affectedBrowserAfterFinalChange": {
+    "startTime": "2026-09-30T19:30:22.145Z",
+    "duration": 7003.17,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "liveAttempts": [
+    {
+      "status": 422,
+      "error": "Unknown pantry lot reference",
+      "file": "live-planner.json",
+      "coreValidationRetained": true
+    },
+    {
+      "status": 422,
+      "error": "Optional cooking method missing ingredient coverage",
+      "file": "live-planner-second.json",
+      "recoveryImplementedAndDeterministicallyVerified": true
+    },
+    {
+      "status": 422,
+      "error": "Unknown pantry lot reference after optional method recovery",
+      "file": "live-planner-final.json",
+      "recordsUnchanged": true,
+      "recovery": "Exact server-local aliases and request-local response enum"
+    },
+    {
+      "status": 200,
+      "file": "live-planner-alias.json",
+      "summary": {
+        "status": 200,
+        "details": {
+          "retainedMethods": 6,
+          "omittedMethods": 1,
+          "methodsReviewed": 0,
+          "variety": [
+            {
+              "category": "Dinner",
+              "meals": 7,
+              "patterns": 7,
+              "repeated": false,
+              "message": "Dinner: 7 ingredient patterns across 7 meals."
+            }
+          ]
+        },
+        "effects": {
+          "intakeUnchanged": true,
+          "pantryEventsUnchanged": true,
+          "groceriesUnchanged": true,
+          "plansBefore": 0,
+          "plansAfter": 1,
+          "planStatuses": [
+            "draft"
+          ]
+        },
+        "errors": []
+      }
+    }
+  ],
+  "successfulLivePostRecovery": true,
+  "aliasBoundary": {
+    "serverOnly": true,
+    "redFailed": 6,
+    "greenPassed": 16,
+    "greenFailed": 0,
+    "typeScriptBuild": "passed",
+    "evidence": "green-references.json"
+  },
+  "successfulLiveReferenceBoundary": true
+}

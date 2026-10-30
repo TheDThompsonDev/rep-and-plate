@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
-import { useHealth } from "./store";
+import { Text } from "react-native";
+import { useHealth, useLoadedHealth } from "./store";
 import { Button, Card, Choice, Field, Row, Sheet, Sources, s } from "./ui";
 import { jsonApi } from "./api";
 import { id, today } from "../../src/domain";
@@ -26,8 +26,8 @@ import { defaultPreferences } from "../../src/features/preferences/contracts";
 import { ReceiptEditor } from "./KitchenTools";
 import type { GroceryReceipt } from "../../src/ai-contract";
 export function Shopping() {
-  const h = useHealth(),
-    state = h.state!,
+  const h = useLoadedHealth(),
+    state = h.state,
     shopping = state.shopping ?? { list: [], dismissed: [], prices: {} },
     preferences = state.preferences ?? defaultPreferences();
   const [tab, setTab] = useState("List"),

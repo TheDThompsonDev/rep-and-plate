@@ -1,0 +1,80 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: A LITTLE MORE YOU Developer audit, this is your space. Your progress, preferences, and the little things that make this work for you. A LITTLE PERSPECTIVE Weekly Spot Check 2026-09-24 – 2026-09-30
+- button "Plate · Food"
+- button "Rep · Training"
+- text: 215 avg recorded cal 18g avg recorded protein Across 1 days with meals logged. Recorded amounts, not estimates of everything you ate. Unlogged days are unknown. Start wherever you are.
+- button "Meet Spot":
+  - text: Meet Spot Replay the welcome tour. Your records stay here.
+  - img
+- button "Hide Spot illustrations":
+  - text: Hide Spot illustrations The same tools work either way.
+  - img
+- text: THE WEEK YOU’RE BUILDING 1 meals. 1 days with food logged. Based on what you logged. Missing days stay unknown.
+- button "Your weekly review"
+- button "Your profile & daily targets":
+  - text: Your profile & daily targets Review generic starting targets and choose your own
+  - img
+- text: Your weight, over time Optional measurements from you. Starting nutrition targets are generic; edit them in Your profile. Weight entries do not change them automatically. Add measurements on two dates to see the change. Measurement date (YYYY-MM-DD)
+- textbox "Measurement date (YYYY-MM-DD)": 2026-09-30
+- text: Body weight
+- textbox "Body weight"
+- button "lb"
+- button "kg"
+- button "Save measurement"
+- text: No measurements recorded yet.
+- button "Food & household preferences":
+  - text: Food & household preferences Favorites, restrictions, budget, and equipment
+  - img
+- button "Reviews & captured moments":
+  - text: Reviews & captured moments 0 items to check
+  - img
+- button "Cloud & your records":
+  - text: Cloud & your records Bring your web records to your phone
+  - img
+- button "Connection":
+  - text: Connection Beta server or local development
+  - img
+- button "Agent connections":
+  - text: Agent connections Choose agent access and review proposed meals
+  - img
+- heading "Help & your data" [level=1]
+- text: Tell us what you were trying to do and what happened. Keep receipts, passwords and private meal details out of your report.
+- link "Contact support"
+- button "Share safe diagnostics"
+- text: Includes app version, platform, time and available request IDs. No account email, messages, photos or health records.
+- button "How your data is handled −"
+- text: Your records Meals, groceries, plans, workouts, preferences and conversations are kept on your device. When account saving is enabled, records and their saved photos are also stored privately in your Rep & Plate account. Check the account saving status before changing devices. An offline device may still hold changes that have not reached your account. When you ask Spot Relevant messages, saved context and any capture you submit are sent to the AI services needed to answer. Qwen leads the conversation, OpenAI can provide a backup response and voice transcription, and Jev checks purchase-versus-meal intent. These providers process submitted content under their own terms. Avoid including payment details or other information you do not want processed. Temporary uploads and service records Private uploads used to read a capture are separate from photos saved with your records. A daily cleanup removes temporary captures older than 24 hours and expired response caches. Service monitoring stores account and request identifiers, model, timing, token counts and success or failure for up to 90 days plus the cleanup interval. It does not store message text, images or provider error details in monitoring records. Your controls Use Account & saved data to export records and manage your account. Signing out does not erase local records. Account deletion removes the server account and saved data; downloaded exports and copies on other offline devices can remain until you remove them. Use a personal device for private records.
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen
+- button "Dismiss notification": Meal saved for 2026-08-31.
+- dialog:
+  - heading "Food & household preferences" [level=1]
+  - button "Close":
+    - img
+  - button "Dismiss notification": Meal saved for 2026-08-31.
+  - text: Choose only what matters to you. Every section is optional; Save keeps changes in all sections.
+  - button "Food"
+  - button "Shopping"
+  - button "Cooking & training"
+  - text: Cooking equipment (comma separated)
+  - textbox "Cooking equipment (comma separated)"
+  - text: Cooking time in minutes (optional)
+  - textbox "Cooking time in minutes (optional)"
+  - text: Workout goals and preferences
+  - textbox "Workout goals and preferences"
+  - button "Save preferences"

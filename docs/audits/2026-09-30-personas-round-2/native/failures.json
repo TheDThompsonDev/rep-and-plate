@@ -1,0 +1,135 @@
+{
+  "mode": "Isolated synthetic UI-exported backup seed; quota failure explicitly injected; no external provider mock",
+  "pageErrors": [],
+  "console": [
+    {
+      "type": "warning",
+      "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+    },
+    {
+      "type": "warning",
+      "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+    }
+  ],
+  "steps": [
+    "40-toast-over-composer",
+    "41-unconnected-chat-error",
+    "42-quota-warning",
+    "43-quota-export-recovery",
+    "44-quota-reload",
+    "45-nested-modal",
+    "46-nested-modal-keyboard"
+  ],
+  "overlap": {
+    "sendRect": {
+      "x": 338,
+      "y": 710,
+      "width": 44,
+      "height": 44,
+      "top": 710,
+      "right": 382,
+      "bottom": 754,
+      "left": 338
+    },
+    "hit": "Dismiss notification"
+  },
+  "sendBlocked": true,
+  "clickFailure": "locator.click: Timeout 1600ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Send message', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Send message\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Dismiss notification\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Dismiss notification\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    3 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Dismiss notification\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n",
+  "chatInputAfterFailure": "",
+  "quota": {
+    "exportIncludesUnsaved": true,
+    "persistedIncludesUnsaved": false
+  },
+  "nestedFocus": [
+    {
+      "tag": "INPUT",
+      "label": "Labeled serving (for example 40 g)",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "Servings available",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "calories per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "protein per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "carbs per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "fat per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Close",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "Ingredient name",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "Labeled serving (for example 40 g)",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "Servings available",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "calories per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "protein per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "carbs per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "INPUT",
+      "label": "fat per serving",
+      "text": "",
+      "insideDialog": true
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Close",
+      "text": "",
+      "insideDialog": true
+    }
+  ]
+}

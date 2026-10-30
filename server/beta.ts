@@ -1,10 +1,12 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createApi } from "./http.ts";
+import { createApi, type ApiInput } from "./http.ts";
+import { captureSchema } from "../src/ai-contract.ts";
 import type { Config } from "./ai.ts";
 import type { ChatCache } from "./chat-cache.ts";
 import { Readable } from "node:stream";
 import {AccountError} from './account.ts';
 import {withGenerationTelemetry,type GenerationEvent} from './operations.ts';
+import { BODY_LIMITS, cloudConfigResponse, hostedApiRoutes, readJsonBody } from "./routes.ts";
 
 export type BetaServices = {
   config: Config;
@@ -24,25 +26,8 @@ export type BetaServices = {
     path: string,
   ) => Promise<{ bytes: Buffer; mime: string }>;
 };
-const routes = new Set([
-  "/api/status",
-  "/api/chat",
-  "/api/products/search",
-  "/api/products/lookup",
-  "/api/products/label",
-  "/api/plans/workout",
-  "/api/plans/meals",
-  "/api/voice",
-  "/api/shopping/prices",
-]);
-const costly = new Set([
-  "/api/chat",
-  "/api/products/label",
-  "/api/plans/workout",
-  "/api/plans/meals",
-  "/api/voice",
-  "/api/shopping/prices",
-]);
+// Method and admission cost come from the shared route table; nothing is listed twice.
+const routes = new Map(hostedApiRoutes.map((route) => [route.path, route] as const));
 export function betaHandler(services: BetaServices) {
   // One handler keeps public USDA caches bounded. Private chat caching is in Postgres.
   const api = createApi(services.config, undefined, {
@@ -71,12 +56,14 @@ export function betaHandler(services: BetaServices) {
       res.writeHead(204).end();
       return;
     }
-    // Public bootstrap is necessary to sign in; it contains no service credentials.
-    if (path === "/api/cloud/config" && req.method === "GET")
-      return json(200, { available: true, ...services.publicConfig });
-    if (!routes.has(path)&&path!=='/api/account/delete') return json(404, { error: "Not found." });
-    if (req.method !== (path === "/api/status" ? "GET" : "POST"))
+    const route = routes.get(path);
+    if (!route) return json(404, { error: "Not found." });
+    if (req.method !== route.method)
       return json(405, { error: "Method not allowed." });
+    // Public bootstrap is necessary to sign in; it contains no service credentials. Availability is
+    // computed exactly as the local server computes it; it is always true here because
+    // `betaServices` validated `publicConfig` at startup and throws BETA_CONFIG otherwise.
+    if (route.public) return json(200, cloudConfigResponse(services.publicConfig));
     const authorization = req.headers.authorization;
     if (!authorization?.startsWith("Bearer ") || authorization.length > 8192)
       return json(401, { error: "Sign in to continue." });
@@ -87,12 +74,11 @@ export function betaHandler(services: BetaServices) {
         return json(401, { error: "Your session expired. Sign in again." });
       if(path==='/api/account/delete'){
         if(!services.deleteAccount)return json(503,{error:'Account management is unavailable. Please retry later.'});
-        const chunks:Buffer[]=[];let size=0;
-        for await(const chunk of req){const bytes=Buffer.from(chunk);size+=bytes.length;if(size>2048)return json(413,{error:'Account request is too large.'});chunks.push(bytes);}
-        let body:unknown;try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{return json(400,{error:'Check the account request.'});}
-        return json(200,await services.deleteAccount(authorization.slice(7),body));
+        const read=await readJsonBody(req,BODY_LIMITS.accountDelete);
+        if(!read.ok)return read.reason==='too-large'?json(413,{error:'Account request is too large.'}):json(400,{error:'Check the account request.'});
+        return json(200,await services.deleteAccount(authorization.slice(7),read.body));
       }
-      const admission = await services.admit(user, costly.has(path));
+      const admission = await services.admit(user, route.costly);
       if (!admission.allowed) {
         res.setHeader("Retry-After", "60");
         return json(429, {
@@ -102,38 +88,24 @@ export function betaHandler(services: BetaServices) {
       }
       lease = admission.lease;
       let input = req;
+      let parsed: ApiInput | undefined;
       let requestId:string|undefined;
       if (req.method === "POST") {
-        const chunks: Buffer[] = [];
-        let size = 0;
-        for await (const part of req) {
-          size += part.length;
-          if (size > 4_000_000)
-            return json(413, {
-              error:
-                "Upload large photos and recordings through private capture storage.",
-            });
-          chunks.push(Buffer.from(part));
-        }
-        let body: Record<string, unknown>;
-        try {
-          body = JSON.parse(Buffer.concat(chunks).toString());
-        } catch {
-          return json(400, { error: "The capture could not be read." });
-        }
-        if (!body || typeof body !== "object" || Array.isArray(body))
+        const read = await readJsonBody(req, BODY_LIMITS.hostedPost);
+        if (!read.ok)
+          return read.reason === "too-large"
+            ? json(413, { error: "Upload large photos and recordings through private capture storage." })
+            : json(400, { error: "The capture could not be read." });
+        if (!read.body || typeof read.body !== "object" || Array.isArray(read.body))
           return json(400, { error: "Send a JSON object." });
+        const body = read.body as Record<string, unknown>;
         requestId=typeof body.requestId==='string'?body.requestId:undefined;
         if (body.capture) {
-          const capture = body.capture as { path?: string; kind?: string };
-          if (
-            !services.readCapture ||
-            typeof capture.path !== "string" ||
-            !capture.path.startsWith(user + "/") ||
-            !/^[a-f0-9-]+\/[a-f0-9-]+\.(jpg|png|webp|m4a|webm|ogg|wav)$/.test(
-              capture.path,
-            )
-          )
+          const parsedCapture = captureSchema.safeParse(body.capture);
+          if (!parsedCapture.success)
+            return json(400, { error: "The capture could not be read." });
+          const capture = parsedCapture.data;
+          if (!services.readCapture || !capture.path.startsWith(user + "/"))
             return json(400, {
               error: "This capture does not belong to your account.",
             });
@@ -159,19 +131,24 @@ export function betaHandler(services: BetaServices) {
             });
           delete body.capture;
         }
-        input = Readable.from([
-          Buffer.from(JSON.stringify(body)),
-        ]) as IncomingMessage;
-        input.headers = { ...req.headers };
-        input.method = req.method;
-        input.url = req.url;
-        delete input.headers["content-length"];
+        if (path === "/api/chat") parsed = { body };
+        else {
+          // Product, plan, voice and shopping handlers read their own request stream, so they
+          // still receive the verified body re-serialized; chat above is parsed exactly once.
+          input = Readable.from([
+            Buffer.from(JSON.stringify(body)),
+          ]) as IncomingMessage;
+          input.headers = { ...req.headers };
+          input.method = req.method;
+          input.url = req.url;
+          delete input.headers["content-length"];
+        }
       }
       // Only this verified boundary can reach the loopback-only domain handlers.
       input.headers.host = "localhost";
       delete input.headers.origin;
       delete input.headers.authorization;
-      const run=()=>api(input,res,()=>json(404,{error:'Not found.'}),user);
+      const run=()=>api(input,res,()=>json(404,{error:'Not found.'}),user,parsed);
       if(services.recordGeneration)await withGenerationTelemetry({userId:user,operation:path,requestId},services.recordGeneration,run);
       else await run();
     } catch(error) {

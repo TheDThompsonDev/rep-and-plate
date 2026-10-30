@@ -259,8 +259,38 @@ describe("AI grounding and boundaries", () => {
       "authenticate",
     );
   });
+  it("names the stage for review budget failures instead of a generic timeout", () => {
+    const output = publicError(Error("AI_BOUNDARY_TIMEOUT_OUTPUT"));
+    expect(output).toContain("final response check");
+    expect(output).toContain("haven’t");
+    const input = publicError(Error("AI_BOUNDARY_TIMEOUT_INPUT"));
+    expect(input).toContain("question check");
+    expect(input).not.toBe(output);
+    expect(publicError(Object.assign(Error("AI_BOUNDARY_UNAVAILABLE"), { status: 429 }))).toContain("usage limit");
+  });
 });
 describe("HTTP API", () => {
+  it("answers local account deletion with a hosted-only explanation instead of a bare 404", async () => {
+    const api = createApi(config, vi.fn());
+    const server = createServer((req, res) => {
+      void api(req, res, () => res.writeHead(404).end());
+    });
+    await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
+    const { port } = server.address() as { port: number };
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/api/account/delete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmation: "DELETE", password: "x" }),
+      });
+      expect(response.status).toBe(501);
+      const body = await response.json();
+      expect(body.error).toContain("Use your hosted account connection to manage your account.");
+      expect(body.error).not.toBe("Not found.");
+    } finally {
+      await new Promise<void>((r) => server.close(() => r()));
+    }
+  });
   it("validates origin/body and deduplicates a completed request without a second provider call", async () => {
     const runner = vi.fn(async (req) => resultFixture(req.requestId));
     const api = createApi(config, runner);

@@ -9,6 +9,7 @@ import { pantryDatesSchema } from "./features/pantry/date-contract.ts";
 import { proposalComponentsSchema } from "./features/meals/proposals.ts";
 import { recipePortionProposalSchema } from "./features/recipes/proposal-contract.ts";
 import { fitnessGoalSchema } from './features/progress/fitness-goal.ts';
+import { trainingAnswersSchema } from './features/progress/training-program.ts';
 import { nutritionBaselineSchema } from './features/progress/nutrition-setup.ts';
 import { bodyWeightEntrySchema } from './features/progress/body-weight.ts';
 
@@ -96,10 +97,14 @@ export const aiResultSchema = z.object({
 });
 export type AIResult = z.infer<typeof aiResultSchema>;
 export type AIStatus = { available: boolean; jev: boolean; model?: string };
+/** One text limit for every composer (web, voice, native) and the server. */
+export const CHAT_INPUT_LIMIT = 4000;
 export const aiRequestSchema = z.object({
   captureDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  /** Set when the photo came from the chat meal camera: the user is logging food they ate. */
+  captureIntent: z.literal("meal").optional(),
   requestId: z.string().uuid(),
-  text: z.string().min(1).max(4000),
+  text: z.string().min(1).max(CHAT_INPUT_LIMIT),
   image: z
     .string()
     .max(4500000)
@@ -116,6 +121,8 @@ export const aiRequestSchema = z.object({
     .max(20),
   context: z.object({
     fitnessGoal: fitnessGoalSchema.optional(),
+    /** Training-week answers only (days, equipment, experience); never loads or derived sessions. */
+    trainingProgram: trainingAnswersSchema.optional(),
     nutritionBaseline: nutritionBaselineSchema.optional(),
     bodyWeights: z.array(bodyWeightEntrySchema).max(30).optional(),
     goalsConfigured: z.boolean().optional(),
@@ -165,3 +172,15 @@ export const aiRequestSchema = z.object({
   }),
 });
 export type AIRequest = z.infer<typeof aiRequestSchema>;
+/** A meal camera intent only counts with its photo; a typed request never claims consumption by flag. */
+export const isMealCameraPhoto = (request: Pick<AIRequest, "captureIntent" | "image">) =>
+  request.captureIntent === "meal" && !!request.image;
+/** Private capture reference produced by `uploadCapture`: `<account id>/<uuid>.<ext>` in the
+ * health-captures bucket. The server still checks the account prefix against the signed-in user. */
+export const capturePathPattern =
+  /^[a-f0-9-]+\/[a-f0-9-]+\.(jpg|png|webp|m4a|webm|ogg|wav)$/;
+export const captureSchema = z.object({
+  path: z.string().max(200).regex(capturePathPattern),
+  kind: z.enum(["image", "audio"]),
+});
+export type CaptureReference = z.infer<typeof captureSchema>;

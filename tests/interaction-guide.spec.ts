@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mockCloud } from "./cloud-fixture";
+import { mockCloud } from "../e2e-shared/cloud-fixture";
 import { readBrowserRecords } from "./record-fixture";
 
 test("Spot previews teach tracking without saving examples or requesting AI", async ({

@@ -1,0 +1,832 @@
+{
+  "version": 1,
+  "groceries": [
+    {
+      "id": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5",
+      "fingerprint": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+          "receiptText": "Rolled oats",
+          "name": "Rolled oats",
+          "quantity": "6 servings on hand",
+          "serving": "40 g",
+          "servingsPurchased": 6,
+          "nutrition": {
+            "calories": 150,
+            "protein": 5,
+            "carbs": 27,
+            "fat": 3
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    },
+    {
+      "id": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4",
+      "fingerprint": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+          "receiptText": "Whole milk",
+          "name": "Whole milk",
+          "quantity": "6 servings on hand",
+          "serving": "1 cup",
+          "servingsPurchased": 6,
+          "nutrition": {
+            "calories": 150,
+            "protein": 8,
+            "carbs": 12,
+            "fat": 8
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    }
+  ],
+  "chatRevision": 3,
+  "profile": {
+    "targetsConfigured": false,
+    "name": "friend",
+    "calories": 2000,
+    "protein": 110,
+    "carbs": 250,
+    "fat": 78
+  },
+  "meals": [],
+  "reviews": [],
+  "messages": [
+    {
+      "id": "welcome",
+      "role": "assistant",
+      "text": "I’m Spot. Tell me what you ate or what you did. Photo, text, voice, screenshot — start anywhere.",
+      "time": "2:41 PM"
+    }
+  ],
+  "workout": {
+    "status": "ready",
+    "exercises": [
+      {
+        "weightConfirmed": false,
+        "name": "Bench Press",
+        "weight": 0,
+        "target": 8,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Incline Dumbbell Press",
+        "weight": 0,
+        "target": 10,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Seated Cable Row",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Lateral Raise",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Triceps Pushdown",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      }
+    ],
+    "startedAt": null,
+    "finishedAt": null
+  },
+  "mealPlans": [
+    {
+      "id": "f16bb1ae-cab1-4421-9a1a-a7334856af3e",
+      "createdAt": "2026-09-30T19:42:54.977Z",
+      "status": "draft",
+      "days": [
+        {
+          "date": "2026-10-01",
+          "meals": [
+            {
+              "id": "dinner-20261001-1",
+              "title": "Savory oats with mushrooms & spinach",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": 20,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5::manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4::manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+                  "name": "Whole milk",
+                  "servings": 0.5,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Mushrooms (sliced)",
+                  "servings": 100,
+                  "servingLabel": "g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Baby spinach",
+                  "servings": 30,
+                  "servingLabel": "g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Olive oil",
+                  "servings": 1,
+                  "servingLabel": "tbsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Water",
+                  "servings": 0.25,
+                  "servingLabel": "cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Salt",
+                  "servings": 0.25,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Black pepper",
+                  "servings": 0.1,
+                  "servingLabel": "tsp"
+                }
+              ],
+              "notes": "",
+              "cookingMethod": {
+                "steps": [
+                  {
+                    "action": "saute",
+                    "ingredientIndexes": [
+                      4,
+                      2
+                    ],
+                    "minutes": 5,
+                    "temperatureC": 180
+                  },
+                  {
+                    "action": "combine",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      5
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "simmer",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      6,
+                      7
+                    ],
+                    "minutes": 7,
+                    "temperatureC": 95
+                  },
+                  {
+                    "action": "stir",
+                    "ingredientIndexes": [
+                      3
+                    ],
+                    "minutes": 1,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "serve",
+                    "ingredientIndexes": [
+                      0,
+                      2,
+                      3
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  }
+                ],
+                "reviewed": false
+              }
+            }
+          ]
+        },
+        {
+          "date": "2026-10-02",
+          "meals": [
+            {
+              "id": "dinner-20261002-1",
+              "title": "Oat-crusted pan chicken",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": 25,
+              "ingredients": [
+                {
+                  "lotId": null,
+                  "name": "Chicken breast (thin)",
+                  "servings": 1,
+                  "servingLabel": "~150 g"
+                },
+                {
+                  "lotId": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5::manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Egg",
+                  "servings": 1,
+                  "servingLabel": "large"
+                },
+                {
+                  "lotId": null,
+                  "name": "Olive oil",
+                  "servings": 1,
+                  "servingLabel": "tbsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Salt",
+                  "servings": 0.25,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Black pepper",
+                  "servings": 0.1,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Water",
+                  "servings": 0.1,
+                  "servingLabel": "cup"
+                }
+              ],
+              "notes": "",
+              "cookingMethod": null
+            }
+          ]
+        },
+        {
+          "date": "2026-10-03",
+          "meals": [
+            {
+              "id": "dinner-20261003-1",
+              "title": "Creamy milk & oat tomato soup",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": 20,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4::manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5::manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+                  "name": "Rolled oats",
+                  "servings": 0.5,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Canned tomatoes",
+                  "servings": 200,
+                  "servingLabel": "g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Onion (diced)",
+                  "servings": 0.5,
+                  "servingLabel": "medium"
+                },
+                {
+                  "lotId": null,
+                  "name": "Olive oil",
+                  "servings": 1,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Water",
+                  "servings": 0.5,
+                  "servingLabel": "cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Salt",
+                  "servings": 0.25,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Black pepper",
+                  "servings": 0.1,
+                  "servingLabel": "tsp"
+                }
+              ],
+              "notes": "",
+              "cookingMethod": {
+                "steps": [
+                  {
+                    "action": "saute",
+                    "ingredientIndexes": [
+                      4,
+                      3
+                    ],
+                    "minutes": 4,
+                    "temperatureC": 160
+                  },
+                  {
+                    "action": "combine",
+                    "ingredientIndexes": [
+                      2,
+                      5,
+                      6,
+                      7
+                    ],
+                    "minutes": 1,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "simmer",
+                    "ingredientIndexes": [
+                      2,
+                      5
+                    ],
+                    "minutes": 10,
+                    "temperatureC": 95
+                  },
+                  {
+                    "action": "blend",
+                    "ingredientIndexes": [
+                      2,
+                      1,
+                      0
+                    ],
+                    "minutes": 2,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "serve",
+                    "ingredientIndexes": [
+                      2
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  }
+                ],
+                "reviewed": false
+              }
+            }
+          ]
+        },
+        {
+          "date": "2026-10-04",
+          "meals": [
+            {
+              "id": "dinner-20261004-1",
+              "title": "Oat & pea skillet with parmesan",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": 18,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5::manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Frozen peas",
+                  "servings": 100,
+                  "servingLabel": "g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Parmesan (grated)",
+                  "servings": 15,
+                  "servingLabel": "g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Butter or oil",
+                  "servings": 1,
+                  "servingLabel": "tbsp"
+                },
+                {
+                  "lotId": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4::manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+                  "name": "Whole milk",
+                  "servings": 0.25,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Salt",
+                  "servings": 0.25,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Black pepper",
+                  "servings": 0.1,
+                  "servingLabel": "tsp"
+                }
+              ],
+              "notes": "",
+              "cookingMethod": {
+                "steps": [
+                  {
+                    "action": "saute",
+                    "ingredientIndexes": [
+                      3,
+                      1
+                    ],
+                    "minutes": 4,
+                    "temperatureC": 180
+                  },
+                  {
+                    "action": "combine",
+                    "ingredientIndexes": [
+                      0,
+                      4,
+                      5,
+                      6
+                    ],
+                    "minutes": 1,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "simmer",
+                    "ingredientIndexes": [
+                      0,
+                      4
+                    ],
+                    "minutes": 8,
+                    "temperatureC": 95
+                  },
+                  {
+                    "action": "stir",
+                    "ingredientIndexes": [
+                      2
+                    ],
+                    "minutes": 1,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "serve",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  }
+                ],
+                "reviewed": false
+              }
+            }
+          ]
+        },
+        {
+          "date": "2026-10-05",
+          "meals": [
+            {
+              "id": "dinner-20261005-1",
+              "title": "Milk-scrambled eggs with toast",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": 12,
+              "ingredients": [
+                {
+                  "lotId": null,
+                  "name": "Eggs",
+                  "servings": 2,
+                  "servingLabel": "large"
+                },
+                {
+                  "lotId": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4::manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+                  "name": "Whole milk",
+                  "servings": 0.25,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Bread (toast)",
+                  "servings": 1,
+                  "servingLabel": "slice"
+                },
+                {
+                  "lotId": null,
+                  "name": "Butter or oil",
+                  "servings": 1,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Salt",
+                  "servings": 0.25,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Black pepper",
+                  "servings": 0.1,
+                  "servingLabel": "tsp"
+                }
+              ],
+              "notes": "",
+              "cookingMethod": {
+                "steps": [
+                  {
+                    "action": "combine",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      4,
+                      5
+                    ],
+                    "minutes": 1,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "saute",
+                    "ingredientIndexes": [
+                      3,
+                      0
+                    ],
+                    "minutes": 6,
+                    "temperatureC": 160
+                  },
+                  {
+                    "action": "slice",
+                    "ingredientIndexes": [
+                      2
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "serve",
+                    "ingredientIndexes": [
+                      0,
+                      2
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  }
+                ],
+                "reviewed": false
+              }
+            }
+          ]
+        },
+        {
+          "date": "2026-10-06",
+          "meals": [
+            {
+              "id": "dinner-20261006-1",
+              "title": "Oat & banana warm bowl with peanut butter",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": 8,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5::manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+                  "name": "Rolled oats",
+                  "servings": 1,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4::manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+                  "name": "Whole milk",
+                  "servings": 1,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": null,
+                  "name": "Banana (sliced)",
+                  "servings": 1,
+                  "servingLabel": "medium"
+                },
+                {
+                  "lotId": null,
+                  "name": "Peanut butter",
+                  "servings": 1,
+                  "servingLabel": "tbsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Salt",
+                  "servings": 0.1,
+                  "servingLabel": "pinch"
+                },
+                {
+                  "lotId": null,
+                  "name": "Water",
+                  "servings": 0.1,
+                  "servingLabel": "cup"
+                }
+              ],
+              "notes": "",
+              "cookingMethod": {
+                "steps": [
+                  {
+                    "action": "combine",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      5
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "simmer",
+                    "ingredientIndexes": [
+                      0,
+                      1
+                    ],
+                    "minutes": 5,
+                    "temperatureC": 95
+                  },
+                  {
+                    "action": "stir",
+                    "ingredientIndexes": [
+                      3,
+                      4
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "serve",
+                    "ingredientIndexes": [
+                      0,
+                      2,
+                      3
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  }
+                ],
+                "reviewed": false
+              }
+            }
+          ]
+        },
+        {
+          "date": "2026-10-07",
+          "meals": [
+            {
+              "id": "dinner-20261007-1",
+              "title": "Berry oat milk smoothie bowl (no cook)",
+              "category": "Dinner",
+              "portions": 1,
+              "minutes": 5,
+              "ingredients": [
+                {
+                  "lotId": "manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4::manual-ingredient:eec17d7b-124a-4e1c-aff2-bda8d3cfcba4:item",
+                  "name": "Whole milk",
+                  "servings": 0.5,
+                  "servingLabel": "1 cup"
+                },
+                {
+                  "lotId": "manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5::manual-ingredient:936d306d-c408-414b-bad4-435dc5018aa5:item",
+                  "name": "Rolled oats",
+                  "servings": 0.5,
+                  "servingLabel": "40 g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Frozen mixed berries",
+                  "servings": 100,
+                  "servingLabel": "g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Yogurt (optional)",
+                  "servings": 50,
+                  "servingLabel": "g"
+                },
+                {
+                  "lotId": null,
+                  "name": "Honey or sweetener (optional)",
+                  "servings": 1,
+                  "servingLabel": "tsp"
+                },
+                {
+                  "lotId": null,
+                  "name": "Water",
+                  "servings": 0.1,
+                  "servingLabel": "cup"
+                }
+              ],
+              "notes": "",
+              "cookingMethod": {
+                "steps": [
+                  {
+                    "action": "combine",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      2,
+                      5
+                    ],
+                    "minutes": 1,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "blend",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "minutes": 2,
+                    "temperatureC": null
+                  },
+                  {
+                    "action": "serve",
+                    "ingredientIndexes": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "minutes": 0.5,
+                    "temperatureC": null
+                  }
+                ],
+                "reviewed": false
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

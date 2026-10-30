@@ -1,0 +1,589 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/kitchen-round-two.spec.ts",
+      "tests/kitchen-remediation.spec.ts",
+      "--workers=1",
+      "--reporter=json",
+      "--output=docs/audits/2026-09-30-round-2-remediation/kitchen/green-browser-final-output"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-round-2-remediation/kitchen/green-browser-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-round-2-remediation/kitchen/green-browser-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://127.0.0.1:5173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "kitchen-remediation.spec.ts",
+      "file": "kitchen-remediation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "generated meal drafts and edits survive closing and reloading without approval or intake",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4547,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:21:50.608Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4729ff85aea5b94eb35e-f32ca0a20c353630ed13",
+          "file": "kitchen-remediation.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "recipe prerequisite returns to the entered batch and collapsed preferences retain their values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2541,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:21:55.251Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4729ff85aea5b94eb35e-992c19798b5f58ba69d2",
+          "file": "kitchen-remediation.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "receipt purchase date and prioritized review queue lead straight to the uncertain food",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1197,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:21:57.803Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4729ff85aea5b94eb35e-d95b871c9be68307387a",
+          "file": "kitchen-remediation.spec.ts",
+          "line": 71,
+          "column": 1
+        },
+        {
+          "title": "generated meal drafts and edits survive closing and reloading without approval or intake",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1810,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:10.939Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4729ff85aea5b94eb35e-36fcc45b54c526eeeea7",
+          "file": "kitchen-remediation.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "recipe prerequisite returns to the entered batch and collapsed preferences retain their values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2395,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:12.855Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4729ff85aea5b94eb35e-92577374a39bc51e86e2",
+          "file": "kitchen-remediation.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "receipt purchase date and prioritized review queue lead straight to the uncertain food",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1179,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:15.259Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4729ff85aea5b94eb35e-8cbaee127fafba5e83c0",
+          "file": "kitchen-remediation.spec.ts",
+          "line": 71,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "kitchen-round-two.spec.ts",
+      "file": "kitchen-round-two.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "review queue opens saved candidates and offers direct manual label correction",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2375,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:21:59.033Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c6dd6ecb00bcd5b4867-5e970c2abf581887623c",
+          "file": "kitchen-round-two.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "structured cooking review persists without inventory changes and shows ingredient-pattern repetition",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2118,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:01.417Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c6dd6ecb00bcd5b4867-5beedd1557aab2e15309",
+          "file": "kitchen-round-two.spec.ts",
+          "line": 20,
+          "column": 1
+        },
+        {
+          "title": "manual pantry stock stays available without purchase claims or receipt-review work",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6779,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Grocery spending' })\nExpected substring: \u001b[32m\"0 reviewed \u001b[7m�\u001b[27m 0 with missing\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mYour grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet\u001b[27m0 reviewed \u001b[7m·\u001b[27m 0 with missing\u001b[7m or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('region', { name: 'Grocery spending' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Grocery spending' })\u001b[22m\n\u001b[2m    14 × locator resolved to <section aria-label=\"Grocery spending\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"Your grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet0 reviewed · 0 with missing or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Grocery spending' })\nExpected substring: \u001b[32m\"0 reviewed \u001b[7m�\u001b[27m 0 with missing\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mYour grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet\u001b[27m0 reviewed \u001b[7m·\u001b[27m 0 with missing\u001b[7m or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('region', { name: 'Grocery spending' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Grocery spending' })\u001b[22m\n\u001b[2m    14 × locator resolved to <section aria-label=\"Grocery spending\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"Your grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet0 reviewed · 0 with missing or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\"\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts:32:867",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                      "column": 867,
+                      "line": 32
+                    },
+                    "snippet": "  30 |\n  31 | test('manual pantry stock stays available without purchase claims or receipt-review work',async({page})=>{\n> 32 |  const base=await ready(page);const state=addManualPantryIngredient(base,{name:'Manual oats',serving:'40 g',servings:10,nutrition:{calories:150,protein:5,carbs:27,fat:3}},'spending');await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open meal planner',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('10 labeled servings remain; stock recorded');await expect(page.getByRole('dialog')).not.toContainText('from your');await page.getByRole('button',{name:'Close dialog',exact:true}).click();await page.getByRole('button',{name:'Swaps, list & spending',exact:true}).click();await page.getByRole('tab',{name:'Your spending',exact:true}).click();const spending=page.getByRole('region',{name:'Grocery spending'});await expect(spending).toContainText('0 reviewed � 0 with missing');await expect(spending.getByRole('button')).toHaveCount(0);const saved=await readBrowserRecords(page);expect(saved.groceries).toHaveLength(1);expect(saved.groceries[0].items[0].servingsPurchased).toBe(10);await page.screenshot({path:test.info().outputPath('manual-stock-not-a-purchase.png')});\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^\n  33 | });\n  34 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                        "column": 867,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Grocery spending' })\nExpected substring: \u001b[32m\"0 reviewed \u001b[7m�\u001b[27m 0 with missing\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mYour grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet\u001b[27m0 reviewed \u001b[7m·\u001b[27m 0 with missing\u001b[7m or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('region', { name: 'Grocery spending' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Grocery spending' })\u001b[22m\n\u001b[2m    14 × locator resolved to <section aria-label=\"Grocery spending\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"Your grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet0 reviewed · 0 with missing or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\"\u001b[22m\n\n\n  30 |\n  31 | test('manual pantry stock stays available without purchase claims or receipt-review work',async({page})=>{\n> 32 |  const base=await ready(page);const state=addManualPantryIngredient(base,{name:'Manual oats',serving:'40 g',servings:10,nutrition:{calories:150,protein:5,carbs:27,fat:3}},'spending');await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open meal planner',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('10 labeled servings remain; stock recorded');await expect(page.getByRole('dialog')).not.toContainText('from your');await page.getByRole('button',{name:'Close dialog',exact:true}).click();await page.getByRole('button',{name:'Swaps, list & spending',exact:true}).click();await page.getByRole('tab',{name:'Your spending',exact:true}).click();const spending=page.getByRole('region',{name:'Grocery spending'});await expect(spending).toContainText('0 reviewed � 0 with missing');await expect(spending.getByRole('button')).toHaveCount(0);const saved=await readBrowserRecords(page);expect(saved.groceries).toHaveLength(1);expect(saved.groceries[0].items[0].servingsPurchased).toBe(10);await page.screenshot({path:test.info().outputPath('manual-stock-not-a-purchase.png')});\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^\n  33 | });\n  34 |\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts:32:867"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:03.543Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\kitchen\\green-browser-final-output\\kitchen-round-two-manual-p-4ce7b-aims-or-receipt-review-work-desktop\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\kitchen\\green-browser-final-output\\kitchen-round-two-manual-p-4ce7b-aims-or-receipt-review-work-desktop\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                    "column": 867,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6c6dd6ecb00bcd5b4867-77f7c96c921d4ea7fa0f",
+          "file": "kitchen-round-two.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "review queue opens saved candidates and offers direct manual label correction",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2225,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:16.467Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c6dd6ecb00bcd5b4867-0b264eaa5309d737c2fe",
+          "file": "kitchen-round-two.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "structured cooking review persists without inventory changes and shows ingredient-pattern repetition",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2086,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:18.703Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c6dd6ecb00bcd5b4867-2f282e3dca04a69d14c1",
+          "file": "kitchen-round-two.spec.ts",
+          "line": 20,
+          "column": 1
+        },
+        {
+          "title": "manual pantry stock stays available without purchase claims or receipt-review work",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6662,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Grocery spending' })\nExpected substring: \u001b[32m\"0 reviewed \u001b[7m�\u001b[27m 0 with missing\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mYour grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet\u001b[27m0 reviewed \u001b[7m·\u001b[27m 0 with missing\u001b[7m or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('region', { name: 'Grocery spending' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Grocery spending' })\u001b[22m\n\u001b[2m    14 × locator resolved to <section aria-label=\"Grocery spending\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"Your grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet0 reviewed · 0 with missing or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Grocery spending' })\nExpected substring: \u001b[32m\"0 reviewed \u001b[7m�\u001b[27m 0 with missing\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mYour grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet\u001b[27m0 reviewed \u001b[7m·\u001b[27m 0 with missing\u001b[7m or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('region', { name: 'Grocery spending' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Grocery spending' })\u001b[22m\n\u001b[2m    14 × locator resolved to <section aria-label=\"Grocery spending\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"Your grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet0 reviewed · 0 with missing or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\"\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts:32:867",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                      "column": 867,
+                      "line": 32
+                    },
+                    "snippet": "  30 |\n  31 | test('manual pantry stock stays available without purchase claims or receipt-review work',async({page})=>{\n> 32 |  const base=await ready(page);const state=addManualPantryIngredient(base,{name:'Manual oats',serving:'40 g',servings:10,nutrition:{calories:150,protein:5,carbs:27,fat:3}},'spending');await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open meal planner',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('10 labeled servings remain; stock recorded');await expect(page.getByRole('dialog')).not.toContainText('from your');await page.getByRole('button',{name:'Close dialog',exact:true}).click();await page.getByRole('button',{name:'Swaps, list & spending',exact:true}).click();await page.getByRole('tab',{name:'Your spending',exact:true}).click();const spending=page.getByRole('region',{name:'Grocery spending'});await expect(spending).toContainText(/0 reviewed\\s+\\u00b7\\s+0 with missing/);await expect(spending.getByRole('button')).toHaveCount(0);const saved=await readBrowserRecords(page);expect(saved.groceries).toHaveLength(1);expect(saved.groceries[0].items[0].servingsPurchased).toBe(10);await page.screenshot({path:test.info().outputPath('manual-stock-not-a-purchase.png')});\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^\n  33 | });\n  34 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                        "column": 867,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Grocery spending' })\nExpected substring: \u001b[32m\"0 reviewed \u001b[7m�\u001b[27m 0 with missing\"\u001b[39m\nReceived string:    \u001b[31m\"\u001b[7mYour grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet\u001b[27m0 reviewed \u001b[7m·\u001b[27m 0 with missing\u001b[7m or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('region', { name: 'Grocery spending' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Grocery spending' })\u001b[22m\n\u001b[2m    14 × locator resolved to <section aria-label=\"Grocery spending\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"Your grocery trips, together.Only reviewed receipts count. This is recorded household spending, including nonfood purchases—not a complete account of everything you spent.No reviewed totals yet0 reviewed · 0 with missing or unchecked totalsYour shopping history is private to your saved account or this device. No cross-user shopping analytics are collected by this feature.\"\u001b[22m\n\n\n  30 |\n  31 | test('manual pantry stock stays available without purchase claims or receipt-review work',async({page})=>{\n> 32 |  const base=await ready(page);const state=addManualPantryIngredient(base,{name:'Manual oats',serving:'40 g',servings:10,nutrition:{calories:150,protein:5,carbs:27,fat:3}},'spending');await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open meal planner',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('10 labeled servings remain; stock recorded');await expect(page.getByRole('dialog')).not.toContainText('from your');await page.getByRole('button',{name:'Close dialog',exact:true}).click();await page.getByRole('button',{name:'Swaps, list & spending',exact:true}).click();await page.getByRole('tab',{name:'Your spending',exact:true}).click();const spending=page.getByRole('region',{name:'Grocery spending'});await expect(spending).toContainText(/0 reviewed\\s+\\u00b7\\s+0 with missing/);await expect(spending.getByRole('button')).toHaveCount(0);const saved=await readBrowserRecords(page);expect(saved.groceries).toHaveLength(1);expect(saved.groceries[0].items[0].servingsPurchased).toBe(10);await page.screenshot({path:test.info().outputPath('manual-stock-not-a-purchase.png')});\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^\n  33 | });\n  34 |\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts:32:867"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:20.801Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\kitchen\\green-browser-final-output\\kitchen-round-two-manual-p-4ce7b-aims-or-receipt-review-work-mobile\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\kitchen\\green-browser-final-output\\kitchen-round-two-manual-p-4ce7b-aims-or-receipt-review-work-mobile\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                    "column": 867,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6c6dd6ecb00bcd5b4867-aa059236ca627b18dd9c",
+          "file": "kitchen-round-two.spec.ts",
+          "line": 31,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T19:21:49.925Z",
+    "duration": 37626.565,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

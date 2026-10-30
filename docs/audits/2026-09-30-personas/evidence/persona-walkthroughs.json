@@ -1,0 +1,952 @@
+[
+  {
+    "id": "expert",
+    "name": "Expert Audit",
+    "focus": "Movement & workouts",
+    "tour": false,
+    "prompt": "I finished bench press: 80 kg for 5 reps, then 80 kg for 5 reps. Please let me review before saving.",
+    "mode": "unmocked local app, guest setup through UI",
+    "steps": [
+      {
+        "step": "01-welcome",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "expert/01-welcome.txt"
+      },
+      {
+        "step": "03-account",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "expert/03-account.txt"
+      },
+      {
+        "step": "04-setup",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "expert/04-setup.txt"
+      },
+      {
+        "step": "05-ready",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "expert/05-ready.txt"
+      },
+      {
+        "step": "06-first-chat",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "expert/06-first-chat.txt"
+      },
+      {
+        "step": "07-live-response",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "expert/07-live-response.txt"
+      },
+      {
+        "step": "08-nutrition",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "expert/08-nutrition.txt"
+      },
+      {
+        "step": "09-nutrition-week",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "expert/09-nutrition-week.txt"
+      },
+      {
+        "step": "10-previous-day",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "expert/10-previous-day.txt"
+      },
+      {
+        "step": "11-targets",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "expert/11-targets.txt"
+      },
+      {
+        "step": "12-workouts",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "expert/12-workouts.txt"
+      },
+      {
+        "step": "13-workout-builder",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "expert/13-workout-builder.txt"
+      },
+      {
+        "step": "14-workout-history",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "expert/14-workout-history.txt"
+      },
+      {
+        "step": "15-kitchen",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/15-kitchen.txt"
+      },
+      {
+        "step": "16-first-week",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/16-first-week.txt"
+      },
+      {
+        "step": "17-pantry",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/17-pantry.txt"
+      },
+      {
+        "step": "18-recipes",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/18-recipes.txt"
+      },
+      {
+        "step": "19-planner",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/19-planner.txt"
+      },
+      {
+        "step": "20-food-preferences",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/20-food-preferences.txt"
+      },
+      {
+        "step": "21-swaps",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/21-swaps.txt"
+      },
+      {
+        "step": "22-shopping-list",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/22-shopping-list.txt"
+      },
+      {
+        "step": "23-spending",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/23-spending.txt"
+      },
+      {
+        "step": "24-receipt-capture",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/24-receipt-capture.txt"
+      },
+      {
+        "step": "25-barcode",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "expert/25-barcode.txt"
+      },
+      {
+        "step": "26-profile",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/26-profile.txt"
+      },
+      {
+        "step": "27-account-backups",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/27-account-backups.txt"
+      },
+      {
+        "step": "28-connections",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/28-connections.txt"
+      },
+      {
+        "step": "29-weekly-review",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/29-weekly-review.txt"
+      },
+      {
+        "step": "30-meals-captures",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/30-meals-captures.txt"
+      },
+      {
+        "step": "31-profile-workout-history",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/31-profile-workout-history.txt"
+      },
+      {
+        "step": "32-privacy-help",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/32-privacy-help.txt"
+      },
+      {
+        "step": "33-about",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/33-about.txt"
+      },
+      {
+        "step": "34-weight-saved",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/34-weight-saved.txt"
+      },
+      {
+        "step": "35-return-after-reload",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "expert/35-return-after-reload.txt"
+      }
+    ],
+    "pageErrors": [],
+    "liveElapsedMs": 6532,
+    "completed": true
+  },
+  {
+    "id": "beginner",
+    "name": "Beginner Audit",
+    "focus": "A little of both",
+    "tour": true,
+    "prompt": "I went for a 20 minute walk today. I would like to record it.",
+    "mode": "unmocked local app, guest setup through UI",
+    "steps": [
+      {
+        "step": "01-welcome",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/01-welcome.txt"
+      },
+      {
+        "step": "02-tour-1",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/02-tour-1.txt"
+      },
+      {
+        "step": "02-tour-2",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/02-tour-2.txt"
+      },
+      {
+        "step": "02-tour-3",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/02-tour-3.txt"
+      },
+      {
+        "step": "02-tour-4",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/02-tour-4.txt"
+      },
+      {
+        "step": "03-account",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/03-account.txt"
+      },
+      {
+        "step": "04-setup",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/04-setup.txt"
+      },
+      {
+        "step": "05-ready",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "beginner/05-ready.txt"
+      },
+      {
+        "step": "06-first-chat",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "beginner/06-first-chat.txt"
+      },
+      {
+        "step": "07-live-response",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "beginner/07-live-response.txt"
+      },
+      {
+        "step": "08-nutrition",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "beginner/08-nutrition.txt"
+      },
+      {
+        "step": "09-nutrition-week",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "beginner/09-nutrition-week.txt"
+      },
+      {
+        "step": "10-previous-day",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "beginner/10-previous-day.txt"
+      },
+      {
+        "step": "11-targets",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "beginner/11-targets.txt"
+      },
+      {
+        "step": "12-workouts",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "beginner/12-workouts.txt"
+      },
+      {
+        "step": "13-workout-builder",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "beginner/13-workout-builder.txt"
+      },
+      {
+        "step": "14-workout-history",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "beginner/14-workout-history.txt"
+      },
+      {
+        "step": "15-kitchen",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/15-kitchen.txt"
+      },
+      {
+        "step": "16-first-week",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/16-first-week.txt"
+      },
+      {
+        "step": "17-pantry",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/17-pantry.txt"
+      },
+      {
+        "step": "18-recipes",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/18-recipes.txt"
+      },
+      {
+        "step": "19-planner",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/19-planner.txt"
+      },
+      {
+        "step": "20-food-preferences",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/20-food-preferences.txt"
+      },
+      {
+        "step": "21-swaps",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/21-swaps.txt"
+      },
+      {
+        "step": "22-shopping-list",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/22-shopping-list.txt"
+      },
+      {
+        "step": "23-spending",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/23-spending.txt"
+      },
+      {
+        "step": "24-receipt-capture",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/24-receipt-capture.txt"
+      },
+      {
+        "step": "25-barcode",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "beginner/25-barcode.txt"
+      },
+      {
+        "step": "26-profile",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/26-profile.txt"
+      },
+      {
+        "step": "27-account-backups",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/27-account-backups.txt"
+      },
+      {
+        "step": "28-connections",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/28-connections.txt"
+      },
+      {
+        "step": "29-weekly-review",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/29-weekly-review.txt"
+      },
+      {
+        "step": "30-meals-captures",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/30-meals-captures.txt"
+      },
+      {
+        "step": "31-profile-workout-history",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/31-profile-workout-history.txt"
+      },
+      {
+        "step": "32-privacy-help",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/32-privacy-help.txt"
+      },
+      {
+        "step": "33-about",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/33-about.txt"
+      },
+      {
+        "step": "34-weight-saved",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/34-weight-saved.txt"
+      },
+      {
+        "step": "35-return-after-reload",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "beginner/35-return-after-reload.txt"
+      }
+    ],
+    "pageErrors": [],
+    "liveWaitReachedLimit": true,
+    "liveElapsedMs": 60154,
+    "completed": true
+  },
+  {
+    "id": "six-months",
+    "name": "Six Months Audit",
+    "focus": "A little of both",
+    "tour": false,
+    "prompt": "I ate lunch today: 150 g cooked white rice, 150 g cooked chicken breast and 1 tablespoon olive oil. Show the components before I log it.",
+    "mode": "unmocked local app, guest setup through UI",
+    "steps": [
+      {
+        "step": "01-welcome",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "six-months/01-welcome.txt"
+      },
+      {
+        "step": "03-account",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "six-months/03-account.txt"
+      },
+      {
+        "step": "04-setup",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "six-months/04-setup.txt"
+      },
+      {
+        "step": "05-ready",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "six-months/05-ready.txt"
+      },
+      {
+        "step": "06-first-chat",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "six-months/06-first-chat.txt"
+      },
+      {
+        "step": "07-live-response",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "six-months/07-live-response.txt"
+      },
+      {
+        "step": "08-nutrition",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "six-months/08-nutrition.txt"
+      },
+      {
+        "step": "09-nutrition-week",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "six-months/09-nutrition-week.txt"
+      },
+      {
+        "step": "10-previous-day",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "six-months/10-previous-day.txt"
+      },
+      {
+        "step": "11-targets",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "six-months/11-targets.txt"
+      },
+      {
+        "step": "12-workouts",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "six-months/12-workouts.txt"
+      },
+      {
+        "step": "13-workout-builder",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "six-months/13-workout-builder.txt"
+      },
+      {
+        "step": "14-workout-history",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "six-months/14-workout-history.txt"
+      },
+      {
+        "step": "15-kitchen",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/15-kitchen.txt"
+      },
+      {
+        "step": "16-first-week",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/16-first-week.txt"
+      },
+      {
+        "step": "17-pantry",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/17-pantry.txt"
+      },
+      {
+        "step": "18-recipes",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/18-recipes.txt"
+      },
+      {
+        "step": "19-planner",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/19-planner.txt"
+      },
+      {
+        "step": "20-food-preferences",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/20-food-preferences.txt"
+      },
+      {
+        "step": "21-swaps",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/21-swaps.txt"
+      },
+      {
+        "step": "22-shopping-list",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/22-shopping-list.txt"
+      },
+      {
+        "step": "23-spending",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/23-spending.txt"
+      },
+      {
+        "step": "24-receipt-capture",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/24-receipt-capture.txt"
+      },
+      {
+        "step": "25-barcode",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "six-months/25-barcode.txt"
+      },
+      {
+        "step": "26-profile",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/26-profile.txt"
+      },
+      {
+        "step": "27-account-backups",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/27-account-backups.txt"
+      },
+      {
+        "step": "28-connections",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/28-connections.txt"
+      },
+      {
+        "step": "29-weekly-review",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/29-weekly-review.txt"
+      },
+      {
+        "step": "30-meals-captures",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/30-meals-captures.txt"
+      },
+      {
+        "step": "31-profile-workout-history",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/31-profile-workout-history.txt"
+      },
+      {
+        "step": "32-privacy-help",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/32-privacy-help.txt"
+      },
+      {
+        "step": "33-about",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/33-about.txt"
+      },
+      {
+        "step": "34-weight-saved",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/34-weight-saved.txt"
+      },
+      {
+        "step": "35-return-after-reload",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "six-months/35-return-after-reload.txt"
+      }
+    ],
+    "pageErrors": [],
+    "liveElapsedMs": 7608,
+    "completed": true
+  },
+  {
+    "id": "fit-new-tracker",
+    "name": "Fit New Tracker Audit",
+    "focus": "Food & meals",
+    "tour": true,
+    "prompt": "I had two slices of toast with peanut butter for breakfast today. I do not know how much peanut butter. Help me log it without pretending the portion is certain.",
+    "mode": "unmocked local app, guest setup through UI",
+    "steps": [
+      {
+        "step": "01-welcome",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/01-welcome.txt"
+      },
+      {
+        "step": "02-tour-1",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/02-tour-1.txt"
+      },
+      {
+        "step": "02-tour-2",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/02-tour-2.txt"
+      },
+      {
+        "step": "02-tour-3",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/02-tour-3.txt"
+      },
+      {
+        "step": "02-tour-4",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/02-tour-4.txt"
+      },
+      {
+        "step": "03-account",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/03-account.txt"
+      },
+      {
+        "step": "04-setup",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/04-setup.txt"
+      },
+      {
+        "step": "05-ready",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "fit-new-tracker/05-ready.txt"
+      },
+      {
+        "step": "06-first-chat",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "fit-new-tracker/06-first-chat.txt"
+      },
+      {
+        "step": "07-live-response",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "fit-new-tracker/07-live-response.txt"
+      },
+      {
+        "step": "08-nutrition",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "fit-new-tracker/08-nutrition.txt"
+      },
+      {
+        "step": "09-nutrition-week",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "fit-new-tracker/09-nutrition-week.txt"
+      },
+      {
+        "step": "10-previous-day",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "fit-new-tracker/10-previous-day.txt"
+      },
+      {
+        "step": "11-targets",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "fit-new-tracker/11-targets.txt"
+      },
+      {
+        "step": "12-workouts",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "fit-new-tracker/12-workouts.txt"
+      },
+      {
+        "step": "13-workout-builder",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "fit-new-tracker/13-workout-builder.txt"
+      },
+      {
+        "step": "14-workout-history",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "fit-new-tracker/14-workout-history.txt"
+      },
+      {
+        "step": "15-kitchen",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/15-kitchen.txt"
+      },
+      {
+        "step": "16-first-week",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/16-first-week.txt"
+      },
+      {
+        "step": "17-pantry",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/17-pantry.txt"
+      },
+      {
+        "step": "18-recipes",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/18-recipes.txt"
+      },
+      {
+        "step": "19-planner",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/19-planner.txt"
+      },
+      {
+        "step": "20-food-preferences",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/20-food-preferences.txt"
+      },
+      {
+        "step": "21-swaps",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/21-swaps.txt"
+      },
+      {
+        "step": "22-shopping-list",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/22-shopping-list.txt"
+      },
+      {
+        "step": "23-spending",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/23-spending.txt"
+      },
+      {
+        "step": "24-receipt-capture",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/24-receipt-capture.txt"
+      },
+      {
+        "step": "25-barcode",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "fit-new-tracker/25-barcode.txt"
+      },
+      {
+        "step": "26-profile",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/26-profile.txt"
+      },
+      {
+        "step": "27-account-backups",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/27-account-backups.txt"
+      },
+      {
+        "step": "28-connections",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/28-connections.txt"
+      },
+      {
+        "step": "29-weekly-review",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/29-weekly-review.txt"
+      },
+      {
+        "step": "30-meals-captures",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/30-meals-captures.txt"
+      },
+      {
+        "step": "31-profile-workout-history",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/31-profile-workout-history.txt"
+      },
+      {
+        "step": "32-privacy-help",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/32-privacy-help.txt"
+      },
+      {
+        "step": "33-about",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/33-about.txt"
+      },
+      {
+        "step": "34-weight-saved",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/34-weight-saved.txt"
+      },
+      {
+        "step": "35-return-after-reload",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "fit-new-tracker/35-return-after-reload.txt"
+      }
+    ],
+    "pageErrors": [],
+    "liveElapsedMs": 5109,
+    "completed": true
+  },
+  {
+    "id": "developer",
+    "name": "Developer Audit",
+    "focus": "A little of both",
+    "tour": false,
+    "prompt": null,
+    "mode": "unmocked local app, guest setup through UI",
+    "steps": [
+      {
+        "step": "01-welcome",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "developer/01-welcome.txt"
+      },
+      {
+        "step": "03-account",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "developer/03-account.txt"
+      },
+      {
+        "step": "04-setup",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "developer/04-setup.txt"
+      },
+      {
+        "step": "05-ready",
+        "url": "http://127.0.0.1:5173/",
+        "evidence": "developer/05-ready.txt"
+      },
+      {
+        "step": "06-first-chat",
+        "url": "http://127.0.0.1:5173/#chat",
+        "evidence": "developer/06-first-chat.txt"
+      },
+      {
+        "step": "08-nutrition",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "developer/08-nutrition.txt"
+      },
+      {
+        "step": "09-nutrition-week",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "developer/09-nutrition-week.txt"
+      },
+      {
+        "step": "10-previous-day",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "developer/10-previous-day.txt"
+      },
+      {
+        "step": "11-targets",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "evidence": "developer/11-targets.txt"
+      },
+      {
+        "step": "12-workouts",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "developer/12-workouts.txt"
+      },
+      {
+        "step": "13-workout-builder",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "developer/13-workout-builder.txt"
+      },
+      {
+        "step": "14-workout-history",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "evidence": "developer/14-workout-history.txt"
+      },
+      {
+        "step": "15-kitchen",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/15-kitchen.txt"
+      },
+      {
+        "step": "16-first-week",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/16-first-week.txt"
+      },
+      {
+        "step": "17-pantry",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/17-pantry.txt"
+      },
+      {
+        "step": "18-recipes",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/18-recipes.txt"
+      },
+      {
+        "step": "19-planner",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/19-planner.txt"
+      },
+      {
+        "step": "20-food-preferences",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/20-food-preferences.txt"
+      },
+      {
+        "step": "21-swaps",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/21-swaps.txt"
+      },
+      {
+        "step": "22-shopping-list",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/22-shopping-list.txt"
+      },
+      {
+        "step": "23-spending",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/23-spending.txt"
+      },
+      {
+        "step": "24-receipt-capture",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/24-receipt-capture.txt"
+      },
+      {
+        "step": "25-barcode",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "evidence": "developer/25-barcode.txt"
+      },
+      {
+        "step": "26-profile",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/26-profile.txt"
+      },
+      {
+        "step": "27-account-backups",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/27-account-backups.txt"
+      },
+      {
+        "step": "28-connections",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/28-connections.txt"
+      },
+      {
+        "step": "29-weekly-review",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/29-weekly-review.txt"
+      },
+      {
+        "step": "30-meals-captures",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/30-meals-captures.txt"
+      },
+      {
+        "step": "31-profile-workout-history",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/31-profile-workout-history.txt"
+      },
+      {
+        "step": "32-privacy-help",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/32-privacy-help.txt"
+      },
+      {
+        "step": "33-about",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/33-about.txt"
+      },
+      {
+        "step": "34-weight-saved",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/34-weight-saved.txt"
+      },
+      {
+        "step": "35-return-after-reload",
+        "url": "http://127.0.0.1:5173/#you",
+        "evidence": "developer/35-return-after-reload.txt"
+      }
+    ],
+    "pageErrors": [],
+    "completed": true
+  }
+]

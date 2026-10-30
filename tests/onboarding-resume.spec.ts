@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { mockCloud } from "./cloud-fixture";
+import { mockCloud } from "../e2e-shared/cloud-fixture";
 import { draftKey, emptyDraft } from "../src/features/onboarding/draft";
 import { readBrowserRecords } from "./record-fixture";
 

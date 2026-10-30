@@ -1,12 +1,9 @@
 import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
+import { send } from "../e2e-shared/chat";
 
 const stored=(page:Page)=>readBrowserRecords(page);
 const card=(page:Page)=>page.getByRole('region',{name:'Review prepared meal portion'});
-async function send(page:Page,text:string) {
-  await page.getByRole('textbox',{name:'Message Rep & Plate'}).fill(text);
-  await page.getByRole('button',{name:'Send message',exact:true}).click();
-}
 async function setup(page:Page) {
   await page.route('**/api/status',route=>route.fulfill({json:{available:true,jev:true}}));
   await page.route('**/api/chat',route=>{

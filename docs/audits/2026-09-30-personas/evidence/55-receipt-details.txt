@@ -1,0 +1,112 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: I ate 170 g plain Greek yogurt and one medium banana for breakfast today. Please estimate it and let me review before logging.
+      - text: 9:31 AM
+      - paragraph: "Got it. Here's my estimate for your breakfast: plain Greek yogurt and a medium banana. Give it a quick look before adding it to your day."
+      - text: 9:31 AM
+      - paragraph: "Correction to Breakfast: the yogurt was nonfat, and its label says 100 calories, 17 g protein, 6 g carbs, 0 g fat for 170 g. Keep the medium banana."
+      - text: 9:32 AM
+      - paragraph: "Got it. Using your label for the nonfat yogurt and a medium banana, here's my estimate: about 215 calories, 23g protein, 34g carbs, and 1g fat. Review this before adding it to your day."
+      - text: 9:32 AM
+      - strong: Logged.
+      - text: Meal · 215 cal · 18.3g protein
+      - complementary "A moment with Spot":
+        - strong: Look at us.
+        - paragraph: Being all organized and stuff.
+      - button "Edit Breakfast":
+        - strong: Breakfast
+        - text: Saved to your day ~215 cal · 18.3g protein Added to Breakfast 9:32 AM
+      - button "Which pantry ingredients did you use?"
+      - paragraph: Audit oats saved to your groceries. This doesn't count toward today's intake.
+      - text: 9:36 AM
+      - button "Scanned groceries 1 grocery item saved Nutrition estimates & sources inside Saved to groceries · not today’s intake":
+        - strong: Scanned groceries
+        - text: 1 grocery item saved Nutrition estimates & sources inside
+        - emphasis: Saved to groceries · not today’s intake
+      - paragraph: Your Audit oat batch batch is saved with 4 portions. Its ingredients moved out of the pantry. Nothing has been added to your food log.
+      - text: 9:37 AM
+      - paragraph: Meal removed. Any linked pantry or recipe portions have been restored.
+      - text: 9:37 AM
+      - img "Your captured photo or screenshot"
+      - paragraph: This is a grocery receipt for items I purchased. Identify the store and items, research their nutrition, and save the grocery list separately from meals I ate. Do not log these purchases as food eaten.
+      - text: 9:38 AM
+      - paragraph: Got it. I read the Kroger receipt and prepared a grocery list (saved separately from your meals). Review the items below and check any notes before you accept them.
+      - text: 9:38 AM
+      - link "Kroger product — Kroger Vitamin D Whole Milk, 1 gal":
+        - /url: https://www.kroger.com/p/kroger-vitamin-d-whole-milk-gallon/0001111040101
+      - link "Quaker SmartLabel — Old Fashioned Oats 42 oz":
+        - /url: https://smartlabel.pepsico.info/030000010402-0008-en-US/index.html
+      - link "Dawn — Ingredients (brand site)":
+        - /url: https://dawn-dish.com/en-us/how-to/what-dawn-is-made-of-ingredients/
+      - button "KROGER 3 grocery items saved 2 matches need a check Saved to groceries · not today’s intake":
+        - strong: KROGER
+        - text: 3 grocery items saved 2 matches need a check
+        - emphasis: Saved to groceries · not today’s intake
+      - paragraph: Some product matches need a check. Unknown nutrition is left blank.
+      - paragraph: USDA candidates are ready for 2 receipt items. Compare your package before applying a match.
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Your pantry":
+  - heading "Your pantry" [level=2]
+  - button "Close dialog"
+  - paragraph: What you bought, what is left, and what you used. Nothing counts as eaten until you confirm it.
+  - text: Show items by
+  - combobox "Show items by":
+    - 'option "Use soon: package date" [selected]'
+    - option "Purchase order"
+  - heading "Kroger whole milk, 1 gal (as printed)" [level=3]
+  - text: KROGER · 2026-09-30
+  - strong: Quantity needs a check
+  - text: "1"
+  - paragraph: "1 serving: 1 cup (240 ml)"
+  - text: Package date not recorded Opened date not recorded
+  - button "Edit dates for Kroger whole milk, 1 gal (as printed)": Edit dates
+  - paragraph: ~150 cal · 8g protein per serving
+  - text: Check the serving size and nutrition before logging.
+  - checkbox "Use Kroger whole milk, 1 gal (as printed)" [disabled]
+  - text: Use in a meal
+  - link "Kroger — Kroger Vitamin D Whole Milk, 1 gal product page":
+    - /url: https://www.kroger.com/p/kroger-vitamin-d-whole-milk-gallon/0001111040101
+  - heading "Quaker Old Fashioned Oats, 42 oz (canister)" [level=3]
+  - text: KROGER · 2026-09-30
+  - strong: Quantity needs a check
+  - text: "1"
+  - paragraph: "1 serving: 1/2 cup (40 g)"
+  - text: Package date not recorded Opened date not recorded
+  - button "Edit dates for Quaker Old Fashioned Oats, 42 oz (canister)": Edit dates
+  - paragraph: ~150 cal · 5g protein per serving
+  - text: Check the serving size and nutrition before logging.
+  - checkbox "Use Quaker Old Fashioned Oats, 42 oz (canister)" [disabled]
+  - text: Use in a meal
+  - link "Quaker — SmartLabel for Old Fashioned Oats (42 oz)":
+    - /url: https://smartlabel.pepsico.info/030000010402-0008-en-US/index.html
+  - link "Quaker Old Fashioned Oats (retailer product page)":
+    - /url: https://www.kroger.com/p/upc/0003000001040
+  - button "Check purchase details"
+  - button "What can I make with these?"

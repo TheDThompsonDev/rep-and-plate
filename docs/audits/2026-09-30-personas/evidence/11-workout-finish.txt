@@ -1,0 +1,80 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - strong: Tell Spot what you did.
+    - text: Workout · Talk, type, or tap your sets.
+    - heading "Upper Body saved" [level=1]
+    - paragraph: 0 of 4 exercises completed.
+    - progressbar "Workout progress"
+    - text: 8%
+    - complementary "A moment with Spot":
+      - img "Spot in sunglasses addressing far too many microphones."
+      - text: VERY MUCH IN YOUR CORNER
+      - strong: Get my publicist.
+      - paragraph: Workout logged. I’ve prepared a completely unnecessary press conference.
+    - region "Bench Press":
+      - img "Bench Press illustration"
+      - heading "Bench Press" [level=2]
+      - button "Adjust Bench Press" [disabled]: 185 lb · 3 × 8
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 1 of 4
+      - strong: Set 1
+      - text: 45 lb × 5 reps 2
+      - strong: Set 2
+      - text: 185 lb · Not recorded 3
+      - strong: Set 3
+      - text: 185 lb · Not recorded
+    - paragraph: Got 5
+    - text: 9:29 AM
+    - paragraph: "Got it. Bench Press, set 1: 45 lb × 5 reps."
+    - text: 9:29 AM
+    - region "Incline Dumbbell Press":
+      - img "Incline Dumbbell Press illustration"
+      - heading "Incline Dumbbell Press" [level=2]
+      - button "Adjust Incline Dumbbell Press" [disabled]: 60 lb · 3 × 10
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 2 of 4 1
+      - strong: Set 1
+      - text: 60 lb · Not recorded 2
+      - strong: Set 2
+      - text: 60 lb · Not recorded 3
+      - strong: Set 3
+      - text: 60 lb · Not recorded
+    - region "Seated Cable Row":
+      - img "Seated Cable Row illustration"
+      - heading "Seated Cable Row" [level=2]
+      - button "Adjust Seated Cable Row" [disabled]: 120 lb · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 3 of 4 1
+      - strong: Set 1
+      - text: 120 lb · Not recorded 2
+      - strong: Set 2
+      - text: 120 lb · Not recorded 3
+      - strong: Set 3
+      - text: 120 lb · Not recorded
+    - region "Triceps Pushdown":
+      - img "Triceps Pushdown illustration"
+      - heading "Triceps Pushdown" [level=2]
+      - button "Adjust Triceps Pushdown" [disabled]: 50 lb · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 4 of 4 1
+      - strong: Set 1
+      - text: 50 lb · Not recorded 2
+      - strong: Set 2
+      - text: 50 lb · Not recorded 3
+      - strong: Set 3
+      - text: 50 lb · Not recorded
+    - strong: Session saved. Every recorded set is here.
+    - paragraph: 1 of 12 sets recorded. Your session is saved on this device.
+    - button "Choose your next workout"
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

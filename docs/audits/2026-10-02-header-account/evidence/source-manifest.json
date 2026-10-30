@@ -1,0 +1,173 @@
+{
+  "recordedAt": "2026-10-02T15:07:46.241Z",
+  "files": [
+    {
+      "path": "docs/context/account-lifecycle.md",
+      "sha256": "03f1c4c155005bdaea03c82933277558d2cc9697dcfd9d7e044ba04da99dbc74"
+    },
+    {
+      "path": "docs/context/error-ledger.md",
+      "sha256": "0c6970fa587cb35506063eac67d66e71174b01c7635e0b08f271d5f020e7a93b"
+    },
+    {
+      "path": "mobile/App.tsx",
+      "sha256": "f3ff4ca36d9ca873f7a608227129a47b30b3eeb477339657cc3e61ad59f3838a"
+    },
+    {
+      "path": "mobile/e2e/account-security.spec.ts",
+      "sha256": "a472973d98608224ae52b06b10ad11ad7f6e2b1c79404d13c852c191198c769e"
+    },
+    {
+      "path": "mobile/e2e/agent-connections.spec.ts",
+      "sha256": "52be883149a5a3327f035232daddae756e989f248b7e26a9fb2dee4a38b5bb3d"
+    },
+    {
+      "path": "mobile/e2e/beta-auth.spec.ts",
+      "sha256": "6fbc0fec0e5f931794c599b7fc4abe70397e9a9d0870ab5b725c5d92123d660c"
+    },
+    {
+      "path": "mobile/e2e/draft-boundaries.spec.ts",
+      "sha256": "4416da5000aa46c3503ba3c70db33ecc4660921fd34d68cf7d1d28055798861b"
+    },
+    {
+      "path": "mobile/e2e/fitness-setup.spec.ts",
+      "sha256": "1a675d99465ec47ae07618c5346dffedf7caf444c43242c1f2b28802a1e9972d"
+    },
+    {
+      "path": "mobile/e2e/native-flows.spec.ts",
+      "sha256": "0463a47ad3708002aaa3343feecdb165635c20e7359c22a742523a1788e8325d"
+    },
+    {
+      "path": "mobile/e2e/onboarding-nutrition.spec.ts",
+      "sha256": "aced60ff3d64d4e33d0d82ff2f390fda95503a2cfa39d8979110a1bf3dbbc8bd"
+    },
+    {
+      "path": "mobile/e2e/onboarding.spec.ts",
+      "sha256": "ee3d5230f129fa47ce6a2310c10be709de02f96e7eb25927e4cfdb7d6c5aa068"
+    },
+    {
+      "path": "mobile/e2e/outcome-tracking.spec.ts",
+      "sha256": "c6fb12d562f457b6b8feea09900d884355a8331ed343f0460ac8d3cd49dd9e48"
+    },
+    {
+      "path": "mobile/e2e/round-two-remediation.spec.ts",
+      "sha256": "6eebd75d7350cab7e175bbb605dfdd03f350e6c62ddc0adcbd5572417f97e1e2"
+    },
+    {
+      "path": "mobile/e2e/spot-personality.spec.ts",
+      "sha256": "e24bdd0f94a6f22a004226301d5b3ce191afd21bc37ba22ad90707927d5b3f20"
+    },
+    {
+      "path": "mobile/e2e/spot.spec.ts",
+      "sha256": "28e4f806bdb7883395cab67827b9b0e07af46d1419639e21b8fae5d200f65c2d"
+    },
+    {
+      "path": "mobile/src/QuickAccount.tsx",
+      "sha256": "80c412fc23ce8e33f7cecb890f8beb610eb79d2599c645c310cbae9494448cc7"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "f9ab9eb018bfbfc57eca349e1f97e45eab558f04d2aecfd0421acf04fbcaada3"
+    },
+    {
+      "path": "src/FuelNavigation.tsx",
+      "sha256": "810cd1ebd7e9180eefb696f9638a925ef573efcd7bb5dca1406d8a717ab6cd1c"
+    },
+    {
+      "path": "src/features/cloud/QuickAccount.tsx",
+      "sha256": "6500a6985f628b57a6ba5e9df4553889d9a13c06bc3cf24ce3c39c95d0c526d4"
+    },
+    {
+      "path": "src/features/progress/fitness-setup.css",
+      "sha256": "0c6c836bda7edd787506621dce72783d5efb0f865e98a76b337f55d87fa842b9"
+    },
+    {
+      "path": "tests/account-sync.spec.ts",
+      "sha256": "105c132fb8c55a4458ad8cf67f974d0a2b005d355454e042602a5871e3187c66"
+    },
+    {
+      "path": "tests/ai-cancellation.spec.ts",
+      "sha256": "22ee0fbce76a8a9aa1678f657ec0a7a845d2b65b2fda69ba9292ff94fa266ec6"
+    },
+    {
+      "path": "tests/ai-flows.spec.ts",
+      "sha256": "17d87e39415dbfdc4cf079dc94d1640da0a28f48ef5bedd17f70cc917d897edf"
+    },
+    {
+      "path": "tests/barcode-entry.spec.ts",
+      "sha256": "10407c8bd4bdc616af601baf36e9d92703687b821ba7d83a774be8bebe2bcd82"
+    },
+    {
+      "path": "tests/fitness-setup.spec.ts",
+      "sha256": "1055e3788770b174b2ba288931622c901b20915a17f034b17fab876dba5603b8"
+    },
+    {
+      "path": "tests/flows.spec.ts",
+      "sha256": "ce8a0a2e2d0e228be40567cd1ad07da133692a7be77712aa13b8726b608f8a52"
+    },
+    {
+      "path": "tests/kitchen.spec.ts",
+      "sha256": "c604046054bfeee09e647a73e6a4660c1aea34934223149dd87ef9ec21be4598"
+    },
+    {
+      "path": "tests/nutrition-round-two.spec.ts",
+      "sha256": "559e699e4d9774f2ff53dd0e55ce79909a506e26dbc75bb2590314fd047d279e"
+    },
+    {
+      "path": "tests/onboarding-first-log.spec.ts",
+      "sha256": "b239ea7a1c301c388f9d18d2d9396e2449305cca9753ab3e82c51e60f1a671d2"
+    },
+    {
+      "path": "tests/onboarding-nutrition.spec.ts",
+      "sha256": "4e12d1e18ae1316195b623d61fedc660919132a54d061a54ea541439dbe8fb4d"
+    },
+    {
+      "path": "tests/onboarding.spec.ts",
+      "sha256": "a9e9c5838c86f31b244ee8fd76b062d63a57d0fae07475f00308a592a5d04eb2"
+    },
+    {
+      "path": "tests/outcome-tracking.spec.ts",
+      "sha256": "efbede9bc1c9303805d3d3578bb6fdd6cea7b448f498bd373ede0d7d174dc12c"
+    },
+    {
+      "path": "tests/persona-remediation.spec.ts",
+      "sha256": "3877ad8bf960ec8931b6948f354b6116c531b3fa8601a351eac68aa0dc0988b6"
+    },
+    {
+      "path": "tests/refined-tabs.spec.ts",
+      "sha256": "d8c3849d5bdb0ce524ca95dbbbd5ed6c5d913347f23cd4627f263e025237407d"
+    },
+    {
+      "path": "tests/shopping.spec.ts",
+      "sha256": "05c40bf8b0207db9bd0ca33847da54b26365c0eadff7ac887415b427438465d3"
+    },
+    {
+      "path": "tests/spot-personality.spec.ts",
+      "sha256": "9a5dea769374cc742e2da80be081ea6d50e9d4098118b5b5ef69a071fca4de8d"
+    },
+    {
+      "path": "tests/spot.spec.ts",
+      "sha256": "ba5f3c559ad829d6b2adeb635781bab1c58e1cb3ee21de94685353d48a2229a9"
+    },
+    {
+      "path": "tests/you-connected.spec.ts",
+      "sha256": "6236b2e82bb443d785cc02d99500a888529e06a2a0ce97b6298c0ec416e604bd"
+    },
+    {
+      "path": "mobile/e2e/header-account.spec.ts",
+      "sha256": "05855e08db461d194cbf5125b91722c9879bec3204f5a00fd15ada1594dd5c2d"
+    },
+    {
+      "path": "src/features/cloud/header-account.ts",
+      "sha256": "85dba60fddf118e603119fe2fdc12975ef4d14d57f12425c9a145c495b0a984c"
+    },
+    {
+      "path": "tests/header-account.spec.ts",
+      "sha256": "dd8a1d5152698abbba56e5f012480a07ed77eafc9e344df77182b37aa6f42a90"
+    },
+    {
+      "path": "tests/profile-navigation.ts",
+      "sha256": "b2b20c4e3ff377f5de561f9b5bff6480aa0264bb396e4be0344db66574ccbc6c"
+    }
+  ]
+}
