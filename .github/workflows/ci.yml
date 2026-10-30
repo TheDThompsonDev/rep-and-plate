@@ -32,6 +32,11 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
+      # The root unit run also collects mobile/src tests, and mobile/tsconfig.json
+      # extends expo/tsconfig.base, so Expo must be installed before vitest runs.
+      - name: Install native dependencies
+        run: npm --prefix mobile ci
+
       - name: Web type check
         run: npx tsc --noEmit
 
@@ -48,9 +53,6 @@ jobs:
 
       - name: Agent contracts type check
         run: npm run agents:check
-
-      - name: Install native dependencies
-        run: npm --prefix mobile ci
 
       - name: Native type check
         run: npm --prefix mobile run check
