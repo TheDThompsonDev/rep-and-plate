@@ -19,10 +19,16 @@ export async function commitSeededRecords(page: Page) {
   await seedBrowserRecords(page, state);
 }
 
+/** A save journals to localStorage first and clears the journal once IndexedDB
+ * holds the same snapshot. Wait for that hand-off, so a read right after a save
+ * or reload sees what the app hydrated instead of racing the durable write. */
 export async function readBrowserRecords(page: Page) {
   return page.evaluate(async () => {
     const modulePath = "/src/platform/browser-records.ts";
     const { browserRecordTransaction, browserGet } = await import(modulePath);
+    const deadline = Date.now() + 5000;
+    while (Object.keys(localStorage).some((key) => key.startsWith("health.pending.")) && Date.now() < deadline)
+      await new Promise((resolve) => setTimeout(resolve, 50));
     return browserRecordTransaction(async () =>
       JSON.parse(await browserGet("fuel.prototype.v1")),
     );
