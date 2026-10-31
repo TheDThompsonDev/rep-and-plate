@@ -1,0 +1,9 @@
+{
+  "src/features/onboarding/model.ts": "0f785764022913adc1fa2c884ec13456994e60b68db9052f6eed2613027ad085",
+  "src/features/onboarding/Onboarding.tsx": "a6bf04080b63c08bc6467bb6837ecacfb62a987ada1a918fd22acc46ba052837",
+  "src/features/cloud/CloudAccount.tsx": "d85b61cef62c7b9436ede87d353edf4a0860fc089a721b9b69d1f91d90ae45ae",
+  "mobile/src/Onboarding.tsx": "fc2975ccee3ecc549226ba0c50c1dd7201da9eea359055491d839f7cf61d4a21",
+  "tests/onboarding.spec.ts": "ced5df00b166810704b3a2b00457ce44e2148edc92a3f59ab1f766cc0c7e4183",
+  "mobile/e2e/onboarding.spec.ts": "8716af639baeb7bb7c40afc6717f18152ee3d6f39596f7f509647842f7c6ac04",
+  "docs/context/error-ledger.md": "24d666fecde153f23ef685e91ba612d884da2bf238c7a9022bba2807323bd239"
+}

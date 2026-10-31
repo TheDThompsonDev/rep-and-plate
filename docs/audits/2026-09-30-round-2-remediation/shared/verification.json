@@ -1,0 +1,16 @@
+{
+  "findings": ["R2-01", "R2-02", "R2-11", "R2-16"],
+  "red": {
+    "unit": "4 expected failures: scaled values unchanged, invalid multiplier accepted, sample target judgment, generic clarification footer",
+    "browserMobile": "2 expected failures: manual input default0, missing portion multiplier"
+  },
+  "green": {
+    "focusedUnit": 56,
+    "focusedDesktopAndMobile": 26,
+    "configuredTargetRegression": 2,
+    "typecheck": "passed",
+    "browserErrors": 0
+  },
+  "screenshots": ["evidence/01-goal-free.png", "evidence/02-deliberate-manual-values.png", "evidence/03-reviewed-scaling.png", "evidence/04-weekly-without-targets.png"],
+  "scope": "Shared models, web nutrition forms/summaries, AI clarification footer and additive existing-scope agent context metadata. Root owns final integration checks."
+}

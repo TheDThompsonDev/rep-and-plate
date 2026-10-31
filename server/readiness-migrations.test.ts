@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { matchingDatabaseUrl, migrationBody } from "./readiness-migrations";
+import { readdirSync, readFileSync } from "node:fs";
+import {
+  matchingDatabaseUrl,
+  migrationBody,
+  readinessMigrations,
+} from "./readiness-migrations";
 
 describe("readiness migration boundaries", () => {
   it("only removes outer transaction directives and hashes consistently across line endings", () => {
@@ -38,5 +43,44 @@ describe("readiness migration boundaries", () => {
       "postgres://postgres:secret@db.example.supabase.co.evil.test/postgres",
     ])
       expect(() => matchingDatabaseUrl(url, publicUrl)).toThrow();
+  });
+});
+
+describe("migration coverage", () => {
+  const migrations = new URL("../supabase/migrations/", import.meta.url);
+  const files = readdirSync(migrations)
+    .filter((name) => name.endsWith(".sql"))
+    .sort();
+  const bootstrap = readFileSync(
+    new URL("../scripts/setup-supabase.ts", import.meta.url),
+    "utf8",
+  );
+  const direct = files.filter((name) => bootstrap.includes(`migrations/${name}`));
+  const readiness: readonly string[] = readinessMigrations;
+  it("applies every migration file through exactly one setup path", () => {
+    expect(new Set([...direct, ...readiness])).toEqual(new Set(files));
+    expect(direct.filter((name) => readiness.includes(name))).toEqual([]);
+    expect(new Set(readiness).size).toBe(readiness.length);
+  });
+  it("keeps the agents migration after the account migration it depends on, without moving the initial three", () => {
+    expect(readiness.slice(0, 3)).toEqual([
+      "20260929_account.sql",
+      "20260929_operations.sql",
+      "20260929_sync.sql",
+    ]);
+    expect(readiness.indexOf("20260929_agents.sql")).toBeGreaterThan(
+      readiness.indexOf("20260929_account.sql"),
+    );
+  });
+  it("accepts every readiness file's transaction envelope, including leading comments", () => {
+    for (const version of readiness) {
+      const source = readFileSync(new URL(version, migrations), "utf8");
+      const parsed = migrationBody(source);
+      expect(parsed.body.toLowerCase().startsWith("begin;")).toBe(false);
+      expect(parsed.body.length).toBeGreaterThan(100);
+    }
+    expect(
+      migrationBody("-- note\n-- more\nbegin;\ncreate table t(id int);\ncommit;\n").body,
+    ).toContain("create table t");
   });
 });

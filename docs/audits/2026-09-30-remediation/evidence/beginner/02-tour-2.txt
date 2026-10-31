@@ -1,0 +1,14 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - text: SMALL PLATE. BIG PERSONALITY.
+  - img "Spot connecting pasta photos with red string on a conspiracy board."
+  - text: 01 · Meet Spot 02 · Your account 03 · Make it yours
+  - paragraph: MEET SPOT · 2 OF 4
+  - heading "Tell me what you ate." [level=1]
+  - heading "Dinner has become a federal investigation." [level=2]
+  - paragraph: A photo, a few words, or your voice. I’ll help with the details. You review my estimates before anything is logged.
+  - button "Next"
+  - button "Back"
+  - button "Skip to account"
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

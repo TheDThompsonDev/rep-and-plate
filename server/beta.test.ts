@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { createServer, request as httpRequest } from "node:http";
 import type { AddressInfo } from "node:net";
 import { betaHandler, type BetaServices } from "./beta";
+import { requestFixture } from "../tests/ai-fixtures";
 
 async function serve(
   services: BetaServices,
@@ -15,6 +16,8 @@ async function serve(
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
 }
+const owner = "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a";
+const file = "0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f.jpg";
 const services = (): BetaServices => ({
   config: { model: "test", jevModel: "test" },
   origin: "https://health.example",
@@ -217,6 +220,57 @@ describe("hosted beta boundary", () => {
       });
       expect(response.status).toBe(400);
       expect(reads).toBe(0);
+    });
+  });
+  it("rejects a malformed or wrongly typed capture before touching storage", async () => {
+    const s = services();
+    s.authenticate = async (token) => (token === "valid" ? owner : null);
+    let reads = 0;
+    s.readCapture = async () => {
+      reads++;
+      throw Error("must not read");
+    };
+    await serve(s, async (url) => {
+      for (const capture of [
+        { path: 123, kind: "image" },
+        { path: `${owner}/not-a-uuid.jpg`, kind: "image" },
+        { path: `${owner}/${file}`, kind: "video" },
+        { path: `${owner}/${file}` },
+        `${owner}/${file}`,
+      ]) {
+        const response = await fetch(url + "/api/chat", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer valid",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...requestFixture(), capture }),
+        });
+        expect(response.status).toBe(400);
+      }
+      expect(reads).toBe(0);
+    });
+  });
+  it("reads an owned, well-formed capture exactly once and forwards it", async () => {
+    const s = services();
+    s.authenticate = async (token) => (token === "valid" ? owner : null);
+    const reads: [string, string][] = [];
+    s.readCapture = async (user, path) => {
+      reads.push([user, path]);
+      return { bytes: Buffer.from([0xff, 0xd8, 0xff]), mime: "image/jpeg" };
+    };
+    await serve(s, async (url) => {
+      const path = `${owner}/${file}`;
+      const response = await fetch(url + "/api/chat", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer valid",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...requestFixture(), capture: { path, kind: "image" } }),
+      });
+      expect(response.status).not.toBe(400);
+      expect(reads).toEqual([[owner, path]]);
     });
   });
 });

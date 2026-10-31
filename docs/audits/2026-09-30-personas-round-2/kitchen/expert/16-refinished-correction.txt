@@ -1,0 +1,102 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: Workout units
+    - combobox "Workout units":
+      - option "lb"
+      - option "kg" [selected]
+    - button "Log walk or cardio"
+    - strong: Tell Spot what you did.
+    - text: Workout · Talk, type, or tap your sets.
+    - heading "Upper Body saved" [level=1]
+    - paragraph: 0 of 4 exercises completed.
+    - progressbar "Workout progress"
+    - text: 27%
+    - complementary "A moment with Spot":
+      - img "Spot in sunglasses addressing far too many microphones."
+      - text: VERY MUCH IN YOUR CORNER
+      - strong: Get my publicist.
+      - paragraph: Workout logged. I’ve prepared a completely unnecessary press conference.
+    - button "Correct this workout"
+    - region "Bench Press":
+      - img "Bench Press illustration"
+      - heading "Bench Press" [level=2]
+      - button "Adjust Bench Press" [disabled]: Choose load · 3 × 8
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 1 of 4
+      - group: How to approach Bench Press
+      - strong: Set 1
+      - text: 80 kg × 8 reps
+      - strong: Set 2
+      - text: 80 kg × 6 reps 3
+      - strong: Set 3
+      - text: Choose load · Not recorded
+    - paragraph: Got 8
+    - text: 1:27 PM
+    - paragraph: "Got it. Bench Press, set 1: 176.3698 lb × 8 reps."
+    - text: 1:27 PM
+    - paragraph: Got 7
+    - text: 1:27 PM
+    - paragraph: "Got it. Bench Press, set 2: 176.3698 lb × 7 reps."
+    - text: 1:27 PM
+    - paragraph: Got 6
+    - text: 1:28 PM
+    - paragraph: "Updated. Bench Press, set 2: 176.3698 lb × 6 reps."
+    - text: 1:28 PM
+    - region "Seated Cable Row":
+      - img "Seated Cable Row illustration"
+      - heading "Seated Cable Row" [level=2]
+      - button "Adjust Seated Cable Row" [disabled]: Choose load · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 2 of 4
+      - group: How to approach Seated Cable Row
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · Not recorded 2
+      - strong: Set 2
+      - text: Choose load · Not recorded 3
+      - strong: Set 3
+      - text: Choose load · Not recorded
+    - region "Dumbbell Overhead Press":
+      - img "Dumbbell Overhead Press illustration"
+      - heading "Dumbbell Overhead Press" [level=2]
+      - button "Adjust Dumbbell Overhead Press" [disabled]: 20 kg · 2 × 8
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 3 of 4
+      - group: How to approach Dumbbell Overhead Press
+      - strong: Set 1
+      - text: 20 kg × 8 reps 2
+      - strong: Set 2
+      - text: 20 kg · Not recorded
+    - paragraph: Got 8
+    - text: 1:28 PM
+    - paragraph: "Got it. Dumbbell Overhead Press, set 1: 44.0925 lb × 8 reps."
+    - text: 1:28 PM
+    - region "Triceps Pushdown":
+      - img "Triceps Pushdown illustration"
+      - heading "Triceps Pushdown" [level=2]
+      - button "Adjust Triceps Pushdown" [disabled]: Choose load · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 4 of 4
+      - group: How to approach Triceps Pushdown
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · Not recorded 2
+      - strong: Set 2
+      - text: Choose load · Not recorded 3
+      - strong: Set 3
+      - text: Choose load · Not recorded
+    - strong: Session saved. Every recorded set is here.
+    - paragraph: 3 of 11 sets recorded. Your session is saved on this device.
+    - button "Choose your next workout"
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

@@ -1,0 +1,1722 @@
+{
+  "at": "2026-09-30T16:07:44.889Z",
+  "scope": "Changed tracked files and relevant untracked implementation/evidence. Includes preserved pre-existing work; does not imply sole authorship.",
+  "artifacts": [
+    {
+      "path": ".env.example",
+      "sha256": "a4e9f91e8440bb6cf593c897268141eac67e6383cd76195591946a86533267d9"
+    },
+    {
+      "path": "README.md",
+      "sha256": "06f7861b5a267d47efcf3af024bc4b3d63ddc95d59d0f3c12e6c4cc844fc86f0"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/README.md",
+      "sha256": "0c300e3a6cb2b443cdea1a969e2d8e2dd8d1a11bef718c1dd2e215dd44976ca5"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/agents-check.log",
+      "sha256": "dbebf5fc37fd27a439b3d43831d4ecd683dbadfd59e0a7408cb66b74bad6c683"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/ai-before.log",
+      "sha256": "336b10f752d0d817c505781fcc23dd2b5c386ee0996ea487e3790e43f87084b7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/autosave-loop-green-results/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/autosave-loop-green.log",
+      "sha256": "d216863a805251760648f99302771f2fb7b3c734d4b0346bbdc655059aa11a34"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/autosave-loop-red-results/.last-run.json",
+      "sha256": "34039df6d90051f81254948bbb258b83000d1f6e37900e669f027c6b54a6204e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/autosave-loop-red-results/recurring-plans-legacy-pla-7db74-iting-their-approved-source-desktop/error-context.md",
+      "sha256": "b826338758b5d8b78fa76b01d61f833b83f407b08ba86be69438563c82e745d5"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/autosave-loop-red-results/recurring-plans-legacy-pla-7db74-iting-their-approved-source-desktop/test-failed-1.png",
+      "sha256": "478a2640bf35dba70e9abb073eb8e9a29fa2ec8385306a3d1508fb1d89925b7a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/autosave-loop-red.log",
+      "sha256": "50f4b41308f7e99bb81d5459c82270a1577aeaaa163e7d78cb6842865ee5c8de"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/01-welcome.txt",
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/02-tour-1.txt",
+      "sha256": "74a6f57d02d211cf65445d5c9c0e70d404b437b4c9cdc741e0e6e4d526701523"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/02-tour-2.txt",
+      "sha256": "50f88283644f415fb7fff1c39329ebe0124b5b5389b9b096e438c0a9b8f743f9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/02-tour-3.txt",
+      "sha256": "a6195f8226a843f1910194669e54830b542cd15dc47ae3b72797ca0401d43177"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/02-tour-4.txt",
+      "sha256": "338c7dc68e2f71e2d21dcd6be56d9f4557daa3c0fe7cf48c274250a6314fcec4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/03-account.txt",
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/04-setup.txt",
+      "sha256": "80394135791423a315dda955ebf9991e1d57f440fd1923d3e4cb44e0a315f908"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/05-ready.txt",
+      "sha256": "edddfd18ef43aaf771b01c290fe1eafabd7a9f8344d3a91692dc56c409ae2fcc"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/06-first-chat.txt",
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/07-live-response.txt",
+      "sha256": "26583f08254bbc3d917aabf028c07e5654f0649e3914f21828bfe3f759bdbf6f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/08-nutrition.txt",
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/09-nutrition-week.txt",
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/10-previous-day.txt",
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/11-targets.txt",
+      "sha256": "a3976e9bfa5276c196770fa6b1945f7820a3870e9aaf6b903a9dd5906c4804ca"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/12-workouts.txt",
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/13-workout-builder.txt",
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/14-workout-history.txt",
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/15-kitchen.txt",
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/16-first-week.txt",
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/17-pantry.txt",
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/18-recipes.txt",
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/19-planner.txt",
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/20-food-preferences.txt",
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/21-swaps.txt",
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/22-shopping-list.txt",
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/23-spending.txt",
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/24-receipt-capture.txt",
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/25-barcode.txt",
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/26-profile.txt",
+      "sha256": "73c31f31254b47a369f5ecd26b040b4a3418e3c2082e7f19bbcaad8dad838a44"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/27-account-backups.txt",
+      "sha256": "eac1c0f6d3ae39d1fd9bc4a0b75b31c28391a23961cb41e4a15c704804f4510f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/28-connections.txt",
+      "sha256": "7c6796c99142e9a4e72c191878d72cc8a47359e70c4aea225b31c3d0f639d05f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/29-weekly-review.txt",
+      "sha256": "fbf67fc49dc0ce0dfbc71d129ac8fb65b3607195a100a4a225d4b3487836cba9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/30-meals-captures.txt",
+      "sha256": "558a454fb2c39f215ab00e15e5b279fa6546405ab51ec3a82538b7db0718f1e2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/31-profile-workout-history.txt",
+      "sha256": "959fa7af6302132f86eacfe42d9fd5742cf2f77535c5d8f5efda74d63b52de94"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/32-privacy-help.txt",
+      "sha256": "786848c51b977038d644ebaad64b3a451b765121a50db32534f7c7f23776a905"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/33-about.txt",
+      "sha256": "aeb4d6eff5c5c2c675d1aa5307704eda79ed9d40c173cc59c7fb9a1b410efab2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/34-weight-saved.txt",
+      "sha256": "d76f97ae2f0f77f9c352af284b0954fed4aab72305ca075dfe3a078a628f068a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/35-return-after-reload.txt",
+      "sha256": "d76f97ae2f0f77f9c352af284b0954fed4aab72305ca075dfe3a078a628f068a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/beginner/return.png",
+      "sha256": "a06329e0ff5d414c940a24d5f7d61b5da3b4328f715b2c89c21a3d9fcaa04c9e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/build-final.log",
+      "sha256": "0de2ff2f11aa4f55d52ba3258bde52520c604c98a99c3f198a1d72e663f33e37"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/build.log",
+      "sha256": "f0d030ec9caeffe0ee9451a808541b92f119e75b2e0a431c70cc0ad187d8be02"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/01-welcome.txt",
+      "sha256": "c623de1b7f6d72c12dfb080f9cc9c3863b16dd19ac39fe82aa7fa609347ecede"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/03-account.txt",
+      "sha256": "193347d1224ae59bac0ee0f79e20c8946e4f49cae377aac9723d1b0a30ebb009"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/04-setup.txt",
+      "sha256": "0745885feac4e6ac238663edae13b484f05781ab77592b7420e8fef79961baf2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/05-ready.txt",
+      "sha256": "d6a8a61fb27e534eb8f1bb3a278e850189e116b51a36304a1bec73a5284ebcc7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/06-first-chat.txt",
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/08-nutrition.txt",
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/09-nutrition-week.txt",
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/10-previous-day.txt",
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/11-targets.txt",
+      "sha256": "0add3dd338a850d8bb353415c294d27847a1a25a9a64c7b9cb0a468a0f8695c5"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/12-workouts.txt",
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/13-workout-builder.txt",
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/14-workout-history.txt",
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/15-kitchen.txt",
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/16-first-week.txt",
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/17-pantry.txt",
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/18-recipes.txt",
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/19-planner.txt",
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/20-food-preferences.txt",
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/21-swaps.txt",
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/22-shopping-list.txt",
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/23-spending.txt",
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/24-receipt-capture.txt",
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/25-barcode.txt",
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/26-profile.txt",
+      "sha256": "354d7fe3c972703ec00f02e56d96aeafa0586c93eda89d978e8f50ddac56b710"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/27-account-backups.txt",
+      "sha256": "f12ee982edd413f90fd686233223b85192cb7ed22fc80856a29e6d8c6aa4fe66"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/28-connections.txt",
+      "sha256": "2228927a4ed496eef2ba92165bf96605a09b7940272400a94e93a5f1bde5b964"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/29-weekly-review.txt",
+      "sha256": "3cce4b963ff29aa16193ca3fec27d46e9a9e6cfdef888bd837b7046ce7243832"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/30-meals-captures.txt",
+      "sha256": "346f74653897bfe038f608459f1037673236798a3dced4c1ca4e110163c90b76"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/31-profile-workout-history.txt",
+      "sha256": "3aff019cc3f3532e353302e7a084f54a21dacf85b3d02e0dc1323acb76e23f64"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/32-privacy-help.txt",
+      "sha256": "f01d9039e5d02ee2719497cb14d1d57dcfec0262f369b0def39ac12dc4a8fbc8"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/33-about.txt",
+      "sha256": "c1e7c3002e26c89970115d6ed907cee013efbe4b20c54d1ed7e55a964b8f5ee6"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/34-weight-saved.txt",
+      "sha256": "261fd64293a8830a373d240bda98ab6f165b014e4e8937d8da877f610748b482"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/35-return-after-reload.txt",
+      "sha256": "261fd64293a8830a373d240bda98ab6f165b014e4e8937d8da877f610748b482"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/developer/return.png",
+      "sha256": "486f96c852df5cf39adb27eec783b95dbc6cc3cd74af38a4baf4387c37b26c01"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/diff-check-warnings.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/01-welcome.txt",
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/03-account.txt",
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/04-setup.txt",
+      "sha256": "b67e293d7af1e28f748730251900b8cd9eac2cb16598e991e26c886ac5d2f541"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/05-ready.txt",
+      "sha256": "2c0c5c1d4c2cacf4d1074df72b5da55a518249510c806c9d933a71c93e028c06"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/06-first-chat.txt",
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/07-live-response.txt",
+      "sha256": "1e8374dc7746269b89ccdc29f05528b217172621d536c9c4e2abc320f8cf3fe5"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/08-nutrition.txt",
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/09-nutrition-week.txt",
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/10-previous-day.txt",
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/11-targets.txt",
+      "sha256": "b7fe4d03716aafbce1bda5292f5b184079313b763a34d1ba290e47ebd1954eec"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/12-workouts.txt",
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/13-workout-builder.txt",
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/14-workout-history.txt",
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/15-kitchen.txt",
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/16-first-week.txt",
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/17-pantry.txt",
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/18-recipes.txt",
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/19-planner.txt",
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/20-food-preferences.txt",
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/21-swaps.txt",
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/22-shopping-list.txt",
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/23-spending.txt",
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/24-receipt-capture.txt",
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/25-barcode.txt",
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/26-profile.txt",
+      "sha256": "712c80d0f7c9a569d8c98efcb414a1c20a358e8a46a7b6017ab36388962894f1"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/27-account-backups.txt",
+      "sha256": "083652a83e4392c00fb2035badeb1b08336b1507c29995d59432a958f50ba224"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/28-connections.txt",
+      "sha256": "bcd85d4f3278c46df55f2c8679c2ef3c7414738c20cc97cc4f1c99e1c3c258af"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/29-weekly-review.txt",
+      "sha256": "11bbf66c27a11dd71f2c933eddc7d430f72ad664487b30c20585a0238d15f90e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/30-meals-captures.txt",
+      "sha256": "0dcd1e4750307b3dc77882b75f3193d2212ce68e2b49d9641001d63ec0c680a1"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/31-profile-workout-history.txt",
+      "sha256": "27e9918df90f3d550a0d08a16cccdeec3d9196e08b01a70fce5827f129111b13"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/32-privacy-help.txt",
+      "sha256": "e21b8671ed443c7c68123a43a6fefede0d41b18c00ad8f5377d917e6cea0b2ba"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/33-about.txt",
+      "sha256": "cc3eef20ad46c8b81085ca3d2e09413e7eb79d44fe62174a81b71b8ed4b8e237"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/34-weight-saved.txt",
+      "sha256": "d52c5bbc9122588e7e71648bf2f713f83070787b244d920d8399d0f9c4e51f4d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/35-return-after-reload.txt",
+      "sha256": "d52c5bbc9122588e7e71648bf2f713f83070787b244d920d8399d0f9c4e51f4d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/expert/return.png",
+      "sha256": "563ec191df383d8037b1ff9db53fa58e297103337db7d3d5e4fd460755f9a86b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/f19-notes-browser.log",
+      "sha256": "7f77e8c8afb87c30e46af25e3f0ba5f2702d33a0d4c7e5ded99ba7a7409737b4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/f19-notes-green.log",
+      "sha256": "16000fc43f525db0b41aa40df0196d94c54eee3be2f3c3c3e572c1d3fb050a5d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/f19-notes-red.log",
+      "sha256": "640ed12453d05a10bfb5d00f28a982b3ceed96ab031913868fb4d202113e8f89"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/01-welcome.txt",
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/02-tour-1.txt",
+      "sha256": "74a6f57d02d211cf65445d5c9c0e70d404b437b4c9cdc741e0e6e4d526701523"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/02-tour-2.txt",
+      "sha256": "50f88283644f415fb7fff1c39329ebe0124b5b5389b9b096e438c0a9b8f743f9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/02-tour-3.txt",
+      "sha256": "a6195f8226a843f1910194669e54830b542cd15dc47ae3b72797ca0401d43177"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/02-tour-4.txt",
+      "sha256": "338c7dc68e2f71e2d21dcd6be56d9f4557daa3c0fe7cf48c274250a6314fcec4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/03-account.txt",
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/04-setup.txt",
+      "sha256": "28446d1d0b2fb8fe87546a99090f37c0517313ce571887d2b1740a037f777f3b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/05-ready.txt",
+      "sha256": "192966197e0d38e37626546818b61bd700987d7bb8b201fa94dfee435bf4619a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/06-first-chat.txt",
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/07-live-response.txt",
+      "sha256": "617c0f1e895613f309e5cb10e29d3096420d2ff3f37f370766f44712b897443b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/08-nutrition.txt",
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/09-nutrition-week.txt",
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/10-previous-day.txt",
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/11-targets.txt",
+      "sha256": "e9ab2ff1e42dd6cc6ff7c5e551e55377ca617d928b66d23881cd9025e6d5c43c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/12-workouts.txt",
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/13-workout-builder.txt",
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/14-workout-history.txt",
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/15-kitchen.txt",
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/16-first-week.txt",
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/17-pantry.txt",
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/18-recipes.txt",
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/19-planner.txt",
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/20-food-preferences.txt",
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/21-swaps.txt",
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/22-shopping-list.txt",
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/23-spending.txt",
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/24-receipt-capture.txt",
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/25-barcode.txt",
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/26-profile.txt",
+      "sha256": "70b861497e979514ae7926b4fb77b8a5571fa289ff32030aa1081e4ccddc049e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/27-account-backups.txt",
+      "sha256": "d3f9fd846c0f5ebe3921193b6d24e617a269c9a26f67465a7998e9d0ae472477"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/28-connections.txt",
+      "sha256": "14755cfcb111ec9f12047c26e4f6d2f4d303d857b709c2ef8ea7a30923777ffb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/29-weekly-review.txt",
+      "sha256": "3f9f67f053f48c39bf6bde60ca02375653eea4106754fd5762d913b4ed128eab"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/30-meals-captures.txt",
+      "sha256": "892c87036f521319cae1539418973c332b3e7649171e434f8cd578a78825b08a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/31-profile-workout-history.txt",
+      "sha256": "a5c91797ec774ba3f1e708cb9a302dc589878223a49ad587c5f3fae93740c99b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/32-privacy-help.txt",
+      "sha256": "b72b303c3b7b9b866210f183cd82021f3996c8047392cba83a63a0b1e876c235"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/33-about.txt",
+      "sha256": "61b4cff5cd8f232dd7e4a6335e583bb425d923106a65dd29ebacfc310e3f8427"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/34-weight-saved.txt",
+      "sha256": "1664e79f764b598a4c15ffd4a87a7536c3dd906de5060d774762f72ee8e0ac9f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/35-return-after-reload.txt",
+      "sha256": "1664e79f764b598a4c15ffd4a87a7536c3dd906de5060d774762f72ee8e0ac9f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/fit-new-tracker/return.png",
+      "sha256": "66394c1978cea53d055df967a2b6b767971270eeeea77dcf954c14ae0a95b63b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/flows-startup-artifacts/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/flows-startup.json",
+      "sha256": "5964b4116aa33411acf28f9a7ba6be1d3f6c1e80877b3519e17aa2e94322077e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-final-notes-test-results/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-manual-ingredient-390.png",
+      "sha256": "1c4ab769bde5cdd45bdf468e665d32aa86a1ac22908054c5a913494126a317da"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-manual-ingredient-end-390.png",
+      "sha256": "c591fd4fe87ce765ce1522f00c3ba724643d77dbbd68a3f5eb0461d683404ef0"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-repeat-test-results/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-test-results/.last-run.json",
+      "sha256": "2138325c28574dbc927c9f34eef134bc146a2587ad565337589feebeb0fdaa49"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-test-results/recipes-Preparing-a-batch--d9517-tores-the-correct-inventory-desktop/recipe-batch.png",
+      "sha256": "95ddaa5d084cb3fc67e5e48f1909819b1e3842551742e161ef3dce5e00d33bcd"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-test-results/recipes-Preparing-a-batch--d9517-tores-the-correct-inventory-mobile/recipe-batch.png",
+      "sha256": "c4362998cb6d3fb1f28c10eaa7123442c54dfd488cd68ca1c00228d094382a20"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-test-results/recurring-plans-full-day-g-5713f--all-28-meals-before-saving-desktop/error-context.md",
+      "sha256": "91b6b5823bcb28e8454da708deeea0235a82a76b9ee14e173238680d36f4cd9c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-test-results/recurring-plans-full-day-g-5713f--all-28-meals-before-saving-desktop/test-failed-1.png",
+      "sha256": "f34b23e688f23a751642abb87a7fbb595e1925239ab8d0e4718699716c1c500d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-test-results/recurring-plans-full-day-g-5713f--all-28-meals-before-saving-mobile/error-context.md",
+      "sha256": "6ceaf365f9b8995d7476e18f320db0a96ccf9056ae5de63a51e45f30b212c10c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/kitchen-test-results/recurring-plans-full-day-g-5713f--all-28-meals-before-saving-mobile/test-failed-1.png",
+      "sha256": "bbf035906283aabf3b0b8e786a7c46e1faf2e39bfec08f6453fcec9889aa847b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/layout-check.json",
+      "sha256": "83663f99f45478cd664b792c5297a793a5888b7aa1e5399ba14f37bcd3bbe2db"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/layout-check.log",
+      "sha256": "d4bcb00bf47d9f7f9742df87f2cd3f4c9639512f0d398f9c42ec7e3a63a9f2b3"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/manifest-warnings.log",
+      "sha256": "b4fa926594d4c25a2eff823accfbff8492f87df03751de50256dcce158e5a35f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/mobile-check-final.log",
+      "sha256": "9228d30135db2a8ac3d57f264854a885f0019768a04edd08309070ae7fec7b82"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/native-final-artifacts/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/native-final-artifacts/native-flows-native-shell--5e0bc-nd-saves-household-settings/native-nutrition.png",
+      "sha256": "19e1dd1ff701600263406cd3a1ea381a915239b873bd2c7d3d9dbbf9b36edfd0"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/native-final-artifacts/spot-native-Spot-intro-wor-d4ff9-sult-and-weekly-Rep-summary/spot-native-rep.png",
+      "sha256": "d591d71dfa47d61974d91683d5cf8580609b3a264537eaa119d6a82582fcad52"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/native-final.json",
+      "sha256": "b53a19ebc9522c026832842a0d7b5c1d610acb892cfc13d7cf63a81474db7927"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/nutrition-investigation-artifacts/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/nutrition-investigation.json",
+      "sha256": "502ac3a4d5dffe6848126fca8d65ece11aa9348058c2183e9090c7417acf542d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/nutrition-stable-artifacts/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/nutrition-stable.json",
+      "sha256": "ce9fbcb63de668e0d0d286e2921e3974cff9a130e98a15639418ab58b300af5b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/persona-rerun.log",
+      "sha256": "dcbefc71bdf0b49564a67c4351524a4ece0c44ed28426a7212a7746e7d317ff5"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/persona-walkthroughs.json",
+      "sha256": "6fcf4ae7d169ab2408ff8cb2eb34537fefd422b866e2dd72fe414fdd3a3ce08a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/planner-after-artifacts/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/planner-after.json",
+      "sha256": "cd1b2b7684e165d5e7e8e775d26d89202ca197b7223308571b05df3d90246421"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/planner-before-artifacts/.last-run.json",
+      "sha256": "5697e9da302d9597f0bd3e401085154084a15cbc21ddf2ab65eaccf9cd0b7256"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/planner-before-artifacts/account-sync-automatic-acc-86d4c--overwriting-the-newer-plan-desktop/error-context.md",
+      "sha256": "101a22213ca80dcc80fba476e071bae7c310b5eb21e2e4ec9990714226029a20"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/planner-before-artifacts/account-sync-automatic-acc-86d4c--overwriting-the-newer-plan-desktop/test-failed-1.png",
+      "sha256": "ca17b7270a6c699a9259887541fc2838f74ca967e44c2bd3ee6395da3abcf058"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/planner-before.json",
+      "sha256": "b99a0df7b51d9d0980fd7830097088bc03d6f13f4d4159a3c20578386ae0eddc"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/portion-before.log",
+      "sha256": "eded16df69d6f7b7d839dde7f1c2fb30a670fd2290b4659db0173d3e1a66a6f6"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/recurring-fixture-fixed-results/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/recurring-fixture-fixed.log",
+      "sha256": "87029d731fc2d328582a249c651dfb77a55966d6819a838bf290491ba202f1f9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/recurring-fixture-repeat-results/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/recurring-fixture-repeat.log",
+      "sha256": "72691318366cf7f04da4e7b03abdbead4da93bce0ba7176c47f8528c7e154868"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/root-final-focus/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/root-focused.json",
+      "sha256": "1a40b5eb411d97dd4e2ebdf953e16383c2bd7b38f6cc5aa50dea80888fd0ff44"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/shared-before.log",
+      "sha256": "731bdbea9a251ab8d9a702c5c63cc539263034533d7cc10a5f47aa1777dc32b5"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/shared-focused.log",
+      "sha256": "4114858d0a5f04391f76755f6fd0d27476fbc9fd9298174b5cd835fe102df93e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/shared-live-before.json",
+      "sha256": "d1fc020925744a814e3c17fd3b13e48116f3ed58dd46f8408ae5e965f14cb51a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/shared-live.json",
+      "sha256": "3d81195bf4099615d88049c0811001077dfdccc8dd26264f359dd0fd585a4b90"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/shared-suite.log",
+      "sha256": "7ad9df67c4844a0f5ad7d80880520134cad7e69d5847f0caea6ba77e05adf2b2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/01-welcome.txt",
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/03-account.txt",
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/04-setup.txt",
+      "sha256": "442f3d04467e85f899ff8317d219e04e474e65dfb8ab836f4598a23b5bfd1caf"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/05-ready.txt",
+      "sha256": "56a5bffbe1ca5a1c60dd47d0755c7a5684ff2759c7129eec74c5dc0c79347cc8"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/06-first-chat.txt",
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/07-live-response.txt",
+      "sha256": "fc8ae52272f8e04a3c90b94306f5b8558bb5c184febad7f70f5494a37f5037c9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/08-nutrition.txt",
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/09-nutrition-week.txt",
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/10-previous-day.txt",
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/11-targets.txt",
+      "sha256": "4b9090a27b291d5fbaf76cea8dce27dac9fbd910500ad5f05558bb12bfb22fdc"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/12-workouts.txt",
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/13-workout-builder.txt",
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/14-workout-history.txt",
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/15-kitchen.txt",
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/16-first-week.txt",
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/17-pantry.txt",
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/18-recipes.txt",
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/19-planner.txt",
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/20-food-preferences.txt",
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/21-swaps.txt",
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/22-shopping-list.txt",
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/23-spending.txt",
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/24-receipt-capture.txt",
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/25-barcode.txt",
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/26-profile.txt",
+      "sha256": "9bf36320346981010fd4081a3da2b19192ef759f2a1a807a38354195a7bc5c1f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/27-account-backups.txt",
+      "sha256": "714b71da2966457c1944e602fa610b94531aaf7b54bdc0f10264ef0f7d929e9e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/28-connections.txt",
+      "sha256": "1dcd476d0350c31779225d98f3d2625b5e3303df06e3fc573ff2efc185537e9f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/29-weekly-review.txt",
+      "sha256": "6ffa4b5f392baee8b50272ae064e01a675a9759c34e71280d20201209f2067b9"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/30-meals-captures.txt",
+      "sha256": "34961728d791eaf94a7b20f8154635d2d3b16aabfeceeb89989b19495d28f057"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/31-profile-workout-history.txt",
+      "sha256": "1562c924678ae8a37d8264fabdc83f950dc93b9b91a672f8f04b32df6ec29f79"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/32-privacy-help.txt",
+      "sha256": "b4e17dc46cfa801e289cca6955b5b9f759abcac78868b8837ba68286fc98f219"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/33-about.txt",
+      "sha256": "901cd05fb79a5ed9b40b26ed8514e475b12db36f06fb2609c0ba76cd9bc1709f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/34-weight-saved.txt",
+      "sha256": "532365087ad87a7e950e40b208053035d2cd7287cc5c3f619285ac2885e58ec0"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/35-return-after-reload.txt",
+      "sha256": "532365087ad87a7e950e40b208053035d2cd7287cc5c3f619285ac2885e58ec0"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/six-months/return.png",
+      "sha256": "e0c22ff91915603f059b456c3bcfa395b09969e9a5324b64062268eb18e8591c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/unit-final.log",
+      "sha256": "2041952572dc5a958e554e807bb99cc482d231e883d2a3d6792eb895eff3803a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/unit.log",
+      "sha256": "cc1748641da3f295cf3b5bbe958877c120d1ae428f24c444f8ca00b212f82c65"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/vite-before-final.log",
+      "sha256": "dd0bfa7d84570eaa19f364dbdb7aa8b6b4be2a84bb3bac3dce5a1ce72934a1ea"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/vite-final.log",
+      "sha256": "fc9c6721aeb430b138b0cfe38dfbb7f077901afba333bc66f6f3780a04b80698"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/voice-checks.json",
+      "sha256": "d754963ddbf253266bdeafc0c7437f1038cce640d8185b7d60e6b39c03b84599"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/voice-load-after.log",
+      "sha256": "76ce315aec38281ea88f69b0fab7c6e743940e1231f7794b7dae72364f563c23"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/voice-load-before.log",
+      "sha256": "c3877338c4af3ee82c8ab0e85eec245ccccc4156927b49c012e9f9883bf15cab"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/voice-results/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-before-boundary-fix.json",
+      "sha256": "48e59243abc74db0688785315d827ecc62baf4d29c39dfad0d98c1ba8f657cc5"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-before-fixture-repair.json",
+      "sha256": "f45b6cd3aa32592f5538275cbd1f0ef5af836037b46c037366a8a02dd83c7fa2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-before-render-loop-fix.json",
+      "sha256": "c4b785992b6a381dbb594b58bcc3ea9c31ac9d9dad03c8bbaf2aab7f913f851c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/agent-connections-CLI-conn-3de1d-ome-revocation-takes-effect-mobile/connections-mobile.png",
+      "sha256": "de905ab18e743d00b8c08f5cb9f63e64e2f543b0ef335831740537425e6fe1fd"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/kitchen-Kitchen-derives-st-002e2-nts-without-changing-intake-mobile/kitchen-personal.png",
+      "sha256": "ed4eed1cabd06d670aa556579f4302af49beaf1f44292074ad9e550b6b420666"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/nutrition-connected-Nutrit-16c45-and-edits-update-its-totals-mobile/nutrition-mobile.png",
+      "sha256": "d4daaed6da53ca5a1febbf2f5494bb81d517bc99403a505a19563ac86886f2c3"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/nutrition-day-personal-das-94874-ed-history-through-midnight-mobile/nutrition-personal.png",
+      "sha256": "755001072145d715de27f12a24099c144be07e6ee41f9e3bb92c1fe5556e3031"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/nutrition-day-seven-day-hi-fb1d8-and-an-empty-day-is-unknown-mobile/nutrition-week-320.png",
+      "sha256": "709b62e143447ffbc11c3806b14eef3fc1bfab44cf5dc13d53a885a4d6847ceb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/receipt-capture-Kitchen-re-0e919-es-groceries-without-intake-mobile/receipt-preview.png",
+      "sha256": "5b4d844058f2b83c159742328cc5912adf0d762b0fe41eefd92c03171bad4988"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/recipes-Preparing-a-batch--d9517-tores-the-correct-inventory-desktop/recipe-batch.png",
+      "sha256": "95ddaa5d084cb3fc67e5e48f1909819b1e3842551742e161ef3dce5e00d33bcd"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/recipes-Preparing-a-batch--d9517-tores-the-correct-inventory-mobile/recipe-batch.png",
+      "sha256": "c4362998cb6d3fb1f28c10eaa7123442c54dfd488cd68ca1c00228d094382a20"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/refined-tabs-refined-tabs--eaae7-heir-last-actions-reachable-mobile/refined-nutrition.png",
+      "sha256": "c6a26757ca25b907190e0e8ba3ef29c58787f097e9ef519dad7f1ba0a0e017f8"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/refined-tabs-refined-tabs--eaae7-heir-last-actions-reachable-mobile/refined-you.png",
+      "sha256": "47c58e9bcb5d7ccae7f7762418e9c5ff475262e42fa364d8c8662261435558ce"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/shopping-Equal-quantity-sw-1ba97-ever-alter-pantry-or-intake-desktop/shopping-list.png",
+      "sha256": "b8ea409eead647ef7dd528341f2e89df87ba50b73ad501d7d26506d84c987e0b"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/shopping-Equal-quantity-sw-1ba97-ever-alter-pantry-or-intake-mobile/shopping-list.png",
+      "sha256": "4a656e59be6b6aa17381fdec562a2996b2d4371a7912b17a3c18838ebbf28e4d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/shopping-Price-savings-use-41e9c-ency-and-dated-observations-desktop/smart-swaps-320.png",
+      "sha256": "56dd543fd8cac481580e0c4762833e027ef78a8f1111ae9d2f32eac3b138ab83"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/shopping-Price-savings-use-41e9c-ency-and-dated-observations-mobile/smart-swaps-320.png",
+      "sha256": "28d3dbad31ed59a5ece9a404cf2084da5174978024f3e0c3f13aeec10dcf8143"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/spot-Spot-introduction-piv-46f08-al-and-visuals-are-optional-desktop/spot-onboarding-rep.png",
+      "sha256": "15e5bbb1030ba24c6b8efb781c901ab7e855830d1870a787d7e8a7af3915983a"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/spot-Spot-introduction-piv-46f08-al-and-visuals-are-optional-mobile/spot-onboarding-rep.png",
+      "sha256": "bb21f1ba92204f409ef43dc6d1ea3a94ddd6e10901da09fa44a305314a29f0be"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/spot-workout-capture-confi-08165-d-retains-an-active-session-desktop/spot-workout-check.png",
+      "sha256": "a0842c3093b25e07803f6ff5917e97a1756bbbc705cb24919001c3345a1220aa"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-artifacts/spot-workout-capture-confi-08165-d-retains-an-active-session-mobile/spot-workout-check.png",
+      "sha256": "d38f5cf28b1f12149705b3a8b1586f4fc3d7b533c000a8656dcc8f1fbb74cf36"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/.last-run.json",
+      "sha256": "77c07a2fdd73a9051f65d32af0f40a8a48e5a1db95c7afef95a9ad5c5dd8eced"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/agent-connections-CLI-conn-3de1d-ome-revocation-takes-effect-mobile/connections-mobile.png",
+      "sha256": "25a3b47c909c97c0d865843417b0b5725d32fa76c3eddd5f90fbf7f69a21d474"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/kitchen-Kitchen-derives-st-002e2-nts-without-changing-intake-mobile/kitchen-personal.png",
+      "sha256": "6e071cb4744f19363236ebfd3f95e952387f7d41e8b8c58c17a587eb1226b9bc"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/nutrition-connected-Nutrit-16c45-and-edits-update-its-totals-mobile/nutrition-mobile.png",
+      "sha256": "749ca96991042292fc69861a119ff06385883a16c7c7a4d051d2529e733f69b7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/nutrition-day-personal-das-94874-ed-history-through-midnight-mobile/nutrition-personal.png",
+      "sha256": "53bb3748331071e0b173c2a46fcbcdd4d35cbe4b3b71989e3df84c1badc355c7"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/nutrition-day-seven-day-hi-fb1d8-and-an-empty-day-is-unknown-mobile/nutrition-week-320.png",
+      "sha256": "709b62e143447ffbc11c3806b14eef3fc1bfab44cf5dc13d53a885a4d6847ceb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/receipt-capture-Kitchen-re-0e919-es-groceries-without-intake-mobile/receipt-preview.png",
+      "sha256": "c1100e92c5e9a1e6234a99f25ad30948fefdc09dcc636a6b17cfb4d321ec4afa"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/recipes-Preparing-a-batch--d9517-tores-the-correct-inventory-desktop/recipe-batch.png",
+      "sha256": "95ddaa5d084cb3fc67e5e48f1909819b1e3842551742e161ef3dce5e00d33bcd"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/recipes-Preparing-a-batch--d9517-tores-the-correct-inventory-mobile/recipe-batch.png",
+      "sha256": "1dba9649c625c72d6d25352e01f5bd7a70d8efd8d860b79293e7935bbcfcd871"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/refined-tabs-refined-tabs--eaae7-heir-last-actions-reachable-mobile/refined-nutrition.png",
+      "sha256": "00f53b9308bd03c1251ad0553443ea344e8acb9459082350daa07cce5d5ab281"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/refined-tabs-refined-tabs--eaae7-heir-last-actions-reachable-mobile/refined-you.png",
+      "sha256": "5fcf94add4826cf8dc4a12545dd1a21dd1b4b77c4839b907b30257d4b257e701"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/shopping-Equal-quantity-sw-1ba97-ever-alter-pantry-or-intake-desktop/shopping-list.png",
+      "sha256": "7f3951248763ac6d20df268d1aadf9dc0c500589b0b72e5601ff35121f140ec0"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/shopping-Equal-quantity-sw-1ba97-ever-alter-pantry-or-intake-mobile/shopping-list.png",
+      "sha256": "2fde26b9d0a2fcae4bc08e499dcdbd1d96e6fc33d9fd9e4e237bab22e37ad26c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/shopping-Price-savings-use-41e9c-ency-and-dated-observations-desktop/smart-swaps-320.png",
+      "sha256": "56dd543fd8cac481580e0c4762833e027ef78a8f1111ae9d2f32eac3b138ab83"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/shopping-Price-savings-use-41e9c-ency-and-dated-observations-mobile/smart-swaps-320.png",
+      "sha256": "28d3dbad31ed59a5ece9a404cf2084da5174978024f3e0c3f13aeec10dcf8143"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/spot-Spot-introduction-piv-46f08-al-and-visuals-are-optional-desktop/spot-onboarding-rep.png",
+      "sha256": "1cb4f0ffd222e09a943f9bfa45063c08b2a485f7e2e30a9daae451170b33580e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/spot-Spot-introduction-piv-46f08-al-and-visuals-are-optional-mobile/spot-onboarding-rep.png",
+      "sha256": "e862c5f1657ff5a170852445f5b06e1914b71fc7ec0bd863361301d5501ca960"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/spot-workout-capture-confi-08165-d-retains-an-active-session-desktop/spot-workout-check.png",
+      "sha256": "9761a7be4f84c4a98f68a07a439abca4bc6faf12c9a543b93194b0cec6f0f1b2"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/spot-workout-capture-confi-08165-d-retains-an-active-session-mobile/spot-workout-check.png",
+      "sha256": "4082b9dd9ec06ecad55356eb42941b97865914ced5a03645b3ebff02a741aa79"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/voice-flows-Reviewed-voice-0d3d0-nce-without-calling-Chat-AI-desktop/error-context.md",
+      "sha256": "eeeec76ad78c68d3e2f16d635ba24c9ef24a9cf8395ec396c590c689a2ee6a80"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/voice-flows-Reviewed-voice-0d3d0-nce-without-calling-Chat-AI-desktop/test-failed-1.png",
+      "sha256": "df1eb9f0e1796d295c43dc0a9e4ef7a8a06d93a476bae2589fbdf8b71c616163"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/voice-flows-Reviewed-voice-0d3d0-nce-without-calling-Chat-AI-mobile/error-context.md",
+      "sha256": "eeeec76ad78c68d3e2f16d635ba24c9ef24a9cf8395ec396c590c689a2ee6a80"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final-results/voice-flows-Reviewed-voice-0d3d0-nce-without-calling-Chat-AI-mobile/test-failed-1.png",
+      "sha256": "6cecaff9de79dd45cbb97115999ed342f94c1a5ead48548b91174a0f8eb4b608"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-final.json",
+      "sha256": "935d44857e169bc9ee7847f7eb53b91801f8509e9031e2876b1d2b1555ae1e10"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-fixture-race.json",
+      "sha256": "b332b2e2b90ed5d07e7e923c49a019a46946760fa47930fa08e000660ddb451c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-integration-first.json",
+      "sha256": "963556b48cf4645701a124740e2ba33a077452e81440702066f6ab6aa0e1e14d"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-workout-checks.json",
+      "sha256": "d5526d736f81eebe04243d99821613602d4aa57aadfbec14932056ef8ab8c651"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-workout-first-set.png",
+      "sha256": "ffde3729a404e3c312a65a74f593e36155a4f3d5490505c977bbb1d585e68ccb"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-workout-layout.json",
+      "sha256": "7235ccf31cf99b61dda5d76e98e6f47173ae2cc7553e6a455926e28558549f2c"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/web-workout.png",
+      "sha256": "3cc97ebd53f19c2b0c961028e25351aa2898db76d835341bddb6d728f3a4a223"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/workout-test-results/.last-run.json",
+      "sha256": "50a9e444665aac33259eb10c7933f62031690a14ae08d6a50621147bd94be956"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/workout-test-results/workout-surface-workout-pr-86334-ed-sets-rather-than-presets-desktop/error-context.md",
+      "sha256": "40be0ef8f3c0deccb68bc804e14120ad09d1cc68ea33c65e3168d71f5e971a25"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/evidence/workout-test-results/workout-surface-workout-pr-86334-ed-sets-rather-than-presets-desktop/test-failed-1.png",
+      "sha256": "cb9c3b8047859412e8abcaed51ad9ecefb4bd820c8849af4992e593d500d1836"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/kitchen.md",
+      "sha256": "5bbc888b3ce41cd061f0f2b782a9d77674e1a7a21e7e9531d9cc1256ec7e6a71"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/layout-check.mjs",
+      "sha256": "acfbce693eadc8bfaf920065ab691f9574c04ad51a7fb670b809a42f8f67f473"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/live-shared.ts",
+      "sha256": "e1c919b99a7f19ade1e32c36a0449f2a3e69b2a7fb514f1db29dbe193bb93898"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-boundary-before.json",
+      "sha256": "05fe88a6881afb5fd35b62ea293955804cdb3a2b85c2c261de5590242e82d489"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-check.log",
+      "sha256": "9228d30135db2a8ac3d57f264854a885f0019768a04edd08309070ae7fec7b82"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-export-final.log",
+      "sha256": "d0cb2ff93f15618c659efb7d1854f59dae36723376899660d17d171f6a881c00"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-export.log",
+      "sha256": "97829fbc12c4d82ddabbedcdd3c0262fe1cf7fef7ff629cc10f6e56c9a9a93a4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-layout.json",
+      "sha256": "4d39bedf8650dc7e1029c6a53f5018ee55f705a3f51b26c7bdf16b93dd2a0d92"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-lint.log",
+      "sha256": "09c2439263c873e36bf2985ce626fbf86e7450fc870d40b97a753784fd4ab82f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-suite.json",
+      "sha256": "d21cff1f27e8c04b0e865b28edb89e2dd30ec6f04ce5fb09fff4c38abea4f06f"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-workout-before-layout.png",
+      "sha256": "366dbb6a8356b56f5071a7952ad581587a8cc8b7cccd68d7ebc82405b8a077ef"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native-workout.png",
+      "sha256": "d46797e740588f447d22624f88c39c3df0ce5ec5f6015aec6b6067ee28852dbf"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/native.md",
+      "sha256": "a561f87033c0daabbdf45a1313b09f258525ffeffbd612376b1ade74253b1d80"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/persona-walkthroughs.mjs",
+      "sha256": "f8f698fdf871f576ab95320c0453554eea90ca97b35d366d416c25b719feaae4"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/shared.md",
+      "sha256": "75e198d55210a66b5877886c60880a8fd7cf1192fdde668eb6ab481e207f2060"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/verification.md",
+      "sha256": "c1b14e2ffd236e4dbb79cb954c69f904c6e15aa28a3ffa275a3b24fd6358a20e"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/verify-delivery.mjs",
+      "sha256": "89bb0169e8d2dad9b2e5bcd812738bb2df2df10297700c281be387134e9f8667"
+    },
+    {
+      "path": "docs/audits/2026-09-30-remediation/visual-check.mjs",
+      "sha256": "b486f34022f3481d9e0124ec46332127a013d4d5ec0761a9c9893f3f758ad85d"
+    },
+    {
+      "path": "docs/context/INDEX.md",
+      "sha256": "c2c88521a9d877c950d07b41cbb29cc721cbcf6c40789a53181a2b7ff6211ea5"
+    },
+    {
+      "path": "docs/context/error-ledger.md",
+      "sha256": "6bd110a85fde6a96884de53624c50024a23f475a75f725e4f32922e76c9158fb"
+    },
+    {
+      "path": "mobile/App.tsx",
+      "sha256": "97ad2b0c9ef103349bb3d2da8f74f474356e6da3b8d5c72238ed9639a57488a9"
+    },
+    {
+      "path": "mobile/README.md",
+      "sha256": "71be9496efca28dbf6f83fc170e071ec6579904ed8f268699c22ec260d351293"
+    },
+    {
+      "path": "mobile/e2e/agent-connections.spec.ts",
+      "sha256": "134733ba1200d22f8779dd6d1e2903f4af8d7f1f4eb536b94f38bb8bdc0958be"
+    },
+    {
+      "path": "mobile/e2e/draft-boundaries.spec.ts",
+      "sha256": "b240b330e74fcecffbe422abae368c8efe123c83cb868f355401c9f24a512863"
+    },
+    {
+      "path": "mobile/e2e/native-flows.spec.ts",
+      "sha256": "b7732458b8acc003ba243ea5c44f73f40bbcbaaca85c54a6d1e648f3b94634b9"
+    },
+    {
+      "path": "mobile/e2e/outcome-tracking.spec.ts",
+      "sha256": "2bad56c895d8db56c8b4c6d464c888c27164109a8633dcb6b48704b186ea7037"
+    },
+    {
+      "path": "mobile/e2e/persona-remediation.spec.ts",
+      "sha256": "08f91cc05aef8a73dd50ed40f86a03c11486ac966b080bd01312f07d86dc730c"
+    },
+    {
+      "path": "mobile/src/Capture.tsx",
+      "sha256": "e12ae511a0532d90bfc503218acf03727efb0c6bffefa6c95fe13c060ec1cb44"
+    },
+    {
+      "path": "mobile/src/ChatScreen.tsx",
+      "sha256": "46d70cb62b7289031dae227a9e9203dda0de9553628bd897e94bb5243471a688"
+    },
+    {
+      "path": "mobile/src/Cloud.tsx",
+      "sha256": "8a5c061216f4b6061ebc7606cad3ed8bc0a65b71f6b396134e251fee39b74845"
+    },
+    {
+      "path": "mobile/src/Connections.tsx",
+      "sha256": "480323b020ebddd6728796007d32fd4a04c4f8fa7439402831d080f7aac8ffad"
+    },
+    {
+      "path": "mobile/src/KitchenTools.tsx",
+      "sha256": "3b814ab4b9486f3af15140549c17e7242c5371034792416874bba81e8f6bd7f1"
+    },
+    {
+      "path": "mobile/src/ManualMeal.tsx",
+      "sha256": "5e2c668cf6339470b2f41a187ba10999ad67d01730f0fa18eb913e097c58de9e"
+    },
+    {
+      "path": "mobile/src/NativeWorkout.tsx",
+      "sha256": "abb0bb426c67863658c56f4af884a3726e66b19006ce9e888623c6f4f7a8b3d8"
+    },
+    {
+      "path": "mobile/src/Onboarding.tsx",
+      "sha256": "804bf70f4efa623707d1441ec6e56fc90fc7a72178e121aa56c4cf5652bcb56d"
+    },
+    {
+      "path": "mobile/src/api.ts",
+      "sha256": "cf54cd199da07365cf60d64d724824f4d4090a2be07d308415cb26331cfcc5d8"
+    },
+    {
+      "path": "mobile/src/screens.tsx",
+      "sha256": "96d26c21ee0438c3fa32e191d575a801694c74403acecfd26073dc84cb0cba8c"
+    },
+    {
+      "path": "mobile/src/store.tsx",
+      "sha256": "f98b6d8875e9a11b5bac506e03701608ef59ccb0fc2ff9cca29592246e0458b9"
+    },
+    {
+      "path": "mobile/src/tools.tsx",
+      "sha256": "00e880e66cd0e825842e73dda937f7c1f2805ccf683d888297baae96b08c9bf1"
+    },
+    {
+      "path": "mobile/src/ui.tsx",
+      "sha256": "a0507bc3b3349b4da3036054743278aca28ef24fff8869ad7be465b676746299"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "3904a7ce5baf30f942768e7d21d737fc5c7941e3bae9da3dab979b79e4ffb455"
+    },
+    {
+      "path": "package.json",
+      "sha256": "85928cfccfcfdb7c1c812c9a2adb4e45d08605048caee72e72858de41741ef8f"
+    },
+    {
+      "path": "scripts/agents/client.test.ts",
+      "sha256": "86858e7225c828641fc995b7b71f4d6382d7fa8d28df72f847e5ed2313ae7f40"
+    },
+    {
+      "path": "scripts/agents/client.ts",
+      "sha256": "c2808e4d2d0d4ea4b3dc7e5ffc0255d415b2e0061fa898b867beb2b6bf839637"
+    },
+    {
+      "path": "scripts/agents/mcp.ts",
+      "sha256": "276c0f5c64f058f2eea135e52f4aaf259549de601d110ba4b2099800d54e1aa0"
+    },
+    {
+      "path": "scripts/agents/tsconfig.json",
+      "sha256": "30017aab607806533b06239a318f621309d03ed16e2addcad4d35cee3fa2e787"
+    },
+    {
+      "path": "scripts/health.ts",
+      "sha256": "6b1365679e028fb19c9afb6b84f72cbd5954eca565db61326770643415e79250"
+    },
+    {
+      "path": "server/agents/agents.test.ts",
+      "sha256": "b5d8808d313ee4643ef93023e4d2469a4a05d1b04dbe080cdf2f0b129710e814"
+    },
+    {
+      "path": "server/agents/hosted.test.ts",
+      "sha256": "cf653afdaafdf727aa02fde5659bebc0dfb2f722b35f13d6b451bd9c0f653b51"
+    },
+    {
+      "path": "server/agents/hosted.ts",
+      "sha256": "408d8692db1275c8ae5286bc85b71e7d4d583b2d22c682bc1231e8fc353e2271"
+    },
+    {
+      "path": "server/agents/http.ts",
+      "sha256": "6f2e079acc0a4964a3fe9374c49710710591dfa7b404fdb894ae617aa11c8ba4"
+    },
+    {
+      "path": "server/agents/service.ts",
+      "sha256": "295a5742d53c7986e2a108b69bf77caf19a7eae92ee7f83d94878be8afd4d2d9"
+    },
+    {
+      "path": "server/agents/sqlite.ts",
+      "sha256": "41393d149312f61d339434a09a026943457b39c1c813137bc3bc25cfaecdcfea"
+    },
+    {
+      "path": "server/agents/store.ts",
+      "sha256": "6e4655b13519e0818900ae952d344212e33a64efe855ab124a34c70d58e81460"
+    },
+    {
+      "path": "server/ai.test.ts",
+      "sha256": "3195df8e0d4dc502fecd9ea8d41e8ee1cc37350e6de88f7048db23b4d447e867"
+    },
+    {
+      "path": "server/ai.ts",
+      "sha256": "1743773eb9f3618b932ea924a5d66a831ea0c501759d12ab32c4bbbbe4cca4dd"
+    },
+    {
+      "path": "server/beta-services.ts",
+      "sha256": "ff7d92550336f83a68da7fee3327c1490c0646087d44dff683b61848998ca78c"
+    },
+    {
+      "path": "server/http.ts",
+      "sha256": "3f056a451401ba7f00971d254eb5d050b910db782090645412df61523f7c587b"
+    },
+    {
+      "path": "server/plans.ts",
+      "sha256": "1c117ab1f20ed4aa7b42398c5647e284bf47e0cd00cab0c2bedfb53eb3f2f8c4"
+    },
+    {
+      "path": "server/vercel-entry.ts",
+      "sha256": "14bd510fee772586d940349f590003ab3969a986060b8c956b70d8b1df77cbab"
+    },
+    {
+      "path": "src/AICards.tsx",
+      "sha256": "b59d8f824d93a9611c970ff6fbc46e3303ce8ce59f3ea23197cecc6b0d0dc9c1"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "a1640674c6ee6e6febc95bc62d7b464ee13b951a2320920fb1bd21ea5daacd76"
+    },
+    {
+      "path": "src/ChatLayer.tsx",
+      "sha256": "fec83b230320ca749c11347b6dada015e8a1a7d2739167664c71467cc104bfc0"
+    },
+    {
+      "path": "src/KitchenPage.tsx",
+      "sha256": "7d2aa9d7df249870d4a0acd46f61927121f6f1f716c718cf26620ca0f5fb9643"
+    },
+    {
+      "path": "src/NutritionPage.tsx",
+      "sha256": "21d79b2d7cd036e632a9021968bdc82fcb6f5db047d319c0ad589c982d46ea32"
+    },
+    {
+      "path": "src/WorkoutPage.tsx",
+      "sha256": "26d6c32894ddae57ef82fcb64d3337acf6c52b4b0381dacf11088199f2e3d7f0"
+    },
+    {
+      "path": "src/YouPage.tsx",
+      "sha256": "a8c3e6f5f0316b2f8607c331507c97a832b4326db9ca84ce8ef910f3f470f769"
+    },
+    {
+      "path": "src/activities.ts",
+      "sha256": "17d68c5b507bfb0cdba21dae3df18759856491166681f3dd7e943870b7bf8042"
+    },
+    {
+      "path": "src/activity-contract.ts",
+      "sha256": "be259f637fb2e5b303ed56467f86527ecf2cdbf645ad8d43f48e39c4fd1bce55"
+    },
+    {
+      "path": "src/ai-client.ts",
+      "sha256": "faf4ffb55fadd3f70b92ec382815bca28e60a3ad00c2635a67673f983ccc8840"
+    },
+    {
+      "path": "src/ai-contract.ts",
+      "sha256": "d087a3ca65c7211d18efdedb93dabb1df3f59d5301a59a000bbd71bae2d032d4"
+    },
+    {
+      "path": "src/domain.ts",
+      "sha256": "d2c80178ac6daac7768c7ca63d68117ee07f8b592bf7b3040a59a7511e0e763b"
+    },
+    {
+      "path": "src/exercise-technique.ts",
+      "sha256": "128628cbcdb6a32679d2bb3e20639392995fe908633f46ee8254f747474b8e6b"
+    },
+    {
+      "path": "src/features/cloud/CloudAccount.tsx",
+      "sha256": "c20fa75592731520ef35356e0dc9b7fbb82bd833b771e239877f7f057efad1a9"
+    },
+    {
+      "path": "src/features/cloud/client.ts",
+      "sha256": "a64e0937a874e4394c5500a7b8c3a7e5b5e0efb7abe5a40aca2ff76f2163cd53"
+    },
+    {
+      "path": "src/features/cloud/sync.test.ts",
+      "sha256": "70f5835ac42fe54ae520b2dc074222712fb94b91e72b331be6b9d92061e0859e"
+    },
+    {
+      "path": "src/features/connections/ConnectionsHub.tsx",
+      "sha256": "537ec6688fb2ee072b178efd9cf605a131452aaca01fc472766c50dc0f1dfe8c"
+    },
+    {
+      "path": "src/features/connections/browser.ts",
+      "sha256": "8bd840ebe9825e30515d45f9b05e4d4f6a69a5fc1b33edcff4a62d837940a9c5"
+    },
+    {
+      "path": "src/features/connections/connections.css",
+      "sha256": "5b21a70281b07db057e4a574510fd698fd5049c0cb0d2a55bc70354bb10f1eb1"
+    },
+    {
+      "path": "src/features/connections/context.test.ts",
+      "sha256": "34f5865273110f074e2af9617bb5ef37f314ce76e290dbb5045a574ea74786d3"
+    },
+    {
+      "path": "src/features/connections/context.ts",
+      "sha256": "3bb11397eaccf10e72f5404232539078d83c2244ce2fe7b09f4981de0c86ea5c"
+    },
+    {
+      "path": "src/features/connections/contracts.ts",
+      "sha256": "37e0fc0cc96b40fc023e4ee89d4d28dfafeffb4724b2664bd90b336bcf12155e"
+    },
+    {
+      "path": "src/features/connections/useConnections.ts",
+      "sha256": "5fc9ae20c73c4dd70773d6c247345327a74e4c732eff6e9baa9fe4982f09b671"
+    },
+    {
+      "path": "src/features/onboarding/Onboarding.tsx",
+      "sha256": "2e898351b63caabb3c23dcad499eb6a33a824f780a61273c86cf98167896039a"
+    },
+    {
+      "path": "src/features/pantry/ManualIngredient.tsx",
+      "sha256": "cc9ef3628df4f3ab9cdd70e574f2634ea37735c52df31961c1c6fde66fb862e4"
+    },
+    {
+      "path": "src/features/pantry/PantryDialog.tsx",
+      "sha256": "cb392d4783b42417d70553f67c768331d1f39902593129d50742d8286a10a2dd"
+    },
+    {
+      "path": "src/features/pantry/ledger.test.ts",
+      "sha256": "2583f95e3b1089e7de05309aeff311a5e4c3080f680b2ed9de286b49ab8f9bb7"
+    },
+    {
+      "path": "src/features/pantry/ledger.ts",
+      "sha256": "555630dc14d8ee82abc65ca4a383a2f5256410a79049f14b64fe67c1f69fc3b6"
+    },
+    {
+      "path": "src/features/pantry/manual-ingredient.test.ts",
+      "sha256": "bf852b632ba53f453313a26a2ab552a52f3cad08d879a855b243895c970e5ebe"
+    },
+    {
+      "path": "src/features/pantry/manual-ingredient.ts",
+      "sha256": "196a1020f9872a18cf88e4bf691b7f2d56be131d7ce8a86d5d48913ac5675e1b"
+    },
+    {
+      "path": "src/features/pantry/pantry.css",
+      "sha256": "386c874e1d8ce5feb1770d4fa6b4d132d1819f0b290008a6046eb360a2bc2d2f"
+    },
+    {
+      "path": "src/features/planning/MealPlanner.tsx",
+      "sha256": "e8de425bfdcbfcf4f2eae4e4b9fc7297c8b6298f5e35bb9f03ac7258f38df93c"
+    },
+    {
+      "path": "src/features/planning/meal-plans.test.ts",
+      "sha256": "421bee4f02554b34122cef330414a955b9532d6610f13e382c189f949514de7f"
+    },
+    {
+      "path": "src/features/planning/meal-plans.ts",
+      "sha256": "b3fa833f25249c7f8f1423cafd0983dd60f846a8bd8edee8a9d1525e0d695b46"
+    },
+    {
+      "path": "src/features/preferences/PreferencesDialog.tsx",
+      "sha256": "cf932810ea7effa9743c823cb3f40e1b96eaf7b5d2cbd4a4332db8971e1c2a0c"
+    },
+    {
+      "path": "src/features/preferences/preferences.css",
+      "sha256": "bd9fc361b7201b013b19e015808d60d2a4c2107556c10a1ad529decc17aadea8"
+    },
+    {
+      "path": "src/features/products/ReceiptProductReview.tsx",
+      "sha256": "4eaef7bff700172acd025211c348d72d0e8c73de2d8741aa9f40c592566a38ac"
+    },
+    {
+      "path": "src/features/products/quantities.test.ts",
+      "sha256": "2d9e4840c0ffcdf9c860ded4be1e547ef0990ba6b6024b76bdd5a2308517aa76"
+    },
+    {
+      "path": "src/features/products/quantities.ts",
+      "sha256": "ea804af0f2887cdd8cc4cc18842d197097fcbe2377574d9c96db0a3beed32f95"
+    },
+    {
+      "path": "src/features/recipes/RecipeDialog.tsx",
+      "sha256": "2329579ba8788f7db5ec91907c1128ca0a16623f4c730f18358c924f2a106db5"
+    },
+    {
+      "path": "src/features/scanner/ProductScanner.tsx",
+      "sha256": "4c3a973035608b7f6c5995a35523fa0754acc3cf57af0b136a5fa9705a00b224"
+    },
+    {
+      "path": "src/features/shopping/ReceiptReview.tsx",
+      "sha256": "610bb2dafc4f34022d756480e2893b9d940262df94cd0ac1c8590cbc3b79b0f8"
+    },
+    {
+      "path": "src/features/spot/Spot.tsx",
+      "sha256": "bb48886f054a4d16c0ee29162b80966376c27f4ffad25bc841f2d5672ebd54f2"
+    },
+    {
+      "path": "src/features/spot/model.ts",
+      "sha256": "0833eb6215956d13900a7d5fa5178ff9caff22f3d55b901d1b8e6e2fdcbd7638"
+    },
+    {
+      "path": "src/features/spot/spot.css",
+      "sha256": "2aec9badd4c35ea447c69023cc6e2720144a741a4d0901aef24a01d631317087"
+    },
+    {
+      "path": "src/features/support/SupportAndPrivacy.tsx",
+      "sha256": "6b8e8844d1ee640d8c5edef284e4d81b893974bfa7a592354e3ae6bc58bb29bf"
+    },
+    {
+      "path": "src/features/support/model.test.ts",
+      "sha256": "764277334097b9a9f80c6504065ef116b33c389a12cdcc5056a3578f1c20ef9a"
+    },
+    {
+      "path": "src/features/support/model.ts",
+      "sha256": "b9c798c9e01f49b7ec3e32df77e056ba218020b253e60a0d53509028fd86d72f"
+    },
+    {
+      "path": "src/remediation.test.ts",
+      "sha256": "93f96a848096dbdb6197d47e7f7488a27ce64ef62ec45de4787a1670af1aeadc"
+    },
+    {
+      "path": "src/workouts.css",
+      "sha256": "ff66cb45a243952806689429379601b16ef71207574e828e29adce22e02b4b10"
+    },
+    {
+      "path": "src/workouts.test.ts",
+      "sha256": "b8c79bfbdc0d267f4e13def9fc8651fb1124b5d99517b861c75f73edc8e21fcd"
+    },
+    {
+      "path": "src/workouts.ts",
+      "sha256": "d144f5a853341d6ff18b23e49700244ef59dff60c76c4ed0ef0a37d85886a38e"
+    },
+    {
+      "path": "supabase/migrations/20260929_agents.sql",
+      "sha256": "0316b7058ae8930d4349ecc8c3134e57a4955ee94882efdce6718b3a40ba00d9"
+    },
+    {
+      "path": "tests/account-sync.spec.ts",
+      "sha256": "7578dcf58d790cd0aa3aea152cc74b4f044cb9bec3f6af9a4a4739a9af3c839a"
+    },
+    {
+      "path": "tests/connected-flows.spec.ts",
+      "sha256": "fdc214ee0d7771173f372eba0301feb472cca8af2a9ac00b92caf6cdf04031dc"
+    },
+    {
+      "path": "tests/flows.spec.ts",
+      "sha256": "06ae4c6aac26cc860eb8209ba29174b48bf46709da549b4ea73cf76bb07f3c6c"
+    },
+    {
+      "path": "tests/plan-purchase-connection.spec.ts",
+      "sha256": "07fc513caf42077c592b7dec6ee1dc8b7fdebc4ffe9220ed37fdb9e3d2724464"
+    },
+    {
+      "path": "tests/recurring-plans.spec.ts",
+      "sha256": "1be8650468b9cfa745aa80d26acdcd4ebb94c95613de9dad3168855f195ae315"
+    },
+    {
+      "path": "tests/scanner-flows.spec.ts",
+      "sha256": "b2e26b96accce82704d0dbd9c0d77399a4ee5647f853a2f2c811851fd27723a0"
+    },
+    {
+      "path": "tests/shopping.spec.ts",
+      "sha256": "e2e185a1c50a831f57993e502ba08f5e4c21b6497edbf00c361448276ea43ac3"
+    },
+    {
+      "path": "tests/voice-flows.spec.ts",
+      "sha256": "bbc4d5be230fb04cda558509e05822240e6a72f82479eb54e70d7d78ab4914b1"
+    },
+    {
+      "path": "tests/workout-surface.spec.ts",
+      "sha256": "f9385505c959f8f0097e6210cacd18482cb62edc2fcfb62b5c43206c4f1cecf3"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: I had two slices of toast with peanut butter for breakfast today. I do not know how much peanut butter. Help me log it without pretending the portion is certain.
+      - text: 9:35 AM PLATE
+      - heading "Spot Check" [level=3]
+      - paragraph: I need one detail.
+      - paragraph: Got it. I can't guess the peanut butter amount without making things up. To give you a useful estimate, how much peanut butter did you use on the two slices? A typical serving is about 2 tablespoons (roughly 32g), but your portion might differ.
+      - text: 9:35 AM
+      - paragraph: I need a little more context before treating this as a meal or a grocery purchase.
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

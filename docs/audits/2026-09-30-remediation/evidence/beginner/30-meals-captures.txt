@@ -1,0 +1,122 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "You":
+    - button "Open your menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: B
+    - heading "Looking ahead, Beginner Audit." [level=1]
+    - paragraph: Your goals. Your pace. Your progress.
+    - button "Edit your profile"
+    - button "Account & backups Sign in, sign out, and manage saved records":
+      - strong: Account & backups
+      - text: Sign in, sign out, and manage saved records
+    - button "Meet Spot Replay the introduction. Keep your saved records.":
+      - strong: Meet Spot
+      - text: Replay the introduction. Keep your saved records.
+    - button "Connections Your assistants, access, and meal proposals":
+      - strong: Connections
+      - text: Your assistants, access, and meal proposals
+    - region "Your recorded activity":
+      - text: Your last seven days
+      - button "Open your weekly review": See week
+      - strong: "0"
+      - text: of 7 days
+      - paragraph: Your first log starts the picture
+      - text: — Thu — Fri — Sat — Sun — Mon — Tue — Wed Unlogged days are unknown, not missed goals. A meal, a drink, a workout. Start anywhere.
+      - button "Open Chat"
+    - heading "Your week, taking shape." [level=2]
+    - button "See week"
+    - button "0 Workouts recorded 0 sets logged this week":
+      - strong: "0"
+      - text: Workouts recorded 0 sets logged this week
+    - button "0 Meals recorded Across 0 logged days":
+      - strong: "0"
+      - text: Meals recorded Across 0 logged days
+    - button "1 little thing to review A quick check, then carry on.":
+      - strong: 1 little thing to review
+      - text: A quick check, then carry on.
+    - region "Your reviews":
+      - heading "Your reviews" [level=2]
+      - button "Completed"
+      - text: 1 pending review entries
+      - region "Walking":
+        - text: Movement from Spot
+        - heading "Walking" [level=3]
+        - paragraph: 2026-09-30 · 20 minutes. Review before logging.
+        - button "Review in Chat"
+    - heading "Your daily goals" [level=2]
+    - button "Edit goals"
+    - region "Your daily goals":
+      - strong: Your saved daily targets.
+      - paragraph: Starting targets are generic. Review and edit them for your needs; weight entries do not personalize them automatically.
+      - strong: 2,000cal
+      - text: Calories
+      - strong: 110g
+      - text: Protein
+      - strong: 250g
+      - text: Carbs
+      - strong: 78g
+      - text: Fats
+    - region "Body weight history":
+      - heading "Your weight, over time" [level=2]
+      - paragraph: Optional measurements from you. These do not change your food targets or suggest a goal.
+      - paragraph: Add measurements on two dates to see the change.
+      - text: Measurement date
+      - textbox "Measurement date": 2026-09-30
+      - text: Body weight
+      - spinbutton "Body weight"
+      - text: Weight unit
+      - combobox "Weight unit":
+        - option "lb" [selected]
+        - option "kg"
+      - button "Save measurement"
+      - list
+      - paragraph: No measurements recorded yet.
+    - button "MAKE TIME TO MOVE Find your next workout Choose a session that works for today":
+      - text: MAKE TIME TO MOVE
+      - strong: Find your next workout
+      - text: Choose a session that works for today
+    - heading "Your food & activity" [level=2]
+    - button "Recipes & leftovers Your prepared meals and portions left":
+      - strong: Recipes & leftovers
+      - text: Your prepared meals and portions left
+    - button "Your weekly meal plan Ingredients on hand, meals ahead":
+      - strong: Your weekly meal plan
+      - text: Ingredients on hand, meals ahead
+    - button "Food & routine preferences Your choices, exclusions, and cooking time":
+      - strong: Food & routine preferences
+      - text: Your choices, exclusions, and cooking time
+    - button "Groceries & pantry 0 available items · from your receipts":
+      - strong: Groceries & pantry
+      - text: 0 available items · from your receipts
+    - button "Meals & captures 0 saved meals · 0 reviewed notes":
+      - strong: Meals & captures
+      - text: 0 saved meals · 0 reviewed notes
+    - button "Workout history Your next session starts here":
+      - strong: Workout history
+      - text: Your next session starts here
+    - heading "Make it yours" [level=2]
+    - button "Profile & preferences Your name and daily targets":
+      - strong: Profile & preferences
+      - text: Your name and daily targets
+    - button "Your data & privacy Account saving, privacy, and help":
+      - strong: Your data & privacy
+      - text: Account saving, privacy, and help
+    - button "About Rep & Plate A little help with the details":
+      - strong: About Rep & Plate
+      - text: A little help with the details
+    - button "Something to share? Just tell Rep & Plate."
+    - navigation "You navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+    - dialog "Meals & captures":
+      - heading "Meals & captures" [level=2]
+      - button "Close dialog"
+      - paragraph: Send your first meal in chat and you’ll find it here.
+      - button "Share something in chat"

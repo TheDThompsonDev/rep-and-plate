@@ -1,0 +1,90 @@
+{
+  "captured": "2026-10-01T18:28:08.436Z",
+  "files": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "77054465135b8671e367662cb4f4f61bdf046c0ab399e1137248fd2b7589e952"
+    },
+    {
+      "path": "src/ChatLayer.tsx",
+      "sha256": "73b3537de56ad449f93710f38f4ad81f311c1431ffb4dc74fba4f731484236a2"
+    },
+    {
+      "path": "src/AICards.tsx",
+      "sha256": "c0fb2762b664ae54d26b1b2cdf72819e1492bbc6bfb1958a4b839d957d42dfd0"
+    },
+    {
+      "path": "src/KitchenPage.tsx",
+      "sha256": "7d2aa9d7df249870d4a0acd46f61927121f6f1f716c718cf26620ca0f5fb9643"
+    },
+    {
+      "path": "src/features/onboarding/Onboarding.tsx",
+      "sha256": "2e898351b63caabb3c23dcad499eb6a33a824f780a61273c86cf98167896039a"
+    },
+    {
+      "path": "src/features/onboarding/model.ts",
+      "sha256": "e87ff203a648d4f368e4c2ffd4872a905e6297705ad382d348818c6c09d28b4e"
+    },
+    {
+      "path": "src/features/planning/FirstWeek.tsx",
+      "sha256": "f4900422aa5a9585a7509b13c1bcb0a8f087fb7a49a15f5d09bb4621455600ec"
+    },
+    {
+      "path": "src/features/planning/first-week.ts",
+      "sha256": "7dcb322e34e4bf90a510fc0d11e7aca39b4acd086d7a5820443562e3332b6f83"
+    },
+    {
+      "path": "src/features/planning/MealPlanner.tsx",
+      "sha256": "2ffedc4f309dadc97228937f706d4e5f8679e6d322d504858280ecbfe67f1b1c"
+    },
+    {
+      "path": "src/features/pantry/PantryDialog.tsx",
+      "sha256": "cb392d4783b42417d70553f67c768331d1f39902593129d50742d8286a10a2dd"
+    },
+    {
+      "path": "src/features/pantry/ledger.ts",
+      "sha256": "0975f5a3c6d3729171fbbc130af4a8c485a3ab396b3653908fe1ccde06cd0d7f"
+    },
+    {
+      "path": "src/features/shopping/ReceiptReview.tsx",
+      "sha256": "610bb2dafc4f34022d756480e2893b9d940262df94cd0ac1c8590cbc3b79b0f8"
+    },
+    {
+      "path": "src/features/shopping/ShoppingDialog.tsx",
+      "sha256": "a02200d5b8d3bbbca4f05aaad53e02c3c2c4b3452e4d69f5ec87a54c21ff76d8"
+    },
+    {
+      "path": "src/features/shopping/shopping.ts",
+      "sha256": "a90277e0de2baba650c4e2094c1d11a81b4f45527dd596ad31850080e8be1d29"
+    },
+    {
+      "path": "src/features/cloud/useAccountSync.ts",
+      "sha256": "e39aa814097cea82250ce66c3887d884319b89eee6dd528cd9fa97c7bab1277a"
+    },
+    {
+      "path": "src/features/cloud/media.ts",
+      "sha256": "bff2a1d14ed55cfbb40c50ee4927b5ecc1ab9cfe248ddc649f2859cb2db75757"
+    },
+    {
+      "path": "server/preview-page.ts",
+      "sha256": "8eeed7170dfccd92f82cb59cf1716d20ca74138663b1ba7afc10a925d0e332dd"
+    },
+    {
+      "path": "tests/receipt-capture.spec.ts",
+      "sha256": "658079bb0b235d893e4b8b02ccfe26cecafe5f119603d91717df49725c9ef2d4"
+    },
+    {
+      "path": "tests/receipt-products.spec.ts",
+      "sha256": "acbc8a1d6dc1236fb9a67d49aaefb94d4d31ea2fcc416849a59bbb8316850c3e"
+    },
+    {
+      "path": "tests/shopping.spec.ts",
+      "sha256": "e2e185a1c50a831f57993e502ba08f5e4c21b6497edbf00c361448276ea43ac3"
+    },
+    {
+      "path": "tests/onboarding.spec.ts",
+      "sha256": "bb8749fcb32c073b69977edf5bd21fcf3ce051c14a1e90ce1847ae7fb80f2f5d"
+    }
+  ],
+  "note": "Targeted source revision record for this audit; not a complete project fingerprint."
+}

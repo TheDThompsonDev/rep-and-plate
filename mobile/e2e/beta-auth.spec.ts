@@ -1,5 +1,6 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
-import { resultFixture } from "../../tests/ai-fixtures";
+import { resultFixture } from "../../e2e-shared/ai-fixtures";
 
 test("hosted native sign-in binds device records and blocks a different account before sending", async ({
   page,
@@ -69,7 +70,7 @@ test("hosted native sign-in binds device records and blocks a different account 
     });
   });
   await page.goto("/");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Cloud & your records", exact: true })
     .click();

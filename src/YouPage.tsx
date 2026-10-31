@@ -1075,7 +1075,7 @@ export default function YouPage({
           </div>
         </Modal>
       )}
-      {panel === 'goals' && <Modal title="Your goals & starting point" onClose={() => setPanel(null)}><FitnessSetup goal={state.profile.fitnessGoal} weight={state.bodyWeights?.slice().sort((a, b) => a.day.localeCompare(b.day)).at(-1)} onSave={draft => { onSaveFitness(draft); setPanel(null); }} /></Modal>}
+      {panel === 'goals' && <Modal title="Your goals & starting point" onClose={() => setPanel(null)}><FitnessSetup goal={state.profile.fitnessGoal} program={state.profile.trainingProgram} weight={state.bodyWeights?.slice().sort((a, b) => a.day.localeCompare(b.day)).at(-1)} onSave={draft => { onSaveFitness(draft); setPanel(null); }} /></Modal>}
       {panel === 'nutrition' && <Modal title="Your calorie starting point" onClose={() => setPanel(null)}><NutritionSetup baseline={state.profile.nutritionBaseline} kind={state.profile.fitnessGoal?.kind} weight={state.bodyWeights?.filter(entry => entry.day <= today()).slice().sort((a,b) => a.day.localeCompare(b.day)).at(-1)} existingTargets={state.profile.targetsConfigured ? state.profile : undefined} onSave={result => {onSaveNutrition(result);setPanel(null);}} /></Modal>}
       {panel === "about" && (
         <Modal

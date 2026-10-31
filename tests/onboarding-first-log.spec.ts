@@ -1,5 +1,6 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { test, expect } from "@playwright/test";
-import { mockCloud } from "./cloud-fixture";
+import { mockCloud } from "../e2e-shared/cloud-fixture";
 import { readBrowserRecords } from "./record-fixture";
 
 async function start(page: import("@playwright/test").Page, movement = false) {
@@ -149,7 +150,7 @@ test("a failed first-prompt marker save does not keep retrying on every app rend
   await dialog
     .getByRole("button", { name: "Save activity", exact: true })
     .click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByRole("button", { name: "Calorie starting point", exact: true }),
   ).toBeVisible();

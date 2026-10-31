@@ -1,12 +1,9 @@
 import {commitSeededRecords, readBrowserRecords } from "./record-fixture";
 import { test,expect,type Page,type Route } from "./app-fixture";
 import type { PreferenceProposal } from '../src/features/preferences/proposals';
+import { send } from "../e2e-shared/chat";
 
 const stored=(page:Page)=>readBrowserRecords(page);
-async function send(page:Page,text:string) {
-  await page.getByRole('textbox',{name:'Message Rep & Plate'}).fill(text);
-  await page.getByRole('button',{name:'Send message',exact:true}).click();
-}
 function reply(route:Route,proposal:PreferenceProposal,repeat=false) {
   const request=route.request().postDataJSON();
   const result={requestId:request.requestId,reply:'Review these preferences before I save them.',decision:'conversation',receipt:null,meal:null,sources:[],warnings:[],preferenceProposal:proposal};

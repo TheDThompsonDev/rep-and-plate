@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {mockCloud} from '../../tests/cloud-fixture';
+import {mockCloud} from '../../e2e-shared/cloud-fixture';
 import {initialState} from '../../src/domain';
 test.setTimeout(90000);
 test('native fresh account restores cloud records and saves a later change across reload',async({page})=>{

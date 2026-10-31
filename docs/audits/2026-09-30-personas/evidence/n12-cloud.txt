@@ -1,0 +1,68 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: A LITTLE MORE YOU Native Audit, this is your space. Your progress, preferences, and the little things that make this work for you. A LITTLE PERSPECTIVE Weekly Spot Check 2026-09-24 – 2026-09-30
+- button "Plate · Food"
+- button "Rep · Training"
+- text: — avg recorded cal — avg recorded protein Across 0 days with meals logged. Recorded amounts, not estimates of everything you ate. Unlogged days are unknown. Start wherever you are.
+- button "Meet Spot":
+  - text: Meet Spot Replay the welcome tour. Your records stay here.
+  - img
+- button "Hide Spot illustrations":
+  - text: Hide Spot illustrations The same tools work either way.
+  - img
+- text: THE WEEK YOU’RE BUILDING 0 meals. 0 days of showing up. Based on what you logged. Missing days stay unknown.
+- button "Your weekly review"
+- button "Your profile & daily targets":
+  - text: Your profile & daily targets Review generic starting targets and choose your own
+  - img
+- text: Your weight, over time Optional measurements from you. Starting nutrition targets are generic; edit them in Your profile. Weight entries do not change them automatically. Add measurements on two dates to see the change. Measurement date (YYYY-MM-DD)
+- textbox "Measurement date (YYYY-MM-DD)": 2026-09-30
+- text: Body weight
+- textbox "Body weight"
+- button "lb"
+- button "kg"
+- button "Save measurement"
+- text: No measurements recorded yet.
+- button "Food & household preferences":
+  - text: Food & household preferences Favorites, restrictions, budget, and equipment
+  - img
+- button "Reviews & captured moments":
+  - text: Reviews & captured moments 0 items to check
+  - img
+- button "Cloud & your records":
+  - text: Cloud & your records Bring your web records to your phone
+  - img
+- button "Connection":
+  - text: Connection Beta server or local development
+  - img
+- button "Agent connections":
+  - text: Agent connections Choose agent access and review proposed meals
+  - img
+- heading "Help & your data" [level=1]
+- text: Tell us what you were trying to do and what happened. Keep receipts, passwords and private meal details out of your report. A support contact has not been configured for this preview. Share feedback with the person who invited you.
+- button "Share safe diagnostics"
+- text: Includes app version, platform, time and available request IDs. No account email, messages, photos or health records.
+- button "How your data is handled +"
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen
+- heading "Cloud & your records" [level=1]
+- button "Close":
+  - img
+- text: Your account saves changes automatically. Export a backup or review a saved copy here. Other accounts keep separate records.
+- button "Export this device"
+- button "Import a backup file"
+- text: Set your server address in Connection first.

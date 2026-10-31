@@ -1,0 +1,24 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - img "Spot connecting pasta photos with red string on a conspiracy board."
+  - text: 01 · Meet Spot 02 · Your account 03 · Make it yours
+  - paragraph: YOUR PACE. SPOT’S ENTHUSIASM.
+  - heading "What should I call you?" [level=1]
+  - paragraph: One tiny introduction before I become unnecessarily invested in your day.
+  - text: Your name (optional)
+  - textbox "Your name (optional)":
+    - /placeholder: What you like to be called
+    - text: Fit New Tracker Audit
+  - group "Where would you like to start?":
+    - text: Where would you like to start?
+    - radio "Food & meals" [checked]
+    - text: Food & meals
+    - radio "Movement & workouts"
+    - text: Movement & workouts
+    - radio "A little of both"
+    - text: A little of both
+  - paragraph: Your account saves changes automatically. Other accounts keep separate records.
+  - button "That’s me. Let’s go."
+  - button "Back to account"
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

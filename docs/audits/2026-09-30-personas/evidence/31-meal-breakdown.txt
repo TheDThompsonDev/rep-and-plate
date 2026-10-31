@@ -1,0 +1,60 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: I ate 170 g plain Greek yogurt and one medium banana for breakfast today. Please estimate it and let me review before logging.
+      - text: 9:31 AM
+      - paragraph: "Got it. Here's my estimate for your breakfast: plain Greek yogurt and a medium banana. Give it a quick look before adding it to your day."
+      - text: 9:31 AM PLATE
+      - heading "Spot Check" [level=3]
+      - text: MEAL ESTIMATE · CHECK THE PORTION
+      - heading "Breakfast" [level=3]
+      - paragraph: 170g yogurt + 1 medium banana
+      - paragraph: For 2026-09-30
+      - strong: ~240 cal · 16.3g protein
+      - text: 32g carbs · 0.4g fat
+      - paragraph: Estimate based on standard nutritional values for plain Greek yogurt and a medium banana.
+      - group:
+        - text: What's in this estimate 2 components
+        - paragraph: Estimated amounts for the portions shown. These ingredients are not linked to pantry purchases.
+        - list:
+          - listitem:
+            - strong: Plain Greek Yogurt
+            - text: 170 g
+            - strong: ~130 cal
+            - text: 15g protein · 9g carbs · 0g fat
+          - listitem:
+            - strong: Medium Banana
+            - text: 1 medium (approx. 118g)
+            - strong: ~110 cal
+            - text: 1.3g protein · 23g carbs · 0.4g fat
+        - strong: Estimated total
+        - text: ~240 cal · 16.3g protein · 32g carbs · 0.4g fat
+      - button "Yep, add to Breakfast"
+      - button "Fix it"
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

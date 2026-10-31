@@ -1,0 +1,621 @@
+{
+  "expert": {
+    "mode": "Fresh guest profile through UI. Real local API; no mocked calls or injected product records.",
+    "actions": [
+      {
+        "name": "01-fresh-onboarding",
+        "url": "http://127.0.0.1:5173/",
+        "at": "2026-09-30T18:27:13.386Z",
+        "snapshot": "expert/01-fresh-onboarding.txt",
+        "screenshot": "expert/01-fresh-onboarding.png"
+      },
+      {
+        "name": "02-guest-setup",
+        "url": "http://127.0.0.1:5173/",
+        "at": "2026-09-30T18:27:13.982Z",
+        "snapshot": "expert/02-guest-setup.txt",
+        "screenshot": "expert/02-guest-setup.png"
+      },
+      {
+        "name": "03-ready",
+        "url": "http://127.0.0.1:5173/",
+        "at": "2026-09-30T18:27:14.141Z",
+        "snapshot": "expert/03-ready.txt",
+        "screenshot": "expert/03-ready.png"
+      },
+      {
+        "name": "04-first-chat",
+        "url": "http://127.0.0.1:5173/#chat",
+        "at": "2026-09-30T18:27:14.547Z",
+        "snapshot": "expert/04-first-chat.txt",
+        "screenshot": "expert/04-first-chat.png"
+      },
+      {
+        "name": "05-workout-options",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:27:25.981Z",
+        "snapshot": "expert/05-workout-options.txt",
+        "screenshot": "expert/05-workout-options.png"
+      },
+      {
+        "name": "06-kg-session-start",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:27:52.733Z",
+        "snapshot": "expert/06-kg-session-start.txt",
+        "screenshot": "expert/06-kg-session-start.png"
+      },
+      {
+        "name": "07-first-recorded-set",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:27:52.985Z",
+        "snapshot": "expert/07-first-recorded-set.txt",
+        "screenshot": "expert/07-first-recorded-set.png"
+      },
+      {
+        "name": "08-second-set-load-required",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:27:53.061Z",
+        "snapshot": "expert/08-second-set-load-required.txt",
+        "screenshot": "expert/08-second-set-load-required.png"
+      },
+      {
+        "name": "09-second-set-and-equipment-change",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:27:53.319Z",
+        "snapshot": "expert/09-second-set-and-equipment-change.txt",
+        "screenshot": "expert/09-second-set-and-equipment-change.png"
+      },
+      {
+        "name": "10-adjust-after-recording",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:27:53.425Z",
+        "snapshot": "expert/10-adjust-after-recording.txt",
+        "screenshot": "expert/10-adjust-after-recording.png"
+      },
+      {
+        "name": "11-customize-unstarted-exercise",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:28:26.764Z",
+        "snapshot": "expert/11-customize-unstarted-exercise.txt",
+        "screenshot": "expert/11-customize-unstarted-exercise.png"
+      },
+      {
+        "name": "12-alternate-exercise-log",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:28:26.878Z",
+        "snapshot": "expert/12-alternate-exercise-log.txt",
+        "screenshot": "expert/12-alternate-exercise-log.png"
+      },
+      {
+        "name": "13-partial-finish-review",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:28:27.013Z",
+        "snapshot": "expert/13-partial-finish-review.txt",
+        "screenshot": "expert/13-partial-finish-review.png"
+      },
+      {
+        "name": "14-finished-with-history",
+        "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'View history', exact: true })\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "14-finished-with-history-error",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:28:42.133Z",
+        "snapshot": "expert/14-finished-with-history-error.txt",
+        "screenshot": "expert/14-finished-with-history-error.png"
+      },
+      {
+        "name": "15-reopen-history-correction",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:28:42.461Z",
+        "snapshot": "expert/15-reopen-history-correction.txt",
+        "screenshot": "expert/15-reopen-history-correction.png"
+      },
+      {
+        "name": "16-refinished-correction",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:28:42.678Z",
+        "snapshot": "expert/16-refinished-correction.txt",
+        "screenshot": "expert/16-refinished-correction.png"
+      },
+      {
+        "name": "17-return-to-options-history",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:29:17.383Z",
+        "snapshot": "expert/17-return-to-options-history.txt",
+        "screenshot": "expert/17-return-to-options-history.png"
+      },
+      {
+        "name": "18-next-session-customization-not-reused",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:29:17.546Z",
+        "snapshot": "expert/18-next-session-customization-not-reused.txt",
+        "screenshot": "expert/18-next-session-customization-not-reused.png"
+      },
+      {
+        "name": "19-reloaded-kg-and-chat-unit-discrepancy",
+        "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('heading', { name: 'Upper Body', exact: true }) to be visible\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "19-reloaded-kg-and-chat-unit-discrepancy-error",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:29:32.712Z",
+        "snapshot": "expert/19-reloaded-kg-and-chat-unit-discrepancy-error.txt",
+        "screenshot": "expert/19-reloaded-kg-and-chat-unit-discrepancy-error.png"
+      },
+      {
+        "name": "20-daily-targets-review",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:10.056Z",
+        "snapshot": "expert/20-daily-targets-review.txt",
+        "screenshot": "expert/20-daily-targets-review.png"
+      },
+      {
+        "name": "21-manual-breakfast",
+        "error": "locator.selectOption: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Meal', { exact: true })\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "21-manual-breakfast-error",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:25.335Z",
+        "snapshot": "expert/21-manual-breakfast-error.txt",
+        "screenshot": "expert/21-manual-breakfast-error.png"
+      },
+      {
+        "name": "22-repeat-portion-review",
+        "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Audit yogurt breakfast', exact: true })\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "22-repeat-portion-review-error",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:40.405Z",
+        "snapshot": "expert/22-repeat-portion-review-error.txt",
+        "screenshot": "expert/22-repeat-portion-review-error.png"
+      },
+      {
+        "name": "23-repeat-to-yesterday",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:40.582Z",
+        "snapshot": "expert/23-repeat-to-yesterday.txt",
+        "screenshot": "expert/23-repeat-to-yesterday.png"
+      },
+      {
+        "name": "24-date-correction-and-reload",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:41.014Z",
+        "snapshot": "expert/24-date-correction-and-reload.txt",
+        "screenshot": "expert/24-date-correction-and-reload.png"
+      },
+      {
+        "name": "25-weekly-intake-view",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:41.115Z",
+        "snapshot": "expert/25-weekly-intake-view.txt",
+        "screenshot": "expert/25-weekly-intake-view.png"
+      },
+      {
+        "name": "26-correct-synthetic-food-and-repeat",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:32:48.081Z",
+        "snapshot": "expert/26-correct-synthetic-food-and-repeat.txt",
+        "screenshot": "expert/26-correct-synthetic-food-and-repeat.png"
+      },
+      {
+        "name": "27-repeat-today-persists",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:33:00.261Z",
+        "snapshot": "expert/27-repeat-today-persists.txt",
+        "screenshot": "expert/27-repeat-today-persists.png"
+      },
+      {
+        "name": "28-recipe-first-setup",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:30.984Z",
+        "snapshot": "expert/28-recipe-first-setup.txt",
+        "screenshot": "expert/28-recipe-first-setup.png"
+      },
+      {
+        "name": "29-add-Rolled-oats",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:31.493Z",
+        "snapshot": "expert/29-add-Rolled-oats.txt",
+        "screenshot": "expert/29-add-Rolled-oats.png"
+      },
+      {
+        "name": "29-add-Whole-milk",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:31.692Z",
+        "snapshot": "expert/29-add-Whole-milk.txt",
+        "screenshot": "expert/29-add-Whole-milk.png"
+      },
+      {
+        "name": "30-return-to-recipe-and-prepare",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:32.026Z",
+        "snapshot": "expert/30-return-to-recipe-and-prepare.txt",
+        "screenshot": "expert/30-return-to-recipe-and-prepare.png"
+      },
+      {
+        "name": "31-log-recipe-portion",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:32.126Z",
+        "snapshot": "expert/31-log-recipe-portion.txt",
+        "screenshot": "expert/31-log-recipe-portion.png"
+      },
+      {
+        "name": "32-recipe-portion-persists",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:32.418Z",
+        "snapshot": "expert/32-recipe-portion-persists.txt",
+        "screenshot": "expert/32-recipe-portion-persists.png"
+      },
+      {
+        "name": "35-kg-second-session-confirmation",
+        "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Workouts', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <dialog open=\"\" class=\"modal wide\" aria-label=\"Recipes & leftovers\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <dialog open=\"\" class=\"modal wide\" aria-label=\"Recipes & leftovers\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <dialog open=\"\" class=\"modal wide\" aria-label=\"Recipes & leftovers\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "35-kg-second-session-confirmation-error",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:34:25.388Z",
+        "snapshot": "expert/35-kg-second-session-confirmation-error.txt",
+        "screenshot": "expert/35-kg-second-session-confirmation-error.png"
+      },
+      {
+        "name": "36-recipe-close-recheck",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:34:50.031Z",
+        "snapshot": "expert/36-recipe-close-recheck.txt",
+        "screenshot": "expert/36-recipe-close-recheck.png"
+      },
+      {
+        "name": "37-kg-reproduction-adjust",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:34:50.379Z",
+        "snapshot": "expert/37-kg-reproduction-adjust.txt",
+        "screenshot": "expert/37-kg-reproduction-adjust.png"
+      },
+      {
+        "name": "38-rest-timer-started",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:36:13.009Z",
+        "snapshot": "expert/38-rest-timer-started.txt",
+        "screenshot": "expert/38-rest-timer-started.png"
+      },
+      {
+        "name": "39-rest-running",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:36:42.787Z",
+        "snapshot": "expert/39-rest-running.txt",
+        "screenshot": "expert/39-rest-running.png"
+      },
+      {
+        "name": "40-rest-navigation-result",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:36:43.256Z",
+        "snapshot": "expert/40-rest-navigation-result.txt",
+        "screenshot": "expert/40-rest-navigation-result.png"
+      },
+      {
+        "name": "41-kg-chat-visible",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:37:27.739Z",
+        "snapshot": "expert/41-kg-chat-visible.txt",
+        "screenshot": "expert/41-kg-chat-visible.png"
+      },
+      {
+        "name": "42a-rest-live",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:37:28.008Z",
+        "snapshot": "expert/42a-rest-live.txt",
+        "screenshot": "expert/42a-rest-live.png"
+      },
+      {
+        "name": "42-rest-navigation-reproduction",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:37:28.475Z",
+        "snapshot": "expert/42-rest-navigation-reproduction.txt",
+        "screenshot": "expert/42-rest-navigation-reproduction.png"
+      },
+      {
+        "name": "43-profile-weekly-review",
+        "url": "http://127.0.0.1:5173/#you",
+        "at": "2026-09-30T18:39:00.758Z",
+        "snapshot": "expert/43-profile-weekly-review.txt",
+        "screenshot": "expert/43-profile-weekly-review.png"
+      }
+    ],
+    "console": [],
+    "pageErrors": []
+  },
+  "six-months": {
+    "mode": "Fresh guest profile through UI. Real local API; no mocked calls or injected product records.",
+    "actions": [
+      {
+        "name": "01-fresh-onboarding",
+        "url": "http://127.0.0.1:5173/",
+        "at": "2026-09-30T18:27:15.272Z",
+        "snapshot": "six-months/01-fresh-onboarding.txt",
+        "screenshot": "six-months/01-fresh-onboarding.png"
+      },
+      {
+        "name": "02-guest-setup",
+        "url": "http://127.0.0.1:5173/",
+        "at": "2026-09-30T18:27:15.660Z",
+        "snapshot": "six-months/02-guest-setup.txt",
+        "screenshot": "six-months/02-guest-setup.png"
+      },
+      {
+        "name": "03-ready",
+        "url": "http://127.0.0.1:5173/",
+        "at": "2026-09-30T18:27:15.917Z",
+        "snapshot": "six-months/03-ready.txt",
+        "screenshot": "six-months/03-ready.png"
+      },
+      {
+        "name": "04-first-chat",
+        "url": "http://127.0.0.1:5173/#chat",
+        "at": "2026-09-30T18:27:16.328Z",
+        "snapshot": "six-months/04-first-chat.txt",
+        "screenshot": "six-months/04-first-chat.png"
+      },
+      {
+        "name": "20-daily-targets-review",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:41.562Z",
+        "snapshot": "six-months/20-daily-targets-review.txt",
+        "screenshot": "six-months/20-daily-targets-review.png"
+      },
+      {
+        "name": "21-manual-breakfast",
+        "error": "locator.selectOption: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Meal', { exact: true })\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "21-manual-breakfast-error",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:30:56.882Z",
+        "snapshot": "six-months/21-manual-breakfast-error.txt",
+        "screenshot": "six-months/21-manual-breakfast-error.png"
+      },
+      {
+        "name": "22-repeat-portion-review",
+        "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Audit chicken rice lunch', exact: true })\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "22-repeat-portion-review-error",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:31:12.010Z",
+        "snapshot": "six-months/22-repeat-portion-review-error.txt",
+        "screenshot": "six-months/22-repeat-portion-review-error.png"
+      },
+      {
+        "name": "23-repeat-to-yesterday",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:31:12.244Z",
+        "snapshot": "six-months/23-repeat-to-yesterday.txt",
+        "screenshot": "six-months/23-repeat-to-yesterday.png"
+      },
+      {
+        "name": "24-date-correction-and-reload",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:31:12.901Z",
+        "snapshot": "six-months/24-date-correction-and-reload.txt",
+        "screenshot": "six-months/24-date-correction-and-reload.png"
+      },
+      {
+        "name": "25-weekly-intake-view",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:31:13.045Z",
+        "snapshot": "six-months/25-weekly-intake-view.txt",
+        "screenshot": "six-months/25-weekly-intake-view.png"
+      },
+      {
+        "name": "26-correct-synthetic-food-and-repeat",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:32:48.764Z",
+        "snapshot": "six-months/26-correct-synthetic-food-and-repeat.txt",
+        "screenshot": "six-months/26-correct-synthetic-food-and-repeat.png"
+      },
+      {
+        "name": "27-repeat-today-persists",
+        "url": "http://127.0.0.1:5173/#nutrition",
+        "at": "2026-09-30T18:33:00.738Z",
+        "snapshot": "six-months/27-repeat-today-persists.txt",
+        "screenshot": "six-months/27-repeat-today-persists.png"
+      },
+      {
+        "name": "28-recipe-first-setup",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:33.140Z",
+        "snapshot": "six-months/28-recipe-first-setup.txt",
+        "screenshot": "six-months/28-recipe-first-setup.png"
+      },
+      {
+        "name": "29-add-Rolled-oats",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:33.773Z",
+        "snapshot": "six-months/29-add-Rolled-oats.txt",
+        "screenshot": "six-months/29-add-Rolled-oats.png"
+      },
+      {
+        "name": "29-add-Whole-milk",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:34.092Z",
+        "snapshot": "six-months/29-add-Whole-milk.txt",
+        "screenshot": "six-months/29-add-Whole-milk.png"
+      },
+      {
+        "name": "30-return-to-recipe-and-prepare",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:34.601Z",
+        "snapshot": "six-months/30-return-to-recipe-and-prepare.txt",
+        "screenshot": "six-months/30-return-to-recipe-and-prepare.png"
+      },
+      {
+        "name": "31-log-recipe-portion",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:34.822Z",
+        "snapshot": "six-months/31-log-recipe-portion.txt",
+        "screenshot": "six-months/31-log-recipe-portion.png"
+      },
+      {
+        "name": "32-recipe-portion-persists",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:35.150Z",
+        "snapshot": "six-months/32-recipe-portion-persists.txt",
+        "screenshot": "six-months/32-recipe-portion-persists.png"
+      },
+      {
+        "name": "33-undo-portion",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:35.705Z",
+        "snapshot": "six-months/33-undo-portion.txt",
+        "screenshot": "six-months/33-undo-portion.png"
+      },
+      {
+        "name": "34-log-correct-portion",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:35.980Z",
+        "snapshot": "six-months/34-log-correct-portion.txt",
+        "screenshot": "six-months/34-log-correct-portion.png"
+      },
+      {
+        "name": "35-planner-settings",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:33:52.379Z",
+        "snapshot": "six-months/35-planner-settings.txt",
+        "screenshot": "six-months/35-planner-settings.png"
+      },
+      {
+        "name": "36-live-generation-started",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:34:10.323Z",
+        "snapshot": "six-months/36-live-generation-started.txt",
+        "screenshot": "six-months/36-live-generation-started.png"
+      },
+      {
+        "name": "37-generated-dinner-week",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:34:50.518Z",
+        "snapshot": "six-months/37-generated-dinner-week.txt",
+        "screenshot": "six-months/37-generated-dinner-week.png"
+      },
+      {
+        "name": "38-edit-draft-close-reload",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:35:11.339Z",
+        "snapshot": "six-months/38-edit-draft-close-reload.txt",
+        "screenshot": "six-months/38-edit-draft-close-reload.png"
+      },
+      {
+        "name": "39-approve-and-repeat-week",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:35:11.749Z",
+        "snapshot": "six-months/39-approve-and-repeat-week.txt",
+        "screenshot": "six-months/39-approve-and-repeat-week.png"
+      },
+      {
+        "name": "40-shopping-list-entry",
+        "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Open swaps, list & spending', exact: true })\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "40-shopping-list-entry-error",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:35:26.932Z",
+        "snapshot": "six-months/40-shopping-list-entry-error.txt",
+        "screenshot": "six-months/40-shopping-list-entry-error.png"
+      },
+      {
+        "name": "41-shopping-list-review",
+        "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Shopping list', exact: true })\u001b[22m\n",
+        "classification": "Script/locator failure unless rerun establishes product behavior"
+      },
+      {
+        "name": "41-shopping-list-review-error",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:36:12.942Z",
+        "snapshot": "six-months/41-shopping-list-review-error.txt",
+        "screenshot": "six-months/41-shopping-list-review-error.png"
+      },
+      {
+        "name": "42-shopping-needs-and-manual-item",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:36:42.171Z",
+        "snapshot": "six-months/42-shopping-needs-and-manual-item.txt",
+        "screenshot": "six-months/42-shopping-needs-and-manual-item.png"
+      },
+      {
+        "name": "43-spending-without-receipts",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:36:42.468Z",
+        "snapshot": "six-months/43-spending-without-receipts.txt",
+        "screenshot": "six-months/43-spending-without-receipts.png"
+      },
+      {
+        "name": "44-start-starter-workout",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:36:43.882Z",
+        "snapshot": "six-months/44-start-starter-workout.txt",
+        "screenshot": "six-months/44-start-starter-workout.png"
+      },
+      {
+        "name": "45-adjust-before-logging-and-alternate",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:37:27.588Z",
+        "snapshot": "six-months/45-adjust-before-logging-and-alternate.txt",
+        "screenshot": "six-months/45-adjust-before-logging-and-alternate.png"
+      },
+      {
+        "name": "46a-partial-review",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:38:01.938Z",
+        "snapshot": "six-months/46a-partial-review.txt",
+        "screenshot": "six-months/46a-partial-review.png"
+      },
+      {
+        "name": "46-save-partial-and-correct",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:38:02.271Z",
+        "snapshot": "six-months/46-save-partial-and-correct.txt",
+        "screenshot": "six-months/46-save-partial-and-correct.png"
+      },
+      {
+        "name": "47a-workout-history",
+        "url": "http://127.0.0.1:5173/#workouts",
+        "at": "2026-09-30T18:38:19.732Z",
+        "snapshot": "six-months/47a-workout-history.txt",
+        "screenshot": "six-months/47a-workout-history.png"
+      },
+      {
+        "name": "47-correction-and-history-persists",
+        "url": "http://127.0.0.1:5173/#you",
+        "at": "2026-09-30T18:38:20.272Z",
+        "snapshot": "six-months/47-correction-and-history-persists.txt",
+        "screenshot": "six-months/47-correction-and-history-persists.png"
+      },
+      {
+        "name": "48-shopping-list-after-reload",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:38:59.730Z",
+        "snapshot": "six-months/48-shopping-list-after-reload.txt",
+        "screenshot": "six-months/48-shopping-list-after-reload.png"
+      },
+      {
+        "name": "49-planned-meal-detail-no-method",
+        "url": "http://127.0.0.1:5173/#kitchen",
+        "at": "2026-09-30T18:39:00.439Z",
+        "snapshot": "six-months/49-planned-meal-detail-no-method.txt",
+        "screenshot": "six-months/49-planned-meal-detail-no-method.png"
+      }
+    ],
+    "console": [],
+    "pageErrors": []
+  }
+}

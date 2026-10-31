@@ -1,0 +1,66 @@
+{
+  "status": "passed",
+  "completedAt": "2026-10-02T00:34:48.4276951Z",
+  "sourceManifest": "source-manifest.json",
+  "stableReviewedFiles": 36,
+  "checks": [
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src server",
+      "count": 425,
+      "criterion": "Shared goal validation, measurement preservation and AI contracts",
+      "result": "passed",
+      "log": "unit.log"
+    },
+    {
+      "command": "npm run build",
+      "warning": "Existing bundle-size warning",
+      "criterion": "Production web build",
+      "result": "passed",
+      "log": "build.log"
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --reporter=list",
+      "count": 322,
+      "criterion": "Complete desktop and phone-browser journeys",
+      "result": "passed",
+      "log": "browser.log"
+    },
+    {
+      "log": "native-browser.log",
+      "renderer": "Expo web",
+      "count": 7,
+      "criterion": "Native goals, onboarding, account sync and deletion safeguards",
+      "result": "passed"
+    },
+    {
+      "log": "native-types.log",
+      "criterion": "Native TypeScript",
+      "result": "passed"
+    },
+    {
+      "existingWarnings": 9,
+      "log": "native-lint.log",
+      "criterion": "Native lint",
+      "result": "passed",
+      "errors": 0
+    },
+    {
+      "log": "diff-check.log",
+      "criterion": "Diff whitespace",
+      "result": "passed"
+    }
+  ],
+  "semanticReview": "Optional schema, legacy profiles, atomic starting weight, same-day conflicts, retries, units, calendar due dates, durable reload, ownership, auth races and sign-out preservation reviewed; no open finding.",
+  "limits": [
+    "In-app check-in prompts only",
+    "No automatic calorie or macro target calculation",
+    "Native checked through Expo web; physical devices not tested",
+    "No live AI-provider personalization outcome claimed",
+    "Managed CYC startup blocked by existing fingerprint limit; configured checks run directly",
+    "No commit or deployment requested"
+  ],
+  "retainedFailures": [
+    "browser-initial.log",
+    "native-browser-initial.log"
+  ]
+}

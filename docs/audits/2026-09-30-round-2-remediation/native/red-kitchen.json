@@ -1,0 +1,227 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "mobile/playwright.config.ts",
+      "mobile/e2e/round-two-remediation.spec.ts",
+      "-g",
+      "manual stock|cooking method",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/mobile/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run web -- --port 8081",
+      "url": "http://127.0.0.1:8081",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "round-two-remediation.spec.ts",
+      "file": "round-two-remediation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "manual stock is not a purchase and uncertain food exposes product matching",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5422,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Your receipts will live here, ready when you need them.', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Your receipts will live here, ready when you need them.', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Your receipts will live here, ready when you need them.', { exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Your receipts will live here, ready when you need them.', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Your receipts will live here, ready when you need them.', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Your receipts will live here, ready when you need them.', { exact: true })\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:319:5",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                      "column": 5,
+                      "line": 319
+                    },
+                    "snippet": "  317 |       exact: true,\n  318 |     }),\n> 319 |   ).toBeVisible();\n      |     ^\n  320 |   await page.getByRole(\"button\", { name: \"Open pantry\", exact: true }).click();\n  321 |   await page.getByRole(\"button\", { name: \"Check Rice\", exact: true }).click();\n  322 |   await expect("
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 5,
+                        "line": 319
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Your receipts will live here, ready when you need them.', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Your receipts will live here, ready when you need them.', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Your receipts will live here, ready when you need them.', { exact: true })\u001b[22m\n\n\n  317 |       exact: true,\n  318 |     }),\n> 319 |   ).toBeVisible();\n      |     ^\n  320 |   await page.getByRole(\"button\", { name: \"Open pantry\", exact: true }).click();\n  321 |   await page.getByRole(\"button\", { name: \"Check Rice\", exact: true }).click();\n  322 |   await expect(\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:319:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:19:04.154Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-manu-40a45-od-exposes-product-matching\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-manu-40a45-od-exposes-product-matching\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                    "column": 5,
+                    "line": 319
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-fc08268c9ea7fe446f86",
+          "file": "round-two-remediation.spec.ts",
+          "line": 294,
+          "column": 5
+        },
+        {
+          "title": "cooking method review persists and quantity changes invalidate review",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5465,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Dinner: 1 ingredient pattern across 7 meals.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Dinner: 1 ingredient pattern across 7 meals.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Dinner: 1 ingredient pattern across 7 meals.')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Dinner: 1 ingredient pattern across 7 meals.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Dinner: 1 ingredient pattern across 7 meals.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Dinner: 1 ingredient pattern across 7 meals.')\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:395:5",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                      "column": 5,
+                      "line": 395
+                    },
+                    "snippet": "  393 |       exact: false,\n  394 |     }),\n> 395 |   ).toBeVisible();\n      |     ^\n  396 |   await expect(\n  397 |     page.getByText(\"1. Boil Rice for 15 min.\", { exact: true }),\n  398 |   ).toHaveCount(7);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 5,
+                        "line": 395
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Dinner: 1 ingredient pattern across 7 meals.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Dinner: 1 ingredient pattern across 7 meals.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Dinner: 1 ingredient pattern across 7 meals.')\u001b[22m\n\n\n  393 |       exact: false,\n  394 |     }),\n> 395 |   ).toBeVisible();\n      |     ^\n  396 |   await expect(\n  397 |     page.getByText(\"1. Boil Rice for 15 min.\", { exact: true }),\n  398 |   ).toHaveCount(7);\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:395:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:19:10.218Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-cook-a1d33-y-changes-invalidate-review\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-cook-a1d33-y-changes-invalidate-review\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                    "column": 5,
+                    "line": 395
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-0152cb02adf8322370f4",
+          "file": "round-two-remediation.spec.ts",
+          "line": 341,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T19:19:03.179Z",
+    "duration": 12674.029,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

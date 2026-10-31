@@ -1,0 +1,158 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "mobile/playwright.config.ts",
+      "mobile/e2e/round-two-remediation.spec.ts",
+      "-g",
+      "dated manual",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/mobile/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run web -- --port 8081",
+      "url": "http://127.0.0.1:8081",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "round-two-remediation.spec.ts",
+      "file": "round-two-remediation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "dated manual entry opens its day and persistent notice cannot block Chat Send",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6413,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Edit Older audit meal', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: 'Edit Older audit meal', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Older audit meal', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Edit Older audit meal', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: 'Edit Older audit meal', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Older audit meal', exact: true })\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:37:84",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                      "column": 84,
+                      "line": 37
+                    },
+                    "snippet": "  35 |   await page.getByRole('textbox',{name:'Day (YYYY-MM-DD)',exact:true}).fill(correctedDay);\n  36 |   await page.getByRole('button',{name:'Save meal',exact:true}).click();\n> 37 |   await expect(page.getByRole('button',{name:'Edit Older audit meal',exact:true})).toBeVisible();\n     |                                                                                    ^\n  38 |   await page.getByRole(\"button\", { name: \"Chat\", exact: true }).click();\n  39 |   await page\n  40 |     .getByRole(\"textbox\", { name: \"Message Rep & Plate\", exact: true })"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 84,
+                        "line": 37
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Edit Older audit meal', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: 'Edit Older audit meal', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Older audit meal', exact: true })\u001b[22m\n\n\n  35 |   await page.getByRole('textbox',{name:'Day (YYYY-MM-DD)',exact:true}).fill(correctedDay);\n  36 |   await page.getByRole('button',{name:'Save meal',exact:true}).click();\n> 37 |   await expect(page.getByRole('button',{name:'Edit Older audit meal',exact:true})).toBeVisible();\n     |                                                                                    ^\n  38 |   await page.getByRole(\"button\", { name: \"Chat\", exact: true }).click();\n  39 |   await page\n  40 |     .getByRole(\"textbox\", { name: \"Message Rep & Plate\", exact: true })\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:37:84"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:29:12.067Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-date-e4a52-tice-cannot-block-Chat-Send\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-date-e4a52-tice-cannot-block-Chat-Send\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                    "column": 84,
+                    "line": 37
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-f3aa7d1f7b3e5d0e99c3",
+          "file": "round-two-remediation.spec.ts",
+          "line": 7,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T19:29:10.679Z",
+    "duration": 8062.692000000001,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

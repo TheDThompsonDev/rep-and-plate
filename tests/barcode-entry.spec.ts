@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { readBrowserRecords } from "./record-fixture";
 import { test, expect } from "./app-fixture";
 
@@ -16,9 +17,7 @@ test("every page opens barcode scanning directly without changing records", asyn
   const before = await readBrowserRecords(page);
   for (const name of ["Chat", "Nutrition", "Workouts", "Kitchen", "You"]) {
     if (name === "You")
-      await page
-        .getByRole("button", { name: "Your profile", exact: true })
-        .click();
+      await openProfile(page);
     else
       await page
         .locator(".fuel-tabs")
@@ -35,11 +34,11 @@ test("every page opens barcode scanning directly without changing records", asyn
       "Workouts",
       "Kitchen",
     ]);
-    await expect(
-      name === "You"
-        ? page.getByRole("button", { name: "Your profile", exact: true })
-        : navigation.getByRole("button", { name, exact: true }),
-    ).toHaveAttribute("aria-current", "page");
+    if (name === 'You') {
+      await expect(page.getByRole('region', { name: 'You', exact: true })).toBeVisible();
+    } else {
+      await expect(navigation.getByRole('button', { name, exact: true })).toHaveAttribute('aria-current', 'page');
+    }
     await navigation
       .getByRole("button", { name: "Scan a barcode", exact: true })
       .click();

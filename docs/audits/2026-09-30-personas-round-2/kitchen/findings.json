@@ -1,0 +1,349 @@
+{
+  "date": "2026-09-30",
+  "method": "Two isolated real UI guest sessions, no mocked APIs or injected records, simulated personas rather than research participants. Hypotheses are not user testimony.",
+  "findings": [
+    {
+      "id": "K01",
+      "priority": "Medium",
+      "classification": "reproduced-product-defect",
+      "personas": [
+        "expert"
+      ],
+      "oldFrictionIds": [
+        "F13"
+      ],
+      "title": "Kilogram workouts switch back to pounds in conversation",
+      "observed": "Two separate sessions display 80 kg in the set/history but append Got it. Bench Press, set 1: 176.3698 lb × 8 reps. Corrections also report pounds. UI numeric data remains correct.",
+      "expected": "Conversation uses the chosen workout unit with sensible display precision.",
+      "wishHypothesis": null,
+      "evidence": [
+        "expert/16-refinished-correction.txt",
+        "expert/17-return-to-options-history.txt",
+        "expert/37-kg-reproduction-adjust.txt",
+        "expert/41-kg-chat-visible.png"
+      ],
+      "source": [
+        "src/workouts.ts:188"
+      ],
+      "reproduction": "Select kg, start Upper Body, Adjust Bench Press to 80 kg, save, record 8 reps. Compare set with reply. Reproduced using per-set load and upfront adjustment."
+    },
+    {
+      "id": "K02",
+      "priority": "Medium",
+      "classification": "reproduced-product-defect",
+      "personas": [
+        "expert",
+        "six-months"
+      ],
+      "oldFrictionIds": [
+        "F14"
+      ],
+      "title": "Planner invents a purchase date for manually entered stock",
+      "observed": "Manual stock is entered without purchase information. Kitchen correctly says Captured Sep 30. Planner says 6 labeled servings remain from your 2026-09-30 purchase. Spending also lists each manual ingredient as a grocery trip with a purchase date needing review, despite no receipt.",
+      "expected": "Keep capture/on-hand dates distinct from purchases, including suggestions and spending-review eligibility.",
+      "wishHypothesis": null,
+      "evidence": [
+        "six-months/29-add-Rolled-oats.txt",
+        "six-months/35-planner-settings.txt",
+        "six-months/37-generated-dinner-week.txt",
+        "six-months/43-spending-without-receipts.txt",
+        "six-months/final-state.json"
+      ],
+      "source": [
+        "src/features/pantry/manual-ingredient.ts:10",
+        "src/features/planning/meal-plans.ts:127",
+        "src/features/shopping/ShoppingDialog.tsx"
+      ],
+      "reproduction": "Add a manual ingredient with quantity and label nutrition, open planner. No purchase-date field exists. Reopen after reload: purchase language remains. Open spending to see manual-stock records in the receipt-review list."
+    },
+    {
+      "id": "K03",
+      "priority": "Medium",
+      "classification": "reproduced-product-defect",
+      "personas": [
+        "expert"
+      ],
+      "oldFrictionIds": [
+        "F11"
+      ],
+      "title": "Rest timer is lost when navigating within the app",
+      "observed": "Start 90-second rest, navigate Nutrition then Workouts: timer becomes Ready when you are. Repeated through Kitchen with the same result while the active workout persists.",
+      "expected": "A running countdown remains tied to its end time across ordinary tab navigation.",
+      "wishHypothesis": "Custom rest duration could help an experienced lifter; only the 90-second preset is present. This preference is a hypothesis, not a participant request.",
+      "evidence": [
+        "expert/39-rest-running.txt",
+        "expert/40-rest-navigation-result.txt",
+        "expert/42a-rest-live.txt",
+        "expert/42-rest-navigation-reproduction.txt"
+      ],
+      "source": [
+        "src/WorkoutPage.tsx:123",
+        "src/WorkoutPage.tsx:504"
+      ],
+      "reproduction": "Start timer, immediately open another bottom-navigation page, return to Workouts, expand Rest timer. No timer remains. Two reproductions were well inside 90 seconds."
+    },
+    {
+      "id": "K04",
+      "priority": "High opportunity; not release blocker",
+      "classification": "missing-capability-hypothesis",
+      "personas": [
+        "expert",
+        "six-months"
+      ],
+      "oldFrictionIds": [
+        "F11",
+        "F28"
+      ],
+      "title": "Reuse a personal workout instead of reconstructing it",
+      "observed": "Expert substituted OHP, changed its sets/target/load, and moved Row earlier. After finishing, Choose your next workout and Start workout returns the original Upper Body starter with Incline Press and original ordering. History and last actual loads persist, but no Save routine or Repeat session action was found in workout choices/history/builder source.",
+      "expected": "A repeat-use lifter may want the same exercise lineup with fresh unlogged sets.",
+      "wishHypothesis": "Save as a personal routine or repeat this workout, explicitly reviewing loads and clearing completion. Do not auto-prescribe progression.",
+      "evidence": [
+        "expert/11-customize-unstarted-exercise.txt",
+        "expert/17-return-to-options-history.txt",
+        "expert/18-next-session-customization-not-reused.txt",
+        "expert/37-kg-reproduction-adjust.txt"
+      ],
+      "source": [
+        "src/workouts.ts:126",
+        "src/WorkoutPage.tsx:317",
+        "src/WorkoutPage.tsx:926",
+        "src/features/workout-planning/WorkoutBuilder.tsx"
+      ],
+      "limitation": "Actual reset observed; absence checked in these UI/source surfaces, not every possible conversation phrasing. AI workout generation was not invoked in this lane."
+    },
+    {
+      "id": "K05",
+      "priority": "Medium opportunity",
+      "classification": "found-but-hard-to-discover",
+      "personas": [
+        "expert",
+        "six-months"
+      ],
+      "oldFrictionIds": [
+        "F22"
+      ],
+      "title": "Same-load setup works through Adjust exercise but is easy to miss",
+      "observed": "Entering 80 kg in the first set leaves the next set without a confirmed load. Before logging anything, Adjust exercise to 80 kg confirms all sets; verified in expert second session and tracker Goblet Squat at 35 lb. After a recorded set, exercise-level weight is disabled and per-set editing remains available.",
+      "expected": "Efficient repeated sets without losing the ability to record differing loads.",
+      "wishHypothesis": "Expose Apply this load to remaining sets near the first set, or point to the existing upfront Adjust exercise path. Do not describe bulk load setup as missing.",
+      "evidence": [
+        "expert/08-second-set-load-required.txt",
+        "expert/10-adjust-after-recording.txt",
+        "expert/37-kg-reproduction-adjust.txt",
+        "six-months/45-adjust-before-logging-and-alternate.txt"
+      ],
+      "source": [
+        "src/features/progress/set-loads.ts:7",
+        "src/WorkoutPage.tsx:1337"
+      ]
+    },
+    {
+      "id": "K06",
+      "priority": "Medium opportunity",
+      "classification": "missing-convenience-hypothesis",
+      "personas": [
+        "expert",
+        "six-months"
+      ],
+      "oldFrictionIds": [
+        "F16"
+      ],
+      "title": "Repeated meals have no portion multiplier",
+      "observed": "Repeat meal opens a dated editable copy with correct decimal nutrition and an explicit inventory disclaimer. The form contains calories and three macros, but no 0.5x/1.5x scale control. Prepared batches separately support fractional portions and were used successfully.",
+      "expected": "Repeating a familiar meal at a different amount may need fewer manual calculations.",
+      "wishHypothesis": "Add a reviewed multiplier for ordinary repeated meals. Keep prepared-batch logging separate to preserve inventory semantics.",
+      "evidence": [
+        "expert/26-correct-synthetic-food-and-repeat.txt",
+        "expert/27-repeat-today-persists.txt",
+        "six-months/26-correct-synthetic-food-and-repeat.txt",
+        "six-months/34-log-correct-portion.txt"
+      ],
+      "source": [
+        "src/App.tsx:2422",
+        "src/App.tsx:2436",
+        "src/domain.ts:320"
+      ],
+      "limitation": "No arithmetic mistakes or failed meal copies occurred. This is a convenience hypothesis, not a broken repeat feature."
+    },
+    {
+      "id": "K07",
+      "priority": "Medium opportunity",
+      "classification": "missing-capability-hypothesis",
+      "personas": [
+        "six-months",
+        "expert"
+      ],
+      "oldFrictionIds": [
+        "F19"
+      ],
+      "title": "Generated meal plans stop at ingredients, not a cooking method",
+      "observed": "One real HTTP 200 dinner week provides seven titles, ingredient quantities and partial nutrition but no preparation directions. Stew, bake, casserole, gratin and skillet names have no heat/time/method. In this request minutes were null because no cooking-time constraint was supplied.",
+      "expected": "A person trying a newly suggested dish may need enough method to prepare it.",
+      "wishHypothesis": "Offer a separate reviewed cooking-method view with instructions that cannot make inventory claims. Current generated-note removal is an intentional truthfulness tradeoff, not a failed request.",
+      "evidence": [
+        "six-months/planner-response.json",
+        "six-months/37-generated-dinner-week.txt",
+        "six-months/49-planned-meal-detail-no-method.png"
+      ],
+      "source": [
+        "src/features/planning/meal-plans.ts:57",
+        "src/features/planning/MealPlanner.tsx:118"
+      ],
+      "limitation": "Did not cook the meals or assess taste/nutritional adequacy. One request cannot characterize all generations."
+    },
+    {
+      "id": "K08",
+      "priority": "Low opportunity; validate demand",
+      "classification": "quality-limit-observation-with-hypothesis",
+      "personas": [
+        "six-months"
+      ],
+      "oldFrictionIds": [
+        "F19"
+      ],
+      "title": "Named variety can still mean the same pantry base every day",
+      "observed": "Variety mode returned seven different titles, but every dinner was one serving oats plus one serving milk plus a different vegetable. This satisfies the current at-least-three-title check and truthfully discloses partial nutrition and shortages.",
+      "expected": "A person selecting variety may mean different primary ingredients or meal patterns.",
+      "wishHypothesis": "Explore a clearer variety preference or stronger ingredient-pattern diversity, while retaining an explicit repeat-friendly choice.",
+      "evidence": [
+        "six-months/planner-response.json",
+        "six-months/37-generated-dinner-week.txt"
+      ],
+      "source": [
+        "src/features/planning/meal-plans.ts:62"
+      ],
+      "limitation": "Single sparse-pantry generation. No claim that users dislike oats or that all plans behave this way; no additional paid generation was needed."
+    }
+  ],
+  "personas": {
+    "expert": {
+      "viewport": "390×844 web",
+      "hypotheticalIntent": "Experienced lifter tracks a known workout, substitutes around equipment, corrects a set, compares prior performance, repeats food and batch-preps.",
+      "regularUseHypothesis": [
+        "Actual set/load logging and correction",
+        "Prior exercise performance and saved session history",
+        "Manual meal entry, repeat and targets",
+        "Prepared batches if doing regular meal prep"
+      ],
+      "occasionalUseHypothesis": [
+        "Meal-plan setup and shopping list",
+        "Food preferences and body-weight review",
+        "Weekly recorded-activity review"
+      ],
+      "niceToHaveHypothesis": [
+        "AI starter workouts for a lifter who already has a program",
+        "Shopping swaps and price research without relevant product/receipt data"
+      ],
+      "deliberateAvoidanceHypothesis": [
+        "Did not request AI to replace an already-known training routine. This is a simulated choice, not measured user avoidance.",
+        "Did not fabricate receipts or branded products to unlock price/swap tools."
+      ],
+      "pleasantExistingBehaviors": [
+        "No default prescribed load",
+        "Units and actual per-set history survive reload",
+        "Reorder/jump/substitution work",
+        "Partial finish requires review and corrected finished sessions persist",
+        "Recipe-first draft survives pantry setup",
+        "Fractional batch portions do not double-deduct ingredients"
+      ],
+      "unmetWishes": [
+        "K04",
+        "K05",
+        "K06",
+        "K07"
+      ],
+      "observedIssues": [
+        "K01",
+        "K02",
+        "K03"
+      ]
+    },
+    "six-months": {
+      "viewport": "1440×1000 web",
+      "hypotheticalIntent": "Intermediate tracker logs a familiar lunch, corrects yesterday, repeats today, prepares breakfast portions, plans next week, builds a list, and records/corrects a gym session.",
+      "regularUseHypothesis": [
+        "Daily nutrition and saved targets",
+        "Meal correction/repeat",
+        "Workout load/reps and history",
+        "Batch portion logging if cooking ahead"
+      ],
+      "occasionalUseHypothesis": [
+        "Meal planning, repeat week and shopping list",
+        "Pantry quantity upkeep",
+        "Weekly food/training view"
+      ],
+      "niceToHaveHypothesis": [
+        "Price research until real reviewed purchase data exists",
+        "AI cooking ideas unless they provide a method usable by this cook"
+      ],
+      "deliberateAvoidanceHypothesis": [
+        "No planned food logged as eaten because it was future food with missing ingredients.",
+        "Smart swaps stopped at its stated product-confirmation prerequisite; manually entered generic oats/milk were not falsely treated as barcode products."
+      ],
+      "pleasantExistingBehaviors": [
+        "Reviewable sample targets become saved targets only after explicit confirmation",
+        "Repeat meal defaults to today and retains nutrition",
+        "Recipe portion undo restores prepared portions, not raw ingredients",
+        "Plan drafts and edits survive close/reload; approved week is preserved on repeat",
+        "Shopping needs added twice remain single entries; checked manual item survives reload",
+        "No reviewed spending total is invented",
+        "Partial workout can be reopened, corrected and saved"
+      ],
+      "unmetWishes": [
+        "K04",
+        "K05",
+        "K06",
+        "K07",
+        "K08"
+      ],
+      "observedIssues": [
+        "K02"
+      ]
+    }
+  },
+  "verification": {
+    "expert": {
+      "screenshots": 43,
+      "scriptFailures": 5,
+      "consoleWarningsOrErrors": 0,
+      "pageErrors": 0,
+      "meals": 3,
+      "pantryEvents": 2
+    },
+    "six-months": {
+      "screenshots": 37,
+      "scriptFailures": 4,
+      "consoleWarningsOrErrors": 0,
+      "pageErrors": 0,
+      "meals": 3,
+      "mealPlans": [
+        {
+          "status": "approved",
+          "start": "2026-10-01"
+        },
+        {
+          "status": "draft",
+          "start": "2026-10-08"
+        }
+      ],
+      "pantryEvents": 2,
+      "shoppingListItems": 10
+    }
+  },
+  "untested": [
+    "Physical phone, camera, microphone and screen-reader hardware",
+    "Authenticated multi-device sync and cloud restore",
+    "Receipt OCR/barcode/provider variation in this lane",
+    "AI workout generation",
+    "Longitudinal adherence, actual food preparation, nutrition outcomes or injury outcomes",
+    "Large histories; handled by sibling agent"
+  ],
+  "evidenceNotes": [
+    "sessions.json is chronological ARIA/screenshot inventory and console collection. Snapshot names ending error preserve harness failures, not asserted product bugs.",
+    "Initial food script used getByLabel for a combobox and saved interim zero entries in a later step. Both were corrected through UI before repeat validation; steps26/27 and final-state.json are canonical food evidence.",
+    "Other harness failures: history action looked up on wrong finished screen, heading omitted in progress suffix, a still-open dialog intercepted navigation, and shopping tabs queried as buttons. All relevant paths were recovered with correct UI selectors.",
+    "Maximum update depth and autosave journal loops did not occur in these sessions.",
+    "Observed counts measure captured checkpoints, not user task duration or participant success rates."
+  ]
+}

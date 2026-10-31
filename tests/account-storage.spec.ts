@@ -17,6 +17,8 @@ test("deletion removes IndexedDB-only account archives while preserving other ac
       accounts.syncStorageKey(identity),
       `health.sync.recovery.${encodeURIComponent(identity)}`,
       `health.pending.${encodeURIComponent(identity)}`,
+      // A preserved copy of this account's unreadable snapshot (RECORDS-OVERWRITE-001).
+      storage.corruptRecordsKey(identity, "1000000000001"),
     ];
     for (const key of ownKeys) {
       await storage.browserSet(key, "private old account");
@@ -26,19 +28,35 @@ test("deletion removes IndexedDB-only account archives while preserving other ac
       accounts.accountStorageKey(other),
       "other private account",
     );
+    await storage.browserSet(
+      storage.corruptRecordsKey(other, "1000000000002"),
+      "other account copy",
+    );
     await storage.browserSet("fuel.prototype.v1", "guest records");
+    await storage.browserSet(
+      storage.corruptRecordsKey(null, "1000000000003"),
+      "guest copy",
+    );
     localStorage.removeItem("health.records.owner");
     await accounts.clearBrowserAccount(deleted);
     return {
       own: await Promise.all(ownKeys.map(storage.browserGet)),
       other: await storage.browserGet(accounts.accountStorageKey(other)),
+      otherCopy: await storage.browserGet(
+        storage.corruptRecordsKey(other, "1000000000002"),
+      ),
       guest: await storage.browserGet("fuel.prototype.v1"),
+      guestCopy: await storage.browserGet(
+        storage.corruptRecordsKey(null, "1000000000003"),
+      ),
     };
   });
   expect(result).toEqual({
-    own: [null, null, null, null],
+    own: [null, null, null, null, null],
     other: "other private account",
+    otherCopy: "other account copy",
     guest: "guest records",
+    guestCopy: "guest copy",
   });
 });
 

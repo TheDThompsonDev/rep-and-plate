@@ -300,4 +300,18 @@ describe("pantry ledger and confirmed consumption", () => {
     expect(sum).toEqual({ calories: 185, protein: 4, carbs: 26, fat: 7.5 });
     expect(() => scaleNutrition(milk, Number.NaN)).toThrow();
   });
+  it("stamps the pantry meal message with an ISO instant for day dividers", () => {
+    const next = mealFromPantry(
+      fixture(),
+      [{ lotId: "shop::milk", servings: 1 }],
+      "drink",
+      "Snack",
+      "Milk",
+    );
+    const message = next.messages.at(-1)!;
+    expect(message).toMatchObject({ role: "assistant", mealId: next.meals[0].id });
+    expect(message.at).toEqual(expect.any(String));
+    expect(new Date(message.at!).toISOString()).toBe(message.at);
+    expect(stateSchema.safeParse(next).success).toBe(true);
+  });
 });

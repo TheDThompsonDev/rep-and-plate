@@ -1,0 +1,100 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - img "Your captured photo or screenshot"
+      - paragraph: This is a grocery receipt for items I purchased. Identify the store and items, research their nutrition, and save the grocery list separately from meals I ate. Do not log these purchases as food eaten.
+      - text: 1:28 PM
+      - paragraph: Got it. I read the receipt and researched the items — here’s what I found. I’ll save this as groceries (not eaten).
+      - text: 1:28 PM
+      - link "Kroger product page — Kroger® Vitamin D Whole Milk Gallon (Nutrition Facts)":
+        - /url: https://www.kroger.com/p/kroger-vitamin-d-whole-milk-gallon/0001111040156
+      - link "Quaker SmartLabel — Quaker Old Fashioned Oats (product & nutrition)":
+        - /url: https://smartlabel.pepsico.info/030000010402-0008-en-US/index.html
+      - link "Dawn product page / retailer listings":
+        - /url: https://dawn-dish.com/en-us/products/dawn-platinum-ez-squeeze-fresh-rain-scent/
+      - button "Kroger 3 grocery items saved 2 matches need a check Saved to groceries · not today’s intake":
+        - strong: Kroger
+        - text: 3 grocery items saved 2 matches need a check
+        - emphasis: Saved to groceries · not today’s intake
+      - paragraph: Some product matches need a check. Unknown nutrition is left blank.
+      - paragraph: USDA candidates are ready for 2 receipt items. Compare your package before applying a match.
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Your pantry":
+  - heading "Your pantry" [level=2]
+  - button "Close dialog"
+  - paragraph: What you bought, what is left, and what you used. Nothing counts as eaten until you confirm it.
+  - button "Add ingredient manually"
+  - region "Pantry review queue":
+    - heading "2 food items need a check" [level=3]
+    - paragraph: Start with product and nutrition details, then quantities. Nonfood receipt lines do not block your pantry.
+    - list:
+      - listitem:
+        - strong: Kroger Vitamin D Whole Milk (1 gal)
+        - text: Confirm product and nutrition
+        - button "Review Kroger Vitamin D Whole Milk (1 gal)"
+      - listitem:
+        - strong: Quaker Old Fashioned Oats (42 oz canister)
+        - text: Confirm product and nutrition
+        - button "Review Quaker Old Fashioned Oats (42 oz canister)"
+    - paragraph: Total servings = packages purchased × servings per package. For example, 2 tubs × 5 servings = 10 servings. Use the package label; leave an unknown amount blank.
+  - text: Show items by
+  - combobox "Show items by":
+    - 'option "Use soon: package date" [selected]'
+    - option "Purchase order"
+  - heading "Kroger Vitamin D Whole Milk (1 gal)" [level=3]
+  - text: Kroger · Purchased 2026-09-25
+  - strong: 16 servings left
+  - text: 16 servings purchased
+  - paragraph: "1 serving: 1 cup (8 fl oz / 240 mL)"
+  - text: Package date not recorded Opened date not recorded
+  - button "Edit dates for Kroger Vitamin D Whole Milk (1 gal)": Edit dates
+  - paragraph: ~160 cal · 8g protein per serving
+  - text: Check the serving size and nutrition before logging.
+  - checkbox "Use Kroger Vitamin D Whole Milk (1 gal)" [disabled]
+  - text: Use in a meal
+  - button "Update amount"
+  - link "Kroger product page — Kroger® Vitamin D Whole Milk Gallon (Nutrition Facts)":
+    - /url: https://www.kroger.com/p/kroger-vitamin-d-whole-milk-gallon/0001111040156
+  - heading "Quaker Old Fashioned Oats (42 oz canister)" [level=3]
+  - text: Kroger · Purchased 2026-09-25
+  - strong: Quantity needs a check
+  - text: "1"
+  - paragraph: "1 serving: 1/2 cup dry (40 g)"
+  - text: Package date not recorded Opened date not recorded
+  - button "Edit dates for Quaker Old Fashioned Oats (42 oz canister)": Edit dates
+  - paragraph: ~150 cal · 5g protein per serving
+  - text: Check the serving size and nutrition before logging.
+  - checkbox "Use Quaker Old Fashioned Oats (42 oz canister)" [disabled]
+  - text: Use in a meal
+  - link "Quaker SmartLabel — Quaker Old Fashioned Oats (product & nutrition)":
+    - /url: https://smartlabel.pepsico.info/030000010402-0008-en-US/index.html
+  - 'link "Quaker nutrition reference (serving: 1/2 cup / 40 g)"':
+    - /url: https://tools.myfooddata.com/nutrition-facts/797691/wt1/
+  - button "Check purchase details"
+  - button "What can I make with these?"

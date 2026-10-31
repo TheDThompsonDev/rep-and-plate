@@ -10,6 +10,7 @@ describe('native record persistence', () => {
     expect(result.meals).toEqual(state.meals);
     expect(()=>restoreDeviceSnapshot('{')).toThrow();
     expect(()=>restoreDeviceSnapshot('{}')).toThrow();
+    expect(()=>restoreDeviceSnapshot(JSON.stringify({...state,version:2}))).toThrow(/could not be opened/);
     expect(restoreDeviceSnapshot(null).meals).toHaveLength(0);
   });
   it('orders saves and recovers after storage failures without overwriting the newest snapshot', async () => {

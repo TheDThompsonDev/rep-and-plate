@@ -1,0 +1,10 @@
+{
+  "verifiedSourceFiles": 128,
+  "existingPreviewAccess": true,
+  "hostedDatabaseMatches": true,
+  "schema": {
+    "agents": false,
+    "account": true,
+    "beta": true
+  }
+}

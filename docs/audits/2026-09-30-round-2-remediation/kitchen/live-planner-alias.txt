@@ -1,0 +1,517 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Kitchen":
+    - button "Open kitchen tools"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: YOUR KITCHEN
+    - heading "What sounds good tonight?" [level=1]
+    - paragraph: What you have. What you can make. A little less to figure out.
+    - button "Open meal planner":
+      - text: MAKE SOMETHING GOOD
+      - strong: Start with what’s already here.
+      - text: Explore your meal plan
+    - button "Scan a food"
+    - button "Add a receipt"
+    - region "Shopping for your household":
+      - text: GOOD FOOD. YOUR KIND OF BUDGET.
+      - heading "Make your next shop work for you." [level=2]
+      - paragraph: Saving money, feeding a family, or finding a little more protein? Let’s start with what matters to you.
+      - button "Swaps, list & spending"
+      - button "Shopping preferences"
+    - region "Your first useful week":
+      - text: SPOT’S PLAN FOR YOUR GROCERIES
+      - heading "A receipt today. Less “what’s for dinner?” tomorrow." [level=2]
+      - paragraph: Daily nutrition targets start as generic values. Set your own before using them to assess a meal plan.
+      - button "Review daily nutrition targets"
+      - paragraph: 1 of 6 steps complete. Start with your real groceries and build a week that works for you.
+      - list:
+        - listitem:
+          - strong: Make it your kind of week
+          - paragraph: Set household size, food restrictions, cooking time and budget.
+          - 'button "Start: Make it your kind of week"'
+      - button "See the whole journey"
+    - region "What you have":
+      - heading "What you have" [level=2]
+      - button "Open pantry": Your pantry
+      - strong: 2 items on hand
+      - text: From your saved groceries and pantry updates
+      - button "Rolled oats 6 labeled servings left · Ingredients entered by you 150 cal · 5g protein per 40 g":
+        - strong: Rolled oats
+        - text: 6 labeled servings left · Ingredients entered by you 150 cal · 5g protein per 40 g
+      - button "Whole milk 6 labeled servings left · Ingredients entered by you 150 cal · 8g protein per 1 cup":
+        - strong: Whole milk
+        - text: 6 labeled servings left · Ingredients entered by you 150 cal · 8g protein per 1 cup
+      - paragraph: Groceries are what you bought. Only portions you log as eaten count toward daily nutrition.
+    - region "What you can make":
+      - heading "What you can make" [level=2]
+      - button "Open recipes": Recipes
+      - button "Oct 1, 2026 · Draft plan Savory oats with mushrooms & spinach Rolled oats · Whole milk · Mushrooms (sliced) · Baby spinach · Olive oil · Water · Salt · Black pepper Check ingredients to complete the nutrition estimate":
+        - text: Oct 1, 2026 · Draft plan
+        - strong: Savory oats with mushrooms & spinach
+        - text: Rolled oats · Whole milk · Mushrooms (sliced) · Baby spinach · Olive oil · Water · Salt · Black pepper Check ingredients to complete the nutrition estimate
+      - button "Oct 2, 2026 · Draft plan Oat-crusted pan chicken Chicken breast (thin) · Rolled oats · Egg · Olive oil · Salt · Black pepper · Water Check ingredients to complete the nutrition estimate":
+        - text: Oct 2, 2026 · Draft plan
+        - strong: Oat-crusted pan chicken
+        - text: Chicken breast (thin) · Rolled oats · Egg · Olive oil · Salt · Black pepper · Water Check ingredients to complete the nutrition estimate
+      - button "Oct 3, 2026 · Draft plan Creamy milk & oat tomato soup Whole milk · Rolled oats · Canned tomatoes · Onion (diced) · Olive oil · Water · Salt · Black pepper Check ingredients to complete the nutrition estimate":
+        - text: Oct 3, 2026 · Draft plan
+        - strong: Creamy milk & oat tomato soup
+        - text: Whole milk · Rolled oats · Canned tomatoes · Onion (diced) · Olive oil · Water · Salt · Black pepper Check ingredients to complete the nutrition estimate
+      - button "Think of a meal with me"
+    - region "What you need to buy":
+      - heading "What you need to buy" [level=2]
+      - button "Review shopping list": View plan
+      - paragraph: For the remaining meals in your latest draft plan.
+      - button "Mushrooms (sliced) 100 g":
+        - strong: Mushrooms (sliced)
+        - text: 100 g
+      - button "Baby spinach 30 g":
+        - strong: Baby spinach
+        - text: 30 g
+      - button "Olive oil 2 tbsp":
+        - strong: Olive oil
+        - text: 2 tbsp
+      - button "Water 1.05 cup":
+        - strong: Water
+        - text: 1.05 cup
+      - button "Salt 1.25 tsp":
+        - strong: Salt
+        - text: 1.25 tsp
+      - button "See all 23 items"
+    - region "Recent grocery trips":
+      - heading "Recent grocery trips" [level=2]
+      - button "Ingredients entered by you Captured Sep 30, 2026 · 1 food items":
+        - strong: Ingredients entered by you
+        - text: Captured Sep 30, 2026 · 1 food items
+      - button "Ingredients entered by you Captured Sep 30, 2026 · 1 food items":
+        - strong: Ingredients entered by you
+        - text: Captured Sep 30, 2026 · 1 food items
+    - button "Just got groceries? Show me what you picked up."
+    - navigation "Kitchen navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Your week of meals":
+  - heading "Your week of meals" [level=2]
+  - button "Close dialog"
+  - paragraph:
+    - text: Start with what’s in your kitchen.
+    - strong: Make room for meals you enjoy.
+  - paragraph: A seven-day draft for 1 person. Review ingredients and portions before approving.
+  - text: Saved weeks
+  - combobox "Saved meal-plan weeks":
+    - option "2026-10-01 · Draft" [selected]
+  - text: Generated drafts and valid edits are saved automatically. Approval stays your choice. Ingredients to use
+  - combobox "Ingredients to use":
+    - option "Include a shopping list" [selected]
+    - option "Confirmed pantry only"
+  - text: Meal variety
+  - combobox "Meal variety":
+    - option "Prefer varied ingredients" [selected]
+    - option "Repeats are welcome"
+  - paragraph: Variety means different ingredient combinations, not just different names or garnishes. Shopping-supported plans can add ingredients; a small pantry may need repeats. Pantry-only plans still need confirmed quantities for the whole week.
+  - group "Meals to plan each day":
+    - text: Meals to plan each day
+    - checkbox "Breakfast"
+    - text: Breakfast
+    - checkbox "Lunch"
+    - text: Lunch
+    - checkbox "Dinner" [checked] [disabled]
+    - text: Dinner
+    - checkbox "Snack"
+    - text: Snack Choose at least one meal type. Each gets a place on all seven days.
+  - text: Week starting
+  - textbox "Week starting": 2026-10-01
+  - button "Create a new draft"
+  - strong: Draft to review
+  - text: Drafts save automatically. Planning does not change your pantry or daily intake.
+  - button "Save draft now"
+  - button "Approve reviewed plan"
+  - region "Ingredient variety check":
+    - heading "Ingredient variety check" [level=3]
+    - paragraph: "Dinner: 7 ingredient patterns across 7 meals."
+    - text: Similar ingredient sets count as a shared pattern. This is a guide to repetition, not a promise of nutritional balance.
+  - heading "Thursday, Oct 1" [level=3]
+  - article:
+    - heading "Savory oats with mushrooms & spinach" [level=4]
+    - paragraph: Dinner · 1 portion · 20 min
+    - list:
+      - listitem:
+        - text: Rolled oats 40 g
+        - strong: 1 × 40 g
+      - listitem:
+        - text: Whole milk 1 cup
+        - strong: 0.5 × 1 cup
+      - listitem:
+        - text: Mushrooms (sliced) g
+        - strong: 100 g
+      - listitem:
+        - text: Baby spinach g
+        - strong: 30 g
+      - listitem:
+        - text: Olive oil tbsp
+        - strong: 1 tbsp
+      - listitem:
+        - text: Water cup
+        - strong: 0.25 cup
+      - listitem:
+        - text: Salt tsp
+        - strong: 0.25 tsp
+      - listitem:
+        - text: Black pepper tsp
+        - strong: 0.1 tsp
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - paragraph: At least 225 cal · 9g protein per portion · partial estimate
+    - paragraph: Nutrition available for 2 of 8 ingredients. Missing ingredients are not counted as zero.
+    - button "Review cooking method" [expanded]
+    - region "Cooking method for Savory oats with mushrooms & spinach":
+      - heading "Cooking method" [level=5]
+      - paragraph: Use the whole-recipe amounts above. Review the steps, timing and package cooking guidance before cooking. Opening or reviewing a method does not log food or change your pantry.
+      - list:
+        - listitem: Sauté Olive oil, Mushrooms (sliced) at 180°C (356°F) for 5 min.
+        - listitem: Combine Rolled oats, Whole milk, Water for 0.5 min.
+        - listitem: Simmer Rolled oats, Whole milk, Salt, Black pepper at 95°C (203°F) for 7 min.
+        - listitem: Stir Baby spinach for 1 min.
+        - listitem: Serve Rolled oats, Mushrooms (sliced), Baby spinach for 0.5 min.
+      - checkbox "I reviewed this cooking method"
+      - text: I reviewed this cooking method Ingredient or portion changes require another review. This records your review; it does not certify doneness or food safety.
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Friday, Oct 2" [level=3]
+  - article:
+    - heading "Oat-crusted pan chicken" [level=4]
+    - paragraph: Dinner · 1 portion · 25 min
+    - list:
+      - listitem:
+        - text: Chicken breast (thin) ~150 g
+        - strong: 1 × ~150 g
+      - listitem:
+        - text: Rolled oats 40 g
+        - strong: 1 × 40 g
+      - listitem:
+        - text: Egg large
+        - strong: 1 × large
+      - listitem:
+        - text: Olive oil tbsp
+        - strong: 1 tbsp
+      - listitem:
+        - text: Salt tsp
+        - strong: 0.25 tsp
+      - listitem:
+        - text: Black pepper tsp
+        - strong: 0.1 tsp
+      - listitem:
+        - text: Water cup
+        - strong: 0.1 cup
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Connect purchased ingredient"
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - paragraph: At least 150 cal · 5g protein per portion · partial estimate
+    - paragraph: Nutrition available for 1 of 7 ingredients. Missing ingredients are not counted as zero.
+    - paragraph: No cooking method saved for this meal.
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Saturday, Oct 3" [level=3]
+  - article:
+    - heading "Creamy milk & oat tomato soup" [level=4]
+    - paragraph: Dinner · 1 portion · 20 min
+    - list:
+      - listitem:
+        - text: Whole milk 1 cup
+        - strong: 1 × 1 cup
+      - listitem:
+        - text: Rolled oats 40 g
+        - strong: 0.5 × 40 g
+      - listitem:
+        - text: Canned tomatoes g
+        - strong: 200 g
+      - listitem:
+        - text: Onion (diced) medium
+        - strong: 0.5 × medium
+      - listitem:
+        - text: Olive oil tsp
+        - strong: 1 tsp
+      - listitem:
+        - text: Water cup
+        - strong: 0.5 cup
+      - listitem:
+        - text: Salt tsp
+        - strong: 0.25 tsp
+      - listitem:
+        - text: Black pepper tsp
+        - strong: 0.1 tsp
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - paragraph: At least 225 cal · 10.5g protein per portion · partial estimate
+    - paragraph: Nutrition available for 2 of 8 ingredients. Missing ingredients are not counted as zero.
+    - button "Review cooking method"
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Sunday, Oct 4" [level=3]
+  - article:
+    - heading "Oat & pea skillet with parmesan" [level=4]
+    - paragraph: Dinner · 1 portion · 18 min
+    - list:
+      - listitem:
+        - text: Rolled oats 40 g
+        - strong: 1 × 40 g
+      - listitem:
+        - text: Frozen peas g
+        - strong: 100 g
+      - listitem:
+        - text: Parmesan (grated) g
+        - strong: 15 g
+      - listitem:
+        - text: Butter or oil tbsp
+        - strong: 1 tbsp
+      - listitem:
+        - text: Whole milk 1 cup
+        - strong: 0.25 × 1 cup
+      - listitem:
+        - text: Salt tsp
+        - strong: 0.25 tsp
+      - listitem:
+        - text: Black pepper tsp
+        - strong: 0.1 tsp
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - paragraph: At least 188 cal · 7g protein per portion · partial estimate
+    - paragraph: Nutrition available for 2 of 7 ingredients. Missing ingredients are not counted as zero.
+    - button "Review cooking method"
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Monday, Oct 5" [level=3]
+  - article:
+    - heading "Milk-scrambled eggs with toast" [level=4]
+    - paragraph: Dinner · 1 portion · 12 min
+    - list:
+      - listitem:
+        - text: Eggs large
+        - strong: 2 × large
+      - listitem:
+        - text: Whole milk 1 cup
+        - strong: 0.25 × 1 cup
+      - listitem:
+        - text: Bread (toast) slice
+        - strong: 1 × slice
+      - listitem:
+        - text: Butter or oil tsp
+        - strong: 1 tsp
+      - listitem:
+        - text: Salt tsp
+        - strong: 0.25 tsp
+      - listitem:
+        - text: Black pepper tsp
+        - strong: 0.1 tsp
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Connect purchased ingredient"
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - paragraph: At least 38 cal · 2g protein per portion · partial estimate
+    - paragraph: Nutrition available for 1 of 6 ingredients. Missing ingredients are not counted as zero.
+    - button "Review cooking method"
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Tuesday, Oct 6" [level=3]
+  - article:
+    - heading "Oat & banana warm bowl with peanut butter" [level=4]
+    - paragraph: Dinner · 1 portion · 8 min
+    - list:
+      - listitem:
+        - text: Rolled oats 40 g
+        - strong: 1 × 40 g
+      - listitem:
+        - text: Whole milk 1 cup
+        - strong: 1 × 1 cup
+      - listitem:
+        - text: Banana (sliced) medium
+        - strong: 1 × medium
+      - listitem:
+        - text: Peanut butter tbsp
+        - strong: 1 tbsp
+      - listitem:
+        - text: Salt pinch
+        - strong: 0.1 × pinch
+      - listitem:
+        - text: Water cup
+        - strong: 0.1 cup
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - paragraph: At least 300 cal · 13g protein per portion · partial estimate
+    - paragraph: Nutrition available for 2 of 6 ingredients. Missing ingredients are not counted as zero.
+    - button "Review cooking method"
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Wednesday, Oct 7" [level=3]
+  - article:
+    - heading "Berry oat milk smoothie bowl (no cook)" [level=4]
+    - paragraph: Dinner · 1 portion · 5 min
+    - list:
+      - listitem:
+        - text: Whole milk 1 cup
+        - strong: 0.5 × 1 cup
+      - listitem:
+        - text: Rolled oats 40 g
+        - strong: 0.5 × 40 g
+      - listitem:
+        - text: Frozen mixed berries g
+        - strong: 100 g
+      - listitem:
+        - text: Yogurt (optional) g
+        - strong: 50 g
+      - listitem:
+        - text: Honey or sweetener (optional) tsp
+        - strong: 1 tsp
+      - listitem:
+        - text: Water cup
+        - strong: 0.1 cup
+    - paragraph: Ingredient amounts are for the whole recipe.
+    - button "Replace pantry ingredient"
+    - button "Replace pantry ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - button "Connect purchased ingredient"
+    - paragraph: At least 150 cal · 6.5g protein per portion · partial estimate
+    - paragraph: Nutrition available for 2 of 6 ingredients. Missing ingredients are not counted as zero.
+    - button "Review cooking method"
+    - button "Edit meal"
+    - button "Swap meal"
+  - button "Add a meal to this day"
+  - heading "Your shopping & pantry check" [level=3]
+  - paragraph: Amounts below account for every meal in the week, including repeat ingredients.
+  - list:
+    - listitem:
+      - strong: Mushrooms (sliced)
+      - text: 100 additional servings · g
+    - listitem:
+      - strong: Baby spinach
+      - text: 30 additional servings · g
+    - listitem:
+      - strong: Olive oil
+      - text: 2 additional servings · tbsp
+    - listitem:
+      - strong: Water
+      - text: 1.05 additional servings · cup
+    - listitem:
+      - strong: Salt
+      - text: 1.25 additional servings · tsp
+    - listitem:
+      - strong: Black pepper
+      - text: 0.5 additional servings · tsp
+    - listitem:
+      - strong: Chicken breast (thin)
+      - text: 1 additional servings · ~150 g
+    - listitem:
+      - strong: Egg
+      - text: 1 additional servings · large
+    - listitem:
+      - strong: Canned tomatoes
+      - text: 200 additional servings · g
+    - listitem:
+      - strong: Onion (diced)
+      - text: 0.5 additional servings · medium
+    - listitem:
+      - strong: Olive oil
+      - text: 1 additional servings · tsp
+    - listitem:
+      - strong: Frozen peas
+      - text: 100 additional servings · g
+    - listitem:
+      - strong: Parmesan (grated)
+      - text: 15 additional servings · g
+    - listitem:
+      - strong: Butter or oil
+      - text: 1 additional servings · tbsp
+    - listitem:
+      - strong: Eggs
+      - text: 2 additional servings · large
+    - listitem:
+      - strong: Bread (toast)
+      - text: 1 additional servings · slice
+    - listitem:
+      - strong: Butter or oil
+      - text: 1 additional servings · tsp
+    - listitem:
+      - strong: Banana (sliced)
+      - text: 1 additional servings · medium
+    - listitem:
+      - strong: Peanut butter
+      - text: 1 additional servings · tbsp
+    - listitem:
+      - strong: Salt
+      - text: 0.1 additional servings · pinch
+    - listitem:
+      - strong: Frozen mixed berries
+      - text: 100 additional servings · g
+    - listitem:
+      - strong: Yogurt (optional)
+      - text: 50 additional servings · g
+    - listitem:
+      - strong: Honey or sweetener (optional)
+      - text: 1 additional servings · tsp
+  - region "Basket cost coverage":
+    - heading "What might the remaining ingredients cost?" [level=3]
+    - paragraph: No priced additional quantities yet.
+    - paragraph: 2 of 25 ingredients covered by pantry stock; 0 additional ingredients priced; 23 need a price or quantity check.
+    - text: Based on reviewed receipt prices from the last 30 days. Shelf prices, full packages, tax and other groceries can change the checkout total.
+  - button "Save draft"
+  - button "Approve this plan"
+  - paragraph: Approval saves the plan. Log a portion only after eating it. Check package ingredients for your restrictions; recipe suggestions cannot verify allergen handling.
+  - heading "Make the most of your groceries" [level=3]
+  - article:
+    - strong: Rolled oats
+    - paragraph: 6 labeled servings remain; stock recorded 2026-09-30.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - article:
+    - strong: Whole milk
+    - paragraph: 6 labeled servings remain; stock recorded 2026-09-30.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - paragraph: Purchase dates help organize ideas. They do not tell us whether food is fresh or spoiled.

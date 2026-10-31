@@ -1,0 +1,81 @@
+{
+  "audit": "2026-09-30 post-remediation round 2",
+  "method": "Two isolated Chromium 390x844 guest sessions. All app records entered through real UI; no preseeded storage or mocked network. Synthetic personas, not real participants. Three real provider messages only in fit-new-tracker session. Expectations, wishes and likely reuse are hypotheses.",
+  "productEdits": false,
+  "findings": [
+    {
+      "id": "SH-R2-01",
+      "title": "Untouched manual macro defaults become confirmed zero nutrition",
+      "classification": "reproduced data-confidence defect",
+      "priority": "P1",
+      "personas": ["complete beginner", "fit but new to calorie tracking"],
+      "previousFriction": ["F26"],
+      "observed": "Open Enter meal manually. All four nutrient fields initially contain numeric 0. Enter only a name and 170 calories from a hypothetical menu; leave protein, carbs and fat untouched. Save succeeds, displaying Confirmed 170 cal 0g protein 0g carbs 0g fat. The only instruction is Your own values, saved exactly as entered. Weekly review counts this as non-estimated nutrition. Reproduced independently in both contexts.",
+      "expectationHypothesis": "A novice who knows menu calories but not macros may expect omitted knowledge to remain unknown, rather than being treated as measured zero.",
+      "wishHypothesis": "Require deliberate nutrient entry or provide explicit unknown macros with incomplete-data treatment in totals. Preserve valid deliberately entered zeros.",
+      "availabilityCheck": "src/App.tsx:239 initializes all nutrients at0 and confidence confirmed; MealEditor:2378-2383 parses all fields and sets confirmed. Required inputs already have defaultValue0. Native parity differs: other audit agent verified native starts blank and rejects missing values.",
+      "evidence": ["evidence/beginner/11-manual-meal-empty.txt", "evidence/beginner/raw-manual-defaults.json", "evidence/beginner/21-calories-only-before-save.png", "evidence/beginner/22-calories-only-saved.txt", "evidence/beginner/51-weekly-review.txt", "evidence/fit-new-tracker/22-calories-only-saved.txt"]
+    },
+    {
+      "id": "SH-R2-02",
+      "title": "Unconfigured sample targets still become progress criteria",
+      "classification": "reproduced cross-surface copy/behavior inconsistency; improvement hypothesis",
+      "priority": "P2",
+      "personas": ["complete beginner", "fit but new to calorie tracking"],
+      "previousFriction": ["F08"],
+      "observed": "Neither persona configured targets. The new Nutrition banner correctly labels samples and target guide explicitly allows logging without a calorie goal. After one215cal meal the prominent ring still says1785 calories left of2000. You labels them Your saved daily targets. Weekly review says0 of2 logged days reached your current110g target, even though the only reviewed goals were explicitly left unconfigured.",
+      "expectationHypothesis": "A logger who intentionally has no goal may expect descriptive recorded totals rather than progress toward an untouched example.",
+      "wishHypothesis": "Use a goal-free view until targets are explicitly configured, or consistently label every comparison as illustrative. This is not a request for automatic calorie prescriptions.",
+      "availabilityCheck": "NutritionPage.tsx:199 renders calories left based on meals.length, not targetsConfigured; YouPage.tsx:556 always says saved daily targets; features/insights/insights.ts:162 generates reached-current-target text. No hide-goals control found in target editor.",
+      "evidence": ["evidence/beginner/10-targets-expanded.txt", "evidence/beginner/13-manual-saved.txt", "evidence/beginner/50-you.txt", "evidence/beginner/51-weekly-review.txt", "evidence/fit-new-tracker/50-you.txt"]
+    },
+    {
+      "id": "SH-R2-03",
+      "title": "Clarification footer forgets already-clear meal intent",
+      "classification": "observed secondary-copy mismatch in real provider conversation",
+      "priority": "P3",
+      "personas": ["fit but new to calorie tracking"],
+      "previousFriction": ["F30"],
+      "observed": "After explicitly describing peanut butter eaten for breakfast and inability to remember amount, assistant helpfully offers an assumed portion or note-only option. Footer nevertheless says it needs more context before treating this as a meal or grocery purchase. Main answer is useful; interaction does not dead-end.",
+      "expectationHypothesis": "The uncertainty should remain about portion, not whether the already-described breakfast was eaten.",
+      "wishHypothesis": "Use the known conversation intent when selecting clarification footer, or omit redundant generic footer when the assistant already explains the open choice.",
+      "availabilityCheck": "server/ai.ts:172 contains the generic fallback. One live conversational occurrence; source-confirmed fallback, not claimed deterministic provider repeatability.",
+      "evidence": ["evidence/fit-new-tracker/25-first-live-reply.txt", "evidence/fit-new-tracker/26-uncertain-followup-reply.txt", "evidence/fit-new-tracker/28-portion-estimate.txt"]
+    },
+    {
+      "id": "SH-R2-04",
+      "title": "Changing the portion of a repeated manual meal requires four calculations",
+      "classification": "validated missing convenience in this specific path; not blocked functionality",
+      "priority": "P3 opportunity",
+      "personas": ["fit but new to calorie tracking"],
+      "previousFriction": ["F16"],
+      "observed": "Same-portion repeat works and exposes editable date and nutrition. To repeat yogurt as two original servings, the auditor had to double215/18.3/33/0.4 into430/36.6/66/0.8 and edit the note. Save correctly succeeded. The repeat dialog offers no portion multiplier.",
+      "expectationHypothesis": "A new tracker repeating a familiar food in a different amount may think in one or two servings rather than independently calculating four nutrient values.",
+      "wishHypothesis": "Offer0.5x/1x/2x or a serving multiplier on repeated saved meals, with a review before saving. Keep stock effects explicit.",
+      "availabilityCheck": "App.tsx MealEditor and domain.ts:320 repeatMeal copy the same values; no multiplier parameter/control. This is not globally missing: recipe portion logging and barcode servings already support amount-based nutrition. Scope is repeated generic/manual meals.",
+      "evidence": ["evidence/fit-new-tracker/16-repeat-review.txt", "evidence/fit-new-tracker/63-repeat-portion-choice.txt", "evidence/fit-new-tracker/64-double-manual-math.txt", "evidence/fit-new-tracker/65-double-repeat-saved.txt"]
+    }
+  ],
+  "positiveObservations": [
+    "Both completed full Meet Spot onboarding through guest setup. Guest-local boundary was explicit.",
+    "Decimal nutrition survived save and name-only correction. Previous-day repeat and correction worked. Chat handoff showed selected date with escape to today.",
+    "Manual walk/run logging worked without inventing calorie burn.",
+    "Starter workouts required explicit load. Technique guidance and source link, rest timer, partial save, correction and history were usable.",
+    "Workout Adjust exercise already applies a chosen load across sets. Fit persona recorded3 sets at20kg without repeated load entry; no missing same-load feature claim.",
+    "Live uncertain peanut-butter meal produced no silent initial portion assumption. Explicit consent to uncertain2tbsp led to reviewable190/8/6/16 estimate, matching prose and card, then saved as estimated.",
+    "Preferences used progressive disclosure and persisted after reload. Weekly review explained partial intake and unknown unlogged days."
+  ],
+  "coverage": {
+    "both": ["welcome", "all4 Meet Spot panels", "guest/name/focus onboarding", "Nutrition empty and populated", "target teaching without setting goals", "manual decimal meal", "name-only edit", "repeat meal to yesterday", "previous-day correction", "selected-day Chat handoff", "calories-only manual-entry probe", "walk/cardio logging", "starter workout", "explicit load", "technique", "rest timer", "partial workout finish", "history", "You", "weekly review", "food and routine preferences", "preference save/reload", "Kitchen first-week journey inspection"],
+    "beginnerExtra": ["single-set15lb×8→corrected15lb×7", "optional effort6", "reopen finished workout", "raw manual defaults captured"],
+    "fitExtra": ["3-turn live portion clarification", "accept estimated meal", "kg preference", "20kg×8 for3 sets via shared exercise load", "reorder and jump to exercise", "manual double-portion repeat"],
+    "excludedFromThisAgent": ["physical exercise performance", "medical/nutrition advice validation", "real participant feelings or retention", "multiweek use", "physical camera/barcode scanning", "microphone", "signed-in account/cloud", "real shopping or receipts", "native device"],
+    "commonSurfaceAudit": "Parent owns broad five-persona complete-surface inventory and kitchen/planning journeys; this evidence supplements it with actual novice-focused populated use."
+  },
+  "regularUseHypotheses": {
+    "complete beginner": {"likelyRegular": ["meal capture and correction", "walk logging", "short workout with technique guidance", "weekly descriptive review"], "optional": ["advanced meal-planning and pantry setup", "body-weight measurements", "assistant connections", "effort ratings after each set"], "observedNonUse": "Did not set calorie targets after reading optionality; did not enter body-weight measurements or connect external assistants. These were deliberate scenario choices, not observed real-user avoidance."},
+    "fit but new to calorie tracking": {"likelyRegular": ["meal review/portion correction", "repeat familiar foods", "selected-day backfill", "kg workout logging/history", "weekly intake review"], "optional": ["first-week instruction after learning", "exercise technique after familiarity", "Spot mood cycling", "household planning if not managing groceries"], "observedNonUse": "No calorie target selected; no need for automatic target generation assumed. Did not adopt kitchen inventory in this deep path; parent covers that capability. No claim that this persona dislikes it."}
+  },
+  "runtime": {"consoleWarnings": 0, "consoleErrors": 0, "pageErrors": 0, "evidence": ["evidence/beginner/console.json", "evidence/fit-new-tracker/console.json"]},
+  "harnessLimitations": ["First repeat attempt used a Notes label locator that timed out; changed to observed textbox role, resumed without duplicate save. HARNESS-repeat-backfill files retain the event.", "Attempted View history directly from finished-session screen, where it is not rendered. Used Choose your next workout then View history successfully. HARNESS-click retained; not an application failure.", "Preferences text locator matched hidden legend and visible summary; corrected to summary selector and replayed. HARNESS-prefs-expand retained; not an application failure.", "Immediate snapshot52 preceded lazy preferences dialog rendering. Snapshot53/54 records loaded dialog; no missing-feature claim.", "Initial live-message snapshots23/24 were overwritten by second send; complete original and follow-up transcript remains in25/26/27/28. Third send uses unique27 prefix."]
+}

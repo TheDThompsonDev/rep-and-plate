@@ -1,0 +1,45 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: "I finished bench press: 80 kg for 5 reps, then 80 kg for 5 reps. Please let me review before saving."
+      - text: 1:26 PM WORKOUT
+      - heading "Spot Check" [level=3]
+      - heading "Upper Body" [level=4]
+      - paragraph: 2026-09-30 · Check the date, loads and completed sets.
+      - list:
+        - listitem:
+          - strong: Bench Press
+          - text: 176.4 lb · 5, 5 reps
+      - paragraph: "Bench Press: 80 kg (176.4 lbs) x 5 reps, 80 kg (176.4 lbs) x 5 reps. Converted from kg to lbs."
+      - button "Yep, log workout"
+      - button "Fix it"
+      - button "Not now"
+      - paragraph: "Got it. Here's the card for your Bench Press session today: 176.4 lbs for two sets of 5 reps. The conversion from 80 kg is included in the note. Please review the details before confirming."
+      - text: 1:26 PM
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

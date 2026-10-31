@@ -4,5 +4,6 @@
     "strict": true,
     "types": ["react", "node"],
     "allowImportingTsExtensions": true
-  }
+  },
+  "include": ["**/*", "../e2e-shared/**/*"]
 }

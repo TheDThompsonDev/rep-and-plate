@@ -1,0 +1,15 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - text: SMALL PLATE. BIG PERSONALITY.
+  - img "Spot summoning a shaker bottle in a beam of golden light."
+  - text: 01 · Meet Spot 02 · Your account 03 · Make it yours
+  - paragraph: OFFICIALLY IN YOUR CORNER
+  - heading "We’re a team, Expert Audit." [level=1]
+  - paragraph: You bring the real life. Spot brings the backup dancers nobody asked for.
+  - strong: Your first small step
+  - paragraph: Start with a walk or a workout. It doesn’t have to be epic.
+  - paragraph: You’re starting with manual tracking on this device. Create an account from your profile when you’re ready for connected features.
+  - button "Let’s do this"
+  - button "Back"
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

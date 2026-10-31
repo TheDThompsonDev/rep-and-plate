@@ -4,7 +4,7 @@ import { ONBOARDING_KEY, defaultFocus, parseOnboarding } from '../../src/feature
 import { Text } from "react-native";
 import { type SupabaseClient } from "@supabase/supabase-js";
 import { Button, Card, Field, Sheet, s } from "./ui";
-import { useHealth } from "./store";
+import { useLoadedHealth } from "./store";
 import { cloudClient } from "./api";
 import { requireDeviceOwner, invalidateSession } from "./auth";
 import { exportRecords, importRecords } from "./storage";
@@ -23,7 +23,7 @@ import {
   resumeCloudSync,
 } from "../../src/features/cloud/sync-control";
 export function Cloud() {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     [client, setClient] = useState<SupabaseClient | null>(null),
     [email, setEmail] = useState(""),
     [code, setCode] = useState(""),
@@ -98,7 +98,7 @@ export function Cloud() {
       <Button
         label="Export this device"
         secondary
-        onPress={() => void run(() => exportRecords(h.state!))}
+        onPress={() => void run(() => exportRecords(h.state))}
       />
       <Button
         label="Import a backup file"
@@ -273,7 +273,7 @@ export function Cloud() {
                 const result = await saveSnapshot(
                   client,
                   user,
-                  h.state!,
+                  h.state,
                   revision!,
                 );
                 checkIdentity(user);

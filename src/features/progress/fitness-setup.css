@@ -90,6 +90,10 @@
 .welcome-shell-nutrition .welcome-layout { grid-template-columns: 1fr; max-width: 620px; margin-inline: auto; }
 .welcome-shell-nutrition .welcome-content { width: 100%; }
 .fitness-setup .fitness-checkbox { display: flex; align-items: flex-start; gap: 12px; }
+.fitness-setup .fitness-week { display: grid; gap: 14px; margin: 0; padding: 16px; border: 1px solid #c6d3c3; border-radius: 16px; }
+.fitness-setup .fitness-week legend { padding: 0 6px; font-weight: 650; color: var(--ink, #073f35); }
+.fitness-setup .fitness-equipment { display: grid; gap: 10px; font-weight: 650; color: var(--ink, #073f35); }
+.fitness-setup .fitness-equipment .fitness-checkbox { font-weight: 500; min-height: 32px; align-items: center; }
 .fitness-setup .fitness-checkbox input { width: 22px; min-height: 22px; flex: 0 0 22px; margin-top: 2px; }
 
 .fitness-alternatives { border-top: 1px solid #c6d3c3; padding-top: 8px; }
@@ -97,3 +101,8 @@
 .fitness-alternatives summary::after { content: '+'; margin-left: auto; }
 .fitness-alternatives[open] summary::after { content: '−'; }
 .fitness-alternatives summary:focus-visible { outline: 2px solid #0b5749; outline-offset: 4px; }
+.header-account-links {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}

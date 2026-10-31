@@ -1,6 +1,7 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { test, expect } from "@playwright/test";
 import { readBrowserRecords } from "./record-fixture";
-import { mockCloud } from "./cloud-fixture";
+import { mockCloud } from "../e2e-shared/cloud-fixture";
 import { demoState } from "../src/domain";
 
 test('setup lists the combined choice last and requires a nonblank name', async ({ page }) => {
@@ -126,7 +127,7 @@ test("new users meet Spot outside the app, create an account, confirm, set up an
   await expect(
     page.getByRole("textbox", { name: "Message Rep & Plate" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page.getByRole("button", { name: /Account & backups/ }).click();
   await page.getByRole("button", { name: "Sign out on this device" }).click();
   await expect(page.getByRole("heading", { name: /Track your food/ })).toBeVisible();
@@ -174,7 +175,7 @@ test("local setup preserves records, persists completion and replay preserves th
   expect(saved.profile).toEqual(state.profile);
   const draft = page.getByRole("textbox", { name: "Message Rep & Plate" });
   await draft.fill("Keep my draft");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page.getByRole("button", { name: /Meet Spot/ }).click();
   await expect(
     page.getByRole("heading", { name: "Hey. I’m Spot." }),

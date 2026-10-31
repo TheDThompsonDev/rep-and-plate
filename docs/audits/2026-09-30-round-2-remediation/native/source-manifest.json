@@ -1,0 +1,596 @@
+{
+  "capturedAt": "2026-09-30T19:33:52.655Z",
+  "exportTimestamp": "2026-09-30T19:32:37.556Z",
+  "method": "Relative static import graph from mobile/index.ts. Timestamp comparison is corroboration, not a reproducible build attestation. Captured after fresh all-platform Expo export.",
+  "sources": [
+    {
+      "path": "mobile/App.tsx",
+      "mtime": "2026-09-30T19:25:31.602Z",
+      "newerThanExport": false,
+      "sha256": "2ecffd6268d2c14c561c15267d0c8b4e6b5e4a7ec101fd5f782d9d6d02f15ce2"
+    },
+    {
+      "path": "mobile/index.ts",
+      "mtime": "2026-09-27T03:52:42.483Z",
+      "newerThanExport": false,
+      "sha256": "5c157f4d44972d9c84415e1e4bda595b3abcd8cf733f8a9cd20935bec3eccc42"
+    },
+    {
+      "path": "mobile/src/AccountSecurity.tsx",
+      "mtime": "2026-09-29T17:47:13.426Z",
+      "newerThanExport": false,
+      "sha256": "ef90d8953527d0f6f5d48915134e90e85013ddb777423f5858ffd880e5ce7064"
+    },
+    {
+      "path": "mobile/src/AccountSync.tsx",
+      "mtime": "2026-09-29T18:07:34.413Z",
+      "newerThanExport": false,
+      "sha256": "47e90c4fc664fe70b845cc6f20953849dacb2dff1eb34c850165e31e17177b50"
+    },
+    {
+      "path": "mobile/src/BodyWeightHistory.tsx",
+      "mtime": "2026-09-29T17:44:46.488Z",
+      "newerThanExport": false,
+      "sha256": "cc72c92d7bd642e20d8a2baaf687996e3def01b8cf4adca7344a1efba602a3bb"
+    },
+    {
+      "path": "mobile/src/Capture.tsx",
+      "mtime": "2026-09-30T19:18:38.965Z",
+      "newerThanExport": false,
+      "sha256": "3df25de4abeb2e59702e6dd050accaab9e861db1a6c1615ed0893ed1a10c8bf7"
+    },
+    {
+      "path": "mobile/src/ChatScreen.tsx",
+      "mtime": "2026-09-30T15:13:08.699Z",
+      "newerThanExport": false,
+      "sha256": "46d70cb62b7289031dae227a9e9203dda0de9553628bd897e94bb5243471a688"
+    },
+    {
+      "path": "mobile/src/Cloud.tsx",
+      "mtime": "2026-09-30T19:18:38.893Z",
+      "newerThanExport": false,
+      "sha256": "4273715020b472fd1cf2c0febaf7a4318b26b62d8c0eddf6fce83fbd8cf1fd19"
+    },
+    {
+      "path": "mobile/src/Connections.tsx",
+      "mtime": "2026-09-29T17:55:59.998Z",
+      "newerThanExport": false,
+      "sha256": "480323b020ebddd6728796007d32fd4a04c4f8fa7439402831d080f7aac8ffad"
+    },
+    {
+      "path": "mobile/src/FirstWeek.tsx",
+      "mtime": "2026-09-29T17:43:05.169Z",
+      "newerThanExport": false,
+      "sha256": "9a69ca830914177fecb81aa8c992f210220b3341c99845b6400ece203858df5d"
+    },
+    {
+      "path": "mobile/src/KitchenTools.tsx",
+      "mtime": "2026-09-30T19:26:38.035Z",
+      "newerThanExport": false,
+      "sha256": "2a0e63f717a8d0387b4e9b05fad514f0104b69c738a0786d729cf068584c6438"
+    },
+    {
+      "path": "mobile/src/ManualMeal.tsx",
+      "mtime": "2026-09-30T19:18:38.874Z",
+      "newerThanExport": false,
+      "sha256": "ab5367874731adca87a5c35505af95fd6e0be599c4f456c08244810455317af4"
+    },
+    {
+      "path": "mobile/src/NativeWorkout.tsx",
+      "mtime": "2026-09-30T19:18:38.854Z",
+      "newerThanExport": false,
+      "sha256": "49aab8db12e1ccb51ef8d1f0060c6f39f225f9c0dd9934a5aad080814e0920c3"
+    },
+    {
+      "path": "mobile/src/Onboarding.tsx",
+      "mtime": "2026-09-30T19:18:38.988Z",
+      "newerThanExport": false,
+      "sha256": "369fe4acfce5aa1bb8a9137e993f60e75631c6d3c55a08e57f2aa469eadbed3e"
+    },
+    {
+      "path": "mobile/src/PasswordRecovery.tsx",
+      "mtime": "2026-09-29T17:47:13.413Z",
+      "newerThanExport": false,
+      "sha256": "9797d35c8c7fff24c1d2084775cb2491926ebd8fc76967bda86218f918ae82a8"
+    },
+    {
+      "path": "mobile/src/PlanIngredientLink.tsx",
+      "mtime": "2026-09-29T17:35:44.772Z",
+      "newerThanExport": false,
+      "sha256": "18e88a614eb591375a9fb40ef1d3b508c8dd281750e7bc0152e1389e12f99ec3"
+    },
+    {
+      "path": "mobile/src/Shopping.tsx",
+      "mtime": "2026-09-30T19:17:08.800Z",
+      "newerThanExport": false,
+      "sha256": "f104bedbfd89603bfdb1c5e74f38a2440ff520b805e7da1387b53fdb9d8bd6f6"
+    },
+    {
+      "path": "mobile/src/Spot.tsx",
+      "mtime": "2026-09-29T02:34:55.964Z",
+      "newerThanExport": false,
+      "sha256": "43af8a75c7039dce6c928f06bc07e5f24ac9e8e3fdab4969098a31a2801860c9"
+    },
+    {
+      "path": "mobile/src/SupportAndPrivacy.tsx",
+      "mtime": "2026-09-30T19:18:38.907Z",
+      "newerThanExport": false,
+      "sha256": "73a31be80abfee7b4bca4cecf646b9448ade1ffca81274b22bea6ca739d09968"
+    },
+    {
+      "path": "mobile/src/api.ts",
+      "mtime": "2026-09-30T15:06:28.233Z",
+      "newerThanExport": false,
+      "sha256": "cf54cd199da07365cf60d64d724824f4d4090a2be07d308415cb26331cfcc5d8"
+    },
+    {
+      "path": "mobile/src/auth.ts",
+      "mtime": "2026-09-29T17:38:12.196Z",
+      "newerThanExport": false,
+      "sha256": "74ff8edadbf02c8063ba7951c5cfb3b2a58c8e93509533d33e052150fb0c0ec6"
+    },
+    {
+      "path": "mobile/src/runtime.ts",
+      "mtime": "2026-09-27T04:29:30.175Z",
+      "newerThanExport": false,
+      "sha256": "93ac19a21f284bb99d637416edc6aad6d6626bef4fbb8a8209ae338b49829a10"
+    },
+    {
+      "path": "mobile/src/screens.tsx",
+      "mtime": "2026-09-30T19:29:46.929Z",
+      "newerThanExport": false,
+      "sha256": "b4325eb3284c05d316ae0e8394648d9d8f33e60f093e49cf26c708a9007f531f"
+    },
+    {
+      "path": "mobile/src/storage.ts",
+      "mtime": "2026-09-30T19:18:38.931Z",
+      "newerThanExport": false,
+      "sha256": "358515b5a0757c6eb0591d3b67752f6c0fd124270a33174c9d5627022d5d3b0a"
+    },
+    {
+      "path": "mobile/src/store.tsx",
+      "mtime": "2026-09-30T15:42:47.273Z",
+      "newerThanExport": false,
+      "sha256": "f98b6d8875e9a11b5bac506e03701608ef59ccb0fc2ff9cca29592246e0458b9"
+    },
+    {
+      "path": "mobile/src/tools.tsx",
+      "mtime": "2026-09-30T19:29:44.544Z",
+      "newerThanExport": false,
+      "sha256": "4d681db987bd46a1e7aa6db32b4c6dae432c1ca11d26ea3b12a9d42dc1e8b1b4"
+    },
+    {
+      "path": "mobile/src/ui.tsx",
+      "mtime": "2026-09-30T15:01:26.023Z",
+      "newerThanExport": false,
+      "sha256": "a0507bc3b3349b4da3036054743278aca28ef24fff8869ad7be465b676746299"
+    },
+    {
+      "path": "src/activities.ts",
+      "mtime": "2026-09-30T15:03:05.984Z",
+      "newerThanExport": false,
+      "sha256": "17d68c5b507bfb0cdba21dae3df18759856491166681f3dd7e943870b7bf8042"
+    },
+    {
+      "path": "src/activity-contract.ts",
+      "mtime": "2026-09-30T15:03:05.983Z",
+      "newerThanExport": false,
+      "sha256": "be259f637fb2e5b303ed56467f86527ecf2cdbf645ad8d43f48e39c4fd1bce55"
+    },
+    {
+      "path": "src/ai-client.ts",
+      "mtime": "2026-09-30T19:15:42.622Z",
+      "newerThanExport": false,
+      "sha256": "a96017f6e2d22ae9c932ddb18ca089b79ec565f9aa4ea9a8ec2f5c9cc84dabf2"
+    },
+    {
+      "path": "src/ai-contract.ts",
+      "mtime": "2026-09-30T15:11:57.768Z",
+      "newerThanExport": false,
+      "sha256": "d087a3ca65c7211d18efdedb93dabb1df3f59d5301a59a000bbd71bae2d032d4"
+    },
+    {
+      "path": "src/api-fetch.ts",
+      "mtime": "2026-09-28T17:49:38.494Z",
+      "newerThanExport": false,
+      "sha256": "758b41a451fd42679723a307a491ab1801a8552c501e6021cc0141a112381435"
+    },
+    {
+      "path": "src/domain.ts",
+      "mtime": "2026-09-30T19:13:31.793Z",
+      "newerThanExport": false,
+      "sha256": "dd6c73f119b680c35ebde74ee0d72006d8b9f632da04cd15b7df76d53840f407"
+    },
+    {
+      "path": "src/exercise-technique.ts",
+      "mtime": "2026-09-30T15:07:27.210Z",
+      "newerThanExport": false,
+      "sha256": "128628cbcdb6a32679d2bb3e20639392995fe908633f46ee8254f747474b8e6b"
+    },
+    {
+      "path": "src/features/cloud/account-client.ts",
+      "mtime": "2026-09-29T17:47:13.259Z",
+      "newerThanExport": false,
+      "sha256": "3cc928b66eedab73f811aa94712a2f5345933dd3bbfc471f8a77f25e97de72b0"
+    },
+    {
+      "path": "src/features/cloud/account-storage.ts",
+      "mtime": "2026-09-29T17:57:50.012Z",
+      "newerThanExport": false,
+      "sha256": "9067b37afa7ce1b4d1dbb8a187d617f5918c5987efc3b710b068d35a1330b2af"
+    },
+    {
+      "path": "src/features/cloud/client.ts",
+      "mtime": "2026-09-30T15:10:58.132Z",
+      "newerThanExport": false,
+      "sha256": "a64e0937a874e4394c5500a7b8c3a7e5b5e0efb7abe5a40aca2ff76f2163cd53"
+    },
+    {
+      "path": "src/features/cloud/media.ts",
+      "mtime": "2026-09-29T17:52:36.803Z",
+      "newerThanExport": false,
+      "sha256": "bff2a1d14ed55cfbb40c50ee4927b5ecc1ab9cfe248ddc649f2859cb2db75757"
+    },
+    {
+      "path": "src/features/cloud/sync-control.ts",
+      "mtime": "2026-09-29T17:34:01.170Z",
+      "newerThanExport": false,
+      "sha256": "8796eba01134b5bd6b02634f6aac0ecb7e6af419fbffb4466933282cb4545c81"
+    },
+    {
+      "path": "src/features/cloud/sync.ts",
+      "mtime": "2026-09-29T17:50:30.248Z",
+      "newerThanExport": false,
+      "sha256": "caa82bf1789c9ff2c96954a1f7924ab5b0341235a82e5f225902764ffc8c9f86"
+    },
+    {
+      "path": "src/features/cloud/useAccountSecurity.ts",
+      "mtime": "2026-09-29T17:56:47.231Z",
+      "newerThanExport": false,
+      "sha256": "ed8ca5c789037188b1f08b709d64496cb19f981d317898b75ecf14b7db58cd2b"
+    },
+    {
+      "path": "src/features/cloud/useAccountSync.ts",
+      "mtime": "2026-09-29T18:07:12.216Z",
+      "newerThanExport": false,
+      "sha256": "e39aa814097cea82250ce66c3887d884319b89eee6dd528cd9fa97c7bab1277a"
+    },
+    {
+      "path": "src/features/cloud/usePasswordRecovery.ts",
+      "mtime": "2026-09-29T17:47:13.285Z",
+      "newerThanExport": false,
+      "sha256": "02b9cda577c46674e6e4256b6ca3cc5980023811227c2c8af6e5e3d1edb7fae2"
+    },
+    {
+      "path": "src/features/connections/context.ts",
+      "mtime": "2026-09-30T19:17:05.358Z",
+      "newerThanExport": false,
+      "sha256": "e9b67cb6f1ff23600abd76abe6f6e1d8f2f3d9a9eb00f22db59bf383a7a34935"
+    },
+    {
+      "path": "src/features/connections/contracts.ts",
+      "mtime": "2026-09-30T19:17:05.357Z",
+      "newerThanExport": false,
+      "sha256": "81b67fde29a5e7a280a8f742945da9da29ce1542583654befa516e5b699f4c72"
+    },
+    {
+      "path": "src/features/connections/useConnections.ts",
+      "mtime": "2026-09-29T17:54:52.797Z",
+      "newerThanExport": false,
+      "sha256": "5fc9ae20c73c4dd70773d6c247345327a74e4c732eff6e9baa9fe4982f09b671"
+    },
+    {
+      "path": "src/features/insights/insights.ts",
+      "mtime": "2026-09-30T19:11:47.607Z",
+      "newerThanExport": false,
+      "sha256": "263867e58f8063f0a733ae62525e74c0c0cc7cb7dc4de3081abb65bc912a18cb"
+    },
+    {
+      "path": "src/features/meals/arithmetic.ts",
+      "mtime": "2026-09-25T18:24:16.561Z",
+      "newerThanExport": false,
+      "sha256": "6c9cd3a4d9de6cbec322637d44cd5ccae1520d39362e48ad4e79745a78f8135f"
+    },
+    {
+      "path": "src/features/meals/contracts.ts",
+      "mtime": "2026-09-25T18:24:16.550Z",
+      "newerThanExport": false,
+      "sha256": "c57681806371328d6685db23f851cb34b14792688c0ef2995056e53bc86e0a31"
+    },
+    {
+      "path": "src/features/meals/proposals.ts",
+      "mtime": "2026-09-25T19:34:22.254Z",
+      "newerThanExport": false,
+      "sha256": "a7fa48d29d37e7c0802cae73932b48de5f34845c0a988d18793827427891aad4"
+    },
+    {
+      "path": "src/features/onboarding/model.ts",
+      "mtime": "2026-09-29T03:27:16.662Z",
+      "newerThanExport": false,
+      "sha256": "e87ff203a648d4f368e4c2ffd4872a905e6297705ad382d348818c6c09d28b4e"
+    },
+    {
+      "path": "src/features/onboarding/useOnboarding.ts",
+      "mtime": "2026-09-29T03:27:16.817Z",
+      "newerThanExport": false,
+      "sha256": "482a1b3fee0aead7974df6f5b26abe91bbcd0dc3538ab5a4c69b0f0c1457ebd8"
+    },
+    {
+      "path": "src/features/pantry/contracts.ts",
+      "mtime": "2026-09-25T19:19:16.782Z",
+      "newerThanExport": false,
+      "sha256": "cb9352675926a8745b364129914d46b7431ce777081c8e2bf586ee7fee0b0d9d"
+    },
+    {
+      "path": "src/features/pantry/date-contract.ts",
+      "mtime": "2026-09-25T19:21:29.778Z",
+      "newerThanExport": false,
+      "sha256": "21ba709b0b868ebdca0705e327674b16fd75d7e5e0742403e037c8a511a0ca5d"
+    },
+    {
+      "path": "src/features/pantry/dates.ts",
+      "mtime": "2026-09-25T19:21:29.811Z",
+      "newerThanExport": false,
+      "sha256": "f284766cafa7045e579ec57fa0f77c09ce0f174b877441d34d719e029891423d"
+    },
+    {
+      "path": "src/features/pantry/ledger.ts",
+      "mtime": "2026-09-30T19:19:12.575Z",
+      "newerThanExport": false,
+      "sha256": "0975f5a3c6d3729171fbbc130af4a8c485a3ab396b3653908fe1ccde06cd0d7f"
+    },
+    {
+      "path": "src/features/pantry/manual-ingredient.ts",
+      "mtime": "2026-09-30T15:10:45.394Z",
+      "newerThanExport": false,
+      "sha256": "196a1020f9872a18cf88e4bf691b7f2d56be131d7ce8a86d5d48913ac5675e1b"
+    },
+    {
+      "path": "src/features/pantry/receipt-origin.ts",
+      "mtime": "2026-09-30T19:13:26.993Z",
+      "newerThanExport": false,
+      "sha256": "6036adc9c5c32526632a11879e0c73874c69ed41e19fcbb4227f664c3ef7520c"
+    },
+    {
+      "path": "src/features/pantry/suggestions.ts",
+      "mtime": "2026-09-25T19:06:11.474Z",
+      "newerThanExport": false,
+      "sha256": "8dee8dbf65d5e26183323fc9e34fa79520c2de5117706afbc38124f80a08a75b"
+    },
+    {
+      "path": "src/features/planning/basket.ts",
+      "mtime": "2026-09-30T19:27:09.913Z",
+      "newerThanExport": false,
+      "sha256": "5e4723e36300179f5ea2eaeaa8076dfc4b05c68fb26d11d4326430ad0a89b6c0"
+    },
+    {
+      "path": "src/features/planning/contracts.ts",
+      "mtime": "2026-09-30T19:13:26.992Z",
+      "newerThanExport": false,
+      "sha256": "445cee6dc712391abf55a7913944143bcefd6eee905878cab92f3dbeb0314a5c"
+    },
+    {
+      "path": "src/features/planning/exclusions.ts",
+      "mtime": "2026-09-25T18:32:04.628Z",
+      "newerThanExport": false,
+      "sha256": "5d009d0f7411c540177958cd71a8b85ce3fc3b1a4d72673744a8677d73b4c1bc"
+    },
+    {
+      "path": "src/features/planning/first-week.ts",
+      "mtime": "2026-09-30T19:31:17.073Z",
+      "newerThanExport": false,
+      "sha256": "7dcb322e34e4bf90a510fc0d11e7aca39b4acd086d7a5820443562e3332b6f83"
+    },
+    {
+      "path": "src/features/planning/meal-plans.ts",
+      "mtime": "2026-09-30T19:29:57.335Z",
+      "newerThanExport": false,
+      "sha256": "0619d583bced8bceb051c72477ae7ca71482dcb587198ed6f723675c1b49cb9d"
+    },
+    {
+      "path": "src/features/planning/pantry-links.ts",
+      "mtime": "2026-09-30T19:14:47.530Z",
+      "newerThanExport": false,
+      "sha256": "6e787e95252eee66292a78eb3742143211af68d48f01269f3579ca8934ce795f"
+    },
+    {
+      "path": "src/features/planning/recurring-plans.ts",
+      "mtime": "2026-09-30T19:14:47.530Z",
+      "newerThanExport": false,
+      "sha256": "ac2abd3e0a8577917954fe6d6bfaa2dfbfd747e081161308b5c5f18cc35d60a5"
+    },
+    {
+      "path": "src/features/preferences/contracts.ts",
+      "mtime": "2026-09-27T02:42:47.911Z",
+      "newerThanExport": false,
+      "sha256": "35a4f165173b67c65b55b106c756d3af17037c7db555eb74c683023e412b8c01"
+    },
+    {
+      "path": "src/features/preferences/proposals.ts",
+      "mtime": "2026-09-28T19:01:25.321Z",
+      "newerThanExport": false,
+      "sha256": "1c7398619b6241ea9c93c22592fdf70797c02299264723d6d4c0e30a1128bd79"
+    },
+    {
+      "path": "src/features/products/actions.ts",
+      "mtime": "2026-09-25T18:22:34.170Z",
+      "newerThanExport": false,
+      "sha256": "439cd748cee79418cfbfbeaf86dc99450e68829c1fcf7b3e29b4157d655de6a8"
+    },
+    {
+      "path": "src/features/products/contracts.ts",
+      "mtime": "2026-09-27T02:41:33.049Z",
+      "newerThanExport": false,
+      "sha256": "00ef2650659fbf307cd78d686dc8af16d882fd53488d89c7aa72598da3e55a19"
+    },
+    {
+      "path": "src/features/products/quantities.ts",
+      "mtime": "2026-09-30T15:04:59.499Z",
+      "newerThanExport": false,
+      "sha256": "ea804af0f2887cdd8cc4cc18842d197097fcbe2377574d9c96db0a3beed32f95"
+    },
+    {
+      "path": "src/features/products/search-contract.ts",
+      "mtime": "2026-09-25T19:04:01.243Z",
+      "newerThanExport": false,
+      "sha256": "a7af974a5abceed432361c384f9ba0ab242dd1393d7d67c76d119f5461c88b2a"
+    },
+    {
+      "path": "src/features/progress/body-weight.ts",
+      "mtime": "2026-09-29T17:44:46.329Z",
+      "newerThanExport": false,
+      "sha256": "04e0df2ee6aa41fd38bc95cca6584b03e7643a740eaa865a491c714a704d2cb4"
+    },
+    {
+      "path": "src/features/progress/set-loads.ts",
+      "mtime": "2026-09-29T17:46:48.957Z",
+      "newerThanExport": false,
+      "sha256": "200f604d06df2cd17237e8a50513260bc2b5e6390f52db5e1d8ad6c2cd48e98b"
+    },
+    {
+      "path": "src/features/recipes/batches.ts",
+      "mtime": "2026-09-25T19:28:47.162Z",
+      "newerThanExport": false,
+      "sha256": "709c6dbdb9d8ec34339e4578dce945542ebd7c8958665d269ee818b222a85394"
+    },
+    {
+      "path": "src/features/recipes/contracts.ts",
+      "mtime": "2026-09-25T19:26:37.070Z",
+      "newerThanExport": false,
+      "sha256": "e50f2de9395003508d06adfed6dda5217edbf9a7ec2d731808e78fdf8fa321c0"
+    },
+    {
+      "path": "src/features/recipes/portions.ts",
+      "mtime": "2026-09-25T19:26:37.111Z",
+      "newerThanExport": false,
+      "sha256": "0b7d76071a3b1acc859d5c4eb8453740621186a5b29d07894011183f0941c0a1"
+    },
+    {
+      "path": "src/features/recipes/proposal-contract.ts",
+      "mtime": "2026-09-25T19:46:12.024Z",
+      "newerThanExport": false,
+      "sha256": "eb44b2c92322933f1db6eff538d66e60802d8b345ae3af0de94921ed2163dc50"
+    },
+    {
+      "path": "src/features/recipes/proposals.ts",
+      "mtime": "2026-09-25T19:47:45.863Z",
+      "newerThanExport": false,
+      "sha256": "f528f77193c0cc42363388141a649be2935765f27e30e025f987ca24eda3040a"
+    },
+    {
+      "path": "src/features/reviews/weekly-review.ts",
+      "mtime": "2026-09-26T14:51:46.929Z",
+      "newerThanExport": false,
+      "sha256": "1be299312a66a1aa9ae2470d61461dffe51a8d44589068fab2a10c1da8598b32"
+    },
+    {
+      "path": "src/features/shopping/contracts.ts",
+      "mtime": "2026-09-27T03:03:33.027Z",
+      "newerThanExport": false,
+      "sha256": "bb25ec6720cf4e076b0556a4f46ea5dc02170e216211822c4a39206e80100e1a"
+    },
+    {
+      "path": "src/features/shopping/shopping.ts",
+      "mtime": "2026-09-30T19:13:26.995Z",
+      "newerThanExport": false,
+      "sha256": "a90277e0de2baba650c4e2094c1d11a81b4f45527dd596ad31850080e8be1d29"
+    },
+    {
+      "path": "src/features/spot/contracts.ts",
+      "mtime": "2026-09-28T22:15:53.375Z",
+      "newerThanExport": false,
+      "sha256": "d3147d0bc53d9bfb6e4f38e23caecc7f7d34354a158e6abceafab8bb56bb4bf1"
+    },
+    {
+      "path": "src/features/spot/expansion.ts",
+      "mtime": "2026-09-29T00:56:56.511Z",
+      "newerThanExport": false,
+      "sha256": "ce762497b713b3439baee0c2e2f84cbf87b29078d5d1c8dc95569159c74cc736"
+    },
+    {
+      "path": "src/features/spot/model.ts",
+      "mtime": "2026-09-30T15:20:50.319Z",
+      "newerThanExport": false,
+      "sha256": "0833eb6215956d13900a7d5fa5178ff9caff22f3d55b901d1b8e6e2fdcbd7638"
+    },
+    {
+      "path": "src/features/spot/personality.ts",
+      "mtime": "2026-09-29T02:32:28.059Z",
+      "newerThanExport": false,
+      "sha256": "61b310ae404a7182b4bfa71ac9773942f44557d2d66a9563308ba6c194fabeec"
+    },
+    {
+      "path": "src/features/spot/scenes.ts",
+      "mtime": "2026-09-29T02:32:28.066Z",
+      "newerThanExport": false,
+      "sha256": "bc335339f031a290d6f36318f40e929fd2f790e4fd80200a010eb74654d2cfc6"
+    },
+    {
+      "path": "src/features/support/model.ts",
+      "mtime": "2026-09-30T15:13:12.229Z",
+      "newerThanExport": false,
+      "sha256": "b9c798c9e01f49b7ec3e32df77e056ba218020b253e60a0d53509028fd86d72f"
+    },
+    {
+      "path": "src/features/workout-planning/contracts.ts",
+      "mtime": "2026-09-25T18:16:25.188Z",
+      "newerThanExport": false,
+      "sha256": "492571fca31179dd5eeedf475402140885413a096dce237516107bc7c09836bb"
+    },
+    {
+      "path": "src/features/workout-planning/history.ts",
+      "mtime": "2026-09-30T19:21:51.537Z",
+      "newerThanExport": false,
+      "sha256": "77104d3c3b87bdd26071fed944a1c3bd308ccac94cca4859a6315bd09f3abec6"
+    },
+    {
+      "path": "src/platform/browser-records.ts",
+      "mtime": "2026-09-29T17:57:13.599Z",
+      "newerThanExport": false,
+      "sha256": "f16105c4d2ac7cdb6ad29dca64e47e03f8cb92ea808e227a245fbc5752d325fe"
+    },
+    {
+      "path": "src/platform/capture-upload.ts",
+      "mtime": "2026-09-28T17:49:38.523Z",
+      "newerThanExport": false,
+      "sha256": "fab7798baec134c5fab907699c87b34ae6b68b2567923f5c2e763023bb330d67"
+    },
+    {
+      "path": "src/platform/owned-state.ts",
+      "mtime": "2026-09-29T18:06:00.406Z",
+      "newerThanExport": false,
+      "sha256": "52c286fda1b3745be1677b5859761aa18113467c2f9ee1b36df76fb4ec3137f5"
+    },
+    {
+      "path": "src/platform/secure-values.ts",
+      "mtime": "2026-09-28T17:49:38.508Z",
+      "newerThanExport": false,
+      "sha256": "f83e99dc018c63ce9dbdcf76a113912c00348b5f94d0a24a91f589b1a24e3d03"
+    },
+    {
+      "path": "src/platform/snapshot.ts",
+      "mtime": "2026-09-27T03:55:22.878Z",
+      "newerThanExport": false,
+      "sha256": "d2cca35ca91349a6ced8bf08f9dc85b55d0d44f5d0d3c907733a2133df9ed7ac"
+    },
+    {
+      "path": "src/workouts.ts",
+      "mtime": "2026-09-30T19:15:27.438Z",
+      "newerThanExport": false,
+      "sha256": "70d00b17bd61ca79befa62dab84bedba29c402571a97bba797518f27f3402d5f"
+    }
+  ],
+  "bundles": [
+    {
+      "name": "index-a636726a15785f5ca3b0f27aef936592.js",
+      "bytes": 45266,
+      "sha256": "1ad13c504ea7ba2a921e2d751d8fd341559e1e8575716f118b862a3b6b0a7704"
+    },
+    {
+      "name": "index-a87299bb3dc9c74a27990050b449e153.js",
+      "bytes": 4083824,
+      "sha256": "55cf8bf3ae67b07752ec1012d75acd33dee658b9fc80d801b851f6a587a31b1c"
+    }
+  ],
+  "newerSources": []
+}

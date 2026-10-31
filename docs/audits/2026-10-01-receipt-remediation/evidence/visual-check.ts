@@ -1,0 +1,57 @@
+import { chromium, expect } from '@playwright/test';
+import { writeFileSync } from 'node:fs';
+import { initialState } from '../../../../src/domain';
+import { resultFixture } from '../../../../tests/ai-fixtures';
+import { commitSeededRecords } from '../../../../tests/record-fixture';
+
+const out = 'docs/audits/2026-10-01-receipt-remediation/evidence';
+const browser = await chromium.launch();
+const checks: object[] = [];
+for (const width of [320, 390, 1100]) {
+  const context = await browser.newContext({ viewport: { width, height: 844 } });
+  const page = await context.newPage();
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.route('**/api/status', route => route.fulfill({ json: { available: true, jev: false } }));
+  await page.goto('http://127.0.0.1:5173/');
+  await expect(page.getByRole('heading', { name: /Good food/ })).toBeVisible();
+  await page.screenshot({ path: `${out}/welcome-${width}.png`, fullPage: true });
+  await page.getByRole('button', { name: 'See a receipt example', exact: true }).click();
+  await page.getByRole('button', { name: 'See dinner ideas', exact: true }).click();
+  await expect(page.getByRole('dialog')).toContainText('What else might you need?');
+  await page.screenshot({ path: `${out}/example-${width}.png` });
+  const exampleFit = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+  await page.getByRole('dialog').getByRole('button', { name: 'Close dialog' }).click();
+  const source = 'visual-receipt';
+  const state = initialState();
+  state.messages = [{ id: source, role: 'user', text: 'My grocery receipt', image: 'data:image/png;base64,' + (await import('node:fs')).readFileSync('tests/fixtures/grocery-receipt.png').toString('base64'), time: '10:00', ai: true, aiStatus: 'complete' }, { id: 'receipt-answer', role: 'assistant', text: 'Your groceries are saved. One food needs a check.', time: '10:00', ai: true, requestId: source, receiptId: source }];
+  state.groceries = [resultFixture(source).receipt!];
+  await page.evaluate(state => {
+    localStorage.setItem('fuel.prototype.v1', JSON.stringify(state));
+    localStorage.setItem('rep-and-plate.onboarding.v1', JSON.stringify({ version: 1, mode: 'guest', focus: 'Groceries & dinner' }));
+  }, state);
+  await commitSeededRecords(page);
+  await page.reload();
+  await expect(page.locator('.receipt-result-actions')).toContainText('1 food is checked and on hand.');
+  await page.locator('.receipt-result-actions').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: `${out}/result-${width}.png` });
+  await page.locator('.receipt-result-actions').screenshot({ path: `${out}/result-actions-${width}.png` });
+  await page.getByRole('button', { name: 'Choose dinner from these groceries', exact: true }).focus();
+  await expect(page.getByRole('button', { name: 'Choose dinner from these groceries', exact: true })).toBeFocused();
+  await page.locator('.fuel-grocery-card').click();
+  await page.getByRole('button', { name: 'Check purchase details', exact: true }).click();
+  await page.getByRole('button', { name: 'Review store, date & prices', exact: true }).click();
+  const compare = page.getByText('Compare with original receipt', { exact: true });
+  await compare.focus(); await compare.press('Enter');
+  await expect(page.getByAltText('Original grocery receipt')).toBeVisible();
+  await page.getByRole('button', { name: 'Enlarge receipt' }).click();
+  await expect(page.getByRole('button', { name: 'Fit receipt to screen' })).toHaveAttribute('aria-pressed', 'true');
+  const sourceFit = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+  const dialogFit = await page.getByRole('dialog').evaluate(el => el.scrollWidth <= el.clientWidth + 1);
+  await page.screenshot({ path: `${out}/source-${width}.png` });
+  checks.push({ width, exampleFit, sourceFit, dialogFit, keyboardDinnerFocus: true, keyboardSourceDisclosure: true, zoomPressed: true, pageErrors: errors });
+  expect(exampleFit).toBe(true); expect(sourceFit).toBe(true); expect(dialogFit).toBe(true); expect(errors).toEqual([]);
+  await context.close();
+}
+await browser.close();
+writeFileSync(`${out}/visual-check.json`, JSON.stringify({ method: 'Isolated browser contexts and controlled receipt data; no live OCR', checks }, null, 2));

@@ -1,0 +1,58 @@
+[
+  {
+    "sha256": "4c75403040ede10f1edc9a7d512ba200cb19563b825eab4d46bb46a85b266320",
+    "path": "src/features/onboarding/model.ts"
+  },
+  {
+    "sha256": "4b99c7cf5a32e227da53e7e8e8f2d601a6a82cb08f81d79f30c90f8fce9b26a5",
+    "path": "src/features/onboarding/useOnboarding.ts"
+  },
+  {
+    "sha256": "83d7f21fe24a52e94cec3a08f0b1e17c9ea53b04b02f533a221233f0376cd38d",
+    "path": "src/features/onboarding/Onboarding.tsx"
+  },
+  {
+    "sha256": "6c8af4ae5e786243c651b8041ad0c38f7a03df9c2ba82e9034dd53952bc4293a",
+    "path": "mobile/src/Onboarding.tsx"
+  },
+  {
+    "sha256": "e9fa443c1b382882a21225c75e7f832a3a6e1bc8dab4e137480a910e811467eb",
+    "path": "src/features/cloud/sync.ts"
+  },
+  {
+    "sha256": "0da704156b908d6450de253d0a68a8f7cfb57a648dfd3ea4170e650ff76f9a54",
+    "path": "src/features/cloud/useAccountSync.ts"
+  },
+  {
+    "sha256": "9f6cfec22e56382230f9decb3cd004a2a21479d9ff5aaf541f8a4fb4b9fb9c65",
+    "path": "src/features/cloud/sync.test.ts"
+  },
+  {
+    "sha256": "ac0219c179ed00231421e66015be796ab041138c6ffd675d20bcb3bf11893fc4",
+    "path": "tests/onboarding.spec.ts"
+  },
+  {
+    "sha256": "b25d8fad4da5b5cefe68eebdf68d885da6a02b1cfd0084c808dae0915d4b7dfc",
+    "path": "tests/interaction-guide.spec.ts"
+  },
+  {
+    "sha256": "fbe366e8b75142ecdec0bd854869b875fc3cd4ed8044b4d2f417f148a70b1396",
+    "path": "tests/account-sync.spec.ts"
+  },
+  {
+    "sha256": "05d2cbaaf1a534d6be14fb738cb14150f90b88daab37de6b33ef118965099799",
+    "path": "mobile/e2e/onboarding.spec.ts"
+  },
+  {
+    "sha256": "9e3ea8c0676a189fe01fab98ba015778a2bd9957cffe29d04501e6d8f8c60315",
+    "path": "mobile/e2e/account-sync.spec.ts"
+  },
+  {
+    "sha256": "d839f7c0b8a154deba5dad06cd96db0e71bb075e4f772ebc45962fe91f2251bd",
+    "path": "docs/context/error-ledger.md"
+  },
+  {
+    "sha256": "615be7063e5935f111e834a4bb2f64b311102f966c5ef3061ca5d25428d2881d",
+    "path": "docs/audits/2026-10-01-onboarding-required-name/report.md"
+  }
+]

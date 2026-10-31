@@ -5,17 +5,21 @@ import {
   convertSetupUnit,
   parseFitnessSetup,
   weightCheckIn,
+  type FitnessSetupDraft,
 } from "./fitness-goal";
 import { buildAIRequest } from "../../ai-client";
 import { aiRequestSchema } from "../../ai-contract";
 
-const input = {
+const input: FitnessSetupDraft = {
   kind: "lose",
   currentWeight: "82.5",
   targetWeight: "78",
   unit: "kg",
   cadence: "weekly",
-} as const;
+  trainingDays: "",
+  equipment: [],
+  experience: "",
+};
 it("saves a real starting measurement and goal together without inventing food targets", () => {
   const before = initialState();
   const next = applyFitnessSetup(
@@ -110,6 +114,27 @@ it("converts entered units and retains goals plus real weight context through th
   );
   expect(request.context.fitnessGoal).toEqual(state.profile.fitnessGoal);
   expect(request.context.bodyWeights).toEqual(state.bodyWeights);
+  expect(request.context.trainingProgram).toBeUndefined();
+  const planned = applyFitnessSetup(
+    state,
+    { ...input, currentWeight: "", trainingDays: "3", equipment: ["dumbbells"], experience: "some" },
+    "2020-10-02",
+    "unused",
+  );
+  const plannedRequest = aiRequestSchema.parse(
+    buildAIRequest(planned, {
+      id: "11111111-1111-4111-8111-111111111112",
+      role: "user",
+      text: "Plan my week",
+      time: "12:00 PM",
+    }),
+  );
+  // Answers only: no derived sessions, no loads, reach the provider.
+  expect(plannedRequest.context.trainingProgram).toEqual({
+    daysPerWeek: 3,
+    equipment: ["bodyweight", "dumbbells"],
+    experience: "some",
+  });
   const edited = applyFitnessSetup(
     state,
     { ...input, currentWeight: "", targetWeight: "77", cadence: "daily" },

@@ -1,0 +1,172 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "mobile/playwright.config.ts",
+      "mobile/e2e/draft-boundaries.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/mobile/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run web -- --port 8081",
+      "url": "http://127.0.0.1:8081",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "draft-boundaries.spec.ts",
+      "file": "draft-boundaries.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "import discards recipe draft and a closed planner cannot append a late result",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 13449,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('textbox', { name: 'Recipe name', exact: true })\nExpected: \u001b[32m\"\"\u001b[39m\nReceived: \u001b[31m\"Prior copy draft\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"soft toHaveValue\" getByRole('textbox', { name: 'Recipe name', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Recipe name', exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <input rows=\"1\" dir=\"auto\" autocorrect=\"on\" autocomplete=\"on\" spellcheck=\"true\" aria-label=\"Recipe name\" value=\"Prior copy draft\" autocapitalize=\"sentences\" virtualkeyboardpolicy=\"auto\" class=\"css-11aywtz r-6taxm2 r-1jpgo0j r-b5xy7o r-t23y2h r-rs99b7 r-lrpfzh r-ubezar r-1pl7oy7 r-kq9wsh\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Prior copy draft\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('textbox', { name: 'Recipe name', exact: true })\nExpected: \u001b[32m\"\"\u001b[39m\nReceived: \u001b[31m\"Prior copy draft\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"soft toHaveValue\" getByRole('textbox', { name: 'Recipe name', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Recipe name', exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <input rows=\"1\" dir=\"auto\" autocorrect=\"on\" autocomplete=\"on\" spellcheck=\"true\" aria-label=\"Recipe name\" value=\"Prior copy draft\" autocapitalize=\"sentences\" virtualkeyboardpolicy=\"auto\" class=\"css-11aywtz r-6taxm2 r-1jpgo0j r-b5xy7o r-t23y2h r-rs99b7 r-lrpfzh r-ubezar r-1pl7oy7 r-kq9wsh\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Prior copy draft\"\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts:33:80",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts",
+                      "column": 80,
+                      "line": 33
+                    },
+                    "snippet": "  31 |   await page.getByRole(\"button\",{name:\"Kitchen\",exact:true}).click();\n  32 |   await page.getByRole(\"button\",{name:\"Recipes & leftovers\",exact:true}).click();\n> 33 |   await expect.soft(page.getByRole(\"textbox\",{name:\"Recipe name\",exact:true})).toHaveValue(\"\");\n     |                                                                                ^\n  34 |   await page.getByRole(\"button\",{name:\"Close\",exact:true}).click();\n  35 |   await page.getByRole(\"button\",{name:\"Your week of meals\",exact:true}).click();\n  36 |   await expect.soft(page.getByRole(\"textbox\",{name:\"Planned meal title\",exact:true})).toHaveCount(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts",
+                        "column": 80,
+                        "line": 33
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('textbox', { name: 'Recipe name', exact: true })\nExpected: \u001b[32m\"\"\u001b[39m\nReceived: \u001b[31m\"Prior copy draft\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"soft toHaveValue\" getByRole('textbox', { name: 'Recipe name', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Recipe name', exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <input rows=\"1\" dir=\"auto\" autocorrect=\"on\" autocomplete=\"on\" spellcheck=\"true\" aria-label=\"Recipe name\" value=\"Prior copy draft\" autocapitalize=\"sentences\" virtualkeyboardpolicy=\"auto\" class=\"css-11aywtz r-6taxm2 r-1jpgo0j r-b5xy7o r-t23y2h r-rs99b7 r-lrpfzh r-ubezar r-1pl7oy7 r-kq9wsh\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Prior copy draft\"\u001b[22m\n\n\n  31 |   await page.getByRole(\"button\",{name:\"Kitchen\",exact:true}).click();\n  32 |   await page.getByRole(\"button\",{name:\"Recipes & leftovers\",exact:true}).click();\n> 33 |   await expect.soft(page.getByRole(\"textbox\",{name:\"Recipe name\",exact:true})).toHaveValue(\"\");\n     |                                                                                ^\n  34 |   await page.getByRole(\"button\",{name:\"Close\",exact:true}).click();\n  35 |   await page.getByRole(\"button\",{name:\"Your week of meals\",exact:true}).click();\n  36 |   await expect.soft(page.getByRole(\"textbox\",{name:\"Planned meal title\",exact:true})).toHaveCount(0);\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts:33:80"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts",
+                        "column": 87,
+                        "line": 36
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('textbox', { name: 'Planned meal title', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"soft toHaveCount\" getByRole('textbox', { name: 'Planned meal title', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Planned meal title', exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to 7 elements\u001b[22m\n\u001b[2m       - unexpected value \"7\"\u001b[22m\n\n\n  34 |   await page.getByRole(\"button\",{name:\"Close\",exact:true}).click();\n  35 |   await page.getByRole(\"button\",{name:\"Your week of meals\",exact:true}).click();\n> 36 |   await expect.soft(page.getByRole(\"textbox\",{name:\"Planned meal title\",exact:true})).toHaveCount(0);\n     |                                                                                       ^\n  37 |   const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem(\"dannys-health.native.v1\")!).mealPlans??[]);expect(plans).toEqual([]);\n  38 | });\n  39 |\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts:36:87"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts",
+                        "column": 129,
+                        "line": 37
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -   1\u001b[39m\n\u001b[31m+ Received  + 156\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"createdAt\": \"2026-09-30T15:37:24.014Z\",\u001b[39m\n\u001b[31m+     \"days\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"date\": \"2026-09-30\",\u001b[39m\n\u001b[31m+         \"meals\": Array [\u001b[39m\n\u001b[31m+           Object {\u001b[39m\n\u001b[31m+             \"category\": \"Dinner\",\u001b[39m\n\u001b[31m+             \"id\": \"meal-0\",\u001b[39m\n\u001b[31m+             \"ingredients\": Array [\u001b[39m\n\u001b[31m+               Object {\u001b[39m\n\u001b[31m+                 \"lotId\": null,\u001b[39m\n\u001b[31m+                 \"name\": \"Oats\",\u001b[39m\n\u001b[31m+                 \"servingLabel\": \"40 g\",\u001b[39m\n\u001b[31m+                 \"servings\": 1,\u001b[39m\n\u001b[31m+               },\u001b[39m\n\u001b[31m+             ],\u001b[39m\n\u001b[31m+             \"minutes\": 15,\u001b[39m\n\u001b[31m+             \"notes\": \"Cook until ready.\",\u001b[39m\n\u001b[31m+             \"portions\": 1,\u001b[39m\n\u001b[31m+             \"title\": \"Oat bowl\",\u001b[39m\n\u001b[31m+           },\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"date\": \"2026-10-01\",\u001b[39m\n\u001b[31m+         \"meals\": Array [\u001b[39m\n\u001b[31m+           Object {\u001b[39m\n\u001b[31m+             \"category\": \"Dinner\",\u001b[39m\n\u001b[31m+             \"id\": \"meal-1\",\u001b[39m\n\u001b[31m+             \"ingredients\": Array [\u001b[39m\n\u001b[31m+               Object {\u001b[39m\n\u001b[31m+                 \"lotId\": null,\u001b[39m\n\u001b[31m+                 \"name\": \"Oats\",\u001b[39m\n\u001b[31m+                 \"servingLabel\": \"40 g\",\u001b[39m\n\u001b[31m+                 \"servings\": 1,\u001b[39m\n\u001b[31m+               },\u001b[39m\n\u001b[31m+             ],\u001b[39m\n\u001b[31m+             \"minutes\": 15,\u001b[39m\n\u001b[31m+             \"notes\": \"Cook until ready.\",\u001b[39m\n\u001b[31m+             \"portions\": 1,\u001b[39m\n\u001b[31m+             \"title\": \"Oat pancakes\",\u001b[39m\n\u001b[31m+           },\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"date\": \"2026-10-02\",\u001b[39m\n\u001b[31m+         \"meals\": Array [\u001b[39m\n\u001b[31m+           Object {\u001b[39m\n\u001b[31m+             \"category\": \"Dinner\",\u001b[39m\n\u001b[31m+             \"id\": \"meal-2\",\u001b[39m\n\u001b[31m+             \"ingredients\": Array [\u001b[39m\n\u001b[31m+               Object {\u001b[39m\n\u001b[31m+                 \"lotId\": null,\u001b[39m\n\u001b[31m+                 \"name\": \"Oats\",\u001b[39m\n\u001b[31m+                 \"servingLabel\": \"40 g\",\u001b[39m\n\u001b[31m+                 \"servings\": 1,\u001b[39m\n\u001b[31m+               },\u001b[39m\n\u001b[31m+             ],\u001b[39m\n\u001b[31m+             \"minutes\": 15,\u001b[39m\n\u001b[31m+             \"notes\": \"Cook until ready.\",\u001b[39m\n\u001b[31m+             \"portions\": 1,\u001b[39m\n\u001b[31m+             \"title\": \"Oat soup\",\u001b[39m\n\u001b[31m+           },\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"date\": \"2026-10-03\",\u001b[39m\n\u001b[31m+         \"meals\": Array [\u001b[39m\n\u001b[31m+           Object {\u001b[39m\n\u001b[31m+             \"category\": \"Dinner\",\u001b[39m\n\u001b[31m+             \"id\": \"meal-3\",\u001b[39m\n\u001b[31m+             \"ingredients\": Array [\u001b[39m\n\u001b[31m+               Object {\u001b[39m\n\u001b[31m+                 \"lotId\": null,\u001b[39m\n\u001b[31m+                 \"name\": \"Oats\",\u001b[39m\n\u001b[31m+                 \"servingLabel\": \"40 g\",\u001b[39m\n\u001b[31m+                 \"servings\": 1,\u001b[39m\n\u001b[31m+               },\u001b[39m\n\u001b[31m+             ],\u001b[39m\n\u001b[31m+             \"minutes\": 15,\u001b[39m\n\u001b[31m+             \"notes\": \"Cook until ready.\",\u001b[39m\n\u001b[31m+             \"portions\": 1,\u001b[39m\n\u001b[31m+             \"title\": \"Oat bowl\",\u001b[39m\n\u001b[31m+           },\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"date\": \"2026-10-04\",\u001b[39m\n\u001b[31m+         \"meals\": Array [\u001b[39m\n\u001b[31m+           Object {\u001b[39m\n\u001b[31m+             \"category\": \"Dinner\",\u001b[39m\n\u001b[31m+             \"id\": \"meal-4\",\u001b[39m\n\u001b[31m+             \"ingredients\": Array [\u001b[39m\n\u001b[31m+               Object {\u001b[39m\n\u001b[31m+                 \"lotId\": null,\u001b[39m\n\u001b[31m+                 \"name\": \"Oats\",\u001b[39m\n\u001b[31m+                 \"servingLabel\": \"40 g\",\u001b[39m\n\u001b[31m+                 \"servings\": 1,\u001b[39m\n\u001b[31m+               },\u001b[39m\n\u001b[31m+             ],\u001b[39m\n\u001b[31m+             \"minutes\": 15,\u001b[39m\n\u001b[31m+             \"notes\": \"Cook until ready.\",\u001b[39m\n\u001b[31m+             \"portions\": 1,\u001b[39m\n\u001b[31m+             \"title\": \"Oat pancakes\",\u001b[39m\n\u001b[31m+           },\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"date\": \"2026-10-05\",\u001b[39m\n\u001b[31m+         \"meals\": Array [\u001b[39m\n\u001b[31m+           Object {\u001b[39m\n\u001b[31m+             \"category\": \"Dinner\",\u001b[39m\n\u001b[31m+             \"id\": \"meal-5\",\u001b[39m\n\u001b[31m+             \"ingredients\": Array [\u001b[39m\n\u001b[31m+               Object {\u001b[39m\n\u001b[31m+                 \"lotId\": null,\u001b[39m\n\u001b[31m+                 \"name\": \"Oats\",\u001b[39m\n\u001b[31m+                 \"servingLabel\": \"40 g\",\u001b[39m\n\u001b[31m+                 \"servings\": 1,\u001b[39m\n\u001b[31m+               },\u001b[39m\n\u001b[31m+             ],\u001b[39m\n\u001b[31m+             \"minutes\": 15,\u001b[39m\n\u001b[31m+             \"notes\": \"Cook until ready.\",\u001b[39m\n\u001b[31m+             \"portions\": 1,\u001b[39m\n\u001b[31m+             \"title\": \"Oat soup\",\u001b[39m\n\u001b[31m+           },\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"date\": \"2026-10-06\",\u001b[39m\n\u001b[31m+         \"meals\": Array [\u001b[39m\n\u001b[31m+           Object {\u001b[39m\n\u001b[31m+             \"category\": \"Dinner\",\u001b[39m\n\u001b[31m+             \"id\": \"meal-6\",\u001b[39m\n\u001b[31m+             \"ingredients\": Array [\u001b[39m\n\u001b[31m+               Object {\u001b[39m\n\u001b[31m+                 \"lotId\": null,\u001b[39m\n\u001b[31m+                 \"name\": \"Oats\",\u001b[39m\n\u001b[31m+                 \"servingLabel\": \"40 g\",\u001b[39m\n\u001b[31m+                 \"servings\": 1,\u001b[39m\n\u001b[31m+               },\u001b[39m\n\u001b[31m+             ],\u001b[39m\n\u001b[31m+             \"minutes\": 15,\u001b[39m\n\u001b[31m+             \"notes\": \"Cook until ready.\",\u001b[39m\n\u001b[31m+             \"portions\": 1,\u001b[39m\n\u001b[31m+             \"title\": \"Oat bowl\",\u001b[39m\n\u001b[31m+           },\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"id\": \"late-prior-plan\",\u001b[39m\n\u001b[31m+     \"status\": \"draft\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  35 |   await page.getByRole(\"button\",{name:\"Your week of meals\",exact:true}).click();\n  36 |   await expect.soft(page.getByRole(\"textbox\",{name:\"Planned meal title\",exact:true})).toHaveCount(0);\n> 37 |   const plans=await page.evaluate(()=>JSON.parse(localStorage.getItem(\"dannys-health.native.v1\")!).mealPlans??[]);expect(plans).toEqual([]);\n     |                                                                                                                                 ^\n  38 | });\n  39 |\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts:37:129"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T15:37:19.873Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\draft-boundaries-import-di-5b2e6-cannot-append-a-late-result\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\draft-boundaries-import-di-5b2e6-cannot-append-a-late-result\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\draft-boundaries.spec.ts",
+                    "column": 80,
+                    "line": 33
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9ba23732125ab7fa0239-7b46dd2151aef0d67495",
+          "file": "draft-boundaries.spec.ts",
+          "line": 5,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T15:37:16.554Z",
+    "duration": 17975.686999999998,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

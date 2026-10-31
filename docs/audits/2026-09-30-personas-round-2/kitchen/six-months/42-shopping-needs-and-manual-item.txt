@@ -1,0 +1,171 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Kitchen":
+    - button "Open kitchen tools"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: YOUR KITCHEN
+    - heading "What sounds good tonight?" [level=1]
+    - paragraph: What you have. What you can make. A little less to figure out.
+    - button "Open meal planner":
+      - text: MAKE SOMETHING GOOD
+      - strong: Start with what’s already here.
+      - text: Explore your meal plan
+    - button "Scan a food"
+    - button "Add a receipt"
+    - region "Shopping for your household":
+      - text: GOOD FOOD. YOUR KIND OF BUDGET.
+      - heading "Make your next shop work for you." [level=2]
+      - paragraph: Saving money, feeding a family, or finding a little more protein? Let’s start with what matters to you.
+      - button "Swaps, list & spending"
+      - button "Shopping preferences"
+    - region "Your first useful week":
+      - text: SPOT’S PLAN FOR YOUR GROCERIES
+      - heading "A receipt today. Less “what’s for dinner?” tomorrow." [level=2]
+      - paragraph: Daily nutrition targets start as generic values. Set your own before using them to assess a meal plan.
+      - button "Review daily nutrition targets"
+      - paragraph: 2 of 6 steps complete. Start with your real groceries and build a week that works for you.
+      - list:
+        - listitem:
+          - strong: Make it your kind of week
+          - paragraph: Set household size, food restrictions, cooking time and budget.
+          - 'button "Start: Make it your kind of week"'
+      - button "See the whole journey"
+    - region "What you have":
+      - heading "What you have" [level=2]
+      - button "Open pantry": Your pantry
+      - strong: 2 items on hand
+      - text: From your saved groceries and pantry updates
+      - button "Rolled oats 6 labeled servings left · Ingredients entered by you 150 cal · 5g protein per 40 g":
+        - strong: Rolled oats
+        - text: 6 labeled servings left · Ingredients entered by you 150 cal · 5g protein per 40 g
+      - button "Whole milk 6 labeled servings left · Ingredients entered by you 150 cal · 8g protein per 1 cup":
+        - strong: Whole milk
+        - text: 6 labeled servings left · Ingredients entered by you 150 cal · 8g protein per 1 cup
+      - paragraph: Groceries are what you bought. Only portions you log as eaten count toward daily nutrition.
+    - region "What you can make":
+      - heading "What you can make" [level=2]
+      - button "Open recipes": Recipes
+      - button "Tracker overnight oats 3 prepared portions left ~225 cal · 9g protein per portion":
+        - strong: Tracker overnight oats
+        - text: 3 prepared portions left ~225 cal · 9g protein per portion
+      - button "Oct 8, 2026 · Draft plan My reviewed oat dinner Rolled oats · Whole milk · Carrots Check ingredients to complete the nutrition estimate":
+        - text: Oct 8, 2026 · Draft plan
+        - strong: My reviewed oat dinner
+        - text: Rolled oats · Whole milk · Carrots Check ingredients to complete the nutrition estimate
+      - button "Oct 9, 2026 · Draft plan Creamy Oat Risotto with Mushrooms Rolled oats · Whole milk · Button mushrooms Check ingredients to complete the nutrition estimate":
+        - text: Oct 9, 2026 · Draft plan
+        - strong: Creamy Oat Risotto with Mushrooms
+        - text: Rolled oats · Whole milk · Button mushrooms Check ingredients to complete the nutrition estimate
+      - button "Oct 10, 2026 · Draft plan Savory Oat Porridge with Spinach Rolled oats · Whole milk · Fresh spinach Check ingredients to complete the nutrition estimate":
+        - text: Oct 10, 2026 · Draft plan
+        - strong: Savory Oat Porridge with Spinach
+        - text: Rolled oats · Whole milk · Fresh spinach Check ingredients to complete the nutrition estimate
+      - button "Think of a meal with me"
+    - region "What you need to buy":
+      - heading "What you need to buy" [level=2]
+      - button "Review shopping list": View plan
+      - paragraph: For the remaining meals in your latest draft plan.
+      - button "Rolled oats 1 × 40 g":
+        - strong: Rolled oats
+        - text: 1 × 40 g
+      - button "Whole milk 1 × 1 cup":
+        - strong: Whole milk
+        - text: 1 × 1 cup
+      - button "Carrots 1 × 1 medium":
+        - strong: Carrots
+        - text: 1 × 1 medium
+      - button "Button mushrooms 1 × 5 medium":
+        - strong: Button mushrooms
+        - text: 1 × 5 medium
+      - button "Fresh spinach 1 × 2 cups":
+        - strong: Fresh spinach
+        - text: 1 × 2 cups
+      - button "See all 9 items"
+    - region "Recent grocery trips":
+      - heading "Recent grocery trips" [level=2]
+      - button "Ingredients entered by you Captured Sep 30, 2026 · 1 food items":
+        - strong: Ingredients entered by you
+        - text: Captured Sep 30, 2026 · 1 food items
+      - button "Ingredients entered by you Captured Sep 30, 2026 · 1 food items":
+        - strong: Ingredients entered by you
+        - text: Captured Sep 30, 2026 · 1 food items
+    - button "Just got groceries? Show me what you picked up."
+    - navigation "Kitchen navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Shop your way":
+  - heading "Shop your way" [level=2]
+  - button "Close dialog"
+  - strong: A little more for your groceries.
+  - paragraph: A little of everything · Cooking for 1
+  - button "Edit shopping preferences"
+  - tablist "Shopping tools":
+    - tab "Smart swaps"
+    - tab "Shopping list" [selected]
+    - tab "Your spending"
+  - region "Your shopping list":
+    - heading "A list that’s yours." [level=3]
+    - strong: From your latest meal plan
+    - paragraph: Rolled oats · 1 × 40 g
+    - paragraph: Whole milk · 1 × 1 cup
+    - paragraph: Carrots · 1 × 1 medium
+    - paragraph: Button mushrooms · 1 × 5 medium
+    - paragraph: Fresh spinach · 1 × 2 cups
+    - paragraph: Broccoli florets · 1 × 1 cup
+    - paragraph: Zucchini · 1 × 1 medium
+    - paragraph: Cauliflower · 1 × 1 cup
+    - paragraph: Bell peppers · 1 × 1 medium
+    - button "Add plan needs to my list"
+    - paragraph: Check items off as you shop. Add your receipt afterward to update your pantry.
+    - text: Item to buy
+    - textbox "Item to buy"
+    - text: Amount or note
+    - textbox "Amount or note"
+    - button "Add item"
+    - checkbox "Rolled oats 1 × 40 g"
+    - strong: Rolled oats
+    - text: 1 × 40 g
+    - button "Remove Rolled oats from list"
+    - checkbox "Whole milk 1 × 1 cup"
+    - strong: Whole milk
+    - text: 1 × 1 cup
+    - button "Remove Whole milk from list"
+    - checkbox "Carrots 1 × 1 medium"
+    - strong: Carrots
+    - text: 1 × 1 medium
+    - button "Remove Carrots from list"
+    - checkbox "Button mushrooms 1 × 5 medium"
+    - strong: Button mushrooms
+    - text: 1 × 5 medium
+    - button "Remove Button mushrooms from list"
+    - checkbox "Fresh spinach 1 × 2 cups"
+    - strong: Fresh spinach
+    - text: 1 × 2 cups
+    - button "Remove Fresh spinach from list"
+    - checkbox "Broccoli florets 1 × 1 cup"
+    - strong: Broccoli florets
+    - text: 1 × 1 cup
+    - button "Remove Broccoli florets from list"
+    - checkbox "Zucchini 1 × 1 medium"
+    - strong: Zucchini
+    - text: 1 × 1 medium
+    - button "Remove Zucchini from list"
+    - checkbox "Cauliflower 1 × 1 cup"
+    - strong: Cauliflower
+    - text: 1 × 1 cup
+    - button "Remove Cauliflower from list"
+    - checkbox "Bell peppers 1 × 1 medium"
+    - strong: Bell peppers
+    - text: 1 × 1 medium
+    - button "Remove Bell peppers from list"
+    - checkbox "Apples 6 pieces" [checked]
+    - strong: Apples
+    - text: 6 pieces
+    - button "Remove Apples from list"
+  - status: Known shopping needs added. Check uncertain pantry amounts before buying more.

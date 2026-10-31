@@ -1,0 +1,110 @@
+{
+  "verifiedAt": "2026-09-30T19:35:11.300Z",
+  "productSourceFrozen": true,
+  "sourceFiles": 96,
+  "sourceChangesSinceExportManifest": [],
+  "exportTimestamp": "2026-09-30T19:32:37.556Z",
+  "commands": [
+    {
+      "command": "npm run mobile:check",
+      "cwd": "repository root",
+      "exitCode": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "command": "npm run lint",
+      "cwd": "mobile",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 9,
+      "warningStatus": "pre-existing warnings",
+      "log": "lint.log"
+    },
+    {
+      "command": "npm run export",
+      "cwd": "mobile",
+      "exitCode": 0,
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "log": "export.log"
+    },
+    {
+      "command": "npx playwright test --config mobile/playwright.config.ts --reporter=json",
+      "cwd": "repository root",
+      "exitCode": 0,
+      "log": "full-suite.json",
+      "startTime": "2026-09-30T19:33:33.945Z",
+      "duration": 54187.703,
+      "expected": 32,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    {
+      "command": "node docs/audits/2026-09-30-round-2-remediation/native/preview.mjs",
+      "cwd": "repository root",
+      "exitCode": 0,
+      "log": "preview.json"
+    }
+  ],
+  "preview": {
+    "pageErrors": [],
+    "consoleErrors": [],
+    "consoleWarnings": [
+      {
+        "type": "warning",
+        "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+      }
+    ],
+    "horizontalOverflow": false,
+    "sendHit": "Send message",
+    "initialTransferBytes": 10664401,
+    "baselineTransferBytes": 15313988,
+    "reductionBytes": 4649587,
+    "reductionPercent": 30.36,
+    "webJavaScriptBytes": 4129090,
+    "budgets": {
+      "guestOnboardingRawTransferMax": 11000000,
+      "combinedWebJavaScriptMax": 4300000
+    },
+    "budgetsPassed": true
+  },
+  "bundles": [
+    {
+      "platform": "web",
+      "name": "index-a636726a15785f5ca3b0f27aef936592.js",
+      "bytes": 45266,
+      "sha256": "1ad13c504ea7ba2a921e2d751d8fd341559e1e8575716f118b862a3b6b0a7704",
+      "gzipEstimateBytes": 14813,
+      "brotliEstimateBytes": 13015
+    },
+    {
+      "platform": "web",
+      "name": "index-a87299bb3dc9c74a27990050b449e153.js",
+      "bytes": 4083824,
+      "sha256": "55cf8bf3ae67b07752ec1012d75acd33dee658b9fc80d801b851f6a587a31b1c",
+      "gzipEstimateBytes": 681770,
+      "brotliEstimateBytes": 529279
+    },
+    {
+      "platform": "ios",
+      "name": "index-e43711a134842da0920ad174ce7a2737.hbc",
+      "bytes": 5837332,
+      "sha256": "1639ab3141d03d4f9552242969579558d0bcd6e838312349ccd81762627369b9"
+    },
+    {
+      "platform": "android",
+      "name": "index-d2758d20790f72b94676e54d2d9c7c25.hbc",
+      "bytes": 5847038,
+      "sha256": "f0f36be2e01378c79f0f7a6f23b1d9c11b0ab0c7e5ec6711317457f94bc8943c"
+    }
+  ],
+  "limits": [
+    "Physical iOS/Android behaviors and slow-network cold start not tested",
+    "Browser provider/account fixtures are not live account or recipe correctness evidence",
+    "Raw preview byte budgets are not production latency guarantees"
+  ]
+}

@@ -1,0 +1,107 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Nutrition":
+    - button "Open nutrition menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - heading "Your day is coming together." [level=1]
+    - paragraph: A clear picture of what fuels you.
+    - paragraph:
+      - text: The calorie and macro targets shown are samples. You can log meals without choosing a goal.
+      - button "Review your targets"
+    - button "Previous day"
+    - text: Today · Sep 30
+    - button "Next day" [disabled]
+    - button "Day" [pressed]
+    - button "Week"
+    - region "Today’s nutrition":
+      - heading "Today’s nutrition" [level=2]
+      - paragraph: Nothing logged for this day yet
+      - button "View and edit today’s meals":
+        - strong: "0"
+        - text: of 2,000 cal
+      - text: Protein
+      - strong: 0g
+      - text: / 110g
+      - progressbar "protein"
+      - text: Carbs
+      - strong: 0g
+      - text: / 250g
+      - progressbar "carbs"
+      - text: Fats
+      - strong: 0g
+      - text: / 78g
+      - progressbar "fat"
+      - text: Sample targets — review them for your needs.
+      - button "Edit daily targets": Edit targets
+    - button "Scan a food barcode":
+      - strong: Have a label? Scan it.
+      - text: Check the portion, then add it to your day.
+    - region "Today's logged meals":
+      - heading "What you’ve had" [level=2]
+      - button "Enter meal manually"
+      - complementary "A moment with Spot":
+        - img "Spot connecting pasta photos with red string on a conspiracy board."
+        - text: VERY MUCH IN YOUR CORNER
+        - strong: No logs. Just vibes.
+        - paragraph: Tell me what you ate. I’ll retire the red string.
+      - heading "Nothing here yet." [level=3]
+      - paragraph: Tell Spot what you ate.
+      - button "Tell Spot"
+    - heading "A little inspiration for later" [level=2]
+    - paragraph: Make room for something you’ll enjoy.
+    - button "MEALS AHEAD What sounds good for your next meal? Explore your meal plan":
+      - text: MEALS AHEAD
+      - strong: What sounds good for your next meal?
+      - text: Explore your meal plan
+    - heading "Your food, organized" [level=2]
+    - navigation "Food planning tools":
+      - button "Pantry What you have":
+        - strong: Pantry
+        - text: What you have
+      - button "Meal plan Your week":
+        - strong: Meal plan
+        - text: Your week
+      - button "Recipes Meals & leftovers":
+        - strong: Recipes
+        - text: Meals & leftovers
+    - heading "Smart swaps" [level=2]
+    - text: Your foods. Your portions.
+    - button "Compare foods in your pantry Add two foods with confirmed serving details to compare them here.":
+      - strong: Compare foods in your pantry
+      - text: Add two foods with confirmed serving details to compare them here.
+    - navigation "Nutrition navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Add a meal estimate.":
+  - heading "Add a meal estimate." [level=2]
+  - button "Close dialog"
+  - text: Your own values, saved exactly as entered. Meal name
+  - textbox "Meal name":
+    - /placeholder: What did you have?
+    - text: After-training yogurt
+  - text: Meal date
+  - textbox "Meal date": 2026-09-30
+  - text: Meal
+  - combobox "Meal":
+    - option "Breakfast"
+    - option "Lunch" [selected]
+    - option "Dinner"
+    - option "Snack"
+  - text: Calories
+  - spinbutton "Calories": "215"
+  - text: Protein (g)
+  - spinbutton "Protein (g)": "18.3"
+  - text: Carbs (g)
+  - spinbutton "Carbs (g)": "33"
+  - text: Fat (g)
+  - spinbutton "Fat (g)": "0.4"
+  - text: Notes
+  - textbox "Notes"
+  - text: "Source: Manual entry"
+  - button "Save changes"

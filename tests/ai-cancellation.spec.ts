@@ -1,6 +1,7 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { readBrowserRecords } from "./record-fixture";
 import { test, expect, type Route } from "./app-fixture";
-import { resultFixture } from "./ai-fixtures";
+import { resultFixture } from "../e2e-shared/ai-fixtures";
 
 test("reset cancels an old reply and a new chat request works immediately", async ({
   page,
@@ -18,7 +19,7 @@ test("reset cancels an old reply and a new chat request works immediately", asyn
     .fill("Old capture before reset");
   await page.getByRole("button", { name: "Send message", exact: true }).click();
   await expect.poll(() => pending.length).toBe(1);
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Edit your profile", exact: true })
     .click();

@@ -1,7 +1,7 @@
 import { test, expect } from "./app-fixture";
 import { commitSeededRecords, readBrowserRecords } from "./record-fixture";
-import { resultFixture } from "./ai-fixtures";
-import { mockCloud } from "./cloud-fixture";
+import { resultFixture } from "../e2e-shared/ai-fixtures";
+import { mockCloud } from "../e2e-shared/cloud-fixture";
 
 test("receipt entry explains the payoff and its example never changes records", async ({
   page,

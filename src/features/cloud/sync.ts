@@ -8,17 +8,28 @@ function canonical(value:unknown):unknown{
 }
 const same=(a:unknown,b:unknown)=>JSON.stringify(canonical(a))===JSON.stringify(canonical(b));
 const stockKeys=['meals','groceries','pantryEvents','recipeBatches','mealPlans'] as const;
+/** Persisted account state is plain JSON; optional fields may be present as `undefined` in memory. */
+export type JsonValue=string|number|boolean|null|JsonValue[]|{[key:string]:JsonValue|undefined};
+function isJsonValue(value:unknown):value is JsonValue {
+ if(value===null||typeof value==='string'||typeof value==='number'||typeof value==='boolean')return true;
+ if(Array.isArray(value))return value.every(isJsonValue);
+ if(typeof value==='object')return Object.values(value).every(entry=>entry===undefined||isJsonValue(entry));
+ return false;
+}
+const isRecord=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
+const conflict:unique symbol=Symbol('conflict');
+type Merged=JsonValue|undefined|typeof conflict;
 /** Consumption and stock form a single transaction. Never merge concurrent
  * inventory edits into a quantity neither device actually reviewed. */
 export function mergeRecords(base:AppState,local:AppState,remote:AppState):AppState|null {
  const stock=(v:AppState)=>stockKeys.map(k=>v[k]);
  if(!same(stock(base),stock(local))&&!same(stock(base),stock(remote))&&!same(stock(local),stock(remote)))return null;
- const conflict=Symbol('conflict');
- function merge(b:any,l:any,r:any):any {
-  if(same(l,r)||same(b,r))return l;
-  if(same(b,l))return r;
-  if(b&&l&&r&&typeof b==='object'&&typeof l==='object'&&typeof r==='object'&&!Array.isArray(b)&&!Array.isArray(l)&&!Array.isArray(r)){
-   const result:Record<string,unknown>={};
+ const winner=(value:unknown):Merged=>value===undefined||isJsonValue(value)?value:conflict;
+ function merge(b:unknown,l:unknown,r:unknown):Merged {
+  if(same(l,r)||same(b,r))return winner(l);
+  if(same(b,l))return winner(r);
+  if(isRecord(b)&&isRecord(l)&&isRecord(r)){
+   const result:Record<string,JsonValue>={};
    for(const key of new Set([...Object.keys(b),...Object.keys(l),...Object.keys(r)])){
     const value=merge(b[key],l[key],r[key]);if(value===conflict)return conflict;if(value!==undefined)result[key]=value;
    }return result;

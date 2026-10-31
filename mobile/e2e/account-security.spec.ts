@@ -1,5 +1,6 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
-import { mockCloud } from "../../tests/cloud-fixture";
+import { mockCloud } from "../../e2e-shared/cloud-fixture";
 test.setTimeout(90000);
 
 test("native account deletion confirms credentials and never clears records on failure", async ({
@@ -38,7 +39,7 @@ test("native account deletion confirms credentials and never clears records on f
     });
   });
   await page.goto("/");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Cloud & your records", exact: true })
     .click();

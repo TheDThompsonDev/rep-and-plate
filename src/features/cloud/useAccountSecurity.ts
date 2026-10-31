@@ -91,6 +91,9 @@ export function useAccountSecurity(
   };
 }
 
+/** Same explanation native gives (mobile/src/api.ts): the local server cannot delete accounts. */
+export const HOSTED_ACCOUNT_MANAGEMENT =
+  "Account deletion isn’t available on this server. Use your hosted account connection to manage your account.";
 export async function browserAccountDeletion(
   client: SupabaseClient,
   body: { confirmation: string; password: string },
@@ -115,6 +118,9 @@ export async function browserAccountDeletion(
     signal: AbortSignal.timeout(60000),
   });
   const result = await response.json().catch(() => null);
+  // 404: a server without the route (local dev, static hosting); 501: local server's explicit answer.
+  if (response.status === 404 || response.status === 501)
+    throw Error(HOSTED_ACCOUNT_MANAGEMENT);
   if (!response.ok || result?.deleted !== true)
     throw Error(
       result?.error || "Account deletion could not finish. Please retry.",

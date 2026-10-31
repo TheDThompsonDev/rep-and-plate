@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react';
 import {AppState,Switch,Text,View} from 'react-native';
 import {fetch as expoFetch} from 'expo/fetch';
 import {Button,Card,Field,Sheet,s} from './ui';
-import {useHealth} from './store';
+import {useLoadedHealth} from './store';
 import {cloudClient,getConnection} from './api';
 import {requireDeviceOwner,sessionSignal} from './auth';
 import {cloudEpoch,cloudPaused} from '../../src/features/cloud/sync-control';
@@ -49,16 +49,16 @@ const platform:ConnectionsPlatform={
 
 /** Mounted with the app so approved connections can refresh while the sheet is closed. */
 export function Connections(){
-  const h=useHealth();
+  const h=useLoadedHealth();
   const open=h.tool==='agents';
-  const c=useConnections(h.state!,h.applyAgentAction,platform,open);
+  const c=useConnections(h.state,h.applyAgentAction,platform,open);
   const [name,setName]=useState('');
   const [scopes,setScopes]=useState<AgentScope[]>(['meals:propose']);
   const [now,setNow]=useState(()=>Date.now());
   useEffect(()=>{const timer=setInterval(()=>setNow(Date.now()),15000);return()=>clearInterval(timer);},[]);
   if(!open)return null;
-  const awaiting=c.overview.actions.filter(action=>action.status==='pending'&&h.state!.agentResolutions?.some(receipt=>receipt.actionId===action.id));
-  const pending=c.overview.actions.filter(action=>action.status==='pending'&&!h.state!.agentResolutions?.some(receipt=>receipt.actionId===action.id));
+  const awaiting=c.overview.actions.filter(action=>action.status==='pending'&&h.state.agentResolutions?.some(receipt=>receipt.actionId===action.id));
+  const pending=c.overview.actions.filter(action=>action.status==='pending'&&!h.state.agentResolutions?.some(receipt=>receipt.actionId===action.id));
   const outcomes=c.overview.actions.filter(action=>action.status!=='pending');
   const disabled=c.busy||h.busy;
   return <Sheet title="Agent connections" onClose={()=>h.setTool(null)}>
@@ -106,7 +106,7 @@ export function Connections(){
       <Text accessibilityRole="header" style={s.h2}>Recent outcomes</Text>
       {!outcomes.length&&<Text style={s.muted}>Completed proposal outcomes will appear here.</Text>}
       {outcomes.map(action=>{
-        const receipt=h.state!.agentResolutions?.find(item=>item.actionId===action.id);
+        const receipt=h.state.agentResolutions?.find(item=>item.actionId===action.id);
         const mismatch=receipt&&receipt.status!==action.status;
         return <Card key={action.id}>
           <Text style={s.eyebrow}>{action.connectionName}</Text>

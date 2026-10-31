@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { mockCloud } from '../../tests/cloud-fixture';
+import { mockCloud } from '../../e2e-shared/cloud-fixture';
 
 test('native unfinished account setup resumes after reload and later sign-in', async ({page}) => {
   await mockCloud(page);

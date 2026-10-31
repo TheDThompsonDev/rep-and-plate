@@ -1,0 +1,114 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: YOUR MOVEMENT Tell me how it’s going.
+- img
+- text: Upper Body in progress 0 of 4 exercises complete Bench Press 185 lb · 3 × 8 Bench Press weight (lb)
+- textbox "Bench Press weight (lb)": "185"
+- button "Save Bench Press weight"
+- text: Set 1 Bench Press set 1 weight (lb)
+- textbox "Bench Press set 1 weight (lb)": "185"
+- button "Save Bench Press set 1 weight"
+- textbox "Bench Press set 1 reps":
+  - /placeholder: "8"
+- button "Save Bench Press set 1" [disabled]
+- text: Set 2 Bench Press set 2 weight (lb)
+- textbox "Bench Press set 2 weight (lb)": "185"
+- button "Save Bench Press set 2 weight"
+- textbox "Bench Press set 2 reps":
+  - /placeholder: "8"
+- button "Save Bench Press set 2" [disabled]
+- text: Set 3 Bench Press set 3 weight (lb)
+- textbox "Bench Press set 3 weight (lb)": "185"
+- button "Save Bench Press set 3 weight"
+- textbox "Bench Press set 3 reps":
+  - /placeholder: "8"
+- button "Save Bench Press set 3" [disabled]
+- text: Incline Dumbbell Press 60 lb · 3 × 10 Incline Dumbbell Press weight (lb)
+- textbox "Incline Dumbbell Press weight (lb)": "60"
+- button "Save Incline Dumbbell Press weight"
+- text: Set 1 Incline Dumbbell Press set 1 weight (lb)
+- textbox "Incline Dumbbell Press set 1 weight (lb)": "60"
+- button "Save Incline Dumbbell Press set 1 weight"
+- textbox "Incline Dumbbell Press set 1 reps":
+  - /placeholder: "10"
+- button "Save Incline Dumbbell Press set 1" [disabled]
+- text: Set 2 Incline Dumbbell Press set 2 weight (lb)
+- textbox "Incline Dumbbell Press set 2 weight (lb)": "60"
+- button "Save Incline Dumbbell Press set 2 weight"
+- textbox "Incline Dumbbell Press set 2 reps":
+  - /placeholder: "10"
+- button "Save Incline Dumbbell Press set 2" [disabled]
+- text: Set 3 Incline Dumbbell Press set 3 weight (lb)
+- textbox "Incline Dumbbell Press set 3 weight (lb)": "60"
+- button "Save Incline Dumbbell Press set 3 weight"
+- textbox "Incline Dumbbell Press set 3 reps":
+  - /placeholder: "10"
+- button "Save Incline Dumbbell Press set 3" [disabled]
+- text: Seated Cable Row 120 lb · 3 × 12 Seated Cable Row weight (lb)
+- textbox "Seated Cable Row weight (lb)": "120"
+- button "Save Seated Cable Row weight"
+- text: Set 1 Seated Cable Row set 1 weight (lb)
+- textbox "Seated Cable Row set 1 weight (lb)": "120"
+- button "Save Seated Cable Row set 1 weight"
+- textbox "Seated Cable Row set 1 reps":
+  - /placeholder: "12"
+- button "Save Seated Cable Row set 1" [disabled]
+- text: Set 2 Seated Cable Row set 2 weight (lb)
+- textbox "Seated Cable Row set 2 weight (lb)": "120"
+- button "Save Seated Cable Row set 2 weight"
+- textbox "Seated Cable Row set 2 reps":
+  - /placeholder: "12"
+- button "Save Seated Cable Row set 2" [disabled]
+- text: Set 3 Seated Cable Row set 3 weight (lb)
+- textbox "Seated Cable Row set 3 weight (lb)": "120"
+- button "Save Seated Cable Row set 3 weight"
+- textbox "Seated Cable Row set 3 reps":
+  - /placeholder: "12"
+- button "Save Seated Cable Row set 3" [disabled]
+- text: Triceps Pushdown 50 lb · 3 × 12 Triceps Pushdown weight (lb)
+- textbox "Triceps Pushdown weight (lb)": "50"
+- button "Save Triceps Pushdown weight"
+- text: Set 1 Triceps Pushdown set 1 weight (lb)
+- textbox "Triceps Pushdown set 1 weight (lb)": "50"
+- button "Save Triceps Pushdown set 1 weight"
+- textbox "Triceps Pushdown set 1 reps":
+  - /placeholder: "12"
+- button "Save Triceps Pushdown set 1" [disabled]
+- text: Set 2 Triceps Pushdown set 2 weight (lb)
+- textbox "Triceps Pushdown set 2 weight (lb)": "50"
+- button "Save Triceps Pushdown set 2 weight"
+- textbox "Triceps Pushdown set 2 reps":
+  - /placeholder: "12"
+- button "Save Triceps Pushdown set 2" [disabled]
+- text: Set 3 Triceps Pushdown set 3 weight (lb)
+- textbox "Triceps Pushdown set 3 weight (lb)": "50"
+- button "Save Triceps Pushdown set 3 weight"
+- textbox "Triceps Pushdown set 3 reps":
+  - /placeholder: "12"
+- button "Save Triceps Pushdown set 3" [disabled]
+- text: Tell me your reps
+- textbox "Tell me your reps":
+  - /placeholder: Got 7
+- button "Log my set"
+- button "Use voice"
+- button "Finish workout"
+- text: Your recent sessions
+- img "Spot summoning a shaker bottle in a beam of golden light."
+- text: Emotionally warmed up. You bring the reps. I’ve already summoned the shaker. No reps yet. Tell Spot what you did.
+- button "Tell Spot"
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen

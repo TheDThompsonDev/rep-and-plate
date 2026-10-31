@@ -1,5 +1,6 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import {test,expect} from './app-fixture';
-import {mockCloud} from '../../tests/cloud-fixture';
+import {mockCloud} from '../../e2e-shared/cloud-fixture';
 import {initialState} from '../../src/domain';
 import type {AgentAction,AgentConnection} from '../../src/features/connections/contracts';
 
@@ -50,11 +51,11 @@ test('native hosted agent review persists before acknowledgment and survives a f
     throw Error(`Unexpected management operation ${body.operation}`);
   });
   await page.goto('/');
-  await page.getByRole('button',{name:'Your profile',exact:true}).click();
+  await openProfile(page);
   await page.getByRole('button',{name:'Cloud & your records',exact:true}).click();
   await page.getByLabel('Email',{exact:true}).fill('fixture@example.test');
   await page.getByLabel('Password',{exact:true}).fill('test-password-only');
-  await page.getByRole('button',{name:'Sign in',exact:true}).click();
+  await page.getByRole('dialog').getByRole('button',{name:'Sign in',exact:true}).click();
   await page.getByRole('button',{name:'These device records are mine',exact:true}).click();
   // Ownership binding may close the sheet when the store opens the account.
   const close=page.getByRole('button',{name:'Close',exact:true});
@@ -87,7 +88,7 @@ test('native paired development bridge explains its limitation without exposing 
   await page.route('**/api/agents/manage',route=>{managementCalls++;return route.abort();});
   await page.route('**/api/cloud/config',route=>route.fulfill({json:{available:false}}));
   await page.goto('/');
-  await page.getByRole('button',{name:'Your profile',exact:true}).click();
+  await openProfile(page);
   await page.getByRole('button',{name:'Agent connections',exact:true}).click();
   await expect(page.getByText(/Agent connections on mobile require a hosted account/)).toBeVisible();
   await expect(page.getByRole('button',{name:'Create connection',exact:true})).toHaveCount(0);

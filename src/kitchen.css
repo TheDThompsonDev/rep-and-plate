@@ -22,7 +22,7 @@
 .kitchen-intro p {
   font-size: 14px;
   line-height: 1.6;
-  color: #647d79;
+  color: var(--refined-muted);
   margin: 0;
   max-width: 330px;
 }
@@ -150,7 +150,7 @@
   text-align: left;
   gap: 13px;
   padding: 18px 0;
-  border-bottom: 1px solid #e2eee8;
+  border-bottom: 1px solid var(--refined-line);
   background: transparent;
 }
 .kitchen-item-icon {
@@ -205,7 +205,7 @@
 }
 .kitchen-empty p {
   margin: 7px 0;
-  color: #647d79;
+  color: var(--refined-muted);
   font-size: 13px;
   line-height: 1.6;
 }
@@ -213,7 +213,7 @@
 .kitchen-subtitle {
   font-size: 12px;
   line-height: 1.6;
-  color: #647d79;
+  color: var(--refined-muted);
   margin: 12px 1px;
 }
 .kitchen-recipe-start {
@@ -306,9 +306,9 @@
 .kitchen-shopping-empty {
   font-size: 14px;
   line-height: 1.65;
-  color: #647d79;
+  color: var(--refined-muted);
   padding: 0 0 14px;
-  border-bottom: 1px solid #e2eee8;
+  border-bottom: 1px solid var(--refined-line);
 }
 .kitchen-chat-return {
   display: flex;

@@ -1,0 +1,173 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/account-sync.spec.ts",
+      "-g",
+      "automatic account refresh closes",
+      "--project=desktop",
+      "--reporter=json",
+      "--output=docs/audits/2026-09-30-remediation/evidence/planner-before-artifacts"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-remediation/evidence/planner-before-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-remediation/evidence/planner-before-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 3,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://127.0.0.1:5173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "account-sync.spec.ts",
+      "file": "account-sync.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "automatic account refresh closes an open planner without overwriting the newer plan",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 17635,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: 'Your week of meals' })\nExpected: not visible\nReceived: visible\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"not toBeVisible\" getByRole('dialog', { name: 'Your week of meals' }) with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog', { name: 'Your week of meals' })\u001b[22m\n\u001b[2m    33 × locator resolved to <dialog open=\"\" class=\"modal wide\" aria-label=\"Your week of meals\">…</dialog>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: 'Your week of meals' })\nExpected: not visible\nReceived: visible\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"not toBeVisible\" getByRole('dialog', { name: 'Your week of meals' }) with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog', { name: 'Your week of meals' })\u001b[22m\n\u001b[2m    33 × locator resolved to <dialog open=\"\" class=\"modal wide\" aria-label=\"Your week of meals\">…</dialog>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\account-sync.spec.ts:95:73",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\account-sync.spec.ts",
+                      "column": 73,
+                      "line": 95
+                    },
+                    "snippet": "  93 |  const replacement={...cloud.remote.state,mealPlans:[{...plan,days:plan.days.map(day=>({...day,meals:day.meals.map(meal=>({...meal,title:'Phone beans'}))}))}]};\n  94 |  cloud.remote={...cloud.remote,revision:cloud.remote.revision+1,state:replacement};\n> 95 |  await expect(page.getByRole('dialog',{name:'Your week of meals'})).not.toBeVisible({timeout:15000});\n     |                                                                         ^\n  96 |  await expect.poll(async()=>(await stored(page)).mealPlans?.[0].days[0].meals[0].title).toBe('Phone beans');\n  97 |  await page.reload();\n  98 |  await page.getByRole('button',{name:'Open meal planner',exact:true}).click();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\account-sync.spec.ts",
+                        "column": 73,
+                        "line": 95
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: 'Your week of meals' })\nExpected: not visible\nReceived: visible\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"not toBeVisible\" getByRole('dialog', { name: 'Your week of meals' }) with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog', { name: 'Your week of meals' })\u001b[22m\n\u001b[2m    33 × locator resolved to <dialog open=\"\" class=\"modal wide\" aria-label=\"Your week of meals\">…</dialog>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n\n  93 |  const replacement={...cloud.remote.state,mealPlans:[{...plan,days:plan.days.map(day=>({...day,meals:day.meals.map(meal=>({...meal,title:'Phone beans'}))}))}]};\n  94 |  cloud.remote={...cloud.remote,revision:cloud.remote.revision+1,state:replacement};\n> 95 |  await expect(page.getByRole('dialog',{name:'Your week of meals'})).not.toBeVisible({timeout:15000});\n     |                                                                         ^\n  96 |  await expect.poll(async()=>(await stored(page)).mealPlans?.[0].days[0].meals[0].title).toBe('Phone beans');\n  97 |  await page.reload();\n  98 |  await page.getByRole('button',{name:'Open meal planner',exact:true}).click();\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\account-sync.spec.ts:95:73"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T15:37:32.728Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-remediation\\evidence\\planner-before-artifacts\\account-sync-automatic-acc-86d4c--overwriting-the-newer-plan-desktop\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-remediation\\evidence\\planner-before-artifacts\\account-sync-automatic-acc-86d4c--overwriting-the-newer-plan-desktop\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\account-sync.spec.ts",
+                    "column": 73,
+                    "line": 95
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b525d54ea9e60eded515-dc378a50f6dadb0e602f",
+          "file": "account-sync.spec.ts",
+          "line": 82,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T15:37:30.469Z",
+    "duration": 20145.392,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

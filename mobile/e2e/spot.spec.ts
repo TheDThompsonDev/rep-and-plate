@@ -1,3 +1,4 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
 import { initialState, today } from "../../src/domain";
 test.setTimeout(60000);
@@ -40,7 +41,7 @@ test("native Spot intro, workout check, saved result and weekly Rep summary", as
     }),
   );
   await page.goto("/");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page.getByRole("button", { name: "Meet Spot", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Hey. I’m Spot." }),
@@ -100,7 +101,7 @@ test("native Spot intro, workout check, saved result and weekly Rep summary", as
     JSON.parse(localStorage.getItem("dannys-health.native.v1")!),
   );
   expect(saved.workout.history).toHaveLength(1);
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByText("Weekly Spot Check", { exact: true }),
   ).toBeVisible();
@@ -139,4 +140,47 @@ test("native comeback starts with today and preserves the capture draft", async 
   await expect(
     page.getByRole("textbox", { name: "Message Rep & Plate" }),
   ).toHaveValue("Yesterday I had oats");
+});
+test("native chat shows a server Spot Check warning when the meal card is withheld", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() =>
+    sessionStorage.setItem(
+      "health.connection",
+      JSON.stringify({ url: "http://127.0.0.1:5174", token: "a".repeat(64) }),
+    ),
+  );
+  await page.route("**/api/chat", (r) =>
+    r.fulfill({
+      contentType: "application/x-ndjson",
+      body:
+        JSON.stringify({
+          type: "result",
+          result: {
+            requestId: r.request().postDataJSON().requestId,
+            reply: "I can log that once I know the day.",
+            decision: "meal",
+            meal: null,
+            receipt: null,
+            sources: [],
+            warnings: ["Spot Check: which date was this meal?"],
+          },
+        }) + "\n",
+    }),
+  );
+  await page.goto("/");
+  await page
+    .getByRole("textbox", { name: "Message Rep & Plate" })
+    .fill("Oats for breakfast the other day");
+  await page.getByRole("button", { name: "Send message", exact: true }).click();
+  await expect(
+    page.getByText("I can log that once I know the day.", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Spot Check: which date was this meal?", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Yep, add to/ })).toHaveCount(0);
+  expect(errors).toEqual([]);
 });

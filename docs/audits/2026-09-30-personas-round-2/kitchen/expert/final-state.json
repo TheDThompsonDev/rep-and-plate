@@ -1,0 +1,395 @@
+{
+  "spot": {
+    "introSeen": true
+  },
+  "recipeBatches": [
+    {
+      "id": "7b7180db-a1f9-4d9e-b39a-5b39003b7b30",
+      "name": "Expert overnight oats",
+      "createdAt": "2026-09-30T18:33:31.940Z",
+      "totalPortions": 4,
+      "ingredients": [
+        {
+          "id": "recipe-ingredient:7b7180db-a1f9-4d9e-b39a-5b39003b7b30:0",
+          "name": "Rolled oats",
+          "lotId": "manual-ingredient:00896c4c-acf9-46bb-a941-e97a48ef5fdc::manual-ingredient:00896c4c-acf9-46bb-a941-e97a48ef5fdc:item",
+          "servings": 4,
+          "servingLabel": "40 g",
+          "nutrition": {
+            "calories": 600,
+            "protein": 20,
+            "carbs": 108,
+            "fat": 12
+          },
+          "sourceUrls": []
+        },
+        {
+          "id": "recipe-ingredient:7b7180db-a1f9-4d9e-b39a-5b39003b7b30:1",
+          "name": "Whole milk",
+          "lotId": "manual-ingredient:56ad8bda-4ae5-4108-9612-0c5aff468dfc::manual-ingredient:56ad8bda-4ae5-4108-9612-0c5aff468dfc:item",
+          "servings": 2,
+          "servingLabel": "1 cup",
+          "nutrition": {
+            "calories": 300,
+            "protein": 16,
+            "carbs": 24,
+            "fat": 16
+          },
+          "sourceUrls": []
+        }
+      ],
+      "nutrition": {
+        "calories": 900,
+        "protein": 36,
+        "carbs": 132,
+        "fat": 28
+      },
+      "preparationEventIds": [
+        "recipe-prep:7b7180db-a1f9-4d9e-b39a-5b39003b7b30:0",
+        "recipe-prep:7b7180db-a1f9-4d9e-b39a-5b39003b7b30:1"
+      ],
+      "consumptions": [
+        {
+          "id": "d7f0be71-ce76-4341-901e-269db5669a23",
+          "mealId": "recipe-meal:d7f0be71-ce76-4341-901e-269db5669a23",
+          "portions": 1.5,
+          "createdAt": "2026-09-30T18:33:32.073Z"
+        }
+      ]
+    }
+  ],
+  "version": 1,
+  "pantryEvents": [
+    {
+      "id": "recipe-prep:7b7180db-a1f9-4d9e-b39a-5b39003b7b30:0",
+      "lotId": "manual-ingredient:00896c4c-acf9-46bb-a941-e97a48ef5fdc::manual-ingredient:00896c4c-acf9-46bb-a941-e97a48ef5fdc:item",
+      "kind": "prepared",
+      "servings": -4,
+      "createdAt": "2026-09-30T18:33:31.940Z",
+      "note": "Transferred to prepared batch: Expert overnight oats. Not logged as eaten."
+    },
+    {
+      "id": "recipe-prep:7b7180db-a1f9-4d9e-b39a-5b39003b7b30:1",
+      "lotId": "manual-ingredient:56ad8bda-4ae5-4108-9612-0c5aff468dfc::manual-ingredient:56ad8bda-4ae5-4108-9612-0c5aff468dfc:item",
+      "kind": "prepared",
+      "servings": -2,
+      "createdAt": "2026-09-30T18:33:31.940Z",
+      "note": "Transferred to prepared batch: Expert overnight oats. Not logged as eaten."
+    }
+  ],
+  "groceries": [
+    {
+      "id": "manual-ingredient:00896c4c-acf9-46bb-a941-e97a48ef5fdc",
+      "fingerprint": "manual-ingredient:00896c4c-acf9-46bb-a941-e97a48ef5fdc",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:00896c4c-acf9-46bb-a941-e97a48ef5fdc:item",
+          "receiptText": "Rolled oats",
+          "name": "Rolled oats",
+          "quantity": "10 servings on hand",
+          "serving": "40 g",
+          "servingsPurchased": 10,
+          "nutrition": {
+            "calories": 150,
+            "protein": 5,
+            "carbs": 27,
+            "fat": 3
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    },
+    {
+      "id": "manual-ingredient:56ad8bda-4ae5-4108-9612-0c5aff468dfc",
+      "fingerprint": "manual-ingredient:56ad8bda-4ae5-4108-9612-0c5aff468dfc",
+      "store": "Ingredients entered by you",
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "manual-ingredient:56ad8bda-4ae5-4108-9612-0c5aff468dfc:item",
+          "receiptText": "Whole milk",
+          "name": "Whole milk",
+          "quantity": "8 servings on hand",
+          "serving": "1 cup",
+          "servingsPurchased": 8,
+          "nutrition": {
+            "calories": 150,
+            "protein": 8,
+            "carbs": 12,
+            "fat": 8
+          },
+          "match": "user",
+          "note": "Confirmed labeled servings on hand. No food logged as eaten.",
+          "sources": [],
+          "needsReview": false,
+          "availability": "available"
+        }
+      ],
+      "note": "Amount on hand and nutrition entered by you. No purchase date or price assumed.",
+      "sources": []
+    }
+  ],
+  "chatRevision": 3,
+  "profile": {
+    "targetsConfigured": true,
+    "workoutUnit": "kg",
+    "name": "Experienced lifter audit",
+    "calories": 3000,
+    "protein": 180,
+    "carbs": 350,
+    "fat": 95
+  },
+  "meals": [
+    {
+      "calories": 215,
+      "protein": 18.3,
+      "carbs": 33,
+      "fat": 0.4,
+      "id": "2bdffa75-ea89-4144-97f8-dab735a96640",
+      "title": "Yesterday corrected yogurt",
+      "category": "Breakfast",
+      "time": "1:30 PM",
+      "day": "2026-09-29",
+      "source": "Manual entry",
+      "confidence": "confirmed",
+      "note": ""
+    },
+    {
+      "calories": 215,
+      "protein": 18.3,
+      "carbs": 33,
+      "fat": 0.4,
+      "example": false,
+      "id": "2dc11ccd-a5bb-44f8-9a97-68b1426ca0e1",
+      "title": "Today yogurt repeated",
+      "category": "Breakfast",
+      "time": "1:32 PM",
+      "day": "2026-09-30",
+      "source": "Repeated saved meal",
+      "confidence": "confirmed",
+      "note": "Same portions and nutrition as Yesterday corrected yogurt. Pantry and prepared portions were not changed."
+    },
+    {
+      "calories": 337.5,
+      "protein": 13.5,
+      "carbs": 49.5,
+      "fat": 10.5,
+      "recipeBatchId": "7b7180db-a1f9-4d9e-b39a-5b39003b7b30",
+      "recipePortions": 1.5,
+      "components": [
+        {
+          "id": "recipe-meal:d7f0be71-ce76-4341-901e-269db5669a23:0",
+          "name": "Rolled oats",
+          "servings": 1.5,
+          "servingLabel": "40 g",
+          "nutrition": {
+            "calories": 225,
+            "protein": 7.5,
+            "carbs": 40.5,
+            "fat": 4.5
+          },
+          "sourceUrls": []
+        },
+        {
+          "id": "recipe-meal:d7f0be71-ce76-4341-901e-269db5669a23:1",
+          "name": "Whole milk",
+          "servings": 0.75,
+          "servingLabel": "1 cup",
+          "nutrition": {
+            "calories": 112.5,
+            "protein": 6,
+            "carbs": 9,
+            "fat": 6
+          },
+          "sourceUrls": []
+        }
+      ],
+      "id": "recipe-meal:d7f0be71-ce76-4341-901e-269db5669a23",
+      "title": "Expert overnight oats",
+      "category": "Lunch",
+      "time": "1:33 PM",
+      "day": "2026-09-30",
+      "source": "Your prepared batch",
+      "confidence": "estimated",
+      "note": "1.5 of 4 prepared portions. Nutrition uses the ingredient snapshots saved when you prepared this batch. Pantry ingredients were deducted at preparation, not again here."
+    }
+  ],
+  "reviews": [],
+  "messages": [
+    {
+      "id": "welcome",
+      "role": "assistant",
+      "text": "I’m Spot. Tell me what you ate or what you did. Photo, text, voice, screenshot — start anywhere.",
+      "time": "1:27 PM"
+    },
+    {
+      "id": "recipe-prepared:7b7180db-a1f9-4d9e-b39a-5b39003b7b30",
+      "role": "assistant",
+      "text": "Your Expert overnight oats batch is saved with 4 portions. Its ingredients moved out of the pantry. Nothing has been added to your food log.",
+      "time": "1:33 PM"
+    },
+    {
+      "id": "recipe-meal:d7f0be71-ce76-4341-901e-269db5669a23:message",
+      "role": "assistant",
+      "text": "Logged 1.5 portions of Expert overnight oats. 2.5 portions remain.",
+      "time": "1:33 PM",
+      "mealId": "recipe-meal:d7f0be71-ce76-4341-901e-269db5669a23"
+    }
+  ],
+  "workout": {
+    "planId": "upper",
+    "title": "Upper Body",
+    "conversation": [
+      {
+        "id": "9f4e7a25-6932-49a0-9b68-6555b949c0d7",
+        "role": "user",
+        "text": "Got 8",
+        "time": "1:34 PM",
+        "exerciseIndex": 0
+      },
+      {
+        "id": "fac59292-01a7-4785-b331-eb8009e5adf4",
+        "role": "assistant",
+        "text": "Got it. Bench Press, set 1: 176.3698 lb × 8 reps.",
+        "time": "1:34 PM",
+        "exerciseIndex": 0
+      }
+    ],
+    "history": [
+      {
+        "title": "Upper Body",
+        "exercises": [
+          {
+            "weightConfirmed": false,
+            "name": "Bench Press",
+            "weight": 0,
+            "target": 8,
+            "previous": [],
+            "sets": [
+              8,
+              6,
+              null
+            ],
+            "setWeights": [
+              176.3698,
+              176.3698,
+              null
+            ],
+            "setEffort": [
+              8,
+              null,
+              null
+            ]
+          },
+          {
+            "weightConfirmed": false,
+            "name": "Seated Cable Row",
+            "weight": 0,
+            "target": 12,
+            "previous": [],
+            "sets": [
+              null,
+              null,
+              null
+            ]
+          },
+          {
+            "weightConfirmed": true,
+            "name": "Dumbbell Overhead Press",
+            "weight": 44.0925,
+            "target": 8,
+            "previous": [],
+            "sets": [
+              8,
+              null
+            ],
+            "setWeights": [
+              44.0925,
+              null
+            ]
+          },
+          {
+            "weightConfirmed": false,
+            "name": "Triceps Pushdown",
+            "weight": 0,
+            "target": 12,
+            "previous": [],
+            "sets": [
+              null,
+              null,
+              null
+            ]
+          }
+        ],
+        "startedAt": "2026-09-30T18:27:52.604Z",
+        "finishedAt": "2026-09-30T18:28:27.054Z"
+      }
+    ],
+    "status": "active",
+    "exercises": [
+      {
+        "weightConfirmed": true,
+        "name": "Bench Press",
+        "weight": 176.3698,
+        "target": 8,
+        "previous": [],
+        "sets": [
+          8,
+          null,
+          null
+        ],
+        "setWeights": [
+          176.3698,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Incline Dumbbell Press",
+        "weight": 0,
+        "target": 10,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Seated Cable Row",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "weightConfirmed": false,
+        "name": "Triceps Pushdown",
+        "weight": 0,
+        "target": 12,
+        "previous": [],
+        "sets": [
+          null,
+          null,
+          null
+        ]
+      }
+    ],
+    "startedAt": "2026-09-30T18:29:17.468Z",
+    "finishedAt": null
+  }
+}

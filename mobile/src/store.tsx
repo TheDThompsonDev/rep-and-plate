@@ -13,10 +13,16 @@ import {
   type Message,
   clockTime,
   id,
+  timestamp,
   today,
   stateSchema,
 } from "../../src/domain";
-import { applyAIResult, buildAIRequest } from "../../src/ai-client";
+import {
+  applyAIResult,
+  buildAIRequest,
+  PROCESSING_DRAFT_NOTICE,
+} from "../../src/ai-client";
+import { holdWhileReplying } from "./composer";
 import { loadDevice, saveDevice, spotVisit, deviceOwnership } from "./storage";
 import { isComeback } from "../../src/features/spot/model";
 import {
@@ -101,6 +107,21 @@ type Store = {
 };
 const Context = createContext<Store>(null!);
 export const useHealth = () => useContext(Context);
+export type LoadedStore = Store & { state: AppState };
+/**
+ * Records for screens rendered beneath the readiness gate in App.tsx
+ * (`if (!h.state)` shows a spinner or the load error). `state` is assigned
+ * only from a completed owner load and is never reset to null, so reaching
+ * the throw means a screen was mounted above that gate, not a runtime state.
+ */
+export function useLoadedHealth(): LoadedStore {
+  const h = useHealth();
+  if (!h.state)
+    throw new Error(
+      "useLoadedHealth: records are not loaded yet. Render this screen beneath the readiness gate in App.tsx.",
+    );
+  return h as LoadedStore;
+}
 export function HealthProvider({ children }: { children: ReactNode }) {
   const [captureRequest, setCaptureRequest] = useState(0);
   const [spotReturning, setSpotReturning] = useState(false);
@@ -280,13 +301,20 @@ export function HealthProvider({ children }: { children: ReactNode }) {
     );
   }
   async function send(text: string, image?: string, retry?: string) {
-    if (
-      controller.current ||
-      !gate.current ||
-      !current.current ||
-      (!text.trim() && !image)
-    )
+    if (controller.current) {
+      // A reply is still processing. A transcript or typed message is held in
+      // the Chat composer with the shared notice (web submitText rule) rather
+      // than dropped; nothing is sent. Retries and image captures are gated by
+      // their own disabled buttons while busy.
+      if (!retry && !image && text.trim()) {
+        setDraft((draft) => holdWhileReplying(draft, text).draft);
+        setNotice(PROCESSING_DRAFT_NOTICE);
+        setTab("Chat");
+        setTool(null);
+      }
       return;
+    }
+    if (!gate.current || !current.current || (!text.trim() && !image)) return;
     const message: Message = retry
       ? current.current.messages.find((m) => m.id === retry)!
       : {
@@ -295,6 +323,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
           text: text.trim(),
           image,
           time: clockTime(),
+          at: timestamp(),
           ai: true,
           aiStatus: "pending",
           captureDay,

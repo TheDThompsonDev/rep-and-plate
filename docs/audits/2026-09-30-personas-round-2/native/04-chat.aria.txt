@@ -1,0 +1,31 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: YOUR FOOD. YOUR REPS. YOUR PACE.
+- heading "Always here." [level=1]
+- text: (In a supportive way.) Tell me what you ate or what you did.
+- button "Tell Spot"
+- button "Another Spot mood"
+- button "Take a photo":
+  - img
+- button "Scan a barcode":
+  - img
+- textbox "Message Rep & Plate":
+  - /placeholder: Tell me what happened…
+- button "Record a message":
+  - img
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen

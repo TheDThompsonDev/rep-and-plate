@@ -1,0 +1,169 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: Workout units
+    - combobox "Workout units":
+      - option "lb"
+      - option "kg" [selected]
+    - button "Log walk or cardio"
+    - heading "Upper Body in progress" [level=1]
+    - paragraph: 0 of 4 exercises completed.
+    - progressbar "Workout progress"
+    - text: 0% Jump to exercise
+    - combobox "Jump to exercise":
+      - option "Choose an exercise" [disabled] [selected]
+      - option "Bench Press"
+      - option "Incline Dumbbell Press"
+      - option "Seated Cable Row"
+      - option "Triceps Pushdown"
+    - group: Rest timer
+    - button "Browse workout options"
+    - region "Bench Press":
+      - img "Bench Press illustration"
+      - heading "Bench Press" [level=2]
+      - button "Adjust Bench Press": Choose load · 3 × 8
+      - paragraph: "Last recorded: 80 kg × 8, 80 kg × 6 · Sep 30, 2026"
+      - text: 1 of 4
+      - group: How to approach Bench Press
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Bench Press set 1 weight (kg)
+      - spinbutton "Bench Press set 1 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Bench Press set 1: 6 reps" [disabled]': "6"
+      - 'button "Bench Press set 1: 7 reps" [disabled]': "7"
+      - 'button "Bench Press set 1: 8 reps" [disabled]': "8"
+      - 'button "Bench Press set 1: 9 reps" [disabled]': "9"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Bench Press set 2 weight (kg)
+      - spinbutton "Bench Press set 2 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Bench Press set 3 weight (kg)
+      - spinbutton "Bench Press set 3 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Bench Press earlier" [disabled]
+      - button "Move Bench Press later"
+    - region "Incline Dumbbell Press":
+      - img "Incline Dumbbell Press illustration"
+      - heading "Incline Dumbbell Press" [level=2]
+      - button "Adjust Incline Dumbbell Press": Choose load · 3 × 10
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 2 of 4
+      - group: How to approach Incline Dumbbell Press
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Incline Dumbbell Press set 1 weight (kg)
+      - spinbutton "Incline Dumbbell Press set 1 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Incline Dumbbell Press set 1: 8 reps" [disabled]': "8"
+      - 'button "Incline Dumbbell Press set 1: 9 reps" [disabled]': "9"
+      - 'button "Incline Dumbbell Press set 1: 10 reps" [disabled]': "10"
+      - 'button "Incline Dumbbell Press set 1: 11 reps" [disabled]': "11"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Incline Dumbbell Press set 2 weight (kg)
+      - spinbutton "Incline Dumbbell Press set 2 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Incline Dumbbell Press set 3 weight (kg)
+      - spinbutton "Incline Dumbbell Press set 3 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Incline Dumbbell Press earlier"
+      - button "Move Incline Dumbbell Press later"
+    - region "Seated Cable Row":
+      - img "Seated Cable Row illustration"
+      - heading "Seated Cable Row" [level=2]
+      - button "Adjust Seated Cable Row": Choose load · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 3 of 4
+      - group: How to approach Seated Cable Row
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Seated Cable Row set 1 weight (kg)
+      - spinbutton "Seated Cable Row set 1 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Seated Cable Row set 1: 10 reps" [disabled]': "10"
+      - 'button "Seated Cable Row set 1: 11 reps" [disabled]': "11"
+      - 'button "Seated Cable Row set 1: 12 reps" [disabled]': "12"
+      - 'button "Seated Cable Row set 1: 13 reps" [disabled]': "13"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Seated Cable Row set 2 weight (kg)
+      - spinbutton "Seated Cable Row set 2 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Seated Cable Row set 3 weight (kg)
+      - spinbutton "Seated Cable Row set 3 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Seated Cable Row earlier"
+      - button "Move Seated Cable Row later"
+    - region "Triceps Pushdown":
+      - img "Triceps Pushdown illustration"
+      - heading "Triceps Pushdown" [level=2]
+      - button "Adjust Triceps Pushdown": Choose load · 3 × 12
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 4 of 4
+      - group: How to approach Triceps Pushdown
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Triceps Pushdown set 1 weight (kg)
+      - spinbutton "Triceps Pushdown set 1 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Triceps Pushdown set 1: 10 reps" [disabled]': "10"
+      - 'button "Triceps Pushdown set 1: 11 reps" [disabled]': "11"
+      - 'button "Triceps Pushdown set 1: 12 reps" [disabled]': "12"
+      - 'button "Triceps Pushdown set 1: 13 reps" [disabled]': "13"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Triceps Pushdown set 2 weight (kg)
+      - spinbutton "Triceps Pushdown set 2 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Triceps Pushdown set 3 weight (kg)
+      - spinbutton "Triceps Pushdown set 3 weight (kg)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Triceps Pushdown earlier"
+      - button "Move Triceps Pushdown later" [disabled]
+    - img "Incline Dumbbell Press illustration"
+    - text: UP NEXT
+    - strong: Incline Dumbbell Press
+    - text: Choose load · 3 × 10
+    - strong: One set at a time. You’ve got this.
+    - paragraph: 0 of 12 sets recorded. Keep going at your pace.
+    - button "Finish workout" [disabled]
+    - textbox "Message about your workout":
+      - /placeholder: Tell me how that set went…
+    - button "Use voice"
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

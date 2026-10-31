@@ -1,4 +1,4 @@
-import { clockTime, id, type AppState } from "../../domain";
+import { clockTime, id, timestamp, type AppState } from "../../domain";
 import type { GroceryReceipt } from "../../ai-contract";
 import { getPantryLots } from "../pantry/ledger";
 
@@ -64,6 +64,7 @@ export function saveReceiptCapture(
         text: receiptPrompt(context),
         image,
         time: clockTime(),
+        at: timestamp(),
         ai: true,
         captureIntent: "receipt",
         captureReviewId: reviewId,
@@ -91,6 +92,8 @@ export function upgradeSavedReceiptCaptures(state: AppState): AppState {
       text: receiptPrompt(),
       image: review.image,
       time: source?.time ?? clockTime(),
+      // A rewritten photo message keeps its own instant; a fresh record is stamped now.
+      at: source ? source.at : timestamp(),
       ai: true,
       captureIntent: "receipt" as const,
       captureReviewId: review.id,

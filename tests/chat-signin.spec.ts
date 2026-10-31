@@ -1,5 +1,5 @@
 import { test, expect, type Page } from './app-fixture';
-import { mockCloud } from './cloud-fixture';
+import { mockCloud } from '../e2e-shared/cloud-fixture';
 import { readBrowserRecords } from './record-fixture';
 
 test.afterEach(async ({ page }) => { await page.unrouteAll({ behavior: 'wait' }); });

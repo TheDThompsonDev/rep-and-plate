@@ -233,4 +233,18 @@ describe("prepared batches and leftovers", () => {
       /history is incomplete/,
     );
   });
+  it("stamps batch and portion messages with an ISO instant for day dividers", () => {
+    const prepared = prepare();
+    const logged = logRecipePortion(prepared, "batch", 1, "Lunch", "portion");
+    const stamped = [prepared.messages.at(-1)!, logged.messages.at(-1)!];
+    expect(stamped.map((m) => m.id)).toEqual([
+      "recipe-prepared:batch",
+      `${logged.meals[0].id}:message`,
+    ]);
+    for (const message of stamped) {
+      expect(message.at).toEqual(expect.any(String));
+      expect(new Date(message.at!).toISOString()).toBe(message.at);
+    }
+    expect(stateSchema.safeParse(logged).success).toBe(true);
+  });
 });

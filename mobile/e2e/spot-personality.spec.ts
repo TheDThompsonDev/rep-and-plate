@@ -1,10 +1,11 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import {test,expect} from './app-fixture';
 test('native full tour replays without losing records or drafts',async({page})=>{
  await page.setViewportSize({width:320,height:800});
  await page.goto('/');
  const draft=page.getByRole('textbox',{name:'Message Rep & Plate'});await draft.fill('Keep my lunch story');
  const before=await page.evaluate(()=>localStorage.getItem('dannys-health.native.v1'));
- await page.getByRole('button',{name:'Your profile',exact:true}).click();
+ await openProfile(page);
  await page.getByRole('button',{name:'Meet Spot',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Hey. I’m Spot.'})).toBeVisible();
  await expect(page.getByTestId('spot-scene-press-conference')).toBeVisible();
@@ -16,7 +17,7 @@ test('native full tour replays without losing records or drafts',async({page})=>
  await page.getByRole('button',{name:'Chat',exact:true}).click();
  await expect(draft).toHaveValue('Keep my lunch story');
  expect(await page.evaluate(()=>localStorage.getItem('dannys-health.native.v1'))).toBe(before);
- await page.getByRole('button',{name:'Your profile',exact:true}).click();
+ await openProfile(page);
  await page.getByRole('button',{name:'Hide Spot illustrations',exact:true}).click();
  await page.getByRole('button',{name:'Nutrition',exact:true}).click();
  await expect(page.getByTestId('spot-scene-dinner-conspiracy')).toHaveCount(0);

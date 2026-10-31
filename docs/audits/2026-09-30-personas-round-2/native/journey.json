@@ -1,0 +1,404 @@
+{
+  "mode": "Fresh guest browser; real local app UI; no provider/account fixtures",
+  "startedAt": "2026-09-30T18:29:28.585Z",
+  "steps": [
+    {
+      "name": "01-first-launch",
+      "at": "2026-09-30T18:29:29.244Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BODY",
+        "label": null
+      }
+    },
+    {
+      "name": "02-guest-storage-copy",
+      "at": "2026-09-30T18:29:29.793Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "INPUT",
+        "label": "Your name (optional)"
+      }
+    },
+    {
+      "name": "03-ready",
+      "at": "2026-09-30T18:29:30.272Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BODY",
+        "label": null
+      }
+    },
+    {
+      "name": "04-chat",
+      "at": "2026-09-30T18:29:30.771Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BODY",
+        "label": null
+      }
+    },
+    {
+      "name": "05-nutrition",
+      "at": "2026-09-30T18:29:31.263Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Nutrition"
+      }
+    },
+    {
+      "name": "06-calories-only-rejected",
+      "at": "2026-09-30T18:29:32.119Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Save meal"
+      }
+    },
+    {
+      "name": "07-offline-meal-saved",
+      "at": "2026-09-30T18:29:32.639Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Enter meal manually"
+      }
+    },
+    {
+      "name": "08-offline-edit-after-reload",
+      "at": "2026-09-30T18:29:33.690Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Nutrition"
+      }
+    },
+    {
+      "name": "09-old-meal-disappears",
+      "at": "2026-09-30T18:29:34.492Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Enter meal manually"
+      }
+    },
+    {
+      "name": "10-week-history-controls",
+      "at": "2026-09-30T18:29:34.959Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": null
+      }
+    },
+    {
+      "name": "11-you",
+      "at": "2026-09-30T18:29:35.441Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Your profile"
+      }
+    },
+    {
+      "name": "12-data-help",
+      "at": "2026-09-30T18:29:35.922Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": null
+      }
+    },
+    {
+      "name": "13-guest-cloud-copy",
+      "at": "2026-09-30T18:29:36.421Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "14-backup-export",
+      "at": "2026-09-30T18:29:37.036Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Export this device"
+      }
+    },
+    {
+      "name": "15-preferences-food",
+      "at": "2026-09-30T18:29:37.920Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "16-preferences-shopping",
+      "at": "2026-09-30T18:29:38.388Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": null
+      }
+    },
+    {
+      "name": "17-preferences-training",
+      "at": "2026-09-30T18:29:38.853Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": null
+      }
+    },
+    {
+      "name": "18-connection",
+      "at": "2026-09-30T18:29:39.803Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "19-agent-connections-guest",
+      "at": "2026-09-30T18:29:40.671Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "20-kitchen",
+      "at": "2026-09-30T18:29:41.538Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Kitchen"
+      }
+    },
+    {
+      "name": "21-pantry",
+      "at": "2026-09-30T18:29:42.006Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "22-ingredient-form",
+      "at": "2026-09-30T18:29:42.473Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "23-recipes",
+      "at": "2026-09-30T18:29:43.738Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "24-planner",
+      "at": "2026-09-30T18:29:44.638Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "25-shopping",
+      "at": "2026-09-30T18:29:45.518Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "label": "Close"
+      }
+    },
+    {
+      "name": "failure",
+      "at": "2026-09-30T18:29:58.387Z",
+      "overflow": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "tag": "TEXTAREA",
+        "label": "Message Rep & Plate"
+      }
+    }
+  ],
+  "pageErrors": [],
+  "console": [
+    {
+      "type": "warning",
+      "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+    },
+    {
+      "type": "warning",
+      "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+    }
+  ],
+  "failedRequests": [],
+  "initialResources": [
+    {
+      "name": "http://127.0.0.1:8081/_expo/static/js/web/index-ca2a0181f6c3a512ca57b52206e0d7bc.js",
+      "initiator": "script",
+      "bytes": 4063955,
+      "duration": 15.899999991059303
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/scenes/press-conference.ca32f798e3b5a917eb43afdfef8e1c5f.png",
+      "initiator": "img",
+      "bytes": 2184576,
+      "duration": 9.599999994039536
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/scenes/dinner-conspiracy.7f7656acd2819926a7f70e3bf9fd534c.png",
+      "initiator": "img",
+      "bytes": 2316533,
+      "duration": 13.200000002980232
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/scenes/shaker-ritual.0efe9612869ca17116145f9e2d161ff5.png",
+      "initiator": "img",
+      "bytes": 2353223,
+      "duration": 11
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/spot-lean.7f379b83c5087fbeb3655eb8586033b6.png",
+      "initiator": "img",
+      "bytes": 1238647,
+      "duration": 22.099999994039536
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/spot-peek.782f98b8874bbd5eae68057e8a35fd3c.png",
+      "initiator": "img",
+      "bytes": 948541,
+      "duration": 7.600000008940697
+    },
+    {
+      "name": "http://127.0.0.1:8081/assets/assets/spot/spot-atlas.eb2f4844abe29db022fe27e9c4e0581e.png",
+      "initiator": "img",
+      "bytes": 2208513,
+      "duration": 14.199999988079071
+    }
+  ],
+  "afterOldMeal": {
+    "meals": [
+      {
+        "title": "Audit yogurt renamed offline",
+        "day": "2026-09-30",
+        "protein": 18.3,
+        "fat": 0.4
+      },
+      {
+        "title": "Month-old meal",
+        "day": "2026-08-31",
+        "protein": 10,
+        "fat": 4
+      }
+    ],
+    "dateButtons": [
+      "2026-09-24",
+      "2026-09-25",
+      "2026-09-26",
+      "2026-09-27",
+      "2026-09-28",
+      "2026-09-29"
+    ]
+  },
+  "supportLinks": [
+    "Contact support"
+  ],
+  "exportName": "rep-and-plate-backup.json",
+  "failure": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Send message', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Send message\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Dismiss notification\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Dismiss notification\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    23 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <button tabindex=\"0\" role=\"button\" type=\"button\" aria-label=\"Dismiss notification\" class=\"css-g5y9jx r-1loqt21 r-1otgn73\">…</button> intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-personas-round-2\\native\\journey.mjs:25:120",
+  "endedAt": "2026-09-30T18:29:58.390Z"
+}

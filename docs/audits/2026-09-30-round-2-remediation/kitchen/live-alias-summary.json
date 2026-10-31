@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "details": {
+    "retainedMethods": 6,
+    "omittedMethods": 1,
+    "methodsReviewed": 0,
+    "variety": [
+      {
+        "category": "Dinner",
+        "meals": 7,
+        "patterns": 7,
+        "repeated": false,
+        "message": "Dinner: 7 ingredient patterns across 7 meals."
+      }
+    ]
+  },
+  "effects": {
+    "intakeUnchanged": true,
+    "pantryEventsUnchanged": true,
+    "groceriesUnchanged": true,
+    "plansBefore": 0,
+    "plansAfter": 1,
+    "planStatuses": [
+      "draft"
+    ]
+  },
+  "errors": []
+}

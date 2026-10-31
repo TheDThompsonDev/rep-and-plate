@@ -3,9 +3,16 @@ import { initialState, stateSchema } from "./domain";
 import {
   adjustWorkoutExercise,
   recordSet,
+  replyToWorkout,
   startPlan,
   type ExerciseAdjustment,
 } from "./workouts";
+
+/** Day dividers render only between messages carrying an ISO `at` instant. */
+const expectStamped = (message: { at?: string } | undefined) => {
+  expect(message?.at).toEqual(expect.any(String));
+  expect(new Date(message!.at!).toISOString()).toBe(message!.at);
+};
 
 const started = () =>
   startPlan({ ...initialState().workout, status: "ready" }, "upper");
@@ -125,5 +132,22 @@ describe("active workout adjustments", () => {
     expect(() => adjustWorkoutExercise(workout, 200, change)).toThrow(
       /no longer active/,
     );
+  });
+  it("stamps every conversation message with an ISO instant for day dividers", () => {
+    const logged = recordSet(adjustWorkoutExercise(started(), 0, change), 0, 0, 9);
+    const replied = replyToWorkout(logged, "What is next?");
+    expect(replied.conversation).toHaveLength(4);
+    replied.conversation!.forEach(expectStamped);
+    const unweighted = started();
+    unweighted.exercises[0] = {
+      ...unweighted.exercises[0],
+      weightConfirmed: false,
+      setWeights: undefined,
+    };
+    const prompted = replyToWorkout(unweighted, "Got 8");
+    expect(prompted.conversation).toHaveLength(2);
+    expect(prompted.conversation![1].text).toContain("Choose the load");
+    prompted.conversation!.forEach(expectStamped);
+    expect(stateSchema.safeParse({ ...initialState(), workout: replied }).success).toBe(true);
   });
 });

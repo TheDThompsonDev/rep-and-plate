@@ -1,0 +1,54 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: YOUR MOVEMENT Your training log
+- button "lb"
+- button "kg"
+- text: Choose the units on your equipment. A rep is one repetition; a set is a group of reps. This is a training log, not individualized technique coaching.
+- button "Build my workout"
+- text: Starter templates have no prescribed load. Choose a comfortable load for each set before saving; enter 0 for bodyweight. Get qualified instruction for unfamiliar movements. Upper Body Bench Press · Incline Dumbbell Press · Seated Cable Row · Triceps Pushdown
+- button "Start Upper Body"
+- text: Lower Body Goblet Squat · Dumbbell Romanian Deadlift · Reverse Lunge · Standing Calf Raise
+- button "Start Lower Body"
+- text: Full Body Goblet Squat · Bench Press · Seated Cable Row
+- button "Start Full Body"
+- button "Log a walk or cardio"
+- text: "Your recent sessions Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 6 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 5 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 8 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 7 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 6 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 5 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 8 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 7 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 6 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 5 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 8 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- text: "Upper Body 2026-09-30 Bench Press Set 1: 45 lb × 7 reps · Set 2: not logged · Set 3: not logged Incline Dumbbell Press Set 1: not logged · Set 2: not logged · Set 3: not logged Seated Cable Row Set 1: not logged · Set 2: not logged · Set 3: not logged Triceps Pushdown Set 1: not logged · Set 2: not logged · Set 3: not logged"
+- button "Correct Upper Body"
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen

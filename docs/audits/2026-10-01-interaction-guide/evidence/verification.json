@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "id": "unit",
+      "result": "passed",
+      "count": 420,
+      "files": 65,
+      "log": "evidence/unit.log"
+    },
+    {
+      "id": "build",
+      "result": "passed",
+      "log": "evidence/build.log"
+    },
+    {
+      "id": "web",
+      "result": "passed",
+      "count": 314,
+      "log": "evidence/web.log"
+    },
+    {
+      "id": "native-types",
+      "result": "passed",
+      "log": "evidence/native-types.log"
+    },
+    {
+      "id": "native-lint",
+      "result": "passed",
+      "warnings": 9,
+      "errors": 0,
+      "log": "evidence/native-lint.log"
+    },
+    {
+      "id": "native-journeys",
+      "result": "passed",
+      "count": 8,
+      "log": "evidence/native-final.log"
+    }
+  ],
+  "sourceFilesChecked": 24,
+  "sourceUnchanged": true,
+  "regressionRed": "Missing guide heading before implementation; tests/interaction-guide.spec.ts failed in 8.2s",
+  "semanticReview": "self assessment in report.md; no open implementation findings",
+  "limits": [
+    "Native runtime checked through Expo web, not physical iOS/Android devices",
+    "AI capture responses use fixtures; no live model-quality or retention/conversion claims",
+    "CYC recorder failed at existing CYC-ASSETS-001 source size limit; direct configured checks used"
+  ]
+}

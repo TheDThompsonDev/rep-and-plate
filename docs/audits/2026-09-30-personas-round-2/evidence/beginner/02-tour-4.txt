@@ -1,0 +1,14 @@
+- main "Welcome to Rep & Plate":
+  - text: Rep & Plate
+  - button "Sign in"
+  - text: SMALL PLATE. BIG PERSONALITY.
+  - img "Spot wrapped in a blanket, taking rest extremely seriously."
+  - text: 01 · Meet Spot 02 · Your account 03 · Make it yours
+  - paragraph: MEET SPOT · 4 OF 4
+  - heading "We do real life here." [level=1]
+  - heading "Rest day? I’ve already cleared my calendar." [level=2]
+  - paragraph: No food guilt. No punishment for missing a day. Come back whenever you’re ready. I’ll still be a plate.
+  - button "Let’s make this official"
+  - button "Back"
+  - button "Skip to account"
+  - text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

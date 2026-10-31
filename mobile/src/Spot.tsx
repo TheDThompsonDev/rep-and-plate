@@ -8,7 +8,7 @@ import {
   type SpotExpression,
   type SpotSide,
 } from "../../src/features/spot/model";
-import { useHealth } from "./store";
+import { useHealth, useLoadedHealth } from "./store";
 import { Button, Card, Choice, colors, s } from "./ui";
 import { spotScenes, type SpotSceneName } from "../../src/features/spot/scenes";
 import {
@@ -461,8 +461,8 @@ export function SpotWelcome({
 }
 
 export function SpotWeeklyReview() {
-  const h = useHealth();
-  const week = spotWeek(h.state!);
+  const h = useLoadedHealth();
+  const week = spotWeek(h.state);
   const [side, setSide] = useState<SpotSide>("plate");
   return (
     <Card>

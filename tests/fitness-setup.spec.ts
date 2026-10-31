@@ -1,5 +1,6 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { expect, test } from "@playwright/test";
-import { mockCloud } from "./cloud-fixture";
+import { mockCloud } from "../e2e-shared/cloud-fixture";
 import { readBrowserRecords, seedBrowserRecords } from "./record-fixture";
 
 test("onboarding saves goals and a real starting weight, then profile offers weight logging and immediate account entry", async ({
@@ -22,10 +23,15 @@ test("onboarding saves goals and a real starting weight, then profile offers wei
   await page.getByLabel("Weight unit", { exact: true }).selectOption("kg");
   await page.getByLabel("Current weight", { exact: true }).fill("82.5");
   await page.getByLabel("Target weight", { exact: true }).fill("78");
+  // Optional training week: days, equipment and experience ride along in the same step.
+  await page.getByLabel("Training days per week", { exact: true }).selectOption("3");
+  await page.getByRole("checkbox", { name: "Dumbbells", exact: true }).check();
+  await page.getByLabel("Strength training experience", { exact: true }).selectOption("some");
   await page
     .getByRole("button", { name: "Save my starting point", exact: true })
     .click();
   await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+  await expect(page.getByText("Your training week", { exact: true })).toBeVisible();
   await page
     .getByRole("button", { name: "Let’s do this", exact: true })
     .click();
@@ -39,7 +45,27 @@ test("onboarding saves goals and a real starting weight, then profile offers wei
   expect(saved.bodyWeights).toHaveLength(1);
   expect(saved.bodyWeights?.[0]).toMatchObject({ value: 82.5, unit: "kg" });
   expect(saved.profile.targetsConfigured).toBe(false);
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  expect(saved.profile.trainingProgram).toMatchObject({
+    daysPerWeek: 3,
+    equipment: ["bodyweight", "dumbbells"],
+    experience: "some",
+  });
+  expect(saved.profile.trainingProgram.sessions.map((session: { title: string }) => session.title)).toEqual([
+    "Session 1 · Upper Body",
+    "Session 2 · Lower Body",
+    "Session 3 · Full Body",
+  ]);
+  // Workouts now leads with the saved week: no machine or barbell exercise and no "example" copy.
+  await page.goto("/#workouts");
+  await expect(page.getByRole("heading", { name: "Your week", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Session 1 · Upper Body · ~42 min", exact: true })).toBeVisible();
+  await expect(page.getByText(/Example rep targets/)).toHaveCount(0);
+  await expect(page.locator(".workout-preview").first()).toContainText("Dumbbell Bench Press");
+  await expect(page.locator(".workout-preview").first()).toContainText("Choose load · 3 × 8");
+  await expect(page.getByText("Seated Cable Row", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Start this session", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Rep & Plate home", exact: true }).click();
+  await openProfile(page);
   const account = page.getByRole("region", { name: "Quick account access" });
   await expect(
     account.getByRole("button", { name: "Sign in", exact: true }),
@@ -61,6 +87,10 @@ test("onboarding saves goals and a real starting weight, then profile offers wei
   await history
     .getByRole("button", { name: "Edit your goal", exact: true })
     .click();
+  // The editor shows the saved week, and re-saving only the goal keeps it.
+  await expect(
+    page.getByRole("dialog").getByLabel("Training days per week", { exact: true }),
+  ).toHaveValue("3");
   await page
     .getByRole("dialog")
     .getByLabel("Target weight", { exact: true })
@@ -75,6 +105,7 @@ test("onboarding saves goals and a real starting weight, then profile offers wei
     ...saved.profile.fitnessGoal,
     targetWeight: 77,
   });
+  expect((await readBrowserRecords(page)).profile.trainingProgram).toEqual(saved.profile.trainingProgram);
   await account.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page.getByRole("dialog")).toContainText("Email");
   expect((await readBrowserRecords(page)).bodyWeights).toHaveLength(2);
@@ -163,7 +194,7 @@ test("the profile icon gives signed-in users a direct sign-out action and keeps 
   await page
     .getByRole("button", { name: "Let’s do this", exact: true })
     .click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   const before = await readBrowserRecords(page);
   const account = page.getByRole("region", { name: "Quick account access" });
   await expect(account).toContainText("fixture@example.test");

@@ -1,0 +1,71 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - img "Your captured photo or screenshot"
+      - paragraph: This is a grocery receipt for items I purchased. Identify the store and items, research their nutrition, and save the grocery list separately from meals I ate. Do not log these purchases as food eaten.
+      - text: 1:28 PM
+      - paragraph: Got it. I read the receipt and researched the items — here’s what I found. I’ll save this as groceries (not eaten).
+      - text: 1:28 PM
+      - link "Kroger product page — Kroger® Vitamin D Whole Milk Gallon (Nutrition Facts)":
+        - /url: https://www.kroger.com/p/kroger-vitamin-d-whole-milk-gallon/0001111040156
+      - link "Quaker SmartLabel — Quaker Old Fashioned Oats (product & nutrition)":
+        - /url: https://smartlabel.pepsico.info/030000010402-0008-en-US/index.html
+      - link "Dawn product page / retailer listings":
+        - /url: https://dawn-dish.com/en-us/products/dawn-platinum-ez-squeeze-fresh-rain-scent/
+      - button "Kroger 3 grocery items saved 2 matches need a check Saved to groceries · not today’s intake":
+        - strong: Kroger
+        - text: 3 grocery items saved 2 matches need a check
+        - emphasis: Saved to groceries · not today’s intake
+      - paragraph: Some product matches need a check. Unknown nutrition is left blank.
+      - paragraph: USDA candidates are ready for 2 receipt items. Compare your package before applying a match.
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Check this grocery item":
+  - heading "Check this grocery item" [level=2]
+  - button "Close dialog"
+  - paragraph: Use the package label when you have it. Leave unknown nutrition blank.
+  - text: Product name
+  - textbox "Product name": Kroger Vitamin D Whole Milk (1 gal)
+  - text: Quantity purchased
+  - textbox "Quantity purchased": "1"
+  - text: Serving size
+  - textbox "Serving size":
+    - /placeholder: e.g. 1 cup (240 ml)
+    - text: 1 cup (8 fl oz / 240 mL)
+  - text: Total servings purchased
+  - spinbutton "Total servings purchased": "16"
+  - paragraph: Packages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.
+  - text: Calories per serving
+  - spinbutton "Calories per serving": "160"
+  - text: Protein per serving (g)
+  - spinbutton "Protein per serving (g)": "8"
+  - text: Carbs per serving (g)
+  - spinbutton "Carbs per serving (g)": "12"
+  - text: Fat per serving (g)
+  - spinbutton "Fat per serving (g)": "9"
+  - button "Save grocery details"

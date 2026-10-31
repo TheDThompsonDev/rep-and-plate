@@ -1,0 +1,107 @@
+{
+  "at": "2026-09-30T15:16:24.046Z",
+  "records": [
+    {
+      "name": "walk",
+      "request": {
+        "text": "I walked for 20 minutes.",
+        "day": "2026-09-30",
+        "captureDay": "2026-09-20"
+      },
+      "elapsedMs": 9365,
+      "passed": true,
+      "result": {
+        "activity": {
+          "title": "Walking",
+          "day": "2026-09-20",
+          "minutes": 20,
+          "note": "Completed walking activity"
+        },
+        "workout": null,
+        "recipePortionProposal": null,
+        "suggestedAction": null,
+        "preferenceProposal": null,
+        "requestId": "4e251418-5ef4-45c0-9c5f-8047bf453768",
+        "reply": "Here’s your 20-minute walking for 2026-09-20. Check the card before saving it.",
+        "receipt": null,
+        "meal": null,
+        "decision": "conversation",
+        "warnings": [],
+        "sources": []
+      }
+    },
+    {
+      "name": "decimal-and-diary-day",
+      "request": {
+        "text": "I ate one yogurt for breakfast. The label for the exact portion I ate says 215 kcal, 18.3 g protein, 33 g carbs and 0.4 g fat. Use these label values.",
+        "day": "2026-09-30",
+        "captureDay": "2026-09-20"
+      },
+      "elapsedMs": 6065,
+      "passed": true,
+      "result": {
+        "activity": null,
+        "workout": null,
+        "recipePortionProposal": null,
+        "suggestedAction": null,
+        "preferenceProposal": null,
+        "requestId": "d138f62a-040c-42f2-ad5c-70c4fa80cc4d",
+        "reply": "Here’s my estimate for Breakfast Yogurt: 215 kcal · 18.3 g protein · 33 g carbs · 0.4 g fat. Review the portions and details on the card before adding it.",
+        "receipt": null,
+        "meal": {
+          "calories": 215,
+          "protein": 18.3,
+          "carbs": 33,
+          "fat": 0.4,
+          "day": "2026-09-20",
+          "components": [
+            {
+              "name": "Yogurt",
+              "portion": "one serving (label values: 215 kcal, 18.3g protein, 33g carbs, 0.4g fat)",
+              "nutrition": {
+                "calories": 215,
+                "protein": 18.3,
+                "carbs": 33,
+                "fat": 0.4
+              }
+            }
+          ],
+          "title": "Breakfast Yogurt",
+          "category": "Breakfast",
+          "portion": "one serving",
+          "note": "Values taken directly from product label as provided.",
+          "sources": []
+        },
+        "decision": "meal",
+        "warnings": [],
+        "sources": []
+      }
+    },
+    {
+      "name": "focused-portion",
+      "request": {
+        "text": "I ate peanut butter for breakfast.",
+        "day": "2026-09-30",
+        "captureDay": "2026-09-30"
+      },
+      "elapsedMs": 7214,
+      "passed": true,
+      "result": {
+        "activity": null,
+        "workout": null,
+        "recipePortionProposal": null,
+        "suggestedAction": null,
+        "preferenceProposal": null,
+        "requestId": "027fcdeb-e284-46c3-9c5a-47e97894ff7b",
+        "reply": "What portion of each food or drink did you have? A weight or a measure such as tablespoons is enough.",
+        "receipt": null,
+        "meal": null,
+        "decision": "meal",
+        "warnings": [
+          "The typed capture does not include a portion. No serving size was assumed."
+        ],
+        "sources": []
+      }
+    }
+  ]
+}

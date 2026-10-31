@@ -1,0 +1,103 @@
+{
+  "mode": "Return simulation seeded only from the preceding UI-exported synthetic guest backup; no external account/provider mocks",
+  "steps": [
+    "30-workout-saved",
+    "31-thirteen-workouts",
+    "32-import-review",
+    "33-import-restored",
+    "34-unconnected-plan"
+  ],
+  "pageErrors": [],
+  "console": [
+    {
+      "type": "warning",
+      "text": "Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"
+    }
+  ],
+  "historyBoundary": {
+    "renderedCorrections": 12,
+    "storedSessions": [
+      {
+        "startedAt": "2026-09-30T18:30:30.632Z",
+        "finishedAt": "2026-09-30T18:30:31.114Z",
+        "firstReps": 6
+      },
+      {
+        "startedAt": "2026-09-30T18:30:31.599Z",
+        "finishedAt": "2026-09-30T18:30:32.080Z",
+        "firstReps": 7
+      },
+      {
+        "startedAt": "2026-09-30T18:30:32.113Z",
+        "finishedAt": "2026-09-30T18:30:32.579Z",
+        "firstReps": 8
+      },
+      {
+        "startedAt": "2026-09-30T18:30:32.613Z",
+        "finishedAt": "2026-09-30T18:30:33.065Z",
+        "firstReps": 5
+      },
+      {
+        "startedAt": "2026-09-30T18:30:33.095Z",
+        "finishedAt": "2026-09-30T18:30:33.546Z",
+        "firstReps": 6
+      },
+      {
+        "startedAt": "2026-09-30T18:30:33.579Z",
+        "finishedAt": "2026-09-30T18:30:34.031Z",
+        "firstReps": 7
+      },
+      {
+        "startedAt": "2026-09-30T18:30:34.064Z",
+        "finishedAt": "2026-09-30T18:30:34.513Z",
+        "firstReps": 8
+      },
+      {
+        "startedAt": "2026-09-30T18:30:34.546Z",
+        "finishedAt": "2026-09-30T18:30:35.000Z",
+        "firstReps": 5
+      },
+      {
+        "startedAt": "2026-09-30T18:30:35.045Z",
+        "finishedAt": "2026-09-30T18:30:35.548Z",
+        "firstReps": 6
+      },
+      {
+        "startedAt": "2026-09-30T18:30:35.597Z",
+        "finishedAt": "2026-09-30T18:30:36.079Z",
+        "firstReps": 7
+      },
+      {
+        "startedAt": "2026-09-30T18:30:36.112Z",
+        "finishedAt": "2026-09-30T18:30:36.563Z",
+        "firstReps": 8
+      },
+      {
+        "startedAt": "2026-09-30T18:30:36.596Z",
+        "finishedAt": "2026-09-30T18:30:37.063Z",
+        "firstReps": 5
+      },
+      {
+        "startedAt": "2026-09-30T18:30:37.096Z",
+        "finishedAt": "2026-09-30T18:30:37.547Z",
+        "firstReps": 6
+      }
+    ]
+  },
+  "restored": {
+    "name": "Developer audit",
+    "meals": [
+      {
+        "title": "Audit yogurt renamed offline",
+        "day": "2026-09-30",
+        "protein": 18.3
+      },
+      {
+        "title": "Month-old meal",
+        "day": "2026-08-31",
+        "protein": 10
+      }
+    ],
+    "history": []
+  }
+}

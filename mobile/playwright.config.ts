@@ -1,4 +1,6 @@
 import { defineConfig } from "@playwright/test";
+// Helpers shared with the other browser suite live in ../e2e-shared/ and are imported
+// by relative path; the matching tsconfig lists that directory in `include`.
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: false,

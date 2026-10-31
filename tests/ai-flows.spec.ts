@@ -1,14 +1,10 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { readBrowserRecords } from "./record-fixture";
 import { test, expect, type Page } from "./app-fixture";
-import { resultFixture } from "./ai-fixtures";
+import { resultFixture } from "../e2e-shared/ai-fixtures";
+import { send } from "../e2e-shared/chat";
 const stored = (page: Page) =>
   readBrowserRecords(page);
-const send = async (page: Page, text: string) => {
-  await page
-    .getByRole("textbox", { name: "Message Rep & Plate" })
-    .fill(text);
-  await page.getByRole("button", { name: "Send message", exact: true }).click();
-};
 test.beforeEach(async ({ page }) => {
   await page.route("**/api/status", (route) =>
     route.fulfill({
@@ -91,7 +87,7 @@ test("Receipt capture researches groceries, persists edits, and does not change 
   ).toBeVisible();
   expect((await stored(page)).groceries).toHaveLength(1);
   expect((await stored(page)).groceries[0].items[0].name).toBe("My whole milk");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page.getByRole("button", { name: /Groceries & pantry/ }).click();
   await page.getByRole("button", { name: "Check purchase details" }).click();
   await page

@@ -10,6 +10,10 @@ const fitness = z
     cadence: z.enum(["weekly", "daily", "none"]),
     currentWeight: text,
     targetWeight: text,
+    // Added with the training week; defaults keep drafts saved before it readable.
+    trainingDays: text.default(""),
+    equipment: z.array(z.enum(["dumbbells", "barbell", "machines", "bands"])).max(4).default([]),
+    experience: z.enum(["", "new", "some", "experienced"]).default(""),
   })
   .strict();
 const nutritionInput = z

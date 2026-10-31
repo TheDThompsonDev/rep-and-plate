@@ -1,0 +1,376 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/round-two-workouts.spec.ts",
+      "--workers=1",
+      "--reporter=json",
+      "--output=docs/audits/2026-09-30-round-2-remediation/evidence/workouts-browser-final"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-round-2-remediation/evidence/workouts-browser-final",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-round-2-remediation/evidence/workouts-browser-final",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://127.0.0.1:5173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "round-two-workouts.spec.ts",
+      "file": "round-two-workouts.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "rest survives navigation, reload and elapsed wall time",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1502,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:30.137Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5256d092eb9db9f652cc-654dca6a5255f1f90dc1",
+          "file": "round-two-workouts.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "all older sessions remain visible and can be reopened for correction",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6100,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('heading', { name: 'Recorded day 1 in progress', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('heading', { name: 'Recorded day 1 in progress', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts:32:89",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts",
+                      "column": 89,
+                      "line": 32
+                    },
+                    "snippet": "  30 |  await expect(page.getByRole('dialog')).toContainText('Your 13 finished sessions.');\n  31 |  await page.getByRole('button',{name:'Correct Recorded day 1',exact:true}).click();\n> 32 |  await expect(page.getByRole('heading',{name:'Recorded day 1 in progress',exact:true})).toBeVisible();\n     |                                                                                         ^\n  33 |  expect((await readBrowserRecords(page)).workout.exercises[0].sets).toEqual([8]);\n  34 | });\n  35 | test('chosen units, remaining-set loads and personal routine survive return without recording old work',async({page},info)=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts",
+                        "column": 89,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('heading', { name: 'Recorded day 1 in progress', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\u001b[22m\n\n\n  30 |  await expect(page.getByRole('dialog')).toContainText('Your 13 finished sessions.');\n  31 |  await page.getByRole('button',{name:'Correct Recorded day 1',exact:true}).click();\n> 32 |  await expect(page.getByRole('heading',{name:'Recorded day 1 in progress',exact:true})).toBeVisible();\n     |                                                                                         ^\n  33 |  expect((await readBrowserRecords(page)).workout.exercises[0].sets).toEqual([8]);\n  34 | });\n  35 | test('chosen units, remaining-set loads and personal routine survive return without recording old work',async({page},info)=>{\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts:32:89"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:31.742Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\evidence\\workouts-browser-final\\round-two-workouts-all-old-48a51--be-reopened-for-correction-desktop\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\evidence\\workouts-browser-final\\round-two-workouts-all-old-48a51--be-reopened-for-correction-desktop\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts",
+                    "column": 89,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "5256d092eb9db9f652cc-1ea0420689980c55ef9d",
+          "file": "round-two-workouts.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "chosen units, remaining-set loads and personal routine survive return without recording old work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2086,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:38.459Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5256d092eb9db9f652cc-72992faba681a5927112",
+          "file": "round-two-workouts.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "rest survives navigation, reload and elapsed wall time",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1342,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:41.215Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5256d092eb9db9f652cc-708f78cd32e529431c3c",
+          "file": "round-two-workouts.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "all older sessions remain visible and can be reopened for correction",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5920,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('heading', { name: 'Recorded day 1 in progress', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('heading', { name: 'Recorded day 1 in progress', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts:32:89",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts",
+                      "column": 89,
+                      "line": 32
+                    },
+                    "snippet": "  30 |  await expect(page.getByRole('dialog')).toContainText('Your 13 finished sessions.');\n  31 |  await page.getByRole('button',{name:'Correct Recorded day 1',exact:true}).click();\n> 32 |  await expect(page.getByRole('heading',{name:'Recorded day 1 in progress',exact:true})).toBeVisible();\n     |                                                                                         ^\n  33 |  expect((await readBrowserRecords(page)).workout.exercises[0].sets).toEqual([8]);\n  34 | });\n  35 | test('chosen units, remaining-set loads and personal routine survive return without recording old work',async({page},info)=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts",
+                        "column": 89,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('heading', { name: 'Recorded day 1 in progress', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Recorded day 1 in progress', exact: true })\u001b[22m\n\n\n  30 |  await expect(page.getByRole('dialog')).toContainText('Your 13 finished sessions.');\n  31 |  await page.getByRole('button',{name:'Correct Recorded day 1',exact:true}).click();\n> 32 |  await expect(page.getByRole('heading',{name:'Recorded day 1 in progress',exact:true})).toBeVisible();\n     |                                                                                         ^\n  33 |  expect((await readBrowserRecords(page)).workout.exercises[0].sets).toEqual([8]);\n  34 | });\n  35 | test('chosen units, remaining-set loads and personal routine survive return without recording old work',async({page},info)=>{\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts:32:89"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:42.655Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\evidence\\workouts-browser-final\\round-two-workouts-all-old-48a51--be-reopened-for-correction-mobile\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\evidence\\workouts-browser-final\\round-two-workouts-all-old-48a51--be-reopened-for-correction-mobile\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\round-two-workouts.spec.ts",
+                    "column": 89,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "5256d092eb9db9f652cc-35dd46d1a13ed66c0e75",
+          "file": "round-two-workouts.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "chosen units, remaining-set loads and personal routine survive return without recording old work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1806,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:22:49.192Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5256d092eb9db9f652cc-bbea5b7dfb14648f6545",
+          "file": "round-two-workouts.spec.ts",
+          "line": 35,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T19:22:29.277Z",
+    "duration": 21879.99,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

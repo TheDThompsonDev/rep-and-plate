@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "configured": [
+    { "command": "node node_modules/vitest/vitest.mjs run src server", "exitCode": 0, "testsPassed": 421, "log": "unit.log" },
+    { "command": "npm run build", "exitCode": 0, "log": "build.log", "warning": "Existing bundle size warning" },
+    { "command": "node node_modules/@playwright/test/cli.js test --reporter=list", "exitCode": 0, "testsPassed": 316, "duration": "4.9m", "log": "browser.log" }
+  ],
+  "native": [
+    { "command": "npm run mobile:check", "exitCode": 0, "log": "native-types.log" },
+    { "command": "npm --prefix mobile run lint", "exitCode": 0, "errors": 0, "existingWarnings": 9, "log": "native-lint.log" },
+    { "command": "node node_modules/@playwright/test/cli.js test -c mobile/playwright.config.ts mobile/e2e/onboarding.spec.ts mobile/e2e/account-sync.spec.ts --reporter=list", "exitCode": 0, "testsPassed": 5, "duration": "59.1s", "evidence": "Executed tool session 5336; all five passed. Tested with Expo web, not physical devices." }
+  ],
+  "focused": { "webPassed": 28, "syncUnitPassed": 8 },
+  "review": "No open findings. Nonblank trimmed name required before prepare/finish side effects. Combined choice last. Account name matching does not bypass tracking, target, identity, concurrency or conflict checks. Reviewed source manifest remained stable through final checks.",
+  "limitations": "No physical device or deployment verification. Managed CYC run could not start due to existing source fingerprint limit; direct configured checks passed. User acceptance pending. No commit requested."
+}

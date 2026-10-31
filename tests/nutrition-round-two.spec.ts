@@ -1,3 +1,4 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import { test, expect } from './app-fixture';
 import { initialState, today } from '../src/domain';
 import { readBrowserRecords } from './record-fixture';
@@ -25,6 +26,6 @@ test('goal-free summaries and reviewed fractional repeat keep original and stock
  expect((await readBrowserRecords(page)).meals).toHaveLength(1);
  await page.getByRole('button',{name:'Save changes',exact:true}).click();const saved=await readBrowserRecords(page);
  expect(saved.meals).toHaveLength(2);expect(saved.meals[0]).toEqual(state.meals[0]);expect(saved.meals[1]).toMatchObject({calories:322.5,protein:27.45,fat:0.6});expect(saved.pantryEvents).toEqual(state.pantryEvents);
- await page.getByRole('button',{name:'Your profile',exact:true}).click();await expect(page.getByText('Tracking without daily targets.',{exact:true})).toBeVisible();
+ await openProfile(page);await expect(page.getByText('Tracking without daily targets.',{exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Open your weekly review',exact:true}).click();await expect(page.getByRole('dialog').getByText(/reached your current/)).toHaveCount(0);
 });

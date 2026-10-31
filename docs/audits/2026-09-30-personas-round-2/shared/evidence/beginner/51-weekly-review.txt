@@ -1,0 +1,156 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "You":
+    - button "Open your menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: C
+    - heading "Looking ahead, Casey Beginner." [level=1]
+    - paragraph: Your goals. Your pace. Your progress.
+    - button "Edit your profile"
+    - button "Account & backups Sign in, sign out, and manage saved records":
+      - strong: Account & backups
+      - text: Sign in, sign out, and manage saved records
+    - button "Meet Spot Replay the introduction. Keep your saved records.":
+      - strong: Meet Spot
+      - text: Replay the introduction. Keep your saved records.
+    - button "Connections Your assistants, access, and meal proposals":
+      - strong: Connections
+      - text: Your assistants, access, and meal proposals
+    - region "Your recorded activity":
+      - text: Your last seven days
+      - button "Open your weekly review": See week
+      - strong: "2"
+      - text: of 7 days
+      - paragraph: With meals or movement you’ve logged
+      - text: — Thu — Fri — Sat — Sun — Mon Tue Wed Unlogged days are unknown, not missed goals. A record you can keep building on.
+      - button "Open Chat"
+    - heading "Your week, taking shape." [level=2]
+    - button "See week"
+    - button "1 Workouts recorded 1 sets logged this week":
+      - strong: "1"
+      - text: Workouts recorded 1 sets logged this week
+    - button "3 Meals recorded Across 2 logged days":
+      - strong: "3"
+      - text: Meals recorded Across 2 logged days
+    - region "Your reviews":
+      - heading "Your reviews" [level=2]
+      - button "Completed"
+      - text: 0 pending review entries
+      - strong: Nothing waiting on you.
+      - paragraph: Anything that needs a little context will appear here.
+    - heading "Your daily goals" [level=2]
+    - button "Edit goals"
+    - region "Your daily goals":
+      - strong: Your saved daily targets.
+      - paragraph: Starting targets are generic. Review and edit them for your needs; weight entries do not personalize them automatically.
+      - strong: 2,000cal
+      - text: Calories
+      - strong: 110g
+      - text: Protein
+      - strong: 250g
+      - text: Carbs
+      - strong: 78g
+      - text: Fats
+    - region "Body weight history":
+      - heading "Your weight, over time" [level=2]
+      - paragraph: Optional measurements from you. These do not change your food targets or suggest a goal.
+      - paragraph: Add measurements on two dates to see the change.
+      - text: Measurement date
+      - textbox "Measurement date": 2026-09-30
+      - text: Body weight
+      - spinbutton "Body weight"
+      - text: Weight unit
+      - combobox "Weight unit":
+        - option "lb" [selected]
+        - option "kg"
+      - button "Save measurement"
+      - list
+      - paragraph: No measurements recorded yet.
+    - button "MAKE TIME TO MOVE Find your next workout Choose a session that works for today":
+      - text: MAKE TIME TO MOVE
+      - strong: Find your next workout
+      - text: Choose a session that works for today
+    - heading "Your food & activity" [level=2]
+    - button "Recipes & leftovers Your prepared meals and portions left":
+      - strong: Recipes & leftovers
+      - text: Your prepared meals and portions left
+    - button "Your weekly meal plan Ingredients on hand, meals ahead":
+      - strong: Your weekly meal plan
+      - text: Ingredients on hand, meals ahead
+    - button "Food & routine preferences Your choices, exclusions, and cooking time":
+      - strong: Food & routine preferences
+      - text: Your choices, exclusions, and cooking time
+    - button "Groceries & pantry 0 available items · from your receipts":
+      - strong: Groceries & pantry
+      - text: 0 available items · from your receipts
+    - button "Meals & captures 3 saved meals · 0 reviewed notes":
+      - strong: Meals & captures
+      - text: 3 saved meals · 0 reviewed notes
+    - button "Workout history 1 session":
+      - strong: Workout history
+      - text: 1 session
+    - heading "Make it yours" [level=2]
+    - button "Profile & preferences Your name and daily targets":
+      - strong: Profile & preferences
+      - text: Your name and daily targets
+    - button "Your data & privacy Account saving, privacy, and help":
+      - strong: Your data & privacy
+      - text: Account saving, privacy, and help
+    - button "About Rep & Plate A little help with the details":
+      - strong: About Rep & Plate
+      - text: A little help with the details
+    - button "Something to share? Just tell Rep & Plate."
+    - navigation "You navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+    - dialog "Weekly Spot Check":
+      - heading "Weekly Spot Check" [level=2]
+      - button "Close dialog"
+      - region "Weekly Spot Check":
+        - text: A LITTLE PERSPECTIVE
+        - heading "Weekly Spot Check" [level=3]
+        - paragraph: 2026-09-24 – 2026-09-30
+        - group "Weekly view":
+          - button "Plate · Food" [pressed]
+          - button "Rep · Training"
+        - strong: "300"
+        - text: avg recorded cal
+        - strong: 18g
+        - text: avg recorded protein
+        - paragraph: Based on 2 days with meals logged. These are recorded amounts, not estimates of everything you ate.
+        - paragraph: Unlogged days are unknown. Start wherever you are.
+        - button "See the Rep side"
+      - paragraph: 2026-09-24 to 2026-09-30 · Last seven days
+      - paragraph: A look at your saved records. Unlogged days are unknown, and sample meals are left out.
+      - strong: "3"
+      - text: personal meals
+      - strong: "2"
+      - text: days with meals
+      - strong: "1"
+      - text: recorded workouts
+      - heading "Your nutrition" [level=3]
+      - article:
+        - heading "3 meals across 2 logged days." [level=4]
+        - paragraph: "Average recorded intake: 300 calories per logged day."
+        - group: How this was calculated
+      - article:
+        - heading "18g protein per logged day." [level=4]
+        - paragraph: 0 of 2 logged days reached your current 110g target.
+        - group: How this was calculated
+      - article:
+        - heading "Your estimates stay editable." [level=4]
+        - paragraph: 0 of these meals still use estimated nutrition.
+        - group: How this was calculated
+      - group: View the 3 meal records
+      - heading "Your workouts" [level=3]
+      - article:
+        - strong: Upper Body
+        - text: 2026-09-30 · 1 set recorded · Completed
+      - paragraph: Workout evidence uses saved session dates and recorded sets. It does not infer recovery, calorie burn, or progress from missing sessions.
+      - button "Continue your week in Chat"

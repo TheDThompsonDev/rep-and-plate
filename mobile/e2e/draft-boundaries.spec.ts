@@ -1,3 +1,4 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
 import { initialState } from "../../src/domain";
 import { shiftPlanDate } from "../../src/features/planning/recurring-plans";
@@ -69,7 +70,7 @@ test("import discards recipe draft and a closed planner cannot append a late res
     .click();
   await requestStarted;
   await page.getByRole("button", { name: "Close", exact: true }).click();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("button", { name: "Cloud & your records", exact: true })
     .click();

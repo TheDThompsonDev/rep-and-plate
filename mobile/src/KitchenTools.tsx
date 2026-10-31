@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { cloudEpoch } from "../../src/features/cloud/sync-control";
 import { Text, View, Image } from "react-native";
 import { Button, Card, Choice, Field, Row, Sheet, Sources, s } from "./ui";
-import { useHealth } from "./store";
+import { useHealth, useLoadedHealth } from "./store";
 import { jsonApi } from "./api";
 import { Scanner, pickPhoto } from "./Capture";
-import { id, today, clockTime, type Meal } from "../../src/domain";
+import { id, today, clockTime, timestamp, type Meal } from "../../src/domain";
 import {
   groceryItemSchema,
   type GroceryItem,
@@ -52,7 +52,6 @@ import {
 import {
   type MealPlan,
   type MealCategory,
-  mealPlanSchema,
   type PlannedMeal,
   type CookingStep,
 } from "../../src/features/planning/contracts";
@@ -69,6 +68,7 @@ import {
   type WorkoutProposal,
 } from "../../src/features/workout-planning/contracts";
 import { completedWorkoutContext } from "../../src/features/workout-planning/history";
+import { programEquipmentText } from "../../src/features/progress/training-program";
 import { PlanIngredientLink } from "./PlanIngredientLink";
 import {
   linkPlannedIngredient,
@@ -83,14 +83,14 @@ import { addManualPantryIngredient } from "../../src/features/pantry/manual-ingr
 import { purchaseReceipts } from "../../src/features/shopping/shopping";
 
 export function Pantry() {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     [manual, setManual] = useState(false),
     [edit, setEdit] = useState<PantryLot | null>(null),
     [receipt, setReceipt] = useState<GroceryReceipt | null>(null),
     [amount, setAmount] = useState<Record<string, string>>({}),
     [title, setTitle] = useState("Meal from my pantry"),
     [category, setCategory] = useState<Meal["category"]>("Dinner");
-  const lots = getPantryLots(h.state!);
+  const lots = getPantryLots(h.state);
   const reviewQueue = lots
     .filter(
       (l) =>
@@ -142,7 +142,7 @@ export function Pantry() {
         />
       )}
       <Text style={s.h2}>Your grocery trips</Text>
-      {purchaseReceipts(h.state!.groceries ?? []).map((r) => (
+      {purchaseReceipts(h.state.groceries ?? []).map((r) => (
         <Row
           key={r.id}
           title={r.store || "Grocery receipt"}
@@ -221,10 +221,10 @@ export function Pantry() {
       )}
       <Text style={s.h2}>Recent adjustments</Text>
       {h
-        .state!.pantryEvents?.filter(
+        .state.pantryEvents?.filter(
           (e) =>
             ["adjusted", "discarded"].includes(e.kind) &&
-            !h.state!.pantryEvents!.some((x) => x.reversesId === e.id),
+            !h.state.pantryEvents!.some((x) => x.reversesId === e.id),
         )
         .slice(-5)
         .map((e) => (
@@ -740,7 +740,7 @@ export function ReceiptEditor({
   );
 }
 export function Recipes() {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     [name, setName] = useState(h.recipeDraft.name),
     [portions, setPortions] = useState(h.recipeDraft.portions),
     [amounts, setAmounts] = useState<Record<string, string>>(
@@ -748,7 +748,7 @@ export function Recipes() {
     ),
     [eat, setEat] = useState<Record<string, string>>({}),
     [category, setCategory] = useState<Meal["category"]>("Dinner");
-  const lots = getPantryLots(h.state!).filter(
+  const lots = getPantryLots(h.state).filter(
     (l) =>
       l.remaining !== null &&
       l.remaining > 0 &&
@@ -768,7 +768,7 @@ export function Recipes() {
         portions you eat.
       </Text>
       {h
-        .state!.recipeBatches?.filter((b) => !b.undoneAt)
+        .state.recipeBatches?.filter((b) => !b.undoneAt)
         .map((b) => (
           <Card key={b.id}>
             <Text style={s.h2}>{b.name}</Text>
@@ -868,9 +868,9 @@ export function Recipes() {
   );
 }
 export function Planner() {
-  const h = useHealth(),
+  const h = useLoadedHealth(),
     [plan, updatePlan] = useState<MealPlan | undefined>(
-      h.state!.mealPlans?.at(-1),
+      h.state.mealPlans?.at(-1),
     ),
     [start, setStart] = useState(today()),
     [pantryMode, setPantryMode] = useState<
@@ -893,13 +893,13 @@ export function Planner() {
       mounted.current = false;
     };
   }, []);
-  const lots = getPantryLots(h.state!),
-    preferences = h.state!.preferences ?? defaultPreferences(),
+  const lots = getPantryLots(h.state),
+    preferences = h.state.preferences ?? defaultPreferences(),
     context = {
       lots,
       preferences,
-      goals: h.state!.profile,
-      goalsConfigured: h.state!.profile.targetsConfigured === true,
+      goals: h.state.profile,
+      goalsConfigured: h.state.profile.targetsConfigured === true,
       startDate: start,
       mealCategories: categories,
       pantryMode,
@@ -928,10 +928,10 @@ export function Planner() {
         estimatePlanBasket(
           unloggedPlan(
             plan,
-            h.state!.meals.map((meal) => meal.id),
+            h.state.meals.map((meal) => meal.id),
           ),
           lots,
-          h.state!.groceries ?? [],
+          h.state.groceries ?? [],
           today(),
         ),
         preferences.weeklyBudget,
@@ -1055,7 +1055,7 @@ export function Planner() {
         }
       />
       {!!error && <Text style={s.muted}>{error}</Text>}
-      {h.state!.mealPlans?.map((p) => (
+      {h.state.mealPlans?.map((p) => (
         <Row
           key={p.id}
           title={`${p.days[0].date} · ${p.status}`}
@@ -1078,7 +1078,7 @@ export function Planner() {
               {d.meals.map((m) => {
                 const estimate = mealEstimate(m, lots),
                   selections = mealPortionSelections(m, lots),
-                  logged = h.state!.meals.some(
+                  logged = h.state.meals.some(
                     (x) => x.id === `pantry-meal:plan:${plan.id}:${m.id}`,
                   );
                 return (
@@ -1130,7 +1130,7 @@ export function Planner() {
                                     {
                                       lots,
                                       preferences,
-                                      loggedMealIds: h.state!.meals.map(
+                                      loggedMealIds: h.state.meals.map(
                                         (meal) => meal.id,
                                       ),
                                       confirmed: true,
@@ -1421,10 +1421,12 @@ function CookingMethodEditor({
   );
 }
 export function WorkoutBuilder() {
-  const h = useHealth(),
-    [goal, setGoal] = useState(h.state!.preferences?.workoutPreferences ?? ""),
+  const h = useLoadedHealth(),
+    [goal, setGoal] = useState(h.state.preferences?.workoutPreferences ?? ""),
     [equipment, setEquipment] = useState(
-      h.state!.preferences?.equipment.join(", ") ?? "Bodyweight",
+      h.state.profile.trainingProgram
+        ? programEquipmentText(h.state.profile.trainingProgram).replace(/ · /g, ", ")
+        : (h.state.preferences?.equipment.join(", ") ?? "Bodyweight"),
     ),
     [minutes, setMinutes] = useState("30"),
     [plan, setPlan] = useState<WorkoutProposal | null>(null),
@@ -1462,7 +1464,7 @@ export function WorkoutBuilder() {
                     goal,
                     equipment,
                     minutes: Number(minutes),
-                    history: completedWorkoutContext(h.state!.workout),
+                    history: completedWorkoutContext(h.state.workout),
                   }),
                 ),
               );
@@ -1500,7 +1502,7 @@ export function WorkoutBuilder() {
           ))}
           <Button
             label="Start this workout"
-            disabled={h.state!.workout.status === "active"}
+            disabled={h.state.workout.status === "active"}
             onPress={() => {
               if (
                 h.change((s) => {
@@ -1543,6 +1545,7 @@ export function WorkoutBuilder() {
                           id: id(),
                           role: "assistant",
                           time: clockTime(),
+                          at: timestamp(),
                           text:
                             checked.reason +
                             " Choose comfortable weights before your first set.",

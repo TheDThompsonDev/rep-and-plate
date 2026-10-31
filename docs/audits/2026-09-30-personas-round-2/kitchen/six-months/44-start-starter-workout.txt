@@ -1,0 +1,169 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: Workout units
+    - combobox "Workout units":
+      - option "lb" [selected]
+      - option "kg"
+    - button "Log walk or cardio"
+    - heading "Lower Body in progress" [level=1]
+    - paragraph: 0 of 4 exercises completed.
+    - progressbar "Workout progress"
+    - text: 0% Jump to exercise
+    - combobox "Jump to exercise":
+      - option "Choose an exercise" [disabled] [selected]
+      - option "Goblet Squat"
+      - option "Dumbbell Romanian Deadlift"
+      - option "Reverse Lunge"
+      - option "Standing Calf Raise"
+    - group: Rest timer
+    - button "Browse workout options"
+    - region "Goblet Squat":
+      - img "Goblet Squat illustration"
+      - heading "Goblet Squat" [level=2]
+      - button "Adjust Goblet Squat": Choose load · 3 × 10
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 1 of 4
+      - group: How to approach Goblet Squat
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Goblet Squat set 1 weight (lb)
+      - spinbutton "Goblet Squat set 1 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Goblet Squat set 1: 8 reps" [disabled]': "8"
+      - 'button "Goblet Squat set 1: 9 reps" [disabled]': "9"
+      - 'button "Goblet Squat set 1: 10 reps" [disabled]': "10"
+      - 'button "Goblet Squat set 1: 11 reps" [disabled]': "11"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Goblet Squat set 2 weight (lb)
+      - spinbutton "Goblet Squat set 2 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Goblet Squat set 3 weight (lb)
+      - spinbutton "Goblet Squat set 3 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Goblet Squat earlier" [disabled]
+      - button "Move Goblet Squat later"
+    - region "Dumbbell Romanian Deadlift":
+      - img "Dumbbell Romanian Deadlift illustration"
+      - heading "Dumbbell Romanian Deadlift" [level=2]
+      - button "Adjust Dumbbell Romanian Deadlift": Choose load · 3 × 10
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 2 of 4
+      - group: How to approach Dumbbell Romanian Deadlift
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Dumbbell Romanian Deadlift set 1 weight (lb)
+      - spinbutton "Dumbbell Romanian Deadlift set 1 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Dumbbell Romanian Deadlift set 1: 8 reps" [disabled]': "8"
+      - 'button "Dumbbell Romanian Deadlift set 1: 9 reps" [disabled]': "9"
+      - 'button "Dumbbell Romanian Deadlift set 1: 10 reps" [disabled]': "10"
+      - 'button "Dumbbell Romanian Deadlift set 1: 11 reps" [disabled]': "11"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Dumbbell Romanian Deadlift set 2 weight (lb)
+      - spinbutton "Dumbbell Romanian Deadlift set 2 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Dumbbell Romanian Deadlift set 3 weight (lb)
+      - spinbutton "Dumbbell Romanian Deadlift set 3 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Dumbbell Romanian Deadlift earlier"
+      - button "Move Dumbbell Romanian Deadlift later"
+    - region "Reverse Lunge":
+      - img "Reverse Lunge illustration"
+      - heading "Reverse Lunge" [level=2]
+      - button "Adjust Reverse Lunge": Choose load · 3 × 10
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 3 of 4
+      - group: How to approach Reverse Lunge
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Reverse Lunge set 1 weight (lb)
+      - spinbutton "Reverse Lunge set 1 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Reverse Lunge set 1: 8 reps" [disabled]': "8"
+      - 'button "Reverse Lunge set 1: 9 reps" [disabled]': "9"
+      - 'button "Reverse Lunge set 1: 10 reps" [disabled]': "10"
+      - 'button "Reverse Lunge set 1: 11 reps" [disabled]': "11"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Reverse Lunge set 2 weight (lb)
+      - spinbutton "Reverse Lunge set 2 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Reverse Lunge set 3 weight (lb)
+      - spinbutton "Reverse Lunge set 3 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Reverse Lunge earlier"
+      - button "Move Reverse Lunge later"
+    - region "Standing Calf Raise":
+      - img "Standing Calf Raise illustration"
+      - heading "Standing Calf Raise" [level=2]
+      - button "Adjust Standing Calf Raise": Choose load · 3 × 15
+      - paragraph: No finished session recorded for this exercise yet.
+      - text: 4 of 4
+      - group: How to approach Standing Calf Raise
+      - text: "1"
+      - strong: Set 1
+      - text: Choose load · How many reps? Standing Calf Raise set 1 weight (lb)
+      - spinbutton "Standing Calf Raise set 1 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - 'button "Standing Calf Raise set 1: 13 reps" [disabled]': "13"
+      - 'button "Standing Calf Raise set 1: 14 reps" [disabled]': "14"
+      - 'button "Standing Calf Raise set 1: 15 reps" [disabled]': "15"
+      - 'button "Standing Calf Raise set 1: 16 reps" [disabled]': "16"
+      - button "Other reps" [disabled]
+      - button "Use voice"
+      - text: "2"
+      - strong: Set 2
+      - text: Choose load · Not recorded Standing Calf Raise set 2 weight (lb)
+      - spinbutton "Standing Calf Raise set 2 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used. 3
+      - strong: Set 3
+      - text: Choose load · Not recorded Standing Calf Raise set 3 weight (lb)
+      - spinbutton "Standing Calf Raise set 3 weight (lb)"
+      - button "Save set weight" [disabled]
+      - text: 0 = bodyweight. Record the load you actually used.
+      - button "Move Standing Calf Raise earlier"
+      - button "Move Standing Calf Raise later" [disabled]
+    - img "Dumbbell Romanian Deadlift illustration"
+    - text: UP NEXT
+    - strong: Dumbbell Romanian Deadlift
+    - text: Choose load · 3 × 10
+    - strong: One set at a time. You’ve got this.
+    - paragraph: 0 of 12 sets recorded. Keep going at your pace.
+    - button "Finish workout" [disabled]
+    - textbox "Message about your workout":
+      - /placeholder: Tell me how that set went…
+    - button "Use voice"
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

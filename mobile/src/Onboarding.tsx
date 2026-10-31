@@ -459,6 +459,7 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                           ? "You’re starting with manual tracking on this device. Create an account from your profile when you’re ready for connected features."
                           : "During private preview, AI tools require an approved account. You can start manual tracking now."}
                       </Text>
+                      {fitness?.trainingDays && <View style={s.hero}><Text style={s.h3}>Your training week</Text>{text(`${fitness.trainingDays} sessions a week from the starter plans, matched to your equipment. Open Workouts to start the first one; you choose every load.`)}</View>}
                       {nutrition && <View style={s.hero}><Text style={s.h3}>{nutrition.targets ? 'Your daily starting targets' : 'Your details are ready'}</Text>{text(nutrition.targets ? `${nutrition.targets.calories} calories · ${nutrition.targets.protein}g protein · ${nutrition.targets.carbs}g carbs · ${nutrition.targets.fat}g fat. Change them anytime in your profile.` : 'Your age, height and usual activity will be saved. Your daily targets stay as they are.')}</View>}
                       <Button
                         label={flow.busy ? "Getting ready…" : "Let’s do this"}

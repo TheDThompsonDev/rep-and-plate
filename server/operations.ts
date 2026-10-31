@@ -24,8 +24,9 @@ type Attempt = Omit<
   GenerationEvent,
   "id" | "user_id" | "operation" | "request_id"
 >;
+// `withGenerationTelemetry` always assigns a request id before entering the store.
 const storage = new AsyncLocalStorage<{
-  context: Context;
+  context: Context & { requestId: string };
   events: GenerationEvent[];
 }>();
 const operations = new Set([
@@ -46,7 +47,7 @@ export function recordGenerationAttempt(event: Attempt) {
     id: randomUUID(),
     user_id: active.context.userId,
     operation: active.context.operation,
-    request_id: active.context.requestId!,
+    request_id: active.context.requestId,
     provider: event.provider,
     model: event.model.slice(0, 100),
     fallback: event.fallback,

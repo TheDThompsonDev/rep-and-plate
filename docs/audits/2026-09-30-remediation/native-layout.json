@@ -1,0 +1,22 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "weight": {
+    "x": 39,
+    "y": 567,
+    "width": 150,
+    "height": 49
+  },
+  "reps": {
+    "x": 201,
+    "y": 567,
+    "width": 150,
+    "height": 49
+  },
+  "width": {
+    "scroll": 390,
+    "viewport": 390
+  }
+}

@@ -1,0 +1,114 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Kitchen":
+    - button "Open kitchen tools"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: YOUR KITCHEN
+    - heading "What sounds good tonight?" [level=1]
+    - paragraph: What you have. What you can make. A little less to figure out.
+    - button "Open meal planner":
+      - text: MAKE SOMETHING GOOD
+      - strong: Start with what’s already here.
+      - text: Explore your meal plan
+    - button "Scan a food"
+    - button "Add a receipt"
+    - region "Shopping for your household":
+      - text: GOOD FOOD. YOUR KIND OF BUDGET.
+      - heading "Make your next shop work for you." [level=2]
+      - paragraph: Saving money, feeding a family, or finding a little more protein? Let’s start with what matters to you.
+      - button "Swaps, list & spending"
+      - button "Shopping preferences"
+    - region "Your first useful week":
+      - text: SPOT’S PLAN FOR YOUR GROCERIES
+      - heading "A receipt today. Less “what’s for dinner?” tomorrow." [level=2]
+      - paragraph: Daily nutrition targets start as generic values. Set your own before using them to assess a meal plan.
+      - button "Review daily nutrition targets"
+      - paragraph: 1 of 6 steps complete. Start with your real groceries and build a week that works for you.
+      - list:
+        - listitem:
+          - strong: Make it your kind of week
+          - paragraph: Set household size, food restrictions, cooking time and budget.
+          - 'button "Start: Make it your kind of week"'
+      - button "See the whole journey"
+    - region "What you have":
+      - heading "What you have" [level=2]
+      - button "Open pantry": Your pantry
+      - strong: 1 item on hand
+      - text: 2 quantities need a check
+      - button "Audit oats 3 labeled servings left · Scanned groceries 400 cal · 15g protein per 100 g":
+        - strong: Audit oats
+        - text: 3 labeled servings left · Scanned groceries 400 cal · 15g protein per 100 g
+      - button "Kroger whole milk, 1 gal (as printed) Check remaining amount · KROGER Nutrition needs a check":
+        - strong: Kroger whole milk, 1 gal (as printed)
+        - text: Check remaining amount · KROGER Nutrition needs a check
+      - button "Quaker Old Fashioned Oats, 42 oz (canister) Check remaining amount · KROGER Nutrition needs a check":
+        - strong: Quaker Old Fashioned Oats, 42 oz (canister)
+        - text: Check remaining amount · KROGER Nutrition needs a check
+      - paragraph: Groceries are what you bought. Only portions you log as eaten count toward daily nutrition.
+    - region "What you can make":
+      - heading "What you can make" [level=2]
+      - button "Open recipes": Recipes
+      - button "Audit oat batch 4 prepared portions left ~200 cal · 8g protein per portion":
+        - strong: Audit oat batch
+        - text: 4 prepared portions left ~200 cal · 8g protein per portion
+      - button "Think of a meal with me"
+    - region "What you need to buy":
+      - heading "What you need to buy" [level=2]
+      - button "Review shopping list": View plan
+      - paragraph: Build a meal plan and we’ll show the ingredients you still need, after checking your pantry.
+    - region "Recent grocery trips":
+      - heading "Recent grocery trips" [level=2]
+      - button "Scanned groceries Sep 30, 2026 · 1 food items":
+        - strong: Scanned groceries
+        - text: Sep 30, 2026 · 1 food items
+      - button "KROGER Sep 30, 2026 · 2 food items":
+        - strong: KROGER
+        - text: Sep 30, 2026 · 2 food items
+    - button "Just got groceries? Show me what you picked up."
+    - navigation "Kitchen navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+- dialog "Your week of meals":
+  - heading "Your week of meals" [level=2]
+  - button "Close dialog"
+  - paragraph:
+    - text: Start with what’s in your kitchen.
+    - strong: Make room for meals you enjoy.
+  - paragraph: A seven-day draft for 1 person. Review ingredients and portions before approving.
+  - group "Meals to plan each day":
+    - text: Meals to plan each day
+    - checkbox "Breakfast" [disabled]
+    - text: Breakfast
+    - checkbox "Lunch" [disabled]
+    - text: Lunch
+    - checkbox "Dinner" [checked] [disabled]
+    - text: Dinner
+    - checkbox "Snack" [disabled]
+    - text: Snack Choose at least one meal type. Each gets a place on all seven days.
+  - text: Week starting
+  - textbox "Week starting" [disabled]: 2026-09-30
+  - button "Planning your meals…" [disabled]
+  - status: Checking your ingredients, preferences, and portions…
+  - heading "Make the most of your groceries" [level=3]
+  - article:
+    - strong: Audit oats
+    - paragraph: 3 labeled servings remain from your 2026-09-30 purchase.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - article:
+    - strong: Kroger whole milk, 1 gal (as printed)
+    - paragraph: Check how much you have, then include it in a meal.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - article:
+    - strong: Quaker Old Fashioned Oats, 42 oz (canister)
+    - paragraph: Check how much you have, then include it in a meal.
+    - button "Find a meal idea"
+    - button "Dismiss for now"
+  - paragraph: Purchase dates help organize ideas. They do not tell us whether food is fresh or spoiled.

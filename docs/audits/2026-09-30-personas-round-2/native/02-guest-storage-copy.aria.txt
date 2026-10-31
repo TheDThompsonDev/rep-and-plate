@@ -1,0 +1,15 @@
+- text: Rep & Plate
+- button "Sign in"
+- img "Spot connecting pasta photos with red string on a conspiracy board."
+- text: YOUR PACE. SPOT’S ENTHUSIASM.
+- heading "What should I call you?" [level=1]
+- text: One tiny introduction before I become unnecessarily invested in your day. Your name (optional)
+- textbox "Your name (optional)": Developer audit
+- text: Where would you like to start?
+- radio "Food & meals"
+- radio "Movement & workouts"
+- radio "A little of both"
+- text: Your records stay on this device. Export a backup or sign in to save them to an account.
+- button "That’s me. Let’s go."
+- button "Back to account"
+- text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

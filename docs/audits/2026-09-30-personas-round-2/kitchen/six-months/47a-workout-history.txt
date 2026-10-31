@@ -1,0 +1,74 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: Workout units
+    - combobox "Workout units":
+      - option "lb" [selected]
+      - option "kg"
+    - button "Log walk or cardio"
+    - heading "What should you do today?" [level=1]
+    - paragraph: Your next workout, with room for how you feel today.
+    - button "Create a workout for me"
+    - button "Upper Body ~42 min"
+    - button "Lower Body ~35 min" [pressed]
+    - button "Full Body ~30 min"
+    - text: Workout option
+    - heading "Lower Body · ~35 min" [level=2]
+    - paragraph: Build your session around legs and glutes.
+    - paragraph: Example rep targets. Choose a comfortable load before logging; no weight is prescribed. Use 0 only for bodyweight work.
+    - button "Start workout"
+    - img "Dumbbells on a gym bench"
+    - heading "Exercises" [level=2]
+    - text: 4 exercises · ~35 min
+    - 'button "1 Goblet Squat illustration Goblet Squat Choose load · 3 × 10 Last recorded: 35 lb × 10, 35 lb × 8 · Sep 30, 2026"':
+      - text: "1"
+      - img "Goblet Squat illustration"
+      - strong: Goblet Squat
+      - text: "Choose load · 3 × 10 Last recorded: 35 lb × 10, 35 lb × 8 · Sep 30, 2026"
+    - button "2 Dumbbell Romanian Deadlift illustration Dumbbell Romanian Deadlift Choose load · 3 × 10 No finished session recorded for this exercise yet.":
+      - text: "2"
+      - img "Dumbbell Romanian Deadlift illustration"
+      - strong: Dumbbell Romanian Deadlift
+      - text: Choose load · 3 × 10 No finished session recorded for this exercise yet.
+    - button "3 Reverse Lunge illustration Reverse Lunge Choose load · 3 × 10 No finished session recorded for this exercise yet.":
+      - text: "3"
+      - img "Reverse Lunge illustration"
+      - strong: Reverse Lunge
+      - text: Choose load · 3 × 10 No finished session recorded for this exercise yet.
+    - 'button "4 Standing Calf Raise illustration Standing Calf Raise Choose load · 3 × 15 Last recorded: 0 lb × 15 · Sep 30, 2026"':
+      - text: "4"
+      - img "Standing Calf Raise illustration"
+      - strong: Standing Calf Raise
+      - text: "Choose load · 3 × 15 Last recorded: 0 lb × 15 · Sep 30, 2026"
+    - heading "Your recent training" [level=2]
+    - button "View history"
+    - button "3 sets across your latest finished session. Only the sets you recorded are counted.":
+      - strong: 3 sets across your latest finished session.
+      - paragraph: Only the sets you recorded are counted.
+    - 'button "Last finished: Lower Body Sep 30, 2026 · 2 exercises with recorded sets."':
+      - strong: "Last finished: Lower Body"
+      - paragraph: Sep 30, 2026 · 2 exercises with recorded sets.
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+    - dialog "Session history":
+      - heading "Session history" [level=2]
+      - button "Close dialog"
+      - paragraph: Your latest 1 finished session. Unrecorded sets are not included.
+      - heading "Lower Body · Saved" [level=3]
+      - paragraph: Sep 30, 2026
+      - paragraph:
+        - strong: Goblet Squat
+        - text: ": 35 lb × 10, 35 lb × 8"
+      - paragraph:
+        - strong: Standing Calf Raise
+        - text: ": 0 lb × 15"
+      - button "Correct Lower Body"

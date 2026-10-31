@@ -1,0 +1,38 @@
+{
+  "method": "Agent-led simulated persona inspection; wishes and recurring-use predictions are hypotheses, not participant statements",
+  "findings": [
+    {
+      "localId": "R01",
+      "title": "Pantry review queue bypasses the available product-match comparison",
+      "classification": "existing capability difficult to discover",
+      "priority": "P2",
+      "personas": ["six-months", "fit-new-tracker", "beginner"],
+      "stage": "Receipt capture → pantry food-review queue",
+      "expectation": "A request to confirm product and nutrition offers the candidates already found for that receipt item.",
+      "observed": "A live synthetic receipt saved two food items and one nonfood item. The queue correctly excluded nonfood. Review Kroger Vitamin D Whole Milk opened a manual details form without the saved USDA candidates. Closing that form returned to Your groceries; expanding the item exposed Review USDA matches and the retained candidates.",
+      "wishHypothesis": "Put product matching and manual label correction together at the queue entry, so confirming a package does not require discovering a second review path.",
+      "missingFeatureCheck": "Product matching is present, including barcode, text search and package-serving calculator. This is a routing/discoverability issue, not a request to build product search.",
+      "workaround": "Close the manual editor, expand the item in Your groceries, choose Review USDA matches.",
+      "recurringUse": "Potential weekly cost for receipt/pantry users; not relevant to people who only log meals.",
+      "confidence": "High for observed routing/source; unvalidated for human preference or severity",
+      "oldFindings": ["F27"],
+      "source": ["src/features/pantry/PantryDialog.tsx:343", "src/AICards.tsx:195", "src/AICards.tsx:199"],
+      "evidence": ["evidence/capture-deep/03-receipt-details.txt", "evidence/capture-deep/04-product-review.txt", "evidence/capture-deep/06-expanded-product.txt", "evidence/capture-deep/07-usda-candidates.txt"],
+      "suggestedAcceptance": "For an uncertain food with saved candidates, the queue entry exposes match comparison and manual correction without backing out into a different list; purchase quantity remains explicitly reviewed."
+    }
+  ],
+  "strengths": [
+    "All five fresh onboarding/all-surface traversals completed: 177 checkpoints, zero captured page errors and console errors.",
+    "Live strength, walking and meal proposals remained reviewable; common food response and card totals agreed. This establishes internal consistency, not nutritional accuracy.",
+    "Live synthetic receipt retained its September 25 purchase date separately from September 30 capture date; soap was nonfood and did not enter the food-review queue.",
+    "Package calculator produced 16 servings from 1 package ×16 servings without applying the selected product. The package confirmation requirement remained visible; no actual package was available or falsely confirmed.",
+    "Reviewed receipt spending matched the fictional printed $12.77, persisted after reload and added zero meals. The spending panel explicitly included nonfood household purchases.",
+    "16 focused desktop fixtures passed for voice review/cancellation/denial, scanner product/private-label/invalid-code/upload decoding, receipt preview/offline retention and assistant proposal acknowledgment/revocation. Provider/account/device fixtures are not live service or hardware evidence."
+  ],
+  "limitations": [
+    "Common all-surface traversal includes browsing and empty states; substantive workflow evidence is supplied separately by deep journeys.",
+    "One synthetic receipt is not representative extraction or nutrient-accuracy validation.",
+    "Some first snapshots captured lazy loading. Follow-ups waited for final controls; those loading snapshots are not product failures.",
+    "No real email, hosted deployment, physical phone, actual speech, or natural human avoidance was tested."
+  ]
+}

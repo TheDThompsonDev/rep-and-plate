@@ -1,5 +1,6 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { expect, test } from "@playwright/test";
-import { mockCloud } from "../../tests/cloud-fixture";
+import { mockCloud } from "../../e2e-shared/cloud-fixture";
 
 test("native goal setup saves a starting weight, supports goal edits and exposes account access from the profile icon", async ({
   page,
@@ -33,10 +34,15 @@ test("native goal setup saves a starting weight, supports goal edits and exposes
   await page
     .getByRole("textbox", { name: "Target weight", exact: true })
     .fill("78");
+  // Optional training week in the same step.
+  await page.getByRole("button", { name: "3 days", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Dumbbells", exact: true }).click();
+  await page.getByRole("button", { name: "Some experience", exact: true }).click();
   await page
     .getByRole("button", { name: "Save my starting point", exact: true })
     .click();
   await page.getByRole("button", { name: "Skip targets for now", exact: true }).click();
+  await expect(page.getByText("Your training week", { exact: true })).toBeVisible();
   await page
     .getByRole("button", { name: "Let’s do this", exact: true })
     .click();
@@ -45,7 +51,22 @@ test("native goal setup saves a starting weight, supports goal edits and exposes
       JSON.parse(localStorage.getItem("dannys-health.native.v1")!),
     );
   expect((await records()).bodyWeights).toHaveLength(1);
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  expect((await records()).profile.trainingProgram).toMatchObject({
+    daysPerWeek: 3,
+    equipment: ["bodyweight", "dumbbells"],
+    experience: "some",
+  });
+  // Workouts leads with the week; the next session starts with loads the person confirms.
+  await page.getByRole("button", { name: "Workouts", exact: true }).click();
+  await expect(page.getByText("Your week", { exact: true })).toBeVisible();
+  await expect(page.getByText("Session 1 · Upper Body · Next up", { exact: true })).toBeVisible();
+  await expect(page.getByText(/Dumbbell Bench Press 3 × 8/)).toBeVisible();
+  await page.getByRole("button", { name: "Start Session 1 · Upper Body", exact: true }).click();
+  await expect(page.getByText("Session 1 · Upper Body", { exact: true })).toBeVisible();
+  const started = (await records()).workout;
+  expect(started.status).toBe("active");
+  expect(started.exercises[0]).toMatchObject({ name: "Dumbbell Bench Press", weight: 0, weightConfirmed: false });
+  await openProfile(page);
   await expect(
     page.getByText("Lose weight · Target: 78 kg · Weekly check-ins", {
       exact: true,
@@ -69,7 +90,7 @@ test("native goal setup saves a starting weight, supports goal edits and exposes
     }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await expect(
     page.getByText("Lose weight · Target: 77 kg · Weekly check-ins", {
       exact: true,

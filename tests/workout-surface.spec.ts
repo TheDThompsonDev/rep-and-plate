@@ -157,3 +157,50 @@ test("workout previews and recent history use completed recorded sets rather tha
     page.getByRole("region", { name: "Bench Press", exact: true }),
   ).toContainText("Last recorded: 95 lb · 8, 6 reps");
 });
+
+test("without a training week the landing keeps starter plans and offers one setup entry point", async ({
+  page,
+}) => {
+  await expect(
+    page.getByRole("heading", { name: "What should you do today?", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your week", exact: true })).toHaveCount(0);
+  const setup = page.getByRole("button", { name: "Set up your training week", exact: true });
+  await expect(setup).toHaveCount(1);
+  await expect(page.getByText(/Example rep targets/)).toBeVisible();
+  await setup.click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.getByRole("heading", { name: "Your training week", exact: true })).toBeVisible();
+  // Equipment and experience only appear once a week is chosen.
+  await expect(dialog.getByRole("checkbox", { name: "Dumbbells", exact: true })).toHaveCount(0);
+  await dialog.getByLabel("Training days per week", { exact: true }).selectOption("2");
+  await dialog.getByLabel("Strength training experience", { exact: true }).selectOption("new");
+  await dialog.getByRole("button", { name: "Save my starting point", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Your week", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Session 1 · Full Body · ~20 min", exact: true })).toBeVisible();
+  await expect(page.getByText(/Example rep targets/)).toHaveCount(0);
+  await expect(page.getByText(/Starting targets you confirm/)).toBeVisible();
+  // Someone new to strength training gets two sets, bodyweight substitutes and no stored load.
+  await expect(page.locator(".workout-preview").first()).toContainText("Bodyweight Squat");
+  await expect(page.locator(".workout-preview").first()).toContainText("Choose load · 2 × 10");
+  await expect(page.getByRole("heading", { name: "Starter plans", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Create a workout for me", exact: true })).toBeEnabled();
+  const program = (await stored(page)).profile.trainingProgram;
+  expect(program).toMatchObject({ daysPerWeek: 2, equipment: ["bodyweight"], experience: "new" });
+  for (const session of program.sessions)
+    for (const exercise of session.exercises)
+      expect(Object.keys(exercise).sort()).toEqual(["name", "sets", "target"]);
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Your week", exact: true })).toBeVisible();
+  // Removal is explicit and leaves every other record intact.
+  const before = await stored(page);
+  await page.getByRole("button", { name: "Edit training week", exact: true }).click();
+  await page.getByRole("button", { name: "Remove training week", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "What should you do today?", exact: true }),
+  ).toBeVisible();
+  const after = await stored(page);
+  expect(after.profile.trainingProgram).toBeUndefined();
+  expect(after.profile.fitnessGoal).toEqual(before.profile.fitnessGoal);
+  expect(after.workout).toEqual(before.workout);
+});

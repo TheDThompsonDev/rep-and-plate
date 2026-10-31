@@ -28,9 +28,6 @@
   src: url("/fonts/font-3.ttf") format("truetype");
 }
 .fuel-chat.refined-surface {
-  --refined-ink: #102d38;
-  --refined-muted: #647d79;
-  --refined-line: #e2eee8;
   font-family: "DM Sans", sans-serif;
   color: var(--refined-ink);
   overflow-y: auto;

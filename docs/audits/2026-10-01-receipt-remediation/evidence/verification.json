@@ -1,0 +1,243 @@
+{
+  "captured": "2026-10-01T19:30:49.070Z",
+  "method": "Direct configured verification on final production files; managed CYC startup failed before run creation with existing source-fingerprint size limit. No protected settings changed.",
+  "checks": [
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src server",
+      "exitCode": 0,
+      "passed": 420,
+      "files": 65,
+      "log": "unit.log"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "build.log",
+      "note": "Build succeeds with large-chunk warning; no size threshold changed."
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --reporter=list",
+      "exitCode": 0,
+      "passed": 312,
+      "log": "browser.log"
+    },
+    {
+      "command": "npm run mobile:check",
+      "exitCode": 0,
+      "log": "mobile-check.log"
+    },
+    {
+      "command": "npm --prefix mobile run lint",
+      "exitCode": 0,
+      "log": "mobile-lint.log",
+      "warnings": 9,
+      "note": "Warnings in unchanged native screen files; zero lint errors."
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test -c mobile/playwright.config.ts mobile/e2e/onboarding.spec.ts mobile/e2e/spot.spec.ts mobile/e2e/spot-personality.spec.ts mobile/e2e/plan-purchase.spec.ts --reporter=list",
+      "exitCode": 0,
+      "passed": 7,
+      "log": "native-journey.log",
+      "note": "Expo web runtime; physical phones not tested."
+    },
+    {
+      "command": "node node_modules/tsx/dist/cli.mjs docs/audits/2026-10-01-receipt-remediation/evidence/visual-check.ts",
+      "exitCode": 0,
+      "log": "visual.log",
+      "widths": [
+        320,
+        390,
+        1100
+      ],
+      "checks": [
+        {
+          "width": 320,
+          "exampleFit": true,
+          "sourceFit": true,
+          "dialogFit": true,
+          "keyboardDinnerFocus": true,
+          "keyboardSourceDisclosure": true,
+          "zoomPressed": true,
+          "pageErrors": []
+        },
+        {
+          "width": 390,
+          "exampleFit": true,
+          "sourceFit": true,
+          "dialogFit": true,
+          "keyboardDinnerFocus": true,
+          "keyboardSourceDisclosure": true,
+          "zoomPressed": true,
+          "pageErrors": []
+        },
+        {
+          "width": 1100,
+          "exampleFit": true,
+          "sourceFit": true,
+          "dialogFit": true,
+          "keyboardDinnerFocus": true,
+          "keyboardSourceDisclosure": true,
+          "zoomPressed": true,
+          "pageErrors": []
+        }
+      ]
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "log": "diff-check.log"
+    }
+  ],
+  "redEvidence": "Initial discovery/recovery tests failed against original UI. Inconclusive-read case failed before recovery action. Pending dinner test failed with empty composer. Strengthened dialog-overflow test failed before min-width repair. First full suite preserved as browser-before-review.log: 308 passed, 4 old tour-order expectations failed; updated sequence now covered.",
+  "semanticReview": {
+    "reviewer": "Self-review",
+    "findings": "Resolved saved recovery, incomplete-result caching, account handoff, rejected draft closure, used stock, pending dinner loss, source-image overflow and shared tour-order consumers.",
+    "learning": "Recorded in receipt-journey.md and error-ledger.md; user acceptance pending.",
+    "dismissed": "No speculative analytics, OCR accuracy claims, photo duplication, authorization bypass, live deployment or native redesign."
+  },
+  "visualInspection": "Observed welcome-390, result-320, enlarged source-320 before and after repair, and example-1100 screenshots. Agent-browser separately opened welcome and the isolated example.",
+  "limits": [
+    "Controlled provider results, not representative live OCR",
+    "No real-user comprehension or conversion measurement",
+    "No physical camera validation",
+    "No hosted deployment"
+  ],
+  "sourceRevisions": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "6b5c9c270ca62d9f068a42251066ad81f0cf5b40f7103751b857d4e875b4cb8b"
+    },
+    {
+      "path": "src/ChatLayer.tsx",
+      "sha256": "107f84dfd836f805da18a504920eb48374c9d5a7cb21754ecadc8c45bdf7959b"
+    },
+    {
+      "path": "src/AICards.tsx",
+      "sha256": "08610be4dec9f1e0030d1c89a81cf364b68d3847359f0d9b120a313f35592485"
+    },
+    {
+      "path": "src/KitchenPage.tsx",
+      "sha256": "41fc464ec1cee3d455c3e62d2c6a08cba0de3854f77c7550c791d9c90ca6416c"
+    },
+    {
+      "path": "src/ai-client.ts",
+      "sha256": "586da62dc6514f9171899679d490f055adeb5be86daac64f7338550f398b7579"
+    },
+    {
+      "path": "src/domain.ts",
+      "sha256": "dd0457e100cc1b2c19fe0f6959f99ece4991e5f571ad71ddd191125ac3c59487"
+    },
+    {
+      "path": "src/chat-guidance.ts",
+      "sha256": "795df09657ad2945bbd1eeb3aeeea87f1a8bcf3ce56e72ba5bdc015c74e357b0"
+    },
+    {
+      "path": "src/features/onboarding/Onboarding.tsx",
+      "sha256": "39122d0f56a189f0dc6d98f404cbcd62d7b9cb4ba7910bd2a39d87e96df2ac19"
+    },
+    {
+      "path": "src/features/onboarding/model.ts",
+      "sha256": "57a5a3ce6b4492a271076237874568c312c254cf1dd616f4cfe51a1d2b4e4939"
+    },
+    {
+      "path": "src/features/planning/FirstWeek.tsx",
+      "sha256": "9be4c911907092ff7d71ca7d6f24dde3c21f19c6f483b56f67eacee4ad512788"
+    },
+    {
+      "path": "src/features/planning/first-week.ts",
+      "sha256": "0c0ff92d4ab8dc54fd26b630a45f4cca201e12c98305a8c92d8d33368ed66074"
+    },
+    {
+      "path": "src/features/pantry/PantryDialog.tsx",
+      "sha256": "65fa2c7f43d3fc76bb22883d48abf984a1ba81077e58e6c8d468ce9d227521b3"
+    },
+    {
+      "path": "src/features/products/ReceiptProductReview.tsx",
+      "sha256": "1d5e242ee0c429a9061b0eff47dfe49b84cb29fd43bef320cf4ec28c599fefe1"
+    },
+    {
+      "path": "src/features/shopping/ReceiptReview.tsx",
+      "sha256": "d846160447750adf45248b2e9242b58ef80306f3d867cd2cdc6e2807d394b2d3"
+    },
+    {
+      "path": "src/features/shopping/ShoppingDialog.tsx",
+      "sha256": "5a99a93d978e84c3fefa0663b28ffe1cb6c249cf76193b75f7cf6143f987fdf7"
+    },
+    {
+      "path": "src/features/cloud/CloudAccount.tsx",
+      "sha256": "174f4559de813919f029262e35157f64665aab4b2e839bab1dc24c5c33d42c4d"
+    },
+    {
+      "path": "server/preview-page.ts",
+      "sha256": "c0b9eb3b4cf6ef741ea5323de515330ee8da741d03b558e493fd726469841c95"
+    },
+    {
+      "path": "tests/receipt-journey.spec.ts",
+      "sha256": "224c47300e9aa2afdfa03c204fe0093d41c709d63fa773069bc993d06b3d64c6"
+    },
+    {
+      "path": "tests/receipt-capture.spec.ts",
+      "sha256": "c84e3acea5e0d83e784ee11792ecf8c5ee678599c478daf82ec52d1a6cc1fac8"
+    },
+    {
+      "path": "tests/onboarding.spec.ts",
+      "sha256": "10745f2b37713b03fa00c57962db5de8ad95ee8236dc9f782b7c073ede6b6dab"
+    },
+    {
+      "path": "tests/plan-purchase-connection.spec.ts",
+      "sha256": "a71c7380b00632b5a4e501027bfd3af5c8e3cedbf78cf466884a0cec48dec19b"
+    },
+    {
+      "path": "tests/spot.spec.ts",
+      "sha256": "0dac575c940fe14a0725c2ae459c9576cf550411e9e40a8398ce9728072e3f3b"
+    },
+    {
+      "path": "tests/spot-personality.spec.ts",
+      "sha256": "8edcdc55ed22dec01bc63d6ad64f5084fac851378e30e4f554425cc8816ded29"
+    },
+    {
+      "path": "mobile/e2e/onboarding.spec.ts",
+      "sha256": "b3834e1c1bfdb2ac274feabe33486b3db3cf1a663f6f797766d7781dad0b83db"
+    },
+    {
+      "path": "mobile/e2e/spot.spec.ts",
+      "sha256": "a0486d8c6cf9e0b688bec0fd3f5647eb095577aa020af2ad330b4265a3ce10ec"
+    },
+    {
+      "path": "src/features/receipts/journey.test.ts",
+      "sha256": "471d02fc8ba5294517ba225d9498580a9d915167cf07c1eb4b509c3c3a08d76b"
+    },
+    {
+      "path": "src/features/receipts/journey.ts",
+      "sha256": "5d06184dffc9a3664bb77920b2f00887586774ed5d7a92bcbd9cf5e31e8b9e4b"
+    },
+    {
+      "path": "src/features/receipts/receipt-journey.css",
+      "sha256": "96358af6ffcba54a4b51125dc30bd5e8e6cacf634d8dea91ebd2a57da288ab63"
+    },
+    {
+      "path": "src/features/receipts/ReceiptEntry.tsx",
+      "sha256": "ae494d8f69a8a661fc1db96dd4dc96922cd4be8ca1df9125f889d471c3ff5cb5"
+    },
+    {
+      "path": "src/features/receipts/ReceiptExample.tsx",
+      "sha256": "41a4596598666f69e56fc43518c9be43d1bb6a820dc26f7a8f54e5cf36eb383e"
+    },
+    {
+      "path": "src/features/receipts/ReceiptSource.tsx",
+      "sha256": "cb3cca7626909b0ffad59900fc1f88df3ffa0ed91eb518338943eb2a78e931b9"
+    },
+    {
+      "path": "docs/context/receipt-journey.md",
+      "sha256": "3e73e5805ebeb573dd5551fd71dd412214db578e9d41db1d39316afee1fb54ab"
+    },
+    {
+      "path": "docs/context/INDEX.md",
+      "sha256": "87b6f0e3807256449fdcff7b28a121dd017dad9b6c5d1c53afae5c86f6d55ad2"
+    },
+    {
+      "path": "docs/context/error-ledger.md",
+      "sha256": "94eab4e1c42ee57decdae7b647a2978233a61c7bfde6de557701c802da832764"
+    }
+  ]
+}

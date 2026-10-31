@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { agentRequestSchema, manageRequestSchema, type AgentContext } from '../../src/features/connections/contracts.ts';
 import { AgentError, AgentService } from './service.ts';
 import type { AgentStore } from './store.ts';
+import { BODY_LIMITS } from '../routes.ts';
 
 export type AgentDependencies = {
   store: AgentStore;
@@ -64,7 +65,7 @@ export function createAgentHandler(deps: AgentDependencies) {
       }
       if (!req.headers['content-type']?.toLowerCase().startsWith('application/json')) throw new AgentError(415, 'CONTENT_TYPE', 'Send application/json.');
       const chunks: Buffer[] = []; let size = 0;
-      for await (const part of req) { const chunk = Buffer.from(part); size += chunk.length; if (size > 1_000_000) throw new AgentError(413, 'TOO_LARGE', 'This request exceeds 1 MB.'); chunks.push(chunk); }
+      for await (const part of req) { const chunk = Buffer.from(part); size += chunk.length; if (size > BODY_LIMITS.agents) throw new AgentError(413, 'TOO_LARGE', 'This request exceeds 1 MB.'); chunks.push(chunk); }
       let body: unknown;
       try { body = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new AgentError(400, 'INVALID_JSON', 'Send a valid JSON object.'); }
       if (managing) {

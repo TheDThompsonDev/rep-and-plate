@@ -1,0 +1,72 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Workouts":
+    - button "Open workout menu"
+    - button "Rep & Plate home": Rep & Plate
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - text: Workout units
+    - combobox "Workout units":
+      - option "lb" [selected]
+      - option "kg"
+    - button "Log walk or cardio"
+    - group: Walks & cardio · 1 recorded
+    - heading "What should you do today?" [level=1]
+    - paragraph: Your next workout, with room for how you feel today.
+    - button "Create a workout for me"
+    - button "Upper Body ~42 min" [pressed]
+    - button "Lower Body ~35 min"
+    - button "Full Body ~30 min"
+    - text: Workout option
+    - heading "Upper Body · ~42 min" [level=2]
+    - paragraph: A balanced session for your chest, back, and arms.
+    - paragraph: Example rep targets. Choose a comfortable load before logging; no weight is prescribed. Use 0 only for bodyweight work.
+    - button "Start workout"
+    - img "Dumbbells on a gym bench"
+    - heading "Exercises" [level=2]
+    - text: 4 exercises · ~42 min
+    - 'button "1 Bench Press illustration Bench Press Choose load · 3 × 8 Last recorded: 15 lb × 7 · Sep 30, 2026"':
+      - text: "1"
+      - img "Bench Press illustration"
+      - strong: Bench Press
+      - text: "Choose load · 3 × 8 Last recorded: 15 lb × 7 · Sep 30, 2026"
+    - button "2 Incline Dumbbell Press illustration Incline Dumbbell Press Choose load · 3 × 10 No finished session recorded for this exercise yet.":
+      - text: "2"
+      - img "Incline Dumbbell Press illustration"
+      - strong: Incline Dumbbell Press
+      - text: Choose load · 3 × 10 No finished session recorded for this exercise yet.
+    - button "3 Seated Cable Row illustration Seated Cable Row Choose load · 3 × 12 No finished session recorded for this exercise yet.":
+      - text: "3"
+      - img "Seated Cable Row illustration"
+      - strong: Seated Cable Row
+      - text: Choose load · 3 × 12 No finished session recorded for this exercise yet.
+    - button "4 Triceps Pushdown illustration Triceps Pushdown Choose load · 3 × 12 No finished session recorded for this exercise yet.":
+      - text: "4"
+      - img "Triceps Pushdown illustration"
+      - strong: Triceps Pushdown
+      - text: Choose load · 3 × 12 No finished session recorded for this exercise yet.
+    - heading "Your recent training" [level=2]
+    - button "View history"
+    - button "1 sets across your latest finished session. Only the sets you recorded are counted.":
+      - strong: 1 sets across your latest finished session.
+      - paragraph: Only the sets you recorded are counted.
+    - 'button "Last finished: Upper Body Sep 30, 2026 · 1 exercise with recorded sets."':
+      - strong: "Last finished: Upper Body"
+      - paragraph: Sep 30, 2026 · 1 exercise with recorded sets.
+    - navigation "Workouts navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"
+    - dialog "Session history":
+      - heading "Session history" [level=2]
+      - button "Close dialog"
+      - paragraph: Your latest 1 finished session. Unrecorded sets are not included.
+      - heading "Upper Body · Saved" [level=3]
+      - paragraph: Sep 30, 2026
+      - paragraph:
+        - strong: Bench Press
+        - text: ": 15 lb × 7"
+      - button "Correct Upper Body"

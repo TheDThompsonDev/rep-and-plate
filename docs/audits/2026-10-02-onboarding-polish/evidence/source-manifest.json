@@ -1,0 +1,165 @@
+{
+  "recordedAt": "2026-10-02T14:20:47.560Z",
+  "files": [
+    {
+      "path": "src/features/onboarding/useOnboarding.ts",
+      "sha256": "c3f27fe9995e3e20633dc514901661eeab1660c2c40a9bdfe33509c6496b427d"
+    },
+    {
+      "path": "src/features/onboarding/model.ts",
+      "sha256": "1a3b9bbb95624bd54fbd809f97b3d3a4252e120fa82c7c9fd3bfd8ef1603de5a"
+    },
+    {
+      "path": "src/features/onboarding/Onboarding.tsx",
+      "sha256": "0946db5a234d00f6222e8212ad07dfe21fbf32b1f1cf41b98ac58ce617d6df14"
+    },
+    {
+      "path": "src/features/onboarding/onboarding.css",
+      "sha256": "bae384d38b6a909e79a26acb3c3135a2effd1424174b6ad846dc3f698c77e03c"
+    },
+    {
+      "path": "src/features/onboarding/draft.ts",
+      "sha256": "87396aaeabbe7b75c6d9e04306e6b0e5adcae893cf4116e6d40370869625dba8"
+    },
+    {
+      "path": "src/features/onboarding/draft.test.ts",
+      "sha256": "290a87a09d8f8e04034d6d69cc6b5cb4bc1c5d5861272aaeba37b565a386b7b0"
+    },
+    {
+      "path": "src/features/onboarding/first-log.ts",
+      "sha256": "e0d88223270709b8d9505d26271657fe20b1bebfb5832dbd20e88a6f659e309a"
+    },
+    {
+      "path": "src/features/onboarding/first-log.test.ts",
+      "sha256": "6229b6c564f6c00a6af7379c3bef67ebdfb52bddeedcd2d52ff4326fba03cb01"
+    },
+    {
+      "path": "src/features/onboarding/FirstLog.tsx",
+      "sha256": "3488bae715fdb0d30015b981c6d666c3154bfdf3ca1cf4e1c8f613a6512f5acf"
+    },
+    {
+      "path": "src/features/onboarding/first-log.css",
+      "sha256": "5a9d0347c87ca7e684f2382a02633c8942c95989be6561bb364847dd0c77eb95"
+    },
+    {
+      "path": "src/features/progress/FitnessSetup.tsx",
+      "sha256": "1f510f0786fa9d8766833a82c3255ce6b54b62c1b51013e73fe2a4284270e5a2"
+    },
+    {
+      "path": "src/features/progress/NutritionSetup.tsx",
+      "sha256": "34f4a2a02d008086deb6b1341843423b20e62785ac0f73e9dfb6967dbf19ce81"
+    },
+    {
+      "path": "src/features/progress/nutrition-setup.ts",
+      "sha256": "ed027c562f66733bd4c32413d2a37966540c0b5bd4e77965a9b460d3827f2eb3"
+    },
+    {
+      "path": "src/features/progress/useNutritionSetup.ts",
+      "sha256": "914258a3e544f36d58cde625ecc3edfb4f3898887252cfc9a9d9f05de7f88cdb"
+    },
+    {
+      "path": "src/features/progress/fitness-setup.css",
+      "sha256": "951558e211f6c752a516117d4677bbbf1ffc8514582d10a164e5656042ec25b5"
+    },
+    {
+      "path": "src/features/cloud/account-storage.ts",
+      "sha256": "64d6876c7e5eb6c32b50d83e3c6aeefcbcb70e1fbbbfd5816fb9ecf7e104f795"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "0fd784b1770d04fc28351e5a4f75579ed32e0ff2ebfb081f5c3a520f23d206a6"
+    },
+    {
+      "path": "src/ChatLayer.tsx",
+      "sha256": "911f6e3891b51f9d7440029b5864bc0aa234f5da1be22f46bb85eaa5857f4776"
+    },
+    {
+      "path": "src/WorkoutPage.tsx",
+      "sha256": "caee2df1b20d70cad00b8065a85789dcb55f1e73d1a03e79ed5bdcc7bf96e0f2"
+    },
+    {
+      "path": "mobile/App.tsx",
+      "sha256": "317d2cb07024b9b21c2a49e146625e6884936127313366e9dd776ad53ffa4284"
+    },
+    {
+      "path": "mobile/src/Onboarding.tsx",
+      "sha256": "c67f46332391224de7dc9487ecaf37d9fa83f551441a1889194622c76b002729"
+    },
+    {
+      "path": "mobile/src/NutritionSetup.tsx",
+      "sha256": "37a1a5f55ffe76f348f1c336d93f959143fde9f9d3a076be646d3b72ee8908ee"
+    },
+    {
+      "path": "mobile/src/FitnessSetup.tsx",
+      "sha256": "5bda401ba29043087ca1873fafd0cd9b0e2eb8e5f513ae48d6f0fae8bca0772a"
+    },
+    {
+      "path": "mobile/src/FirstLog.tsx",
+      "sha256": "b6acf8ff58a486297565c944f5dcbca0340fb5adf52707fd41e08b96f8a1dc29"
+    },
+    {
+      "path": "mobile/src/NativeWorkout.tsx",
+      "sha256": "bf696b3c1f30eaf387178cc2330cd660bc6af3e30056a1ca49ca3b36fa773fdb"
+    },
+    {
+      "path": "mobile/src/storage.ts",
+      "sha256": "2f63e7041752f392305e2edd249ba657a4a553ecb807ff375c305c1a481c472c"
+    },
+    {
+      "path": "tests/onboarding-resume.spec.ts",
+      "sha256": "ab32513050f371e153164651019a91a5d58bf4e30c17e91f634a00b0e0e7a3a4"
+    },
+    {
+      "path": "tests/onboarding-first-log.spec.ts",
+      "sha256": "7a9f69178bb78a7fceb6cf6b997b5322b48c648113cad036560b12902f0546fd"
+    },
+    {
+      "path": "tests/onboarding-nutrition.spec.ts",
+      "sha256": "c6a384b0766155619707f2cbd8e2a9c3934effb0d1d2c0f594cd708e05ae833c"
+    },
+    {
+      "path": "tests/account-security.spec.ts",
+      "sha256": "198482ce98ed92c8be66fadee7d27832b39b682b0042b72589b4b39117590e01"
+    },
+    {
+      "path": "tests/interaction-guide.spec.ts",
+      "sha256": "8ee118a2ae9b06ae6b9f86a08d1b807037f7db0b69620d2abbe5cc717c985f96"
+    },
+    {
+      "path": "mobile/e2e/onboarding-resume.spec.ts",
+      "sha256": "c24742a0a26672fd82d1ac8bdde2493b95bdeb0bc6a085364db491104200b490"
+    },
+    {
+      "path": "mobile/e2e/onboarding-first-log.spec.ts",
+      "sha256": "7e68dc81876c23de29edc77fc649f10561f387cf0284c696204b67ca9224d8d3"
+    },
+    {
+      "path": "mobile/e2e/onboarding-nutrition.spec.ts",
+      "sha256": "f923df6dd6df814817e9f9c1ce22816d682e945d05b31037c57d7d9e09d23926"
+    },
+    {
+      "path": "mobile/e2e/account-security.spec.ts",
+      "sha256": "79baa2004a8232d7fdd15cc4174ca187251c7db2e775d5c3a14f6f29d137d8a9"
+    },
+    {
+      "path": "mobile/e2e/onboarding.spec.ts",
+      "sha256": "b318867473513faa7b5b3458bcd96b8d5e48a9a9471bfc14e695d72ea18b72cb"
+    },
+    {
+      "path": "docs/context/onboarding.md",
+      "sha256": "d42b6ae2607a26b63eeddf26d1b83b8997a30d4d775b825516c82bbd7edbb4fe"
+    },
+    {
+      "path": "docs/context/INDEX.md",
+      "sha256": "8076763f818690b3418c0e4dadfcfc7b7a570ef9ee356da84d9aaf411331d0c9"
+    },
+    {
+      "path": "docs/context/error-ledger.md",
+      "sha256": "f5210c0fc3c592528293bd9038fd15b5ec4a19e37fa702e7fbf70f74fd353dbe"
+    },
+    {
+      "path": "docs/audits/2026-10-02-onboarding-polish/report.md",
+      "sha256": "62e7058a0bb465fa19d6d6928ff04fc06ac1223d4787a27e55bbf5f477d5a247"
+    }
+  ]
+}

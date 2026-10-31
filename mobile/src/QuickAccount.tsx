@@ -5,7 +5,7 @@ import { invalidateSession } from "./auth";
 import { useHealth } from "./store";
 import { Button, s } from "./ui";
 
-export function QuickAccount() {
+export function QuickAccount({ onSignIn }: { onSignIn?: () => void } = {}) {
   const h = useHealth(),
     account = useQuickAccount(cloudClient, invalidateSession);
   return (
@@ -18,6 +18,7 @@ export function QuickAccount() {
             ? `Signed in as ${account.user.email ?? "your account"}`
             : "Using this device. Sign in to connect your account."}
       </Text>
+      {!account.loading && account.user && <Text style={s.muted}>Signing out keeps your records on this device.</Text>}
       {account.user ? (
         <Button
           label={account.busy ? "Signing out…" : "Sign out"}
@@ -28,7 +29,7 @@ export function QuickAccount() {
         <Button
           label="Sign in"
           disabled={account.loading}
-          onPress={() => h.setTool("cloud")}
+          onPress={onSignIn ?? (() => h.setTool("cloud"))}
         />
       )}
       {!!account.error && (

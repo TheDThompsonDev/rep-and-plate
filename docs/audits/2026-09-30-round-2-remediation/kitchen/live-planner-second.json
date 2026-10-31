@@ -1,0 +1,6 @@
+{
+  "status": 422,
+  "body": {
+    "error": "The cooking method does not include every listed ingredient. Review the steps before cooking."
+  }
+}

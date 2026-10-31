@@ -1,0 +1,174 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/kitchen-round-two.spec.ts",
+      "--project=desktop",
+      "--grep",
+      "review queue",
+      "--workers=1",
+      "--reporter=json",
+      "--output=docs/audits/2026-09-30-round-2-remediation/kitchen/red-browser-output"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-round-2-remediation/kitchen/red-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-round-2-remediation/kitchen/red-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://127.0.0.1:5173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "kitchen-round-two.spec.ts",
+      "file": "kitchen-round-two.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "review queue opens saved candidates and offers direct manual label correction",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6489,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('dialog')\nExpected substring: \u001b[32m\"Ch\u001b[7moose a possible product\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"Ch\u001b[7meck this grocery itemUse the package label when you have it. Leave unknown nutrition blank.Product nameQuantity purchasedServing sizeTotal servings purchasedPackages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.Calories per servingProtein per serving (g)Carbs per serving (g)Fat per serving (g)Save grocery details \u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('dialog') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog')\u001b[22m\n\u001b[2m    14 × locator resolved to <dialog open=\"\" class=\"modal \" aria-label=\"Check this grocery item\">…</dialog>\u001b[22m\n\u001b[2m       - unexpected value \"Check this grocery itemUse the package label when you have it. Leave unknown nutrition blank.Product nameQuantity purchasedServing sizeTotal servings purchasedPackages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.Calories per servingProtein per serving (g)Carbs per serving (g)Fat per serving (g)Save grocery details \"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('dialog')\nExpected substring: \u001b[32m\"Ch\u001b[7moose a possible product\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"Ch\u001b[7meck this grocery itemUse the package label when you have it. Leave unknown nutrition blank.Product nameQuantity purchasedServing sizeTotal servings purchasedPackages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.Calories per servingProtein per serving (g)Carbs per serving (g)Fat per serving (g)Save grocery details \u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('dialog') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog')\u001b[22m\n\u001b[2m    14 × locator resolved to <dialog open=\"\" class=\"modal \" aria-label=\"Check this grocery item\">…</dialog>\u001b[22m\n\u001b[2m       - unexpected value \"Check this grocery itemUse the package label when you have it. Leave unknown nutrition blank.Product nameQuantity purchasedServing sizeTotal servings purchasedPackages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.Calories per servingProtein per serving (g)Carbs per serving (g)Fat per serving (g)Save grocery details \"\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts:9:41",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                      "column": 41,
+                      "line": 9
+                    },
+                    "snippet": "   7 |  const state=await ready(page);state.groceries=[{id:'review-route',fingerprint:'review-route',store:'Audit market',date:'2026-09-30',note:'',sources:[],items:[{id:'oats',receiptText:'OATS',name:'Uncertain oats',quantity:'1 package',serving:'',servingsPurchased:null,nutrition:null,match:'unresolved',needsReview:true,availability:'available',note:'',sources:[],productCandidates:[product]}]}];\n   8 |  await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open pantry',exact:true}).click();await page.getByRole('button',{name:'Review Uncertain oats',exact:true}).click();\n>  9 |  await expect(page.getByRole('dialog')).toContainText('Choose a possible product');await expect(page.getByRole('radio')).toHaveCount(1);\n     |                                         ^\n  10 |  await page.getByRole('button',{name:'Enter package details manually',exact:true}).click();await expect(page.getByLabel('Product name',{exact:true})).toHaveValue('Uncertain oats');\n  11 |  await page.getByLabel('Serving size',{exact:true}).fill('40 g');await page.getByLabel('Total servings purchased',{exact:true}).fill('5');\n  12 |  for(const [name,value] of Object.entries({'Calories per serving':'150','Protein per serving (g)':'5','Carbs per serving (g)':'27','Fat per serving (g)':'3'}))await page.getByLabel(name,{exact:true}).fill(value);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                        "column": 41,
+                        "line": 9
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('dialog')\nExpected substring: \u001b[32m\"Ch\u001b[7moose a possible product\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"Ch\u001b[7meck this grocery itemUse the package label when you have it. Leave unknown nutrition blank.Product nameQuantity purchasedServing sizeTotal servings purchasedPackages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.Calories per servingProtein per serving (g)Carbs per serving (g)Fat per serving (g)Save grocery details \u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('dialog') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog')\u001b[22m\n\u001b[2m    14 × locator resolved to <dialog open=\"\" class=\"modal \" aria-label=\"Check this grocery item\">…</dialog>\u001b[22m\n\u001b[2m       - unexpected value \"Check this grocery itemUse the package label when you have it. Leave unknown nutrition blank.Product nameQuantity purchasedServing sizeTotal servings purchasedPackages purchased × servings per package = total servings. For example, 2 tubs × 5 servings = 10. Copy the serving size and nutrition from that same label.Calories per servingProtein per serving (g)Carbs per serving (g)Fat per serving (g)Save grocery details \"\u001b[22m\n\n\n   7 |  const state=await ready(page);state.groceries=[{id:'review-route',fingerprint:'review-route',store:'Audit market',date:'2026-09-30',note:'',sources:[],items:[{id:'oats',receiptText:'OATS',name:'Uncertain oats',quantity:'1 package',serving:'',servingsPurchased:null,nutrition:null,match:'unresolved',needsReview:true,availability:'available',note:'',sources:[],productCandidates:[product]}]}];\n   8 |  await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open pantry',exact:true}).click();await page.getByRole('button',{name:'Review Uncertain oats',exact:true}).click();\n>  9 |  await expect(page.getByRole('dialog')).toContainText('Choose a possible product');await expect(page.getByRole('radio')).toHaveCount(1);\n     |                                         ^\n  10 |  await page.getByRole('button',{name:'Enter package details manually',exact:true}).click();await expect(page.getByLabel('Product name',{exact:true})).toHaveValue('Uncertain oats');\n  11 |  await page.getByLabel('Serving size',{exact:true}).fill('40 g');await page.getByLabel('Total servings purchased',{exact:true}).fill('5');\n  12 |  for(const [name,value] of Object.entries({'Calories per serving':'150','Protein per serving (g)':'5','Carbs per serving (g)':'27','Fat per serving (g)':'3'}))await page.getByLabel(name,{exact:true}).fill(value);\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts:9:41"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:16:18.441Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\kitchen\\red-browser-output\\kitchen-round-two-review-q-83eaf-ect-manual-label-correction-desktop\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\docs\\audits\\2026-09-30-round-2-remediation\\kitchen\\red-browser-output\\kitchen-round-two-review-q-83eaf-ect-manual-label-correction-desktop\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\tests\\kitchen-round-two.spec.ts",
+                    "column": 41,
+                    "line": 9
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6c6dd6ecb00bcd5b4867-5e970c2abf581887623c",
+          "file": "kitchen-round-two.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T19:16:17.374Z",
+    "duration": 7747.649,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

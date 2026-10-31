@@ -1,0 +1,13 @@
+Implemented the audit remedies with three agents and an independent review.
+
+| Scope | Result |
+|---|---|
+| 12 friction items | Fixed |
+| 6 workflow improvements | Added |
+| Native guest startup transfer | Reduced 30.36% in local preview |
+
+408 unit/CLI checks, 284 web journeys and 32 native-preview tests pass. Builds and typechecks pass.
+
+[Complete changes, evidence and limits](C:/Users/danny/Documents/coding/fitness/docs/audits/2026-09-30-round-2-remediation/report.md)
+
+Not deployed. Physical-device and hosted-release checks remain open; live AI output still requires validation and can need a retry.

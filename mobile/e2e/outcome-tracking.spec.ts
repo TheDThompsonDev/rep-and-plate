@@ -1,9 +1,10 @@
+import { openProfile } from '../../e2e-shared/profile-navigation';
 import { test, expect } from "./app-fixture";
 test("native measurements and distinct set loads persist through reload", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Your profile", exact: true }).click();
+  await openProfile(page);
   await page
     .getByRole("textbox", { name: "Measurement date (YYYY-MM-DD)" })
     .fill("2026-09-01");

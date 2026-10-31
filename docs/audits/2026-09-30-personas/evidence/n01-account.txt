@@ -1,0 +1,18 @@
+- text: Rep & Plate
+- button "Sign in"
+- img "Spot in sunglasses addressing far too many microphones."
+- text: SPOT SAVED YOU A SEAT
+- heading "Make it official." [level=1]
+- text: Create your Rep & Plate account. Spot is already rehearsing your welcome speech. Email
+- textbox "Email"
+- text: Password
+- textbox "Password"
+- text: At least 8 characters.
+- button "Create account" [disabled]
+- button "Already have an account? Sign in"
+- text: Account connection is unavailable right now. Check your connection and try again.
+- button "Retry connection"
+- button "Try on this device first"
+- text: Manual tracking works without an account. AI and connected tools need an approved account during private preview.
+- button "Meet Spot first"
+- text: GOOD FOOD. SOLID WORK. BRIGHTER DAYS.

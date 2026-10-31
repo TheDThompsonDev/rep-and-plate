@@ -59,10 +59,11 @@ async function verify() {
         await tx`select to_regclass('public.health_generation_events') is not null as events,
         to_regprocedure('public.health_begin_account_deletion(uuid)') is not null as deletion,
         to_regprocedure('public.health_expired_capture_candidates()') is not null as cleanup,
+        to_regprocedure('public.health_agent_admit(uuid)') is not null as agents,
         exists(select 1 from storage.buckets where id='health-record-media' and not public) as media`;
       check(
-        setup.events && setup.deletion && setup.cleanup && setup.media,
-        "Readiness migrations are present and media is private",
+        setup.events && setup.deletion && setup.cleanup && setup.agents && setup.media,
+        "Readiness migrations (account, operations, sync, agents) are present and media is private",
       );
       const a = randomUUID(),
         b = randomUUID(),

@@ -8,6 +8,8 @@ import {
   UserRound,
 } from "lucide-react";
 import { APP_NAME, type Page } from "./domain";
+import { useContext } from 'react';
+import { HeaderAccountContext } from './features/cloud/header-account';
 
 export function FuelHeader({
   isHome = false,
@@ -26,6 +28,7 @@ export function FuelHeader({
   onNutrition: () => void;
   onProfile: () => void;
 }) {
+  const openAccount = useContext(HeaderAccountContext);
   return (
     <header className="fuel-header">
       <button
@@ -67,10 +70,10 @@ export function FuelHeader({
           <BarChart3 size={23} strokeWidth={3} />
         </button>
         <button
-          className="fuel-profile"
-          aria-label="Your profile"
-          aria-current={profileActive ? "page" : undefined}
-          onClick={onProfile}
+          className={profileActive ? 'fuel-profile active' : 'fuel-profile'}
+          aria-label="Open account menu"
+          aria-haspopup="dialog"
+          onClick={openAccount ?? onProfile}
         >
           <UserRound size={21} strokeWidth={2.5} />
         </button>

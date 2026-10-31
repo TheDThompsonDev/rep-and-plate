@@ -1,5 +1,5 @@
 import { test, expect } from "./app-fixture";
-import { mockCloud, openAccount, signIn, stored } from "./cloud-fixture";
+import { mockCloud, openAccount, signIn, stored } from "../e2e-shared/cloud-fixture";
 test("Account sign-out returns to welcome and preserves records even if the server fails", async ({page})=>{
   const cloud=await mockCloud(page);
   await openAccount(page);

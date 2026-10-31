@@ -1,4 +1,4 @@
-import { clockTime, today, isExampleMeal, type AppState, type Meal } from "../../domain";
+import { clockTime, timestamp, today, isExampleMeal, type AppState, type Meal } from "../../domain";
 import type { GroceryItem } from "../../ai-contract";
 import type { PantryEvent } from "./contracts";
 import type { MealComponent } from "../meals/contracts";
@@ -153,6 +153,7 @@ export function mealFromPantry(
         role: "assistant",
         text: "Added your meal and updated the ingredients you selected. You can undo this in your pantry.",
         time: clockTime(),
+        at: timestamp(),
         mealId,
       },
     ],

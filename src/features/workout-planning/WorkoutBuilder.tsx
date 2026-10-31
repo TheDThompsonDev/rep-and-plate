@@ -4,6 +4,7 @@ import { Modal } from "../../components";
 import type { AppState } from "../../domain";
 import { workoutProposalSchema, type WorkoutProposal } from "./contracts";
 import { completedWorkoutContext, lastExerciseEvidence } from "./history";
+import { programEquipmentText } from "../progress/training-program";
 import "../scanner/scanner.css";
 import "./workout-builder.css";
 
@@ -19,8 +20,12 @@ export default function WorkoutBuilder({
   const [goal, setGoal] = useState(
     (state.preferences?.workoutPreferences ?? "").slice(0, 1500),
   );
+  // The saved training week's equipment is the best default; cooking preferences are the fallback.
   const [equipment, setEquipment] = useState(
-    state.preferences?.equipment.join(", ").slice(0, 300) || "Bodyweight",
+    (state.profile.trainingProgram
+      ? programEquipmentText(state.profile.trainingProgram).replace(/ · /g, ", ")
+      : state.preferences?.equipment.join(", ")
+    )?.slice(0, 300) || "Bodyweight",
   );
   const [minutes, setMinutes] = useState(30);
   const [plan, setPlan] = useState<WorkoutProposal | null>(null);

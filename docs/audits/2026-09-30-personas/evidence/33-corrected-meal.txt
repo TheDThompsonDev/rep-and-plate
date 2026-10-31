@@ -1,0 +1,49 @@
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - region "Rep & Plate chat home":
+    - button "Open chat menu"
+    - button "Rep & Plate home":
+      - heading "Rep & Plate" [level=1]
+    - button "Today’s nutrition in chat"
+    - button "Your profile"
+    - log "Capture conversation":
+      - region "Tell Spot":
+        - text: YOUR FOOD. YOUR REPS. YOUR PACE.
+        - heading "Always here." [level=2]
+        - paragraph: (In a supportive way.)
+        - text: Tell me what you ate or what you did.
+        - button "Tell Spot"
+        - button "Another Spot mood"
+      - text: Your conversation
+      - paragraph: I ate 170 g plain Greek yogurt and one medium banana for breakfast today. Please estimate it and let me review before logging.
+      - text: 9:31 AM
+      - paragraph: "Got it. Here's my estimate for your breakfast: plain Greek yogurt and a medium banana. Give it a quick look before adding it to your day."
+      - text: 9:31 AM
+      - paragraph: "Correction to Breakfast: the yogurt was nonfat, and its label says 100 calories, 17 g protein, 6 g carbs, 0 g fat for 170 g. Keep the medium banana."
+      - text: 9:32 AM
+      - paragraph: "Got it. Using your label for the nonfat yogurt and a medium banana, here's my estimate: about 215 calories, 23g protein, 34g carbs, and 1g fat. Review this before adding it to your day."
+      - text: 9:32 AM PLATE
+      - heading "Spot Check" [level=3]
+      - text: MEAL ESTIMATE · CHECK THE PORTION
+      - heading "Breakfast" [level=3]
+      - paragraph: 170 g yogurt + 1 medium banana
+      - paragraph: For 2026-09-30
+      - strong: ~215 cal · 18.3g protein
+      - text: 33g carbs · 0.4g fat
+      - paragraph: Yogurt nutrition from user-provided label; banana estimated based on standard USDA data for a medium size.
+      - group: What's in this estimate 2 components
+      - button "Yep, add to Breakfast"
+      - button "Fix it"
+    - button "Scan a barcode in chat"
+    - button "Take a meal photo"
+    - button "Attach image or screenshot"
+    - textbox "Message Rep & Plate":
+      - /placeholder: What happened?
+    - button "Use voice"
+    - navigation "Chat navigation":
+      - button "Chat"
+      - button "Nutrition"
+      - button "Scan a barcode": Scan
+      - button "Workouts"
+      - button "Kitchen"

@@ -1,4 +1,4 @@
-import { clockTime, today, type AppState, type Meal } from "../../domain";
+import { clockTime, timestamp, today, type AppState, type Meal } from "../../domain";
 import { componentNutrition, scaleNutrition } from "../meals/arithmetic";
 import type { MealComponent } from "../meals/contracts";
 import type { PantryEvent } from "../pantry/contracts";
@@ -117,6 +117,7 @@ export function prepareRecipeBatch(
         role: "assistant",
         text: `Your ${batch.name} batch is saved with ${batch.totalPortions} portions. Its ingredients moved out of the pantry. Nothing has been added to your food log.`,
         time: clockTime(),
+        at: timestamp(),
       },
     ],
   };
@@ -207,6 +208,7 @@ export function logRecipePortion(
         role: "assistant",
         text: `Logged ${portions} ${portions === 1 ? "portion" : "portions"} of ${batch.name}. ${quantity(remainingRecipePortions(batch) - portions)} portions remain.`,
         time: clockTime(),
+        at: timestamp(),
         mealId,
       },
     ],

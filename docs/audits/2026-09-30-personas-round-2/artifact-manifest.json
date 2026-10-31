@@ -1,0 +1,3710 @@
+{
+  "createdAt": "2026-09-30T18:46:21.198Z",
+  "artifacts": [
+    {
+      "path": "capture-deep.mjs",
+      "bytes": 2478,
+      "sha256": "6941155cbb2c372d9c1975aee0761ffba9330361b55227e73c9db4324ae7437c"
+    },
+    {
+      "path": "capture-followup.mjs",
+      "bytes": 4260,
+      "sha256": "4a7bf89b1fbf701ba5eeeac0a769bcc094b1e1628ac52fdc80728f8b7206eede"
+    },
+    {
+      "path": "consolidate.mjs",
+      "bytes": 7885,
+      "sha256": "9cd2478586ce6b1bade28dbe35369f71323485c9125ecb1935f8251eaa30f510"
+    },
+    {
+      "path": "evidence/beginner/01-welcome.txt",
+      "bytes": 700,
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "evidence/beginner/02-tour-1.txt",
+      "bytes": 630,
+      "sha256": "74a6f57d02d211cf65445d5c9c0e70d404b437b4c9cdc741e0e6e4d526701523"
+    },
+    {
+      "path": "evidence/beginner/02-tour-2.txt",
+      "bytes": 652,
+      "sha256": "50f88283644f415fb7fff1c39329ebe0124b5b5389b9b096e438c0a9b8f743f9"
+    },
+    {
+      "path": "evidence/beginner/02-tour-3.txt",
+      "bytes": 624,
+      "sha256": "a6195f8226a843f1910194669e54830b542cd15dc47ae3b72797ca0401d43177"
+    },
+    {
+      "path": "evidence/beginner/02-tour-4.txt",
+      "bytes": 659,
+      "sha256": "338c7dc68e2f71e2d21dcd6be56d9f4557daa3c0fe7cf48c274250a6314fcec4"
+    },
+    {
+      "path": "evidence/beginner/03-account.txt",
+      "bytes": 810,
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "evidence/beginner/04-setup.txt",
+      "bytes": 1037,
+      "sha256": "80394135791423a315dda955ebf9991e1d57f440fd1923d3e4cb44e0a315f908"
+    },
+    {
+      "path": "evidence/beginner/05-ready.txt",
+      "bytes": 805,
+      "sha256": "edddfd18ef43aaf771b01c290fe1eafabd7a9f8344d3a91692dc56c409ae2fcc"
+    },
+    {
+      "path": "evidence/beginner/06-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "evidence/beginner/07-live-response.txt",
+      "bytes": 1443,
+      "sha256": "263d3ca610937b1b7c128464ad0fbb0b907f4609b016ef18439e73afaceff901"
+    },
+    {
+      "path": "evidence/beginner/08-nutrition.txt",
+      "bytes": 3081,
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "evidence/beginner/09-nutrition-week.txt",
+      "bytes": 3602,
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "evidence/beginner/10-previous-day.txt",
+      "bytes": 3113,
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "evidence/beginner/11-targets.txt",
+      "bytes": 4110,
+      "sha256": "a3976e9bfa5276c196770fa6b1945f7820a3870e9aaf6b903a9dd5906c4804ca"
+    },
+    {
+      "path": "evidence/beginner/12-workouts.txt",
+      "bytes": 2978,
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "evidence/beginner/13-workout-builder.txt",
+      "bytes": 3629,
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "evidence/beginner/14-workout-history.txt",
+      "bytes": 3200,
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "evidence/beginner/15-kitchen.txt",
+      "bytes": 3184,
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "evidence/beginner/16-first-week.txt",
+      "bytes": 4269,
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "evidence/beginner/17-pantry.txt",
+      "bytes": 4698,
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "evidence/beginner/18-recipes.txt",
+      "bytes": 4763,
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "evidence/beginner/19-planner.txt",
+      "bytes": 5434,
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "evidence/beginner/20-food-preferences.txt",
+      "bytes": 5040,
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "evidence/beginner/21-swaps.txt",
+      "bytes": 4983,
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "evidence/beginner/22-shopping-list.txt",
+      "bytes": 4993,
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "evidence/beginner/23-spending.txt",
+      "bytes": 5115,
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "evidence/beginner/24-receipt-capture.txt",
+      "bytes": 4638,
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "evidence/beginner/25-barcode.txt",
+      "bytes": 4676,
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "evidence/beginner/26-profile.txt",
+      "bytes": 5104,
+      "sha256": "73c31f31254b47a369f5ecd26b040b4a3418e3c2082e7f19bbcaad8dad838a44"
+    },
+    {
+      "path": "evidence/beginner/27-account-backups.txt",
+      "bytes": 6103,
+      "sha256": "eac1c0f6d3ae39d1fd9bc4a0b75b31c28391a23961cb41e4a15c704804f4510f"
+    },
+    {
+      "path": "evidence/beginner/28-connections.txt",
+      "bytes": 6162,
+      "sha256": "7c6796c99142e9a4e72c191878d72cc8a47359e70c4aea225b31c3d0f639d05f"
+    },
+    {
+      "path": "evidence/beginner/29-weekly-review.txt",
+      "bytes": 6770,
+      "sha256": "fbf67fc49dc0ce0dfbc71d129ac8fb65b3607195a100a4a225d4b3487836cba9"
+    },
+    {
+      "path": "evidence/beginner/30-meals-captures.txt",
+      "bytes": 5328,
+      "sha256": "558a454fb2c39f215ab00e15e5b279fa6546405ab51ec3a82538b7db0718f1e2"
+    },
+    {
+      "path": "evidence/beginner/31-profile-workout-history.txt",
+      "bytes": 5431,
+      "sha256": "959fa7af6302132f86eacfe42d9fd5742cf2f77535c5d8f5efda74d63b52de94"
+    },
+    {
+      "path": "evidence/beginner/32-privacy-help.txt",
+      "bytes": 6709,
+      "sha256": "786848c51b977038d644ebaad64b3a451b765121a50db32534f7c7f23776a905"
+    },
+    {
+      "path": "evidence/beginner/33-about.txt",
+      "bytes": 5818,
+      "sha256": "aeb4d6eff5c5c2c675d1aa5307704eda79ed9d40c173cc59c7fb9a1b410efab2"
+    },
+    {
+      "path": "evidence/beginner/34-weight-saved.txt",
+      "bytes": 5169,
+      "sha256": "d76f97ae2f0f77f9c352af284b0954fed4aab72305ca075dfe3a078a628f068a"
+    },
+    {
+      "path": "evidence/beginner/35-return-after-reload.txt",
+      "bytes": 5169,
+      "sha256": "d76f97ae2f0f77f9c352af284b0954fed4aab72305ca075dfe3a078a628f068a"
+    },
+    {
+      "path": "evidence/beginner/return.png",
+      "bytes": 109149,
+      "sha256": "4c1334f822a22a99ed4d4659225f0a7a9be574fd42714f75cea952f1d55fc9a7"
+    },
+    {
+      "path": "evidence/capture-deep/01-receipt-preview.png",
+      "bytes": 62341,
+      "sha256": "0d8f660111b700f656c0a931e020f239467b9c3567a11b5fa28e086e5d98abec"
+    },
+    {
+      "path": "evidence/capture-deep/01-receipt-preview.txt",
+      "bytes": 3940,
+      "sha256": "c3c39be082e8176b1d854a5308f6f1ff0174581f27c241241657a0a8340ff9aa"
+    },
+    {
+      "path": "evidence/capture-deep/02-receipt-result.png",
+      "bytes": 58608,
+      "sha256": "99eed11417e5d7a8ff983d832d58ac48c9f6d81ee385094ca198a354cf968d03"
+    },
+    {
+      "path": "evidence/capture-deep/02-receipt-result.txt",
+      "bytes": 2416,
+      "sha256": "984159a12a6a3c83aac833e4d209b2a8bf8e7fb978fcf4b564e5ade117b88459"
+    },
+    {
+      "path": "evidence/capture-deep/03-receipt-details.png",
+      "bytes": 65413,
+      "sha256": "a3109960856c6e71980370c12cef54aa2185debc4527386535f3935acb6ab63e"
+    },
+    {
+      "path": "evidence/capture-deep/03-receipt-details.txt",
+      "bytes": 5253,
+      "sha256": "1b129cc6a7650ef09683ad235ad47cf53316e30ba84d6968194cf57c086ea30b"
+    },
+    {
+      "path": "evidence/capture-deep/04-product-review.png",
+      "bytes": 56115,
+      "sha256": "ed44f8b21e7821b011da018259d62b439fa37831145cd40082be7fe1d6ab354d"
+    },
+    {
+      "path": "evidence/capture-deep/04-product-review.txt",
+      "bytes": 3490,
+      "sha256": "82ab8cfe6c920f2f9dd077c923dca66c06469e5b0e7b57bf5acc5e425dd18c58"
+    },
+    {
+      "path": "evidence/capture-deep/05-purchase-details.png",
+      "bytes": 72770,
+      "sha256": "4776a5adc7c3f3c5b0b913b5dc7d843b4d77676669645003ab917c9243854725"
+    },
+    {
+      "path": "evidence/capture-deep/05-purchase-details.txt",
+      "bytes": 3803,
+      "sha256": "f52144652bc6e74db0c9064f286bc0cc599cf34c53b7a1f0eab98f68953be4f9"
+    },
+    {
+      "path": "evidence/capture-deep/06-expanded-product.png",
+      "bytes": 70915,
+      "sha256": "51744d7ff30f7689aea71411484fee12112455e0d829c54c5df1914bf6c4a272"
+    },
+    {
+      "path": "evidence/capture-deep/06-expanded-product.txt",
+      "bytes": 4567,
+      "sha256": "f22888d5ae322f70fd36c174f38e801a30fb31a36c86b4c17e7e2261a087640a"
+    },
+    {
+      "path": "evidence/capture-deep/07-usda-candidates.png",
+      "bytes": 60827,
+      "sha256": "7b5593f160535fa50a8fa48a0efcab0355efb7f5c38ed01b3f9a4a2f1957b2d7"
+    },
+    {
+      "path": "evidence/capture-deep/07-usda-candidates.txt",
+      "bytes": 3906,
+      "sha256": "b75a3a9aa12198acfde95d81847be61e224199a494a03700eeedc06d6b05b0d6"
+    },
+    {
+      "path": "evidence/capture-deep/08-serving-calculator.png",
+      "bytes": 61766,
+      "sha256": "30d330f249c2b7aa6f225fc575fe5129c526c63c9ee4880841532ff9adb82855"
+    },
+    {
+      "path": "evidence/capture-deep/08-serving-calculator.txt",
+      "bytes": 5400,
+      "sha256": "926fa8eb5b27994e9c5d813aa6defde7117ec4829b31ffe4d7dff68cf23b7ccc"
+    },
+    {
+      "path": "evidence/capture-deep/09-price-review-ready.png",
+      "bytes": 58106,
+      "sha256": "79b086a69fc8874698b5110fa339558938c16bf86ae5a3661ddc564bf5e29ec5"
+    },
+    {
+      "path": "evidence/capture-deep/09-price-review-ready.txt",
+      "bytes": 3637,
+      "sha256": "5e3a4ac70f41cc69e2687652f8ab8ee0928e44f4baa05f68340e09dde5e6da80"
+    },
+    {
+      "path": "evidence/capture-deep/09-price-review.png",
+      "bytes": 97754,
+      "sha256": "c28833a11586c14a942c892af28f47ff8fdb2f811008853ad9c18cb842afda4d"
+    },
+    {
+      "path": "evidence/capture-deep/09-price-review.txt",
+      "bytes": 2552,
+      "sha256": "118f83a424a523b4ca5607327414405e9c722df6274378a7d50962dd36ee0224"
+    },
+    {
+      "path": "evidence/capture-deep/10-reviewed-spending.png",
+      "bytes": 58558,
+      "sha256": "30b1c99a32ee73237e82b3ce0f4a6c9f4f9f9d688ddb0ecad09a8b00114173db"
+    },
+    {
+      "path": "evidence/capture-deep/10-reviewed-spending.txt",
+      "bytes": 4583,
+      "sha256": "9965615984534d6d8b846091be52631babd4990a3147082694081acca49933d4"
+    },
+    {
+      "path": "evidence/capture-deep/11-reload-spending.png",
+      "bytes": 58558,
+      "sha256": "30b1c99a32ee73237e82b3ce0f4a6c9f4f9f9d688ddb0ecad09a8b00114173db"
+    },
+    {
+      "path": "evidence/capture-deep/11-reload-spending.txt",
+      "bytes": 4583,
+      "sha256": "9965615984534d6d8b846091be52631babd4990a3147082694081acca49933d4"
+    },
+    {
+      "path": "evidence/capture-deep/persisted-summary.json",
+      "bytes": 119,
+      "sha256": "da4e904ca618279b1c84e6f6cb451d8652cfb29c0f95130755f1939cc5215ba1"
+    },
+    {
+      "path": "evidence/capture-deep/results.json",
+      "bytes": 494,
+      "sha256": "20a5e01604b0075cf625840180d0056d0d93e46d56377133b1ba1f3c5b360a8f"
+    },
+    {
+      "path": "evidence/capture-fixture-results/.last-run.json",
+      "bytes": 45,
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "evidence/capture-fixtures.json",
+      "bytes": 20473,
+      "sha256": "719456c39782af0ffc60bd9d9b1f782ef3b455684bcbd95ba220eb1a68b994a3"
+    },
+    {
+      "path": "evidence/developer/01-welcome.txt",
+      "bytes": 768,
+      "sha256": "c623de1b7f6d72c12dfb080f9cc9c3863b16dd19ac39fe82aa7fa609347ecede"
+    },
+    {
+      "path": "evidence/developer/03-account.txt",
+      "bytes": 918,
+      "sha256": "193347d1224ae59bac0ee0f79e20c8946e4f49cae377aac9723d1b0a30ebb009"
+    },
+    {
+      "path": "evidence/developer/04-setup.txt",
+      "bytes": 1146,
+      "sha256": "0745885feac4e6ac238663edae13b484f05781ab77592b7420e8fef79961baf2"
+    },
+    {
+      "path": "evidence/developer/05-ready.txt",
+      "bytes": 847,
+      "sha256": "d6a8a61fb27e534eb8f1bb3a278e850189e116b51a36304a1bec73a5284ebcc7"
+    },
+    {
+      "path": "evidence/developer/06-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "evidence/developer/08-nutrition.txt",
+      "bytes": 3081,
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "evidence/developer/09-nutrition-week.txt",
+      "bytes": 3602,
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "evidence/developer/10-previous-day.txt",
+      "bytes": 3113,
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "evidence/developer/11-targets.txt",
+      "bytes": 4111,
+      "sha256": "0add3dd338a850d8bb353415c294d27847a1a25a9a64c7b9cb0a468a0f8695c5"
+    },
+    {
+      "path": "evidence/developer/12-workouts.txt",
+      "bytes": 2978,
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "evidence/developer/13-workout-builder.txt",
+      "bytes": 3629,
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "evidence/developer/14-workout-history.txt",
+      "bytes": 3200,
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "evidence/developer/15-kitchen.txt",
+      "bytes": 3184,
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "evidence/developer/16-first-week.txt",
+      "bytes": 4269,
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "evidence/developer/17-pantry.txt",
+      "bytes": 4698,
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "evidence/developer/18-recipes.txt",
+      "bytes": 4763,
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "evidence/developer/19-planner.txt",
+      "bytes": 5434,
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "evidence/developer/20-food-preferences.txt",
+      "bytes": 5040,
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "evidence/developer/21-swaps.txt",
+      "bytes": 4983,
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "evidence/developer/22-shopping-list.txt",
+      "bytes": 4993,
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "evidence/developer/23-spending.txt",
+      "bytes": 5115,
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "evidence/developer/24-receipt-capture.txt",
+      "bytes": 4638,
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "evidence/developer/25-barcode.txt",
+      "bytes": 4676,
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "evidence/developer/26-profile.txt",
+      "bytes": 4860,
+      "sha256": "354d7fe3c972703ec00f02e56d96aeafa0586c93eda89d978e8f50ddac56b710"
+    },
+    {
+      "path": "evidence/developer/27-account-backups.txt",
+      "bytes": 5859,
+      "sha256": "f12ee982edd413f90fd686233223b85192cb7ed22fc80856a29e6d8c6aa4fe66"
+    },
+    {
+      "path": "evidence/developer/28-connections.txt",
+      "bytes": 5918,
+      "sha256": "2228927a4ed496eef2ba92165bf96605a09b7940272400a94e93a5f1bde5b964"
+    },
+    {
+      "path": "evidence/developer/29-weekly-review.txt",
+      "bytes": 6526,
+      "sha256": "3cce4b963ff29aa16193ca3fec27d46e9a9e6cfdef888bd837b7046ce7243832"
+    },
+    {
+      "path": "evidence/developer/30-meals-captures.txt",
+      "bytes": 5084,
+      "sha256": "346f74653897bfe038f608459f1037673236798a3dced4c1ca4e110163c90b76"
+    },
+    {
+      "path": "evidence/developer/31-profile-workout-history.txt",
+      "bytes": 5187,
+      "sha256": "3aff019cc3f3532e353302e7a084f54a21dacf85b3d02e0dc1323acb76e23f64"
+    },
+    {
+      "path": "evidence/developer/32-privacy-help.txt",
+      "bytes": 6465,
+      "sha256": "f01d9039e5d02ee2719497cb14d1d57dcfec0262f369b0def39ac12dc4a8fbc8"
+    },
+    {
+      "path": "evidence/developer/33-about.txt",
+      "bytes": 5574,
+      "sha256": "c1e7c3002e26c89970115d6ed907cee013efbe4b20c54d1ed7e55a964b8f5ee6"
+    },
+    {
+      "path": "evidence/developer/34-weight-saved.txt",
+      "bytes": 4925,
+      "sha256": "261fd64293a8830a373d240bda98ab6f165b014e4e8937d8da877f610748b482"
+    },
+    {
+      "path": "evidence/developer/35-return-after-reload.txt",
+      "bytes": 4925,
+      "sha256": "261fd64293a8830a373d240bda98ab6f165b014e4e8937d8da877f610748b482"
+    },
+    {
+      "path": "evidence/developer/return.png",
+      "bytes": 164817,
+      "sha256": "fca8992480470423c7288bc1ce6cee59fb18a1bd27b1c503c6501f28b05d9f0c"
+    },
+    {
+      "path": "evidence/expert/01-welcome.txt",
+      "bytes": 700,
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "evidence/expert/03-account.txt",
+      "bytes": 810,
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "evidence/expert/04-setup.txt",
+      "bytes": 1035,
+      "sha256": "b67e293d7af1e28f748730251900b8cd9eac2cb16598e991e26c886ac5d2f541"
+    },
+    {
+      "path": "evidence/expert/05-ready.txt",
+      "bytes": 788,
+      "sha256": "2c0c5c1d4c2cacf4d1074df72b5da55a518249510c806c9d933a71c93e028c06"
+    },
+    {
+      "path": "evidence/expert/06-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "evidence/expert/07-live-response.txt",
+      "bytes": 1840,
+      "sha256": "3c023911ded1ced52cdafdef0db593b96824cf5170e2f0e5a33b28889f8fc9f1"
+    },
+    {
+      "path": "evidence/expert/08-nutrition.txt",
+      "bytes": 3081,
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "evidence/expert/09-nutrition-week.txt",
+      "bytes": 3602,
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "evidence/expert/10-previous-day.txt",
+      "bytes": 3113,
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "evidence/expert/11-targets.txt",
+      "bytes": 4108,
+      "sha256": "b7fe4d03716aafbce1bda5292f5b184079313b763a34d1ba290e47ebd1954eec"
+    },
+    {
+      "path": "evidence/expert/12-workouts.txt",
+      "bytes": 2978,
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "evidence/expert/13-workout-builder.txt",
+      "bytes": 3629,
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "evidence/expert/14-workout-history.txt",
+      "bytes": 3200,
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "evidence/expert/15-kitchen.txt",
+      "bytes": 3184,
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "evidence/expert/16-first-week.txt",
+      "bytes": 4269,
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "evidence/expert/17-pantry.txt",
+      "bytes": 4698,
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "evidence/expert/18-recipes.txt",
+      "bytes": 4763,
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "evidence/expert/19-planner.txt",
+      "bytes": 5434,
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "evidence/expert/20-food-preferences.txt",
+      "bytes": 5040,
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "evidence/expert/21-swaps.txt",
+      "bytes": 4983,
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "evidence/expert/22-shopping-list.txt",
+      "bytes": 4993,
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "evidence/expert/23-spending.txt",
+      "bytes": 5115,
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "evidence/expert/24-receipt-capture.txt",
+      "bytes": 4638,
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "evidence/expert/25-barcode.txt",
+      "bytes": 4676,
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "evidence/expert/26-profile.txt",
+      "bytes": 5117,
+      "sha256": "712c80d0f7c9a569d8c98efcb414a1c20a358e8a46a7b6017ab36388962894f1"
+    },
+    {
+      "path": "evidence/expert/27-account-backups.txt",
+      "bytes": 6116,
+      "sha256": "083652a83e4392c00fb2035badeb1b08336b1507c29995d59432a958f50ba224"
+    },
+    {
+      "path": "evidence/expert/28-connections.txt",
+      "bytes": 6175,
+      "sha256": "bcd85d4f3278c46df55f2c8679c2ef3c7414738c20cc97cc4f1c99e1c3c258af"
+    },
+    {
+      "path": "evidence/expert/29-weekly-review.txt",
+      "bytes": 6783,
+      "sha256": "11bbf66c27a11dd71f2c933eddc7d430f72ad664487b30c20585a0238d15f90e"
+    },
+    {
+      "path": "evidence/expert/30-meals-captures.txt",
+      "bytes": 5341,
+      "sha256": "0dcd1e4750307b3dc77882b75f3193d2212ce68e2b49d9641001d63ec0c680a1"
+    },
+    {
+      "path": "evidence/expert/31-profile-workout-history.txt",
+      "bytes": 5444,
+      "sha256": "27e9918df90f3d550a0d08a16cccdeec3d9196e08b01a70fce5827f129111b13"
+    },
+    {
+      "path": "evidence/expert/32-privacy-help.txt",
+      "bytes": 6722,
+      "sha256": "e21b8671ed443c7c68123a43a6fefede0d41b18c00ad8f5377d917e6cea0b2ba"
+    },
+    {
+      "path": "evidence/expert/33-about.txt",
+      "bytes": 5831,
+      "sha256": "cc3eef20ad46c8b81085ca3d2e09413e7eb79d44fe62174a81b71b8ed4b8e237"
+    },
+    {
+      "path": "evidence/expert/34-weight-saved.txt",
+      "bytes": 5182,
+      "sha256": "d52c5bbc9122588e7e71648bf2f713f83070787b244d920d8399d0f9c4e51f4d"
+    },
+    {
+      "path": "evidence/expert/35-return-after-reload.txt",
+      "bytes": 5182,
+      "sha256": "d52c5bbc9122588e7e71648bf2f713f83070787b244d920d8399d0f9c4e51f4d"
+    },
+    {
+      "path": "evidence/expert/return.png",
+      "bytes": 108244,
+      "sha256": "c93e54d3d76d9c704dadd77fd3c6f3a4107f3383058b8bbc8d64164cbc795eea"
+    },
+    {
+      "path": "evidence/fit-new-tracker/01-welcome.txt",
+      "bytes": 700,
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "evidence/fit-new-tracker/02-tour-1.txt",
+      "bytes": 630,
+      "sha256": "74a6f57d02d211cf65445d5c9c0e70d404b437b4c9cdc741e0e6e4d526701523"
+    },
+    {
+      "path": "evidence/fit-new-tracker/02-tour-2.txt",
+      "bytes": 652,
+      "sha256": "50f88283644f415fb7fff1c39329ebe0124b5b5389b9b096e438c0a9b8f743f9"
+    },
+    {
+      "path": "evidence/fit-new-tracker/02-tour-3.txt",
+      "bytes": 624,
+      "sha256": "a6195f8226a843f1910194669e54830b542cd15dc47ae3b72797ca0401d43177"
+    },
+    {
+      "path": "evidence/fit-new-tracker/02-tour-4.txt",
+      "bytes": 659,
+      "sha256": "338c7dc68e2f71e2d21dcd6be56d9f4557daa3c0fe7cf48c274250a6314fcec4"
+    },
+    {
+      "path": "evidence/fit-new-tracker/03-account.txt",
+      "bytes": 810,
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "evidence/fit-new-tracker/04-setup.txt",
+      "bytes": 1044,
+      "sha256": "28446d1d0b2fb8fe87546a99090f37c0517313ce571887d2b1740a037f777f3b"
+    },
+    {
+      "path": "evidence/fit-new-tracker/05-ready.txt",
+      "bytes": 780,
+      "sha256": "192966197e0d38e37626546818b61bd700987d7bb8b201fa94dfee435bf4619a"
+    },
+    {
+      "path": "evidence/fit-new-tracker/06-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "evidence/fit-new-tracker/07-live-response.txt",
+      "bytes": 1446,
+      "sha256": "1dc9e89797f5e1b69eadb2d003ac0ce6f37564456438c248fc2737d450e6e59f"
+    },
+    {
+      "path": "evidence/fit-new-tracker/08-nutrition.txt",
+      "bytes": 3081,
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "evidence/fit-new-tracker/09-nutrition-week.txt",
+      "bytes": 3602,
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "evidence/fit-new-tracker/10-previous-day.txt",
+      "bytes": 3113,
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "evidence/fit-new-tracker/11-targets.txt",
+      "bytes": 4117,
+      "sha256": "e9ab2ff1e42dd6cc6ff7c5e551e55377ca617d928b66d23881cd9025e6d5c43c"
+    },
+    {
+      "path": "evidence/fit-new-tracker/12-workouts.txt",
+      "bytes": 2978,
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "evidence/fit-new-tracker/13-workout-builder.txt",
+      "bytes": 3629,
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "evidence/fit-new-tracker/14-workout-history.txt",
+      "bytes": 3200,
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "evidence/fit-new-tracker/15-kitchen.txt",
+      "bytes": 3184,
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "evidence/fit-new-tracker/16-first-week.txt",
+      "bytes": 4269,
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "evidence/fit-new-tracker/17-pantry.txt",
+      "bytes": 4698,
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "evidence/fit-new-tracker/18-recipes.txt",
+      "bytes": 4763,
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "evidence/fit-new-tracker/19-planner.txt",
+      "bytes": 5434,
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "evidence/fit-new-tracker/20-food-preferences.txt",
+      "bytes": 5040,
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "evidence/fit-new-tracker/21-swaps.txt",
+      "bytes": 4983,
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "evidence/fit-new-tracker/22-shopping-list.txt",
+      "bytes": 4993,
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "evidence/fit-new-tracker/23-spending.txt",
+      "bytes": 5115,
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "evidence/fit-new-tracker/24-receipt-capture.txt",
+      "bytes": 4638,
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "evidence/fit-new-tracker/25-barcode.txt",
+      "bytes": 4676,
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "evidence/fit-new-tracker/26-profile.txt",
+      "bytes": 4866,
+      "sha256": "70b861497e979514ae7926b4fb77b8a5571fa289ff32030aa1081e4ccddc049e"
+    },
+    {
+      "path": "evidence/fit-new-tracker/27-account-backups.txt",
+      "bytes": 5865,
+      "sha256": "d3f9fd846c0f5ebe3921193b6d24e617a269c9a26f67465a7998e9d0ae472477"
+    },
+    {
+      "path": "evidence/fit-new-tracker/28-connections.txt",
+      "bytes": 5924,
+      "sha256": "14755cfcb111ec9f12047c26e4f6d2f4d303d857b709c2ef8ea7a30923777ffb"
+    },
+    {
+      "path": "evidence/fit-new-tracker/29-weekly-review.txt",
+      "bytes": 6532,
+      "sha256": "3f9f67f053f48c39bf6bde60ca02375653eea4106754fd5762d913b4ed128eab"
+    },
+    {
+      "path": "evidence/fit-new-tracker/30-meals-captures.txt",
+      "bytes": 5090,
+      "sha256": "892c87036f521319cae1539418973c332b3e7649171e434f8cd578a78825b08a"
+    },
+    {
+      "path": "evidence/fit-new-tracker/31-profile-workout-history.txt",
+      "bytes": 5193,
+      "sha256": "a5c91797ec774ba3f1e708cb9a302dc589878223a49ad587c5f3fae93740c99b"
+    },
+    {
+      "path": "evidence/fit-new-tracker/32-privacy-help.txt",
+      "bytes": 6471,
+      "sha256": "b72b303c3b7b9b866210f183cd82021f3996c8047392cba83a63a0b1e876c235"
+    },
+    {
+      "path": "evidence/fit-new-tracker/33-about.txt",
+      "bytes": 5580,
+      "sha256": "61b4cff5cd8f232dd7e4a6335e583bb425d923106a65dd29ebacfc310e3f8427"
+    },
+    {
+      "path": "evidence/fit-new-tracker/34-weight-saved.txt",
+      "bytes": 4931,
+      "sha256": "1664e79f764b598a4c15ffd4a87a7536c3dd906de5060d774762f72ee8e0ac9f"
+    },
+    {
+      "path": "evidence/fit-new-tracker/35-return-after-reload.txt",
+      "bytes": 4931,
+      "sha256": "1664e79f764b598a4c15ffd4a87a7536c3dd906de5060d774762f72ee8e0ac9f"
+    },
+    {
+      "path": "evidence/fit-new-tracker/return.png",
+      "bytes": 109429,
+      "sha256": "a734eb4422ad6a22d8888dc5113e10aadcd2c5656ac03932ac06ae204a1c910a"
+    },
+    {
+      "path": "evidence/persona-walkthroughs.json",
+      "bytes": 28878,
+      "sha256": "60f987396f8ab09cb5edc0feab95dede37bcf9af2c583bf0df720cac0d9721d2"
+    },
+    {
+      "path": "evidence/six-months/01-welcome.txt",
+      "bytes": 700,
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "evidence/six-months/03-account.txt",
+      "bytes": 810,
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "evidence/six-months/04-setup.txt",
+      "bytes": 1039,
+      "sha256": "442f3d04467e85f899ff8317d219e04e474e65dfb8ab836f4598a23b5bfd1caf"
+    },
+    {
+      "path": "evidence/six-months/05-ready.txt",
+      "bytes": 807,
+      "sha256": "56a5bffbe1ca5a1c60dd47d0755c7a5684ff2759c7129eec74c5dc0c79347cc8"
+    },
+    {
+      "path": "evidence/six-months/06-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "evidence/six-months/07-live-response.txt",
+      "bytes": 1903,
+      "sha256": "892325eb76d6372b44f2f6171bfcdcb425fe0e9705a21ae15b82c64fda2ec277"
+    },
+    {
+      "path": "evidence/six-months/08-nutrition.txt",
+      "bytes": 3081,
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "evidence/six-months/09-nutrition-week.txt",
+      "bytes": 3602,
+      "sha256": "d553216f95f559dde53520c7ccb5f38b4bfc9a15fb21fb680de19d8fc4dfd58a"
+    },
+    {
+      "path": "evidence/six-months/10-previous-day.txt",
+      "bytes": 3113,
+      "sha256": "925e2962efa554d2fd89698d8576de34ba9f6eb555e92e70741c3ff35b1d617f"
+    },
+    {
+      "path": "evidence/six-months/11-targets.txt",
+      "bytes": 4112,
+      "sha256": "4b9090a27b291d5fbaf76cea8dce27dac9fbd910500ad5f05558bb12bfb22fdc"
+    },
+    {
+      "path": "evidence/six-months/12-workouts.txt",
+      "bytes": 2978,
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "evidence/six-months/13-workout-builder.txt",
+      "bytes": 3629,
+      "sha256": "796d8ad40f21015c5b45dd88ceeb4199f8cca2fd954ef921e3725aa3a503cb60"
+    },
+    {
+      "path": "evidence/six-months/14-workout-history.txt",
+      "bytes": 3200,
+      "sha256": "107a19764665343b6b00b4c1bbaeb0b2e0406796e52978e008d3110cfc1f4ee2"
+    },
+    {
+      "path": "evidence/six-months/15-kitchen.txt",
+      "bytes": 3184,
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "evidence/six-months/16-first-week.txt",
+      "bytes": 4269,
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "evidence/six-months/17-pantry.txt",
+      "bytes": 4698,
+      "sha256": "4e9fde47b4b46407f2845480aedeaf2706235b487a72e4a48401a3b5a86c22d4"
+    },
+    {
+      "path": "evidence/six-months/18-recipes.txt",
+      "bytes": 4763,
+      "sha256": "474998f2c9299f0c487bd9ec7eb45f4664c167491863f377b11a573d07f34ee6"
+    },
+    {
+      "path": "evidence/six-months/19-planner.txt",
+      "bytes": 5434,
+      "sha256": "efa977749d8c1b679d25fe2eac4ae3cf7be3a2be2bc2426422f8346b88e576bb"
+    },
+    {
+      "path": "evidence/six-months/20-food-preferences.txt",
+      "bytes": 5040,
+      "sha256": "b4798add949adabb637204aa61d2489c8ddf1104e31575ade3166d079fd0cd4a"
+    },
+    {
+      "path": "evidence/six-months/21-swaps.txt",
+      "bytes": 4983,
+      "sha256": "401e07d992b5e7d96d9e20f64281d800597adaf72850c3dc323ce2b69d458d7d"
+    },
+    {
+      "path": "evidence/six-months/22-shopping-list.txt",
+      "bytes": 4993,
+      "sha256": "2e7b0c70a9529f2fab2c8fe8a3b0a0f334612fa6b5bb59c40f2bcb60859867c1"
+    },
+    {
+      "path": "evidence/six-months/23-spending.txt",
+      "bytes": 5115,
+      "sha256": "965fc9f3e437ffa7ec5b07fafa084c153a7614527a5b5504f99bb80d16cfb103"
+    },
+    {
+      "path": "evidence/six-months/24-receipt-capture.txt",
+      "bytes": 4638,
+      "sha256": "c6a6f553b2853d3fb6b0ad71f8fec8131c28824b458d2fbac85f905370d0bc6b"
+    },
+    {
+      "path": "evidence/six-months/25-barcode.txt",
+      "bytes": 4676,
+      "sha256": "946c1528e009f4c29648404960abde87dd2fb6071ee339c5a19a480a20fabe59"
+    },
+    {
+      "path": "evidence/six-months/26-profile.txt",
+      "bytes": 5194,
+      "sha256": "05fd9ebf16c8821e5fe277a3fb5f67c42ad0ff7e9d7eaf2046706b5dace521f4"
+    },
+    {
+      "path": "evidence/six-months/27-account-backups.txt",
+      "bytes": 6193,
+      "sha256": "20293fbeb13b3d2ead4d0a0e91a7cc1c38a4457b7922ca95d5939d14d6cc8e03"
+    },
+    {
+      "path": "evidence/six-months/28-connections.txt",
+      "bytes": 6252,
+      "sha256": "1da9671dc90ec87c5edd40de6e0999e42ecce5daf55ce9f61bd16ee27691824a"
+    },
+    {
+      "path": "evidence/six-months/29-weekly-review.txt",
+      "bytes": 6860,
+      "sha256": "be875e4c232fe6af1b1dd50f8a5e925f75338fda19586f3c444b75cd2f55e5c0"
+    },
+    {
+      "path": "evidence/six-months/30-meals-captures.txt",
+      "bytes": 5418,
+      "sha256": "5762bc2ef7a88cd80b0a49acabd3ca86f802719d033148cf9079b0fa4da9ff73"
+    },
+    {
+      "path": "evidence/six-months/31-profile-workout-history.txt",
+      "bytes": 5521,
+      "sha256": "4dc37423392d50a5c575167053d86b11691869158d371b91b7412d4fbb211680"
+    },
+    {
+      "path": "evidence/six-months/32-privacy-help.txt",
+      "bytes": 6799,
+      "sha256": "fbf643c776c32c21a590cd7e70db3ee9b6b70e12a86a69628c8803ee0f952bd9"
+    },
+    {
+      "path": "evidence/six-months/33-about.txt",
+      "bytes": 5908,
+      "sha256": "fe5e649e38c915020d1f868da8f9a56465b7bde0e8a827fc97849d5e32c48014"
+    },
+    {
+      "path": "evidence/six-months/34-weight-saved.txt",
+      "bytes": 5259,
+      "sha256": "f6f7d2a011027e14cd56ec567e180b9fe2105e549e181287be3478aeec494783"
+    },
+    {
+      "path": "evidence/six-months/35-return-after-reload.txt",
+      "bytes": 5259,
+      "sha256": "f6f7d2a011027e14cd56ec567e180b9fe2105e549e181287be3478aeec494783"
+    },
+    {
+      "path": "evidence/six-months/return.png",
+      "bytes": 109407,
+      "sha256": "3c8f3d18dc6373e15fa252bd32ccafd5249f14bb0ddf5c376a75c8d1b5e2fcaf"
+    },
+    {
+      "path": "friction-log.json",
+      "bytes": 32026,
+      "sha256": "336e88d03987dba923a5f93078fde3fefea421163545ac7bdc3497ab52512d16"
+    },
+    {
+      "path": "friction-log.md",
+      "bytes": 34322,
+      "sha256": "65a48f8786f77379a39a533ceeea3d6e720b2c21ccd426703948a5e1601f118b"
+    },
+    {
+      "path": "kitchen/expert-training-followup.mjs",
+      "bytes": 1719,
+      "sha256": "0eba61cf9472632a73b14661cf4d1561a73767adad6ff245263a60c88cf51a98"
+    },
+    {
+      "path": "kitchen/expert-training.mjs",
+      "bytes": 1566,
+      "sha256": "fcf1a5092ab79b2cbc6f4553b1c64e2f638e9b0319bcb705d6ebc6dd8b29b0c8"
+    },
+    {
+      "path": "kitchen/expert/01-fresh-onboarding.png",
+      "bytes": 87031,
+      "sha256": "b802f3345d4ac96e849e02cb3418d68a1df8c2a8eca98751454d6f689f1c8d1d"
+    },
+    {
+      "path": "kitchen/expert/01-fresh-onboarding.txt",
+      "bytes": 810,
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "kitchen/expert/02-guest-setup.png",
+      "bytes": 86831,
+      "sha256": "d83cc23c52ab2ae75d669559ab26c9e4ec020a4af453842ab236771d87ba7862"
+    },
+    {
+      "path": "kitchen/expert/02-guest-setup.txt",
+      "bytes": 1047,
+      "sha256": "8ca1449d013cbf31ad22f3f93ee3ff7549c53f523dfb34da91abd08be9369b89"
+    },
+    {
+      "path": "kitchen/expert/03-ready.png",
+      "bytes": 161768,
+      "sha256": "2f9fe45d99d3fbdbb4b7c353a699320ec29db8ca8674ec654b074bd6d6d13082"
+    },
+    {
+      "path": "kitchen/expert/03-ready.txt",
+      "bytes": 800,
+      "sha256": "e03025121d149fb77fdb548c78119db00f87ae95f46d8e8c64c1f800cd9a1f12"
+    },
+    {
+      "path": "kitchen/expert/04-first-chat.png",
+      "bytes": 49088,
+      "sha256": "424de6fbc6facc8e5af7fc2c91e7dd4d54032f2a4276810f27f485a06be180a4"
+    },
+    {
+      "path": "kitchen/expert/04-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "kitchen/expert/05-workout-options.png",
+      "bytes": 95696,
+      "sha256": "d40253627d9e0c0e659930605d95be89ad094485cc845e13495c67774c90e5a9"
+    },
+    {
+      "path": "kitchen/expert/05-workout-options.txt",
+      "bytes": 2978,
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "kitchen/expert/06-kg-session-start.png",
+      "bytes": 69577,
+      "sha256": "ccb5087e981db407f614cabd6c16a984bebf175d3b9627ccbf39c1e052ab342c"
+    },
+    {
+      "path": "kitchen/expert/06-kg-session-start.txt",
+      "bytes": 7799,
+      "sha256": "87e8ba9207320bb1166713ad7dfdb11d6eddb71f9fa5b48425e22024ac968258"
+    },
+    {
+      "path": "kitchen/expert/07-first-recorded-set.png",
+      "bytes": 67416,
+      "sha256": "9550f7937cbaf887f74cb914b062b64bd5c6aac1da9d905b7273613aeb3545f5"
+    },
+    {
+      "path": "kitchen/expert/07-first-recorded-set.txt",
+      "bytes": 8329,
+      "sha256": "ad1438677bbc63b8502ddc2faf01cf25be77a9a94acc8afcd52f69d2917fb392"
+    },
+    {
+      "path": "kitchen/expert/08-second-set-load-required.png",
+      "bytes": 53956,
+      "sha256": "212a5cc95d322ff326b70d3bd4ab6f057004860d40020c19e6d6dcbf68af5aee"
+    },
+    {
+      "path": "kitchen/expert/08-second-set-load-required.txt",
+      "bytes": 8329,
+      "sha256": "ad1438677bbc63b8502ddc2faf01cf25be77a9a94acc8afcd52f69d2917fb392"
+    },
+    {
+      "path": "kitchen/expert/09-second-set-and-equipment-change.png",
+      "bytes": 69123,
+      "sha256": "5b6dd832221c2515ab68ea1460e7709d7a23f14dbb8165430ab53b0c09d61f1b"
+    },
+    {
+      "path": "kitchen/expert/09-second-set-and-equipment-change.txt",
+      "bytes": 8843,
+      "sha256": "4da3452880a3f93d6692906a342c5efdee7d5ffe09112bb5f4d9aa1b2f612fe8"
+    },
+    {
+      "path": "kitchen/expert/10-adjust-after-recording.png",
+      "bytes": 63650,
+      "sha256": "8e0da6dc195700874b2e23fab80b68d3d62228e82e94be0acd0b5c52f1e86fb3"
+    },
+    {
+      "path": "kitchen/expert/10-adjust-after-recording.txt",
+      "bytes": 9450,
+      "sha256": "647fca8b563393096df62f90cf2d4cee358c89f6fae3ecc7daf5033c8cf43837"
+    },
+    {
+      "path": "kitchen/expert/11-customize-unstarted-exercise.png",
+      "bytes": 69559,
+      "sha256": "5508cc6af20784e36663f3e889694ef98ba981355129b83e40e16441ec71082d"
+    },
+    {
+      "path": "kitchen/expert/11-customize-unstarted-exercise.txt",
+      "bytes": 8515,
+      "sha256": "e2e46ef98a9d7f2c170b5902d998f524d1453d3adaba4e8b7b02ff6aac515509"
+    },
+    {
+      "path": "kitchen/expert/12-alternate-exercise-log.png",
+      "bytes": 70924,
+      "sha256": "448d73fff7f67135f34da43798b5f8e6979b1c908955ad72b818013a7ec81ac2"
+    },
+    {
+      "path": "kitchen/expert/12-alternate-exercise-log.txt",
+      "bytes": 9075,
+      "sha256": "aa12779268e42d7249aa682aba03f68db1092848d6162a43e0a1f4bb1084398a"
+    },
+    {
+      "path": "kitchen/expert/13-partial-finish-review.png",
+      "bytes": 90829,
+      "sha256": "57e84563dcd2ec6188bef4977fd6b26a018a7162f39694c92e6221d23740bd1d"
+    },
+    {
+      "path": "kitchen/expert/13-partial-finish-review.txt",
+      "bytes": 9389,
+      "sha256": "59c930628722c6e6f16903fdd3ec53c1c67b5e6170f23e4961b199e80669acc2"
+    },
+    {
+      "path": "kitchen/expert/14-finished-with-history-error.png",
+      "bytes": 70396,
+      "sha256": "e07b1a7bf29aef647e8b84fa1fefbede7ed0d3bd1e2c03bca4425010d87a2f62"
+    },
+    {
+      "path": "kitchen/expert/14-finished-with-history-error.txt",
+      "bytes": 3740,
+      "sha256": "29b1816e264ba802173666e3b68e279f2f1830972e5c6ff19633cfe15417b294"
+    },
+    {
+      "path": "kitchen/expert/15-reopen-history-correction.png",
+      "bytes": 53990,
+      "sha256": "9a4318606066080668d4c2a0d238e3242900e5b93167e80a5fc3a7efd194a273"
+    },
+    {
+      "path": "kitchen/expert/15-reopen-history-correction.txt",
+      "bytes": 9209,
+      "sha256": "e39698a42c3a083d5e064185813ea4b2c549359dab298952bab8688ccc97a548"
+    },
+    {
+      "path": "kitchen/expert/16-refinished-correction.png",
+      "bytes": 68843,
+      "sha256": "e5d9793b98ed30a83e985a9fed43aa042b57729a79378e814c1c51efa72d5c71"
+    },
+    {
+      "path": "kitchen/expert/16-refinished-correction.txt",
+      "bytes": 3874,
+      "sha256": "3b053fe70dce41162f88612a8e4480edc1250c7a213e81488a4ed047efd8fe3e"
+    },
+    {
+      "path": "kitchen/expert/17-return-to-options-history.png",
+      "bytes": 98278,
+      "sha256": "2b073a6696d32d61391582d5ba7acdb734dba87376a9e123f096e39881ff41b1"
+    },
+    {
+      "path": "kitchen/expert/17-return-to-options-history.txt",
+      "bytes": 3527,
+      "sha256": "374cf0dd0a42b58966bdf20c5248a3b321f80f06c3fa224c0e7e502a1e39ce83"
+    },
+    {
+      "path": "kitchen/expert/18-next-session-customization-not-reused.png",
+      "bytes": 69553,
+      "sha256": "c70d2769ddf6d7c30d0d575c0595194593cd1dd7e5ccfdcee579581d51b4bb20"
+    },
+    {
+      "path": "kitchen/expert/18-next-session-customization-not-reused.txt",
+      "bytes": 7803,
+      "sha256": "e6b5635c6ed266897a47423d53d129a4b098adfbb703259bc592caf78178768b"
+    },
+    {
+      "path": "kitchen/expert/19-reloaded-kg-and-chat-unit-discrepancy-error.png",
+      "bytes": 69553,
+      "sha256": "7e8b0778a112d36ff825072949d3e62db1b87bb19aecdf7eda5894a03317def2"
+    },
+    {
+      "path": "kitchen/expert/19-reloaded-kg-and-chat-unit-discrepancy-error.txt",
+      "bytes": 7803,
+      "sha256": "e6b5635c6ed266897a47423d53d129a4b098adfbb703259bc592caf78178768b"
+    },
+    {
+      "path": "kitchen/expert/20-daily-targets-review.png",
+      "bytes": 59304,
+      "sha256": "7c56b19897f7151f148c2950e92062172dbc67b0dbce095700c509840f9682ea"
+    },
+    {
+      "path": "kitchen/expert/20-daily-targets-review.txt",
+      "bytes": 4098,
+      "sha256": "d23aabe5e1de2bf5ae0f7748ab67c2010199f4a76761347ef8fae804a614f535"
+    },
+    {
+      "path": "kitchen/expert/21-manual-breakfast-error.png",
+      "bytes": 49067,
+      "sha256": "e3f71f1f1fcf62305c3e21ab90652a705bbd3773949d7c2944d06c76ecce94bc"
+    },
+    {
+      "path": "kitchen/expert/21-manual-breakfast-error.txt",
+      "bytes": 3668,
+      "sha256": "59400b788697a899039930ceb202588e03fbdd2ed6f0b0f122f1b93e5f4d6280"
+    },
+    {
+      "path": "kitchen/expert/22-repeat-portion-review-error.png",
+      "bytes": 49067,
+      "sha256": "e3f71f1f1fcf62305c3e21ab90652a705bbd3773949d7c2944d06c76ecce94bc"
+    },
+    {
+      "path": "kitchen/expert/22-repeat-portion-review-error.txt",
+      "bytes": 3668,
+      "sha256": "59400b788697a899039930ceb202588e03fbdd2ed6f0b0f122f1b93e5f4d6280"
+    },
+    {
+      "path": "kitchen/expert/23-repeat-to-yesterday.png",
+      "bytes": 103844,
+      "sha256": "52c7007144f53f0aef92e4f76434d313ae9816d2ad1bb58a23a7a3a4cc24bfad"
+    },
+    {
+      "path": "kitchen/expert/23-repeat-to-yesterday.txt",
+      "bytes": 3164,
+      "sha256": "15baeb34532565fd20a0c6ff58c2dc30758ca983a032c401558713667b0d6efa"
+    },
+    {
+      "path": "kitchen/expert/24-date-correction-and-reload.png",
+      "bytes": 99245,
+      "sha256": "f3c0f50ede6c3a8a42be64d4b5eb30388006a894862bcbf6fc57364d19ab2389"
+    },
+    {
+      "path": "kitchen/expert/24-date-correction-and-reload.txt",
+      "bytes": 3182,
+      "sha256": "a98640aed82c909205db2a4476ffb930f8fb58e7e8f9c1663dd4e5b9fe4c84ad"
+    },
+    {
+      "path": "kitchen/expert/25-weekly-intake-view.png",
+      "bytes": 98842,
+      "sha256": "b9a3f44a0e4fe87ba5fa7c23c36948b1c3eabdd0ba993a4e2090c6c446e2889d"
+    },
+    {
+      "path": "kitchen/expert/25-weekly-intake-view.txt",
+      "bytes": 3703,
+      "sha256": "1ceebad2ad0d7907e92eb83607a9c7b6fe0644c69bec987167340d986c9dc2b6"
+    },
+    {
+      "path": "kitchen/expert/26-correct-synthetic-food-and-repeat.png",
+      "bytes": 56802,
+      "sha256": "66d1adebf9a1e3ce2dbe3c801e88efc84633faecc721f2ab00972d8c7dc622fd"
+    },
+    {
+      "path": "kitchen/expert/26-correct-synthetic-food-and-repeat.txt",
+      "bytes": 4111,
+      "sha256": "1c8f686ef556875c3709d3551564c178ea09de65c75980ad70ba723e07528f0b"
+    },
+    {
+      "path": "kitchen/expert/27-repeat-today-persists.png",
+      "bytes": 96856,
+      "sha256": "97461969f98ae93840d141f1052f7dcdd2e20ec999ed3436004ad8c4ae15f5bc"
+    },
+    {
+      "path": "kitchen/expert/27-repeat-today-persists.txt",
+      "bytes": 3072,
+      "sha256": "fbd04e218f55426688bf43745363acd300dcf4e070da3ac49974d4972a4d6949"
+    },
+    {
+      "path": "kitchen/expert/28-recipe-first-setup.png",
+      "bytes": 77068,
+      "sha256": "c351a0071afd843fe82d123bb7800ab354a74a73f37502490481fb0864d72d39"
+    },
+    {
+      "path": "kitchen/expert/28-recipe-first-setup.txt",
+      "bytes": 3184,
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "kitchen/expert/29-add-Rolled-oats.png",
+      "bytes": 58066,
+      "sha256": "7f4bdc05f59f5a9002195e497031c734d5ffef1303b346276446e6188013156d"
+    },
+    {
+      "path": "kitchen/expert/29-add-Rolled-oats.txt",
+      "bytes": 4373,
+      "sha256": "2885edafffb8b94fe7db782986c11a1318a046bb0b7d894120ab9c536beeea36"
+    },
+    {
+      "path": "kitchen/expert/29-add-Whole-milk.png",
+      "bytes": 57808,
+      "sha256": "bcecbf4b5d776a270cfc598def13148c481f8a56846e7646639fd195bb0dcd0e"
+    },
+    {
+      "path": "kitchen/expert/29-add-Whole-milk.txt",
+      "bytes": 5233,
+      "sha256": "7dd74bce51c58c48022a40220d6566dec560c718a00106d6ccc31529000210b6"
+    },
+    {
+      "path": "kitchen/expert/30-return-to-recipe-and-prepare.png",
+      "bytes": 57266,
+      "sha256": "f9b697d67dfd6180fc1ddd4562c119d9ef88071af240adae440e44286ed5a446"
+    },
+    {
+      "path": "kitchen/expert/30-return-to-recipe-and-prepare.txt",
+      "bytes": 4751,
+      "sha256": "5ebf186532e819fbde8ea7f7433a7bccdb97d7662e8ebc290c02cd84ca89fa1d"
+    },
+    {
+      "path": "kitchen/expert/31-log-recipe-portion.png",
+      "bytes": 56596,
+      "sha256": "1c5e1a33129d5a0ae6a45c21719d16f813704232ae7f6635cf40ea82226c79e1"
+    },
+    {
+      "path": "kitchen/expert/31-log-recipe-portion.txt",
+      "bytes": 4813,
+      "sha256": "0c56558a9a8eafd601124a85399aaffb454798c02ccb8c2ef60488a6a72775a7"
+    },
+    {
+      "path": "kitchen/expert/32-recipe-portion-persists.png",
+      "bytes": 73263,
+      "sha256": "355c8d6c6a67c10f92ad5b1a2891931ec7dac9ba4e7a20a40830556f5c2c97e9"
+    },
+    {
+      "path": "kitchen/expert/32-recipe-portion-persists.txt",
+      "bytes": 3788,
+      "sha256": "64bcd4961d07b8ce4e8524e962a176f206678ed0fac80ceace1359f83eeb9d51"
+    },
+    {
+      "path": "kitchen/expert/35-kg-second-session-confirmation-error.png",
+      "bytes": 59591,
+      "sha256": "aec321939aae544ee641d663617fddc79eaabd44d8596a701db1dfe1875ae455"
+    },
+    {
+      "path": "kitchen/expert/35-kg-second-session-confirmation-error.txt",
+      "bytes": 4751,
+      "sha256": "63eb361bbe238319996d6fefa9c0cdb632c42ab31e2bc085f06967c9200403f7"
+    },
+    {
+      "path": "kitchen/expert/36-recipe-close-recheck.png",
+      "bytes": 73788,
+      "sha256": "3e51dc590af34e0f03d5cd6502430e4ba01e9cb246c6598818abcbd3e47cb817"
+    },
+    {
+      "path": "kitchen/expert/36-recipe-close-recheck.txt",
+      "bytes": 3788,
+      "sha256": "64bcd4961d07b8ce4e8524e962a176f206678ed0fac80ceace1359f83eeb9d51"
+    },
+    {
+      "path": "kitchen/expert/37-kg-reproduction-adjust.png",
+      "bytes": 67997,
+      "sha256": "170eee0ece4518900c1869191e70413e481f0fec454c90a608ade4ed6d143a51"
+    },
+    {
+      "path": "kitchen/expert/37-kg-reproduction-adjust.txt",
+      "bytes": 8272,
+      "sha256": "e65f3293950ed68708a720f0c66b3896bac70fac6f8b1f5d50d7128ecf9bdf4e"
+    },
+    {
+      "path": "kitchen/expert/38-rest-timer-started.png",
+      "bytes": 69760,
+      "sha256": "fd0f4466dd5523f0e3c40f28816a752c6dd9b888239c8eff625283066d984147"
+    },
+    {
+      "path": "kitchen/expert/38-rest-timer-started.txt",
+      "bytes": 8469,
+      "sha256": "48c3ee679f7b35679c570371f4b0cc25213e3e8f2495615fbac4337d9d90d5a5"
+    },
+    {
+      "path": "kitchen/expert/39-rest-running.png",
+      "bytes": 69655,
+      "sha256": "024b7d91192893322c4d9f1b7dad68341af46ac397ed1221f44dafb4703bcf00"
+    },
+    {
+      "path": "kitchen/expert/39-rest-running.txt",
+      "bytes": 8506,
+      "sha256": "e206877baf68fffea34fd1c0a8db4c7b86731410b4c43503309109241cb84a58"
+    },
+    {
+      "path": "kitchen/expert/40-rest-navigation-result.png",
+      "bytes": 69972,
+      "sha256": "3c728f4dd614a766f01a13717296687d0de91e904bf4b4962a86b68e2f54bc1c"
+    },
+    {
+      "path": "kitchen/expert/40-rest-navigation-result.txt",
+      "bytes": 8469,
+      "sha256": "48c3ee679f7b35679c570371f4b0cc25213e3e8f2495615fbac4337d9d90d5a5"
+    },
+    {
+      "path": "kitchen/expert/41-kg-chat-visible.png",
+      "bytes": 69082,
+      "sha256": "265bab73e0f2bc67661c01be729aaee793d387c0b2dd95663da50cf2d7073625"
+    },
+    {
+      "path": "kitchen/expert/41-kg-chat-visible.txt",
+      "bytes": 8469,
+      "sha256": "48c3ee679f7b35679c570371f4b0cc25213e3e8f2495615fbac4337d9d90d5a5"
+    },
+    {
+      "path": "kitchen/expert/42-rest-navigation-reproduction.png",
+      "bytes": 70075,
+      "sha256": "8aa31e847959a55736ff440ef43a0a5813a10f5c1adbcf1a492ff7eed8c9e3c7"
+    },
+    {
+      "path": "kitchen/expert/42-rest-navigation-reproduction.txt",
+      "bytes": 8469,
+      "sha256": "48c3ee679f7b35679c570371f4b0cc25213e3e8f2495615fbac4337d9d90d5a5"
+    },
+    {
+      "path": "kitchen/expert/42a-rest-live.png",
+      "bytes": 69987,
+      "sha256": "8cce423f9532f46adbee504022739b52a79e71281e405903f2ac105a6b9d6397"
+    },
+    {
+      "path": "kitchen/expert/42a-rest-live.txt",
+      "bytes": 8506,
+      "sha256": "e206877baf68fffea34fd1c0a8db4c7b86731410b4c43503309109241cb84a58"
+    },
+    {
+      "path": "kitchen/expert/43-profile-weekly-review.png",
+      "bytes": 69972,
+      "sha256": "b6d79f4312289bc390748aea4eeec9ac2784564a69a3e38c81fc86153e88c3f9"
+    },
+    {
+      "path": "kitchen/expert/43-profile-weekly-review.txt",
+      "bytes": 6952,
+      "sha256": "21337c66091099680375bc397401dbf406e4dedb24472320878b6bf28de51e46"
+    },
+    {
+      "path": "kitchen/expert/final-state.json",
+      "bytes": 11128,
+      "sha256": "95bb039ee16e9d824f276d188e92b66fa75eb1f7d0cad4bc4695d6d18f5b8bf5"
+    },
+    {
+      "path": "kitchen/findings.json",
+      "bytes": 16310,
+      "sha256": "be2e5241e636586322071d14b2eddc82502438aca29fdf5984c9d1cf8d6a5088"
+    },
+    {
+      "path": "kitchen/food-use.mjs",
+      "bytes": 2704,
+      "sha256": "61383a4435826bceccdc151071a7490094ba843e9a27b00694f41cdb5cd018b8"
+    },
+    {
+      "path": "kitchen/kitchen-use.mjs",
+      "bytes": 2707,
+      "sha256": "46c22b51e8d7f621183e0b897a5cba25a447ad420a352c5d4bdb0ffc72263711"
+    },
+    {
+      "path": "kitchen/onboard.mjs",
+      "bytes": 972,
+      "sha256": "236fe4687193781c24d01817bd390f174405c2de645a0e6961933e9586869e60"
+    },
+    {
+      "path": "kitchen/package-findings.mjs",
+      "bytes": 13916,
+      "sha256": "421ba235d7a28f32035ec65db54a4717a49be558527a3122e71eaf13a3f454d2"
+    },
+    {
+      "path": "kitchen/report.md",
+      "bytes": 13050,
+      "sha256": "35d534af5f3e832fce047c0811729db8f6117720b628b57f513ca6e9da444064"
+    },
+    {
+      "path": "kitchen/session.mjs",
+      "bytes": 2796,
+      "sha256": "6883dc86ac6314469dd96a6c64453090dc38f07d9fc0ee79bd795b518ea4b3ee"
+    },
+    {
+      "path": "kitchen/sessions.json",
+      "bytes": 26962,
+      "sha256": "db4c2f45e6e777aa3194a627d7d31a42e9996846c429d43c684b189361fe1d69"
+    },
+    {
+      "path": "kitchen/six-months/01-fresh-onboarding.png",
+      "bytes": 469729,
+      "sha256": "1150e50c08253c868b031b1f63dfdeff58766cf3bd6458eb332ed9c0ab04c2f2"
+    },
+    {
+      "path": "kitchen/six-months/01-fresh-onboarding.txt",
+      "bytes": 918,
+      "sha256": "193347d1224ae59bac0ee0f79e20c8946e4f49cae377aac9723d1b0a30ebb009"
+    },
+    {
+      "path": "kitchen/six-months/02-guest-setup.png",
+      "bytes": 515044,
+      "sha256": "130b51bf91bd16fa33b1ce4bb350000781bd7034ae7d4fe3c449ef7b4e4b0c61"
+    },
+    {
+      "path": "kitchen/six-months/02-guest-setup.txt",
+      "bytes": 1154,
+      "sha256": "c39487fe89fd35023f02e6a08191920bcee36fc710ea02aba096d20c98465ce8"
+    },
+    {
+      "path": "kitchen/six-months/03-ready.png",
+      "bytes": 514324,
+      "sha256": "c7d69efb1362dcb9bdc5ed1bbba6fc0a26ba9bbb5ff44a34df51a2d0f5f56365"
+    },
+    {
+      "path": "kitchen/six-months/03-ready.txt",
+      "bytes": 855,
+      "sha256": "66c6f3275fdf450d4f2833b07412b8c543d8443c4f9ff2f28531a80e2da6e8a6"
+    },
+    {
+      "path": "kitchen/six-months/04-first-chat.png",
+      "bytes": 76583,
+      "sha256": "7b40650d205a5a5d856b038994a118cebf27c31d9dab39cc72cd602935cced1d"
+    },
+    {
+      "path": "kitchen/six-months/04-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "kitchen/six-months/20-daily-targets-review.png",
+      "bytes": 142583,
+      "sha256": "df8157f989c264e697165a50235e78577ca58ee4b1b4b13bcc879ffccb507d8d"
+    },
+    {
+      "path": "kitchen/six-months/20-daily-targets-review.txt",
+      "bytes": 4097,
+      "sha256": "a07fd2e69a0bc0c0da8585d25ba06f72335b01afa02f46a1f2d0614c8d830c37"
+    },
+    {
+      "path": "kitchen/six-months/21-manual-breakfast-error.png",
+      "bytes": 116364,
+      "sha256": "b2911fa5bcdac06dc9ca1f70b04a199c19e76c8d74da9e35bc006c984ac90074"
+    },
+    {
+      "path": "kitchen/six-months/21-manual-breakfast-error.txt",
+      "bytes": 3670,
+      "sha256": "778aab4647c73c4c49716645bb5b280cda2fa6cd059e40584074397fd0811829"
+    },
+    {
+      "path": "kitchen/six-months/22-repeat-portion-review-error.png",
+      "bytes": 116364,
+      "sha256": "b2911fa5bcdac06dc9ca1f70b04a199c19e76c8d74da9e35bc006c984ac90074"
+    },
+    {
+      "path": "kitchen/six-months/22-repeat-portion-review-error.txt",
+      "bytes": 3670,
+      "sha256": "778aab4647c73c4c49716645bb5b280cda2fa6cd059e40584074397fd0811829"
+    },
+    {
+      "path": "kitchen/six-months/23-repeat-to-yesterday.png",
+      "bytes": 167091,
+      "sha256": "474dd58057d2f781d3f91e0506d9e3570c19222091361fae732ff64459132ab9"
+    },
+    {
+      "path": "kitchen/six-months/23-repeat-to-yesterday.txt",
+      "bytes": 3168,
+      "sha256": "fd4d739ea44c12334f8b2755b8921d4965eadb9fcb0d48cf1ea23b2295b75de0"
+    },
+    {
+      "path": "kitchen/six-months/24-date-correction-and-reload.png",
+      "bytes": 184478,
+      "sha256": "36ae257b87305711a4874e97f29a06bcf5bcfb7a8a65bd2ca415e2bb721da371"
+    },
+    {
+      "path": "kitchen/six-months/24-date-correction-and-reload.txt",
+      "bytes": 3182,
+      "sha256": "39a52a09f51941716e9d1cb9ed93f0c39074c39572501badaaad0c82c1c3e4af"
+    },
+    {
+      "path": "kitchen/six-months/25-weekly-intake-view.png",
+      "bytes": 160633,
+      "sha256": "f5cd18ead68ef010c2155989cfb13e06d0e4894662d0e97c0f0c0bd994033f54"
+    },
+    {
+      "path": "kitchen/six-months/25-weekly-intake-view.txt",
+      "bytes": 3703,
+      "sha256": "a648e34f4526f9d24069a0ba0961ee7977f4909b02482b0747ed63c27686cf4d"
+    },
+    {
+      "path": "kitchen/six-months/26-correct-synthetic-food-and-repeat.png",
+      "bytes": 132280,
+      "sha256": "fb79b82cd7b5bed218aa41efdb0961859cf8888db68e2c5cfb938fe7d4a3f5ee"
+    },
+    {
+      "path": "kitchen/six-months/26-correct-synthetic-food-and-repeat.txt",
+      "bytes": 4082,
+      "sha256": "6fae1b57af5161836ac32eef375a1b0bdf94f7aff7231d32ad3e27a457e024d8"
+    },
+    {
+      "path": "kitchen/six-months/27-repeat-today-persists.png",
+      "bytes": 165418,
+      "sha256": "8b97cc97c73ff5a8a9c686413e9063dc674c9b1d342580ac5f375b7a0d7cd59d"
+    },
+    {
+      "path": "kitchen/six-months/27-repeat-today-persists.txt",
+      "bytes": 3070,
+      "sha256": "b3b2008d44417851a9e9d415db924d0b006ace932b5a6f4872b3df96ae50ac94"
+    },
+    {
+      "path": "kitchen/six-months/28-recipe-first-setup.png",
+      "bytes": 118995,
+      "sha256": "caa309ec0499903a19d755e35d7e726b7a9735476978fec17e64735ad620e2d0"
+    },
+    {
+      "path": "kitchen/six-months/28-recipe-first-setup.txt",
+      "bytes": 3184,
+      "sha256": "8e0fea1c70f9068ea20995dd1367c564bf5f737d7f0adb0462e979d203bcb7a9"
+    },
+    {
+      "path": "kitchen/six-months/29-add-Rolled-oats.png",
+      "bytes": 97972,
+      "sha256": "74427d7395465d39bb95d4e6c6dade8bf8012cf4da84ead2929492f25479835c"
+    },
+    {
+      "path": "kitchen/six-months/29-add-Rolled-oats.txt",
+      "bytes": 4373,
+      "sha256": "2885edafffb8b94fe7db782986c11a1318a046bb0b7d894120ab9c536beeea36"
+    },
+    {
+      "path": "kitchen/six-months/29-add-Whole-milk.png",
+      "bytes": 92541,
+      "sha256": "e3cc8f32534d9deba82630a6a154c5d279c1266157680d5437c4d48151d3c1f2"
+    },
+    {
+      "path": "kitchen/six-months/29-add-Whole-milk.txt",
+      "bytes": 5233,
+      "sha256": "7dd74bce51c58c48022a40220d6566dec560c718a00106d6ccc31529000210b6"
+    },
+    {
+      "path": "kitchen/six-months/30-return-to-recipe-and-prepare.png",
+      "bytes": 116266,
+      "sha256": "12e2ede3b9bc8ed1793a51c9a2c36f5831e3b40bd2fc5b28fb94d0a32916f7ed"
+    },
+    {
+      "path": "kitchen/six-months/30-return-to-recipe-and-prepare.txt",
+      "bytes": 6034,
+      "sha256": "79b2b32cf29285ea0c977190a07c3bd81ac72131fca765addd298bc662aee3d3"
+    },
+    {
+      "path": "kitchen/six-months/31-log-recipe-portion.png",
+      "bytes": 109129,
+      "sha256": "036a2255ff8183a7f5e02c654898ab5e3a36e83d66d91edbc294d2a9295dab6b"
+    },
+    {
+      "path": "kitchen/six-months/31-log-recipe-portion.txt",
+      "bytes": 4817,
+      "sha256": "dfe60dfe579b427a08ea9fcf00731d1a4b458da82d287676d034757dafb8edcb"
+    },
+    {
+      "path": "kitchen/six-months/32-recipe-portion-persists.png",
+      "bytes": 108614,
+      "sha256": "087d1007272b4f0206edfd6bb437d0f3c2cd10cca22e2633853ffd2a8436a008"
+    },
+    {
+      "path": "kitchen/six-months/32-recipe-portion-persists.txt",
+      "bytes": 3790,
+      "sha256": "ad79c4eda44b37cb8aebaec21921a46aebc085d524912368e0d4b532cbe93a39"
+    },
+    {
+      "path": "kitchen/six-months/33-undo-portion.png",
+      "bytes": 111665,
+      "sha256": "37d8c0feed80a3a19aad161e77908316052b5322bee59bec65f82567c75678c3"
+    },
+    {
+      "path": "kitchen/six-months/33-undo-portion.txt",
+      "bytes": 4732,
+      "sha256": "d4979ced8f819b7c20acf6fa2abff14f9274a6209a240b582e7a5abe10edf0fa"
+    },
+    {
+      "path": "kitchen/six-months/34-log-correct-portion.png",
+      "bytes": 105993,
+      "sha256": "5448f80210ffdece1d54815455ad0e677715702847dfbca908f3c34c55fcc397"
+    },
+    {
+      "path": "kitchen/six-months/34-log-correct-portion.txt",
+      "bytes": 4847,
+      "sha256": "44a73cb5fc313cc27b16b330192b76d6e700965957651e2673778f706433c462"
+    },
+    {
+      "path": "kitchen/six-months/35-planner-settings.png",
+      "bytes": 301767,
+      "sha256": "135bb9bc68687b4207fe241ba9447c3327259720a92957bc19959f7a6f45b3a1"
+    },
+    {
+      "path": "kitchen/six-months/35-planner-settings.txt",
+      "bytes": 3786,
+      "sha256": "9d711353ef88f046cdce291ebf1821ec040af069a4e08bf9fefbc4ab4e765912"
+    },
+    {
+      "path": "kitchen/six-months/36-live-generation-started.png",
+      "bytes": 95195,
+      "sha256": "e019e755a9d0b03a7641abbe83d9a1738b48d6fc5aed5f93357a53fc93e1815d"
+    },
+    {
+      "path": "kitchen/six-months/36-live-generation-started.txt",
+      "bytes": 5616,
+      "sha256": "51f007dc1d2d83c25631260ad2f8724a1fa360c8aa93bbe58732338df715e726"
+    },
+    {
+      "path": "kitchen/six-months/37-generated-dinner-week.png",
+      "bytes": 94626,
+      "sha256": "376e638c36dbb741d8d3c828d4c8a2bbb02952308b78c03d73311f3de34f3de0"
+    },
+    {
+      "path": "kitchen/six-months/37-generated-dinner-week.txt",
+      "bytes": 15182,
+      "sha256": "846d68cfa55d5998633e8ef415994eb7e89d4814752e9847fa4d25ceb1edbaca"
+    },
+    {
+      "path": "kitchen/six-months/38-edit-draft-close-reload.png",
+      "bytes": 93500,
+      "sha256": "4711ae34a719250d2fc2f6fbb6075e38a6dca1589d21e4c2c3166449e32cb023"
+    },
+    {
+      "path": "kitchen/six-months/38-edit-draft-close-reload.txt",
+      "bytes": 15122,
+      "sha256": "97403daf41688d6166c1b2b6f5c63d0b84425a199ade02f363f1a14ba30b7a3b"
+    },
+    {
+      "path": "kitchen/six-months/39-approve-and-repeat-week.png",
+      "bytes": 95163,
+      "sha256": "adfca7e365091b88ccab37efe1d23cf5332a7d0e9c177c2a1b6292c1fc7b2e68"
+    },
+    {
+      "path": "kitchen/six-months/39-approve-and-repeat-week.txt",
+      "bytes": 15246,
+      "sha256": "6157985553e1da0cba160f49ac5cc09f5d3e4c32670b6ec220572c33ad1c67eb"
+    },
+    {
+      "path": "kitchen/six-months/40-shopping-list-entry-error.png",
+      "bytes": 301783,
+      "sha256": "fbc4f1f47f7856a277316f0501a4fbe13e6d27fd6788878d39772c3b490907d5"
+    },
+    {
+      "path": "kitchen/six-months/40-shopping-list-entry-error.txt",
+      "bytes": 5393,
+      "sha256": "c85e9971fc64c030fe7a69a7e7b636c5fcf76136da130a8d99b8ba0f944ccf79"
+    },
+    {
+      "path": "kitchen/six-months/41-shopping-list-review-error.png",
+      "bytes": 130536,
+      "sha256": "372678809f6302da058b8cb250bce2266308387b7979a7c561c47e9e8cd3b754"
+    },
+    {
+      "path": "kitchen/six-months/41-shopping-list-review-error.txt",
+      "bytes": 6107,
+      "sha256": "fcfa00f322519bafc5ad6cea668f94b2cbea71e1be55697f98d38a5081d6c102"
+    },
+    {
+      "path": "kitchen/six-months/42-shopping-needs-and-manual-item.png",
+      "bytes": 68761,
+      "sha256": "8db24b066fa6483d42541879c5593454e6253b1d11478534a80cc46dd76ebcc5"
+    },
+    {
+      "path": "kitchen/six-months/42-shopping-needs-and-manual-item.txt",
+      "bytes": 7989,
+      "sha256": "1764afbafb1ce0b6b7160f2f8b7ea6454a661eca922f8331d2a255711ea9f5bb"
+    },
+    {
+      "path": "kitchen/six-months/43-spending-without-receipts.png",
+      "bytes": 108253,
+      "sha256": "03ae6fb68231bfc8a7257090de73fea6fc260524b1662ef1cde5715d4f43e2d8"
+    },
+    {
+      "path": "kitchen/six-months/43-spending-without-receipts.txt",
+      "bytes": 6655,
+      "sha256": "0488b9a2593dd6f04ea24802465833f2a64d961744695ebebee6132897b3cd3a"
+    },
+    {
+      "path": "kitchen/six-months/44-start-starter-workout.png",
+      "bytes": 104049,
+      "sha256": "992545e31123509b5ab88aae0129829c1bf6f2f5fe70adeab1abf3245798fe18"
+    },
+    {
+      "path": "kitchen/six-months/44-start-starter-workout.txt",
+      "bytes": 7898,
+      "sha256": "553c057d353215d51092b8f47fda3f7e68718210818706238ea648f26a0243c0"
+    },
+    {
+      "path": "kitchen/six-months/45-adjust-before-logging-and-alternate.png",
+      "bytes": 106968,
+      "sha256": "9bc4bdc774c5805f53b71eba31f9600a43c5e1871eac8dc6b9f7388d723a5cda"
+    },
+    {
+      "path": "kitchen/six-months/45-adjust-before-logging-and-alternate.txt",
+      "bytes": 8831,
+      "sha256": "16484003e14c72ef8b9f261d17003ac58298ed34489b6ef84614ab6a9674d888"
+    },
+    {
+      "path": "kitchen/six-months/46-save-partial-and-correct.png",
+      "bytes": 132976,
+      "sha256": "f8e3c3e467d485f293b9391527aae653e195e69456bec2d42404b274176b93c8"
+    },
+    {
+      "path": "kitchen/six-months/46-save-partial-and-correct.txt",
+      "bytes": 9572,
+      "sha256": "a7befb40ea1674fb21f42a825ef344ccd5fb7e7d8c96e93024e428efb11c51da"
+    },
+    {
+      "path": "kitchen/six-months/46a-partial-review.png",
+      "bytes": 145335,
+      "sha256": "3f8a95d0ea44f54b5efaa38f61fe9c67b1cbf44d34f1adbd321dff3cde0ff0ed"
+    },
+    {
+      "path": "kitchen/six-months/46a-partial-review.txt",
+      "bytes": 9698,
+      "sha256": "20a56e8ce274294c23adc3a9d3746f995c79175fcdbd87bb01c4be7b08b0b9b9"
+    },
+    {
+      "path": "kitchen/six-months/47-correction-and-history-persists.png",
+      "bytes": 166227,
+      "sha256": "45c49b70a5a70eb02f7fe6df532069e0e551c044d55610e113b02dee5779aba1"
+    },
+    {
+      "path": "kitchen/six-months/47-correction-and-history-persists.txt",
+      "bytes": 4812,
+      "sha256": "d8dfec1d0c65e9d3aec20bf029b882989542a00f62f4e2b3ce9fd91b73d57801"
+    },
+    {
+      "path": "kitchen/six-months/47a-workout-history.png",
+      "bytes": 151345,
+      "sha256": "6d2e2d3dca41e0a5ee747efc7e676e279622c0f680abd6515c236143168ab93c"
+    },
+    {
+      "path": "kitchen/six-months/47a-workout-history.txt",
+      "bytes": 3525,
+      "sha256": "ca387e5780eab58547d3d16ce0b27a527b33f5b9f27906bd60149a4fb8bb85b3"
+    },
+    {
+      "path": "kitchen/six-months/48-shopping-list-after-reload.png",
+      "bytes": 84516,
+      "sha256": "70dab2ab57c6cb8aad32726f9727aba160424a255abf68b730f7562ee60cf760"
+    },
+    {
+      "path": "kitchen/six-months/48-shopping-list-after-reload.txt",
+      "bytes": 7898,
+      "sha256": "aa059b87ba5a21fcb65978fea9aef753e5808bb24b773139786a939cd88919c3"
+    },
+    {
+      "path": "kitchen/six-months/49-planned-meal-detail-no-method.png",
+      "bytes": 89854,
+      "sha256": "ebac039112e7589e83d6a25fb2addbafe03ab3e409f433f917f99aec04a1d464"
+    },
+    {
+      "path": "kitchen/six-months/49-planned-meal-detail-no-method.txt",
+      "bytes": 15167,
+      "sha256": "0decb695e686eee7cdec06d1a9a94234467ff102983bdb9b4a67a71aaafaed8c"
+    },
+    {
+      "path": "kitchen/six-months/final-state.json",
+      "bytes": 30708,
+      "sha256": "d6d24dd13be9297827003984d48359e0024e40402629c70615f05089b13d290e"
+    },
+    {
+      "path": "kitchen/six-months/planner-response.json",
+      "bytes": 7917,
+      "sha256": "45267a15640cf63e88986f14a9a3e953639159a38503c08c43482e8bb58fb96c"
+    },
+    {
+      "path": "native/01-first-launch.aria.txt",
+      "bytes": 510,
+      "sha256": "ac2dbc1b261a9e9cfe5231a8229473c6c0119530711730dedbdbc9cb4e42b684"
+    },
+    {
+      "path": "native/01-first-launch.png",
+      "bytes": 127990,
+      "sha256": "4a6add607c9e8aae79ccd847e56110ad5257aa4f9a5bb9b77acd480c04dce837"
+    },
+    {
+      "path": "native/01-first-launch.txt",
+      "bytes": 359,
+      "sha256": "6e95550cbfa9d149de1a11e8137f911193ec3cdcc8b33b61d8a13b495026479f"
+    },
+    {
+      "path": "native/02-guest-storage-copy.aria.txt",
+      "bytes": 678,
+      "sha256": "200eb59b2618ff9cf8cd1bcbd4e38ca93a09e5cd7980198822f3d123bcf05d98"
+    },
+    {
+      "path": "native/02-guest-storage-copy.png",
+      "bytes": 134995,
+      "sha256": "2ba3eba3c6cf5222cf3f02db0c73211c50eb7d74d6e75a44d5dddd26e7dfc223"
+    },
+    {
+      "path": "native/02-guest-storage-copy.txt",
+      "bytes": 419,
+      "sha256": "d8d8d2f91ed5abeba9926fc2fe224ce9281a71094419d902c59282653f7ba2c2"
+    },
+    {
+      "path": "native/03-ready.aria.txt",
+      "bytes": 598,
+      "sha256": "65e593b162ebdad190163b9a00a89dbfec2261775a66c6bf07b69a6c7527c604"
+    },
+    {
+      "path": "native/03-ready.png",
+      "bytes": 131556,
+      "sha256": "651c7ae0f1730fa40f5cc22f7044c4ae593861ea36b6f51a04ee4bc01470d981"
+    },
+    {
+      "path": "native/03-ready.txt",
+      "bytes": 445,
+      "sha256": "c737a0ca56e0251584da6fa67ac1218d3e51bf77e4968fa9d54519a0e1e6f37d"
+    },
+    {
+      "path": "native/04-chat.aria.txt",
+      "bytes": 689,
+      "sha256": "bd1fb96122b7b517b62942e67ada7f2a5538a05dff7363d12ceabc44d6061679"
+    },
+    {
+      "path": "native/04-chat.png",
+      "bytes": 43018,
+      "sha256": "099430f9cf2c31ce1c8e62380a345a580b55afcbc8d6d8a346bfc0ffb6196623"
+    },
+    {
+      "path": "native/04-chat.txt",
+      "bytes": 183,
+      "sha256": "21ad989d3377be25bcaffe3eb3bc02c9e804f577adee5eec058a9260aa45a05b"
+    },
+    {
+      "path": "native/05-nutrition.aria.txt",
+      "bytes": 1366,
+      "sha256": "862b24d36d03670d0c71a977f585c0f6afdca5b8131bdfe564745cf8e0d21544"
+    },
+    {
+      "path": "native/05-nutrition.png",
+      "bytes": 50565,
+      "sha256": "2eb02ced6109074e051a8fd19ff68920b2135a9ee5fced3d012309d5096d69bb"
+    },
+    {
+      "path": "native/05-nutrition.txt",
+      "bytes": 705,
+      "sha256": "0dfe5312e9189b804f2254e88b54e3f73055c9cc3f26cc5ac55fb86d5824cc48"
+    },
+    {
+      "path": "native/06-calories-only-rejected.aria.txt",
+      "bytes": 2146,
+      "sha256": "1a1f97105d9d6130611769281c7fba64a6daf01cca2aec99befc3f87a9125694"
+    },
+    {
+      "path": "native/06-calories-only-rejected.png",
+      "bytes": 24545,
+      "sha256": "b19d73304df95f760301ab3cef01fb23abdcf479e9c01fe64b9c2017b580afd3"
+    },
+    {
+      "path": "native/06-calories-only-rejected.txt",
+      "bytes": 1042,
+      "sha256": "a46349ecde46d49bff68dbf65598e765030ececcb807e33cc97fc250854f1023"
+    },
+    {
+      "path": "native/07-offline-meal-saved.aria.txt",
+      "bytes": 1611,
+      "sha256": "db68a35b0390f45634852e95d2d1341524617a2b22fb9c5755f134f696b92ba5"
+    },
+    {
+      "path": "native/07-offline-meal-saved.png",
+      "bytes": 51720,
+      "sha256": "524ddb715032d96a9a592b2a9a978fe7ad3fa92663d29a3035a7a899362ae524"
+    },
+    {
+      "path": "native/07-offline-meal-saved.txt",
+      "bytes": 972,
+      "sha256": "f40330acbeba51f97de437ebffe130877997bb69c0bc4ee275eac107d3240353"
+    },
+    {
+      "path": "native/08-offline-edit-after-reload.aria.txt",
+      "bytes": 1583,
+      "sha256": "0ed8af7495fef26c00625f7c99a73312ce58cf9943d0233868e0f06fb5c4230f"
+    },
+    {
+      "path": "native/08-offline-edit-after-reload.png",
+      "bytes": 51181,
+      "sha256": "7e097a9ab762fad77dc2e1605d07a95cbf7862a234d7fdef25cee24666de3db6"
+    },
+    {
+      "path": "native/08-offline-edit-after-reload.txt",
+      "bytes": 961,
+      "sha256": "e640ee98b4de02fadcd9289fdd3ac72d20c365c495a6dc2a54aca1f2ff671dfa"
+    },
+    {
+      "path": "native/09-old-meal-disappears.aria.txt",
+      "bytes": 1643,
+      "sha256": "e7468391e53c72a93bdb14d19b45d9cc6a4007e17c1537a3de26caab101352f0"
+    },
+    {
+      "path": "native/09-old-meal-disappears.png",
+      "bytes": 51678,
+      "sha256": "cfa966f8bdb8738be3db6d6512d3276cdb7a74385b31a6cc2f0b577d7dc146aa"
+    },
+    {
+      "path": "native/09-old-meal-disappears.txt",
+      "bytes": 988,
+      "sha256": "1afa57865e9c63d7f27d8438e86999f49ec46e432adc73625acbd95fdba52d45"
+    },
+    {
+      "path": "native/10-week-history-controls.aria.txt",
+      "bytes": 1815,
+      "sha256": "3d1392df1e50e0d4c5191cbd2519806535da7c99eb23f700ef3a9bcf428ab54f"
+    },
+    {
+      "path": "native/10-week-history-controls.png",
+      "bytes": 52316,
+      "sha256": "e4921147b6dd4ce3f177dfcb91f58e023fffbdd8929e709e79e604e46c49a8cf"
+    },
+    {
+      "path": "native/10-week-history-controls.txt",
+      "bytes": 1160,
+      "sha256": "99fc9b84d09e31881a03cba9e7ade25f7618cb84c25e9f4c62b2112525592918"
+    },
+    {
+      "path": "native/11-you.aria.txt",
+      "bytes": 2712,
+      "sha256": "bb4a347c10d79f7cd838ac975fda72d5cd2e612c196382b264c8b1cb9efdc99e"
+    },
+    {
+      "path": "native/11-you.png",
+      "bytes": 68673,
+      "sha256": "e542663bb606a9270153dfb152fe189223cd53f3afc02931ffcb00a6979b08ea"
+    },
+    {
+      "path": "native/11-you.txt",
+      "bytes": 1744,
+      "sha256": "6277d32c060b7a95fa634b99cc6a4817b8ce6cf915bfffcbfae2c0705bb99b52"
+    },
+    {
+      "path": "native/12-data-help.aria.txt",
+      "bytes": 4259,
+      "sha256": "3d264b438e97030f22533ca41b5b27f24726b8ce1b9c24d4b09348022fb41532"
+    },
+    {
+      "path": "native/12-data-help.png",
+      "bytes": 47901,
+      "sha256": "9c626d492ce4e27729b9d15a0926573becf0d1fb2dbfd459aced48590bd31ae5"
+    },
+    {
+      "path": "native/12-data-help.txt",
+      "bytes": 3283,
+      "sha256": "fb67cebb9c3e9f8bbd21489970eff757a5092a867b2c620161e5450b41c42bbd"
+    },
+    {
+      "path": "native/13-guest-cloud-copy.aria.txt",
+      "bytes": 4662,
+      "sha256": "97588a80117581c238d5b56aace0a5a5b3f669cd9bd886dbc3081781fd4ce08d"
+    },
+    {
+      "path": "native/13-guest-cloud-copy.png",
+      "bytes": 20697,
+      "sha256": "2bbee24ed07cf708166ae1ec7453177a08411fcee89feff944be4402877e2c5f"
+    },
+    {
+      "path": "native/13-guest-cloud-copy.txt",
+      "bytes": 3541,
+      "sha256": "a44eddd05725d71b09822c0dd51b8e25f74330ca5cdac02fb3c32bc20c763827"
+    },
+    {
+      "path": "native/14-backup-export.aria.txt",
+      "bytes": 4607,
+      "sha256": "d6c09ba22fb714912347e8dfef2e3bec81b105d5813de74320ad6eecca661b2e"
+    },
+    {
+      "path": "native/14-backup-export.png",
+      "bytes": 18793,
+      "sha256": "f6d8f1029c32422e8b361ac131cc121cd4265b253e515908e023efe31b0c8dba"
+    },
+    {
+      "path": "native/14-backup-export.txt",
+      "bytes": 3496,
+      "sha256": "5d333e8571a5149f68554c7c47499aafd9e58b34fd365de183c220280057f48a"
+    },
+    {
+      "path": "native/15-preferences-food.aria.txt",
+      "bytes": 4983,
+      "sha256": "9c51c8a04517536132dff7cf2d1bd2c5a77ba584fc1cf720a7705f1deb2f68b0"
+    },
+    {
+      "path": "native/15-preferences-food.png",
+      "bytes": 29754,
+      "sha256": "7a16e0f7f462cd9b9b27b5ee2ad275ab9157d867b0a2ba72c1938d586db42e9d"
+    },
+    {
+      "path": "native/15-preferences-food.txt",
+      "bytes": 3615,
+      "sha256": "129433b92fcd0e47e6ea22ac657cb5f0a3d11fe45ba9ab26a26147f493579c0e"
+    },
+    {
+      "path": "native/16-preferences-shopping.aria.txt",
+      "bytes": 5314,
+      "sha256": "5a111c79017cf1ccbb804178ce003bec17ea153152888deb67fe84220203a7be"
+    },
+    {
+      "path": "native/16-preferences-shopping.png",
+      "bytes": 43562,
+      "sha256": "a9bd71363c80ba6b2aa1bdbff631883f64f7c4c2a8b9fdc3193c01b280f360f0"
+    },
+    {
+      "path": "native/16-preferences-shopping.txt",
+      "bytes": 3840,
+      "sha256": "cf3b5700eb291240840dad2679e63c515dc8936a62481dc465156bfbd3000f47"
+    },
+    {
+      "path": "native/17-preferences-training.aria.txt",
+      "bytes": 4896,
+      "sha256": "925529aa55fb914827a83150ab8e04a38a77fa7dee7635cc0dfee03c4451a9af"
+    },
+    {
+      "path": "native/17-preferences-training.png",
+      "bytes": 28589,
+      "sha256": "2424650bf6f878c7ad5b3a942b5cf155b8e12247d9047de65945bf8e60785ec7"
+    },
+    {
+      "path": "native/17-preferences-training.txt",
+      "bytes": 3586,
+      "sha256": "f8ed6d68f806971b1f50eddf3cd3bf451c1673b231a81e780f6be99f51c01a68"
+    },
+    {
+      "path": "native/18-connection.aria.txt",
+      "bytes": 4883,
+      "sha256": "af93ff950745ca85f7cd8f19623f4c5ecbc12d5979fb2b9623480b762c575419"
+    },
+    {
+      "path": "native/18-connection.png",
+      "bytes": 22786,
+      "sha256": "ae8f570ae0666f7dd8259a64eea3a830a00484eab7d28db7b86a57e8b7d8be97"
+    },
+    {
+      "path": "native/18-connection.txt",
+      "bytes": 3617,
+      "sha256": "4d7458adc957b57c416877c7518a6fcca8a0ada052168cf884217dce22227091"
+    },
+    {
+      "path": "native/19-agent-connections-guest.aria.txt",
+      "bytes": 4845,
+      "sha256": "6f7b3d8d7100f6487b8efce99a2997eb27af518db6408674a752ccfd00124657"
+    },
+    {
+      "path": "native/19-agent-connections-guest.png",
+      "bytes": 26448,
+      "sha256": "c988799cfcf796ebd343b5160317fc72cc13ce82f55bda1c9f5787ca23ba7b90"
+    },
+    {
+      "path": "native/19-agent-connections-guest.txt",
+      "bytes": 3736,
+      "sha256": "734a6b3fe9a623626e15c2fe30168b0e7b1783f2c72f8b7f76a48ddbd17d8440"
+    },
+    {
+      "path": "native/20-kitchen.aria.txt",
+      "bytes": 1759,
+      "sha256": "3d84e3df801300900e5b595a7d784fec83255caf25ba8b5ece9c2aa6950a9d8c"
+    },
+    {
+      "path": "native/20-kitchen.png",
+      "bytes": 56712,
+      "sha256": "79498f4a3a31393c989864bcc63c021f9371f081bc033c898867eddd75f89528"
+    },
+    {
+      "path": "native/20-kitchen.txt",
+      "bytes": 1170,
+      "sha256": "b808c2fc135a36ec7faa3c2fad8a8b217e6c3040aa5a595734efb1aedddd9468"
+    },
+    {
+      "path": "native/21-pantry.aria.txt",
+      "bytes": 2111,
+      "sha256": "17f788e5a4891137434afd5fd99c79117e20d2a0a64a5c80afbd4cb1060b8476"
+    },
+    {
+      "path": "native/21-pantry.png",
+      "bytes": 22260,
+      "sha256": "22f2c2d89da877d15b676e280d8fc954c0ec3a8434c74d6c4c19478bceddde34"
+    },
+    {
+      "path": "native/21-pantry.txt",
+      "bytes": 1377,
+      "sha256": "dc9c90cf49d1a82602ffbb58ebfc8b7d4258e8eee3a5059cba39f05bc76c1a23"
+    },
+    {
+      "path": "native/22-ingredient-form.aria.txt",
+      "bytes": 2837,
+      "sha256": "8319fdf5d55a4280ad9a1661e884d5a10cec000a656ed310ca6a08aafe78fbd7"
+    },
+    {
+      "path": "native/22-ingredient-form.png",
+      "bytes": 25047,
+      "sha256": "d025105fd19e6f3f6a03a3ee72f5a9ad627a193222e69b807a3c2132fd60bc3c"
+    },
+    {
+      "path": "native/22-ingredient-form.txt",
+      "bytes": 1693,
+      "sha256": "c54306518824954928e2ef9b13315f51e0272d3286c6ec5a7dcacb21131a3989"
+    },
+    {
+      "path": "native/23-recipes.aria.txt",
+      "bytes": 2422,
+      "sha256": "f339d0a894193cd413d9a740b22cf9dffc13fd7edaa6ed408cc426f6a57731e2"
+    },
+    {
+      "path": "native/23-recipes.png",
+      "bytes": 29206,
+      "sha256": "686f4bd86dd0600777455a283e5fd882dc8e94d6d23c4f45c8e9b281c62d92ae"
+    },
+    {
+      "path": "native/23-recipes.txt",
+      "bytes": 1596,
+      "sha256": "3f6a551b3932cea76f899e337eee81ae6bcf89d430bfdf491ca0c91bcb31ee75"
+    },
+    {
+      "path": "native/24-planner.aria.txt",
+      "bytes": 2451,
+      "sha256": "89f6d73613e51bf5c39c3084eb60532490fd446183e6d40890c69919d4a72e90"
+    },
+    {
+      "path": "native/24-planner.png",
+      "bytes": 36405,
+      "sha256": "819d8e787bb60c691fc3d1a6c114da3575f9460665c9bd43fa11b275068029e3"
+    },
+    {
+      "path": "native/24-planner.txt",
+      "bytes": 1555,
+      "sha256": "bce78e4a599ece8b444273071ba557852b7cd1c17448a2ef6d92ee99fec0e378"
+    },
+    {
+      "path": "native/25-shopping.aria.txt",
+      "bytes": 2164,
+      "sha256": "9a716dcaf83f3853775a7a61c3cdcb45d79913ee749714a7da186a5d06e21f50"
+    },
+    {
+      "path": "native/25-shopping.png",
+      "bytes": 22138,
+      "sha256": "cfbfc3929198acbe81cd15de6b9a1de5dfc34d5da515ec0404afc23bc4335d75"
+    },
+    {
+      "path": "native/25-shopping.txt",
+      "bytes": 1317,
+      "sha256": "371deec4e6b95dbf9207772ed1e7131d9738cb1a140988943b4f408dd8241d94"
+    },
+    {
+      "path": "native/30-workout-saved.aria.txt",
+      "bytes": 1517,
+      "sha256": "8044edc8de3176afbc1995681209411d9b07ea266dde225b5b4bc1dfa6f9abb6"
+    },
+    {
+      "path": "native/30-workout-saved.png",
+      "bytes": 46105,
+      "sha256": "bb360d12b3036280d7c5231371ff3c297a5ca5a2e0da45c15b7aaedeffe3e8ee"
+    },
+    {
+      "path": "native/30-workout-saved.txt",
+      "bytes": 1114,
+      "sha256": "6660a2c43476355607e3a397eb23616b64fec6a984da890b10cf7724bbb482d9"
+    },
+    {
+      "path": "native/31-thirteen-workouts.aria.txt",
+      "bytes": 5653,
+      "sha256": "bca506eccacb8229bd2fcf925749cbf6a60954b5a1ed6255c9b22482b39a92b6"
+    },
+    {
+      "path": "native/31-thirteen-workouts.png",
+      "bytes": 45838,
+      "sha256": "dfa640d212667425f86925d69f4e9e29b1e99a57ca08f5fdaa7e3ad3705308e2"
+    },
+    {
+      "path": "native/31-thirteen-workouts.txt",
+      "bytes": 5019,
+      "sha256": "33ec8372789e74bce7f8304cf4a03b7e12c23a3658821c12d12877712c1da130"
+    },
+    {
+      "path": "native/32-import-review.aria.txt",
+      "bytes": 3199,
+      "sha256": "e979364d7783c3cd3f7ddb453c65bff42251eb58e2c61edad71274ee4c1abdb5"
+    },
+    {
+      "path": "native/32-import-review.png",
+      "bytes": 30799,
+      "sha256": "02919c693fc1f0d3fd98d8a60960698dd188a0f180c34e1107242c0ec57f3f32"
+    },
+    {
+      "path": "native/32-import-review.txt",
+      "bytes": 2128,
+      "sha256": "c523a6e18e37c15206b815acca67f2265a074a39aed527a3343582ffb7cdbe29"
+    },
+    {
+      "path": "native/33-import-restored.aria.txt",
+      "bytes": 2718,
+      "sha256": "73fba13c907ffcc031ed4ece1a8e741e91744d49f50f15156e01783fd76f3816"
+    },
+    {
+      "path": "native/33-import-restored.png",
+      "bytes": 68520,
+      "sha256": "374c8fa8da47ec768b72db6e3238be8013647e3fd395077f629d2ea4c5bd4eec"
+    },
+    {
+      "path": "native/33-import-restored.txt",
+      "bytes": 1750,
+      "sha256": "15f4089ce567daaec58e59f13c7cb223008c30caf4100556e4f987910a5bcaad"
+    },
+    {
+      "path": "native/34-unconnected-plan.aria.txt",
+      "bytes": 2549,
+      "sha256": "5fc0932de00e0cb588b0f8e3e6e45aca41de17cc079180985b7f22d57108ab3b"
+    },
+    {
+      "path": "native/34-unconnected-plan.png",
+      "bytes": 38691,
+      "sha256": "1dee48e30252a023d7ae7212c85e6c184d5be37cab03f5fb563265c2fd7eb161"
+    },
+    {
+      "path": "native/34-unconnected-plan.txt",
+      "bytes": 1643,
+      "sha256": "80ac49b2b896d136b15667e1b88bc3e9857c39a7e160587dec208432001afd2b"
+    },
+    {
+      "path": "native/40-toast-over-composer.aria.txt",
+      "bytes": 770,
+      "sha256": "9a3174a0d999942cdaa74114cedff2c2193a8be59a45e448ce17eb0f95399be1"
+    },
+    {
+      "path": "native/40-toast-over-composer.png",
+      "bytes": 42211,
+      "sha256": "9051f06e91a1d4bea7b7926ac42e63936116378dab758b5b77525bef924ea0d1"
+    },
+    {
+      "path": "native/40-toast-over-composer.txt",
+      "bytes": 210,
+      "sha256": "9bc3993c7cf1fa914f555bc5ba0b3970bb69589a75e7fabc5d9b18df3f5fa538"
+    },
+    {
+      "path": "native/41-unconnected-chat-error.aria.txt",
+      "bytes": 828,
+      "sha256": "998b177dc4c57be8bab99520e2ab6d6b7ecf176edc3bfe396f436d41fa3677e1"
+    },
+    {
+      "path": "native/41-unconnected-chat-error.png",
+      "bytes": 50564,
+      "sha256": "705bb473edbcde99650aa37554605d1b376d4e39604ab7f8dd9a2ada21ca532b"
+    },
+    {
+      "path": "native/41-unconnected-chat-error.txt",
+      "bytes": 304,
+      "sha256": "8553b185a4c84ace56e878546ac39c2f70153fe4d001882abad7c335825b95f1"
+    },
+    {
+      "path": "native/42-quota-warning.aria.txt",
+      "bytes": 1931,
+      "sha256": "67a28063272aa3953e70bada025a006d8ed9b82cb4e865a9b856fcdafb418cba"
+    },
+    {
+      "path": "native/42-quota-warning.png",
+      "bytes": 53088,
+      "sha256": "c310c36e3bdcf6babed238c5e1696a29f9fa84f7712d7b8f2676f44b744dbe66"
+    },
+    {
+      "path": "native/42-quota-warning.txt",
+      "bytes": 1188,
+      "sha256": "ab70d49a745cf4d76a1342d4d483caa8558efe3f4bc2a43ed00b9c83c9317046"
+    },
+    {
+      "path": "native/43-quota-export-recovery.aria.txt",
+      "bytes": 3168,
+      "sha256": "842dd5e00ca46fea331872021f1676a124775603b7d1b06338f6335b6407244f"
+    },
+    {
+      "path": "native/43-quota-export-recovery.png",
+      "bytes": 20302,
+      "sha256": "9ee0371b29b93789f2a653ab01cfbebdd6a1b78c10131c2d075645ceea873c0f"
+    },
+    {
+      "path": "native/43-quota-export-recovery.txt",
+      "bytes": 2065,
+      "sha256": "6268d0f1cd4b54e57e0d512943f7a5e082c9d73a781e136a68c9aa66fdd7595c"
+    },
+    {
+      "path": "native/44-quota-reload.aria.txt",
+      "bytes": 1700,
+      "sha256": "aa3a52b9c75384490f19730c7c997df9cfe9b342d9fa72c2b74741ff70335858"
+    },
+    {
+      "path": "native/44-quota-reload.png",
+      "bytes": 51405,
+      "sha256": "f69056d58f74adfb6789e5b336bdd4d9ff10ff8724c59db6be9bf6f2b66a7891"
+    },
+    {
+      "path": "native/44-quota-reload.txt",
+      "bytes": 1035,
+      "sha256": "f3f910bd2485e370c17fb247153e628143e14a5700bb031db9ee9092a1983ecc"
+    },
+    {
+      "path": "native/45-nested-modal.aria.txt",
+      "bytes": 2655,
+      "sha256": "c09ffa7f951b0538f8913d48bb2ae9f1ae24241cb8622d071f8948b716f4a0ac"
+    },
+    {
+      "path": "native/45-nested-modal.png",
+      "bytes": 23310,
+      "sha256": "f34de561d8decaa09c3de9bd93bd46ec5cefcdc73996ad3ec67294c2ff85582e"
+    },
+    {
+      "path": "native/45-nested-modal.txt",
+      "bytes": 1612,
+      "sha256": "6a11485645557fa220b567dbe9eb45bcfd871551c2aca9672cef523b81bf1dda"
+    },
+    {
+      "path": "native/46-nested-modal-keyboard.aria.txt",
+      "bytes": 2655,
+      "sha256": "c09ffa7f951b0538f8913d48bb2ae9f1ae24241cb8622d071f8948b716f4a0ac"
+    },
+    {
+      "path": "native/46-nested-modal-keyboard.png",
+      "bytes": 23560,
+      "sha256": "9472c41c53cb0e7f33881b59d76651ac1df0b1a969f1bd7bb8ab6c4e2f755f5a"
+    },
+    {
+      "path": "native/46-nested-modal-keyboard.txt",
+      "bytes": 1612,
+      "sha256": "6a11485645557fa220b567dbe9eb45bcfd871551c2aca9672cef523b81bf1dda"
+    },
+    {
+      "path": "native/50-invalid-import.png",
+      "bytes": 18907,
+      "sha256": "54b0681bec45fd13c2a12dedba74f3b40cbd7000f8c157f452a7ca52960716ba"
+    },
+    {
+      "path": "native/50-invalid-import.txt",
+      "bytes": 1973,
+      "sha256": "0f6e4ec8a2257ffaa94862258e1f8410df59917103fe4a439e3fb7bcc28f2980"
+    },
+    {
+      "path": "native/baseline.json",
+      "bytes": 21433,
+      "sha256": "f24b49591e7f4519a076585f83546afcb48e58ca2c1ea68cffc2f55fe33fa0d4"
+    },
+    {
+      "path": "native/baseline.mjs",
+      "bytes": 1851,
+      "sha256": "19a60b4d8ff1c804938836c3222d7496415a5ced01d15c1b2ae61456dd42f3cc"
+    },
+    {
+      "path": "native/failure.aria.txt",
+      "bytes": 772,
+      "sha256": "1f9aab63063bb3ea2c6bfb3e6c8b6b9ec773486c843cb24cd06bf45c25beccf8"
+    },
+    {
+      "path": "native/failure.png",
+      "bytes": 42173,
+      "sha256": "ba1a15c8d5676c44c5541f1d0489c2f9861ec998933eca699a7d7c2231643e36"
+    },
+    {
+      "path": "native/failure.txt",
+      "bytes": 210,
+      "sha256": "ea2ce10213af1d94c782184b64a42454a157045eecdd65e682789b05a9a2ee59"
+    },
+    {
+      "path": "native/failures.json",
+      "bytes": 5391,
+      "sha256": "bd686689fd1add045724d8d6ec97cc2849c2a51d1d5934e434c5bc23fb6c3581"
+    },
+    {
+      "path": "native/failures.mjs",
+      "bytes": 4523,
+      "sha256": "38e113223cddd046d5f7699da4d3eed544645dfbfe5f32553d15508c6f6b9c34"
+    },
+    {
+      "path": "native/final-check.json",
+      "bytes": 543,
+      "sha256": "f6c2ef018c5575a5b002def22d40763de8a41d14484d98b491ce2bf9d9eab341"
+    },
+    {
+      "path": "native/findings.json",
+      "bytes": 5821,
+      "sha256": "14e3f2c272ba0f7284a3fd2e7076d7888a3b6e0e54d3208594ef9ec0f64a7cd2"
+    },
+    {
+      "path": "native/import-rejection.json",
+      "bytes": 195,
+      "sha256": "d123551875229465d53e46d4062459bda96953b9a8daa801ab8836f6779bd06b"
+    },
+    {
+      "path": "native/import-rejection.mjs",
+      "bytes": 1960,
+      "sha256": "45293987e3bb7c3b8babadae65f4d12b33368f8a52581ec5a96d3ad5d4e1add5"
+    },
+    {
+      "path": "native/invalid-synthetic-backup.json",
+      "bytes": 14,
+      "sha256": "ddd4d8c655cfab8460cd538d57a622ea750df6d7b8eb8b353c7aa2ab50d7d240"
+    },
+    {
+      "path": "native/journey-tooling-first.json",
+      "bytes": 9688,
+      "sha256": "c818f593dfd674084d9977875da224e22d4cb1ba816dcd1d13e8c94417c044e2"
+    },
+    {
+      "path": "native/journey.json",
+      "bytes": 11572,
+      "sha256": "efbccd3b11649d2d4c88a0bd8c559f78397ce63b269efd2bfd9ff56c06a2ce3e"
+    },
+    {
+      "path": "native/journey.mjs",
+      "bytes": 6056,
+      "sha256": "5e505e515d560d9e80fa29e5702bc6c059da4d48e4fb69521da910973b165010"
+    },
+    {
+      "path": "native/quota-recovery-backup.json",
+      "bytes": 3882,
+      "sha256": "af21632208eaf31e48e1808869b63dd071ede02a901bc4cf0a71768c4b2731cb"
+    },
+    {
+      "path": "native/report.md",
+      "bytes": 11142,
+      "sha256": "a5d3be4ad6378db25d17bbd003fc2094b44a7d8fda1eb0d743a1bbccd2c74f67"
+    },
+    {
+      "path": "native/returning.json",
+      "bytes": 2952,
+      "sha256": "b21c9c07c8f50902b81582bb7dd13c0458b12e9d999c211ba2b4c5efb0224605"
+    },
+    {
+      "path": "native/returning.mjs",
+      "bytes": 3680,
+      "sha256": "b5b035c70743b6fd02a68505092907486eddb5a1392c969b78f7a37ebb939b41"
+    },
+    {
+      "path": "native/synthetic-guest-backup.json",
+      "bytes": 2780,
+      "sha256": "2c3afc61713c19210e537add60fb9c8e668d33465392fed8302aeff34159ff2b"
+    },
+    {
+      "path": "persona-walkthroughs.mjs",
+      "bytes": 6779,
+      "sha256": "fa775716c79df9719786610210dbb8ddfc7f828959d8154906c2bfc1fc5e171d"
+    },
+    {
+      "path": "protocol.md",
+      "bytes": 2744,
+      "sha256": "8ba908c48c1a2c7fcdd2c6ba1196630f722e9596eef13417ee64ea7822bb4036"
+    },
+    {
+      "path": "report.md",
+      "bytes": 13041,
+      "sha256": "ed662e33b747c81cc1a09bc53a48db299551fd4680f975f3c701d698b5bd4275"
+    },
+    {
+      "path": "root-findings.json",
+      "bytes": 3989,
+      "sha256": "8129fc1475e65cffbc502de437df2a14f0f2a609bfcfee602e8a18dca558551a"
+    },
+    {
+      "path": "shared/evidence/beginner/01-welcome.png",
+      "bytes": 139446,
+      "sha256": "32c6a8f85f3f0ed489ae0b7e49b51bd275dc3fd75d311eaad663be2c880d233e"
+    },
+    {
+      "path": "shared/evidence/beginner/01-welcome.txt",
+      "bytes": 700,
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-1.png",
+      "bytes": 134593,
+      "sha256": "07c5bd13efa149cdfa1bc3d536ba4ff83099e83824ac9072a1b772898caa8083"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-1.txt",
+      "bytes": 630,
+      "sha256": "74a6f57d02d211cf65445d5c9c0e70d404b437b4c9cdc741e0e6e4d526701523"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-2.png",
+      "bytes": 137897,
+      "sha256": "5af590e4a66e3d71c1c293f727711aaa00e3d2a3feebc53af4c01e6785aa9169"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-2.txt",
+      "bytes": 652,
+      "sha256": "50f88283644f415fb7fff1c39329ebe0124b5b5389b9b096e438c0a9b8f743f9"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-3.png",
+      "bytes": 139618,
+      "sha256": "810ca501a2726a8ef41f0dc713fc7eea932dec6e197d81c6eb6208a28a5dc765"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-3.txt",
+      "bytes": 624,
+      "sha256": "a6195f8226a843f1910194669e54830b542cd15dc47ae3b72797ca0401d43177"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-4.png",
+      "bytes": 132100,
+      "sha256": "8e229ac36faa689cf60a8f853aab7d1947f7dd48d712a46e94aa960826c41602"
+    },
+    {
+      "path": "shared/evidence/beginner/02-tour-4.txt",
+      "bytes": 659,
+      "sha256": "338c7dc68e2f71e2d21dcd6be56d9f4557daa3c0fe7cf48c274250a6314fcec4"
+    },
+    {
+      "path": "shared/evidence/beginner/03-account.png",
+      "bytes": 87191,
+      "sha256": "e9056b67169ce898dd91e3b9e5cf7092538d084f7b489c11873e3b8925a529c8"
+    },
+    {
+      "path": "shared/evidence/beginner/03-account.txt",
+      "bytes": 810,
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "shared/evidence/beginner/04-local-setup.png",
+      "bytes": 99862,
+      "sha256": "4a2d5af388461f48496b9cf9ed24581c18007341e9aa733a7efa6d9d95345284"
+    },
+    {
+      "path": "shared/evidence/beginner/04-local-setup.txt",
+      "bytes": 1037,
+      "sha256": "9b34f383fe7b60e891d2b781d203a46817acab21a45ce49dadd9b38cbd56ca0c"
+    },
+    {
+      "path": "shared/evidence/beginner/05-ready.png",
+      "bytes": 162048,
+      "sha256": "ed1220af053bbccf05eb93cdbf92505543aa4f847ff717e4c7c9f1019d2956be"
+    },
+    {
+      "path": "shared/evidence/beginner/05-ready.txt",
+      "bytes": 805,
+      "sha256": "3b32fa22cc8aba7493f30f2c7702d1966dbf46b3155e1e13190a5457c3de9861"
+    },
+    {
+      "path": "shared/evidence/beginner/06-first-chat.png",
+      "bytes": 49088,
+      "sha256": "424de6fbc6facc8e5af7fc2c91e7dd4d54032f2a4276810f27f485a06be180a4"
+    },
+    {
+      "path": "shared/evidence/beginner/06-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "shared/evidence/beginner/07-nutrition-empty.png",
+      "bytes": 103886,
+      "sha256": "5be095bd84db6db46552232e854714cc1038cca8be72012695871c834539bcea"
+    },
+    {
+      "path": "shared/evidence/beginner/07-nutrition-empty.txt",
+      "bytes": 3081,
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "shared/evidence/beginner/08-target-guide.png",
+      "bytes": 59206,
+      "sha256": "61fee2aef6fdcf5c4195dc9dd8ff95d866a8028d8df834e68ce245ea4a97146c"
+    },
+    {
+      "path": "shared/evidence/beginner/08-target-guide.txt",
+      "bytes": 4078,
+      "sha256": "8d34ed3291e6a4fca4c9490b8edcd69c7efa366543bc22d652aa1e9d6dd6f34b"
+    },
+    {
+      "path": "shared/evidence/beginner/09-first-week.png",
+      "bytes": 172870,
+      "sha256": "9330d6a52c527895830aa71ad14cf9ebf9396c9fce0bad58bd7d8e3c48769a71"
+    },
+    {
+      "path": "shared/evidence/beginner/09-first-week.txt",
+      "bytes": 4269,
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "shared/evidence/beginner/10-targets-expanded.png",
+      "bytes": 57703,
+      "sha256": "a8485026b0415e589a05a091f1f40f3088962a8b1a8edecd7fc51239e139adf4"
+    },
+    {
+      "path": "shared/evidence/beginner/10-targets-expanded.txt",
+      "bytes": 4353,
+      "sha256": "8495ad67fdcdd0b5a8774165836fcf71025e8d881293930edbaa956b3093294d"
+    },
+    {
+      "path": "shared/evidence/beginner/11-manual-meal-empty.png",
+      "bytes": 48415,
+      "sha256": "fed5cf90ca5620da3fb01e323fa4e438f120820ba280dd955c30deeb54a15fa3"
+    },
+    {
+      "path": "shared/evidence/beginner/11-manual-meal-empty.txt",
+      "bytes": 3805,
+      "sha256": "204c134ac93575a0bb2e4e446b9256c46071f63166d130ccf775c9cd9a84a2f6"
+    },
+    {
+      "path": "shared/evidence/beginner/12-manual-reviewed.png",
+      "bytes": 49352,
+      "sha256": "5ac1c65f2abf084762311f1efa371f5d5d26247224ff077357bce239f2975375"
+    },
+    {
+      "path": "shared/evidence/beginner/12-manual-reviewed.txt",
+      "bytes": 3838,
+      "sha256": "313c41d64cefa52fb81e1e317ead92c2fc887a83096466b7cd7093c813de8b4a"
+    },
+    {
+      "path": "shared/evidence/beginner/13-manual-saved.png",
+      "bytes": 123203,
+      "sha256": "7b3304e1e9d1c896099e30068dc310c6f1e2ce92da2a6421499993b206866bc2"
+    },
+    {
+      "path": "shared/evidence/beginner/13-manual-saved.txt",
+      "bytes": 3294,
+      "sha256": "61ac1631126a1eba4008b86178a5b244f5be24d1293a6f9b9e49101f0ef85f20"
+    },
+    {
+      "path": "shared/evidence/beginner/14-edit-decimals.png",
+      "bytes": 51165,
+      "sha256": "592dab6d26e26eced9c117a16244f030e357d1fe59e25900af3f9d4d02ebda76"
+    },
+    {
+      "path": "shared/evidence/beginner/14-edit-decimals.txt",
+      "bytes": 4140,
+      "sha256": "9b6e96218d0b054b6bb213f37cd68cf654b03ae9b08193b76181e63e9936ac45"
+    },
+    {
+      "path": "shared/evidence/beginner/15-name-only-correction-saved.png",
+      "bytes": 123707,
+      "sha256": "2fbf077ec81e8b28e4f8e723e5a0e1641c72404123d7297537349f79b6a51c1b"
+    },
+    {
+      "path": "shared/evidence/beginner/15-name-only-correction-saved.txt",
+      "bytes": 3314,
+      "sha256": "1dc153817ae41e043a83b792f432aeed9a5ad05a657412ef841746755d92e3b9"
+    },
+    {
+      "path": "shared/evidence/beginner/16-repeat-review.png",
+      "bytes": 55719,
+      "sha256": "fd73cbdf84f813e6a670a6fd9e7f709ab7734cf7d0c12a347611c300e0cba127"
+    },
+    {
+      "path": "shared/evidence/beginner/16-repeat-review.txt",
+      "bytes": 4215,
+      "sha256": "006e3cad7e3ae281b0cf109bbc81ad6c7518b6716cc55c74f7d332c4ec8cf719"
+    },
+    {
+      "path": "shared/evidence/beginner/17-repeat-saved-current-view.png",
+      "bytes": 126239,
+      "sha256": "02d179528928c74769ee1166d927eea2e4043b8a8ce5fa031eafdb918985cd65"
+    },
+    {
+      "path": "shared/evidence/beginner/17-repeat-saved-current-view.txt",
+      "bytes": 3318,
+      "sha256": "947a8a9f02f284e5028f5f4402945d7690bc2d01e376105d316c11ce5346d4da"
+    },
+    {
+      "path": "shared/evidence/beginner/18-yesterday-repeat.png",
+      "bytes": 102567,
+      "sha256": "340674b4ebf6593c37b54079e5bb8335110485e12a470415927377c33a4283c0"
+    },
+    {
+      "path": "shared/evidence/beginner/18-yesterday-repeat.txt",
+      "bytes": 3350,
+      "sha256": "953bf4274131a2b04f3595c5430c708c83241a7d27de3193c53480480d733e39"
+    },
+    {
+      "path": "shared/evidence/beginner/19-backfill-corrected.png",
+      "bytes": 126498,
+      "sha256": "50c4c8837d4ef431ace541577e447da96da9033113f0d60840a511bfb8dc6044"
+    },
+    {
+      "path": "shared/evidence/beginner/19-backfill-corrected.txt",
+      "bytes": 3338,
+      "sha256": "15f574e68557a107a0981d6e3cdc2aa7ba51f9753e065fbd139611cddc2832fb"
+    },
+    {
+      "path": "shared/evidence/beginner/20-selected-day-chat.png",
+      "bytes": 58240,
+      "sha256": "8a9f87d9c0facb22d1683152943f28ea9cb4072d6bffa3eae7974fe9d687adc6"
+    },
+    {
+      "path": "shared/evidence/beginner/20-selected-day-chat.txt",
+      "bytes": 1229,
+      "sha256": "9bcda4e50bfa9db78454352dce94198419b57c42e6c2ac4e4f3aeb79782a6765"
+    },
+    {
+      "path": "shared/evidence/beginner/21-calories-only-before-save.png",
+      "bytes": 50899,
+      "sha256": "9c7bb987b11e824de801df48b5dafc5948faba4e7818b88f981c8c90055e2580"
+    },
+    {
+      "path": "shared/evidence/beginner/21-calories-only-before-save.txt",
+      "bytes": 3994,
+      "sha256": "ff22976c2ab13a9e3fc719c63625862193559ec31699f3b315cc55807d688631"
+    },
+    {
+      "path": "shared/evidence/beginner/22-calories-only-saved.png",
+      "bytes": 98061,
+      "sha256": "b3579c082b2cefa96638a81a4a7af13ee86ef008dd7267c4432cb93968ef6d8f"
+    },
+    {
+      "path": "shared/evidence/beginner/22-calories-only-saved.txt",
+      "bytes": 3498,
+      "sha256": "f92830bbe95d773ff9fec051caf7f5de02b3b94bf1656368d6c65e51f0452776"
+    },
+    {
+      "path": "shared/evidence/beginner/30-train.png",
+      "bytes": 95857,
+      "sha256": "cf417d39ab4ad4c1367e9305a6fbdf9c1d72454f81f15c0ffa405aa7ac900ed8"
+    },
+    {
+      "path": "shared/evidence/beginner/30-train.txt",
+      "bytes": 2978,
+      "sha256": "8ff6cc59d50028ddf2bee2e7fc69fcdc694e97a8a68fa559bc6d696690a95b85"
+    },
+    {
+      "path": "shared/evidence/beginner/31-activity-form.png",
+      "bytes": 66525,
+      "sha256": "f4d50a692e08fff0625d5752018b5f5d239a20dddb33ac999a0ca0db1516ef83"
+    },
+    {
+      "path": "shared/evidence/beginner/31-activity-form.txt",
+      "bytes": 3442,
+      "sha256": "5a3257902fa6ff94d4b606ffd4473b597ee5d9ed604ab65bf0ab28988690c348"
+    },
+    {
+      "path": "shared/evidence/beginner/32-activity-saved.png",
+      "bytes": 94456,
+      "sha256": "0211824c0678e30c9af1f3a2401b4b5b9f3d55da93085be9219c103d1b7b9bc6"
+    },
+    {
+      "path": "shared/evidence/beginner/32-activity-saved.txt",
+      "bytes": 3020,
+      "sha256": "9f22a4ea9f117cb095ed8db98b2d2c46988e021437e031957502521866591d60"
+    },
+    {
+      "path": "shared/evidence/beginner/34-active-workout.png",
+      "bytes": 69272,
+      "sha256": "780ced0772e1fa4a925aef596fae52042414568ab29c41c2d28f1ad0fba41c76"
+    },
+    {
+      "path": "shared/evidence/beginner/34-active-workout.txt",
+      "bytes": 7841,
+      "sha256": "9979d8df0f194534ea467564d9231dbc3198a9d852cb91ffc282231387b531c4"
+    },
+    {
+      "path": "shared/evidence/beginner/35-technique-rest.png",
+      "bytes": 70763,
+      "sha256": "2979d23b2f35a66afcd97bf97f7d080bde74e0f5f52bad81207f83ab06407d38"
+    },
+    {
+      "path": "shared/evidence/beginner/35-technique-rest.txt",
+      "bytes": 8540,
+      "sha256": "779bd081068809ed80f1da892ae006e3b5fac124b171b5db12d48a2999841b76"
+    },
+    {
+      "path": "shared/evidence/beginner/36-first-set.png",
+      "bytes": 52347,
+      "sha256": "3616d9ea89d042173899e3aeae9bce2e420b623f9ce5386b7a48393bf842ab23"
+    },
+    {
+      "path": "shared/evidence/beginner/36-first-set.txt",
+      "bytes": 9064,
+      "sha256": "5d0350de5cb08a261455b4d011c1923fb38af5426bd5576fb832d0c7da46a5d4"
+    },
+    {
+      "path": "shared/evidence/beginner/37-rest-started.png",
+      "bytes": 71761,
+      "sha256": "16e8bc89fc9fc714f8707368395dfc13d10b5b279b0ba23ab86529b00764ea43"
+    },
+    {
+      "path": "shared/evidence/beginner/37-rest-started.txt",
+      "bytes": 9101,
+      "sha256": "fd0b3c38cf50f1b961c0ab1420845e9e46e7027b077fd1e60263b14d00e6072e"
+    },
+    {
+      "path": "shared/evidence/beginner/38-partial-finish.png",
+      "bytes": 90844,
+      "sha256": "3150725248f625ac317cfb1ae93ce459a86d7ceec078b9eaa56bae8a56a7e0be"
+    },
+    {
+      "path": "shared/evidence/beginner/38-partial-finish.txt",
+      "bytes": 9415,
+      "sha256": "e4f5254bd7ac6940a045cf86d1dd629da4d84d685594c4585753b74ba967d8a5"
+    },
+    {
+      "path": "shared/evidence/beginner/39-finished.png",
+      "bytes": 68860,
+      "sha256": "500946a2d54175691ea41a2b4135aecd5b49f27f9992c81003b1377a8ee9ad7c"
+    },
+    {
+      "path": "shared/evidence/beginner/39-finished.txt",
+      "bytes": 4118,
+      "sha256": "34e5f80455dbb7a3895e0701353bf2081b39e62f334432ce14c685d085b2b689"
+    },
+    {
+      "path": "shared/evidence/beginner/41-reopened.png",
+      "bytes": 69839,
+      "sha256": "f94ae5df873d743499fafb13189fe7c4e2d2552e0842ab29970345d84558c913"
+    },
+    {
+      "path": "shared/evidence/beginner/41-reopened.txt",
+      "bytes": 8865,
+      "sha256": "37dc143342cdadc817fd94c97a297b2c4b2c08207c5d8b7e740145f18cdfdc23"
+    },
+    {
+      "path": "shared/evidence/beginner/42-edit-set.png",
+      "bytes": 88031,
+      "sha256": "7636efcb8f5da9c1e40e8b6a1f135b67ffc4a7563809f333fe66e965a2b31a87"
+    },
+    {
+      "path": "shared/evidence/beginner/42-edit-set.txt",
+      "bytes": 9038,
+      "sha256": "4765ec9546f1b8098c2844a05d1f414711433b4e444fdbfd04cbb473d31993f7"
+    },
+    {
+      "path": "shared/evidence/beginner/43-corrected-workout.png",
+      "bytes": 69138,
+      "sha256": "a5690ee0455afad8e7e64a0ceb930195ee65a55ce3a574cec10184975613fc1f"
+    },
+    {
+      "path": "shared/evidence/beginner/43-corrected-workout.txt",
+      "bytes": 4246,
+      "sha256": "4459fc457cb775222d17b5eec9e224e536d2e68ec7f2c1d78705743a9cccddae"
+    },
+    {
+      "path": "shared/evidence/beginner/44-history.png",
+      "bytes": 98347,
+      "sha256": "00c8502299ba4c0d8f00747a73d6a63d6c60dade07de51ff04c245f5133bd740"
+    },
+    {
+      "path": "shared/evidence/beginner/44-history.txt",
+      "bytes": 3439,
+      "sha256": "a597f09629a818c76b50f70be618437baa19fd995e181676c98841c7868e16e3"
+    },
+    {
+      "path": "shared/evidence/beginner/50-you.png",
+      "bytes": 109397,
+      "sha256": "cb0153e08c1dae37ad8d8c8440f5c0810211222a17e3d8ea35b9cb1055365581"
+    },
+    {
+      "path": "shared/evidence/beginner/50-you.txt",
+      "bytes": 4807,
+      "sha256": "684d9c7673c5a3f540bc9269ead03c7851503e9852878e4beb9b6e0678bbd62c"
+    },
+    {
+      "path": "shared/evidence/beginner/51-weekly-review.png",
+      "bytes": 70654,
+      "sha256": "2e187abd49e52db5a10dbfb063168e2dd4d39e87edc79342dc7c18a6b2c72807"
+    },
+    {
+      "path": "shared/evidence/beginner/51-weekly-review.txt",
+      "bytes": 6865,
+      "sha256": "02ed7784a7a5938d41750b2fc47bb7d13f0926418d75162ee163f7423493809c"
+    },
+    {
+      "path": "shared/evidence/beginner/52-preferences.png",
+      "bytes": 96774,
+      "sha256": "d11d10659c142a89a360292496ffac2c66cc631a486b360c8a2482af2cd0d3aa"
+    },
+    {
+      "path": "shared/evidence/beginner/52-preferences.txt",
+      "bytes": 4807,
+      "sha256": "684d9c7673c5a3f540bc9269ead03c7851503e9852878e4beb9b6e0678bbd62c"
+    },
+    {
+      "path": "shared/evidence/beginner/53-preferences-loaded.png",
+      "bytes": 68259,
+      "sha256": "bf91201633a89af5fc2ebed0c5e224b2bf19e311d3d7b3dad091e2a3bd749f60"
+    },
+    {
+      "path": "shared/evidence/beginner/53-preferences-loaded.txt",
+      "bytes": 5578,
+      "sha256": "a92a532afd78da7d9d94ac69788fbffc8e16db8d5433e4c9076eb972b78762c9"
+    },
+    {
+      "path": "shared/evidence/beginner/54-preferences-expanded.png",
+      "bytes": 57611,
+      "sha256": "2c27398440cec155bbe071a9cdd2f7c0243d6b1699919df2866006e0d0c076e7"
+    },
+    {
+      "path": "shared/evidence/beginner/54-preferences-expanded.txt",
+      "bytes": 6356,
+      "sha256": "394815a4c4dc79375abbb2e2fa141aa1e97f106f9ff0319e21e960938c340a8f"
+    },
+    {
+      "path": "shared/evidence/beginner/55-preferences-saved.png",
+      "bytes": 103251,
+      "sha256": "b8ce42fc9e68cba92ff429eaf96473bf2cc0797137fb647ffc1ab6550b30cf88"
+    },
+    {
+      "path": "shared/evidence/beginner/55-preferences-saved.txt",
+      "bytes": 4889,
+      "sha256": "d364419e61f4959ebb44c4c789d680ed1eb5a4d6c362f31fa784d13142795d6a"
+    },
+    {
+      "path": "shared/evidence/beginner/60-reloaded.png",
+      "bytes": 109886,
+      "sha256": "6bd755f3f5a2d746df38989e4ff443753e49edf1d99ae3c2485429064e9157da"
+    },
+    {
+      "path": "shared/evidence/beginner/60-reloaded.txt",
+      "bytes": 4807,
+      "sha256": "684d9c7673c5a3f540bc9269ead03c7851503e9852878e4beb9b6e0678bbd62c"
+    },
+    {
+      "path": "shared/evidence/beginner/61-preferences-persisted.png",
+      "bytes": 57298,
+      "sha256": "60d6a602f0927feb1209cb8942ac45b9bc15f2e2f1a79234f19dc55718e9ddd3"
+    },
+    {
+      "path": "shared/evidence/beginner/61-preferences-persisted.txt",
+      "bytes": 6425,
+      "sha256": "73dfcf63098d361b90af52a5544a3ecab5627babf16673c213afb059a01868c7"
+    },
+    {
+      "path": "shared/evidence/beginner/62-raw-manual-defaults.png",
+      "bytes": 49388,
+      "sha256": "a267dab4175be87b6c49a81a7b5fc95ea6143812a17277c17acc7daf0af3036d"
+    },
+    {
+      "path": "shared/evidence/beginner/62-raw-manual-defaults.txt",
+      "bytes": 4130,
+      "sha256": "164ae93290d09203dbee15286899988b1db83d4dbfe7f148e17db951f0cbc448"
+    },
+    {
+      "path": "shared/evidence/beginner/console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "shared/evidence/beginner/HARNESS-click.png",
+      "bytes": 70428,
+      "sha256": "fd4b9d1284fbd8135a3bc466dc410b28e658d5148d07be25e638df5576a96efc"
+    },
+    {
+      "path": "shared/evidence/beginner/HARNESS-click.txt",
+      "bytes": 4118,
+      "sha256": "34e5f80455dbb7a3895e0701353bf2081b39e62f334432ce14c685d085b2b689"
+    },
+    {
+      "path": "shared/evidence/beginner/HARNESS-prefs-expand.png",
+      "bytes": 68259,
+      "sha256": "bf91201633a89af5fc2ebed0c5e224b2bf19e311d3d7b3dad091e2a3bd749f60"
+    },
+    {
+      "path": "shared/evidence/beginner/HARNESS-prefs-expand.txt",
+      "bytes": 5578,
+      "sha256": "a92a532afd78da7d9d94ac69788fbffc8e16db8d5433e4c9076eb972b78762c9"
+    },
+    {
+      "path": "shared/evidence/beginner/HARNESS-repeat-backfill.png",
+      "bytes": 56322,
+      "sha256": "8aed77cc7bc54e8839888d6993745b30b52ced8a570d76dd36ddd9e7ee99dd46"
+    },
+    {
+      "path": "shared/evidence/beginner/HARNESS-repeat-backfill.txt",
+      "bytes": 4123,
+      "sha256": "aafaa2a9c5e04f296e5b9eee79497e78c46d8bdfa48f510e76beecaf44e46467"
+    },
+    {
+      "path": "shared/evidence/beginner/raw-manual-defaults.json",
+      "bytes": 425,
+      "sha256": "b75fc5a22258275ed6419787ef56d4a8835f4d574c0eedef99a3796784decb23"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/01-welcome.png",
+      "bytes": 139446,
+      "sha256": "32c6a8f85f3f0ed489ae0b7e49b51bd275dc3fd75d311eaad663be2c880d233e"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/01-welcome.txt",
+      "bytes": 700,
+      "sha256": "e6caf97b6e37800a81b3690baee9508637f2cb3571a631c0ed34232e3c0fb4f8"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-1.png",
+      "bytes": 134593,
+      "sha256": "07c5bd13efa149cdfa1bc3d536ba4ff83099e83824ac9072a1b772898caa8083"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-1.txt",
+      "bytes": 630,
+      "sha256": "74a6f57d02d211cf65445d5c9c0e70d404b437b4c9cdc741e0e6e4d526701523"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-2.png",
+      "bytes": 137897,
+      "sha256": "5af590e4a66e3d71c1c293f727711aaa00e3d2a3feebc53af4c01e6785aa9169"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-2.txt",
+      "bytes": 652,
+      "sha256": "50f88283644f415fb7fff1c39329ebe0124b5b5389b9b096e438c0a9b8f743f9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-3.png",
+      "bytes": 139618,
+      "sha256": "810ca501a2726a8ef41f0dc713fc7eea932dec6e197d81c6eb6208a28a5dc765"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-3.txt",
+      "bytes": 624,
+      "sha256": "a6195f8226a843f1910194669e54830b542cd15dc47ae3b72797ca0401d43177"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-4.png",
+      "bytes": 132100,
+      "sha256": "8e229ac36faa689cf60a8f853aab7d1947f7dd48d712a46e94aa960826c41602"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/02-tour-4.txt",
+      "bytes": 659,
+      "sha256": "338c7dc68e2f71e2d21dcd6be56d9f4557daa3c0fe7cf48c274250a6314fcec4"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/03-account.png",
+      "bytes": 87194,
+      "sha256": "e23d03593aa5803aa6faf60007ed73ccf8f7880afa43fa4509d04514d2d34b9e"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/03-account.txt",
+      "bytes": 810,
+      "sha256": "3f1484be4c8b656ce2a15f9d539d55366dba01ec786efacc1d6b90ff80af1a01"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/04-local-setup.png",
+      "bytes": 86790,
+      "sha256": "5819c39209b5cbb00d0cdc22623545a1456999b8543813e2b68f943c270f9869"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/04-local-setup.txt",
+      "bytes": 1041,
+      "sha256": "fde017970bb8457b789b488a4bedd0de87c386e99277cf8b2f59a6f9984f76d5"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/05-ready.png",
+      "bytes": 161232,
+      "sha256": "0403be4f86f1dba78f7edfafbfe4f8cf5226424621da569f2eaf6a66e59817ec"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/05-ready.txt",
+      "bytes": 777,
+      "sha256": "4ae23424fed8676cd96d0319b661b72eb5a13b253b6ea5d16f9c73f92ba3afe3"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/06-first-chat.png",
+      "bytes": 49088,
+      "sha256": "424de6fbc6facc8e5af7fc2c91e7dd4d54032f2a4276810f27f485a06be180a4"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/06-first-chat.txt",
+      "bytes": 997,
+      "sha256": "b60b4dfac1cbe99e75bf69f64128a99ad806325f7a07c1a6c086792c911d30be"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/07-nutrition-empty.png",
+      "bytes": 103886,
+      "sha256": "5be095bd84db6db46552232e854714cc1038cca8be72012695871c834539bcea"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/07-nutrition-empty.txt",
+      "bytes": 3081,
+      "sha256": "037bc4e52d397133ff00a40818eccb33134233dcb7b52c60634b75e12ecc2d2e"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/08-target-guide.png",
+      "bytes": 59445,
+      "sha256": "cbabcd462772ff55f0e97b35008e6a4b8b41810dea492a248200e3da2fbc5a99"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/08-target-guide.txt",
+      "bytes": 4082,
+      "sha256": "30fc0d514fc6f680f06c40ed68dd12e32bd093c2e0e3362d30e9e03235c18ce9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/09-first-week.png",
+      "bytes": 172830,
+      "sha256": "ff227d42ac5c461b7b07acfbbd7b4ad6f35ff36cce80f3807fe46bf92e77e28e"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/09-first-week.txt",
+      "bytes": 4269,
+      "sha256": "1021aa71daaa9ff604b5690e1f665910d48233b34eeae52da6784490fc301ef7"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/10-targets-expanded.png",
+      "bytes": 57929,
+      "sha256": "1bf326c273db5697b1bc8f6c69ef2fa6e02a9886ea014bb8b21a292038d27bd3"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/10-targets-expanded.txt",
+      "bytes": 4357,
+      "sha256": "ce296967e3040c23fbe2f6199396fd9a69cea275f3eb4ef8526c4afb226920ef"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/11-manual-meal-empty.png",
+      "bytes": 48415,
+      "sha256": "fed5cf90ca5620da3fb01e323fa4e438f120820ba280dd955c30deeb54a15fa3"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/11-manual-meal-empty.txt",
+      "bytes": 3805,
+      "sha256": "204c134ac93575a0bb2e4e446b9256c46071f63166d130ccf775c9cd9a84a2f6"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/12-manual-reviewed.png",
+      "bytes": 49695,
+      "sha256": "4bda15c52f005a60315241e58d4ea0a7f47bccd252906ec999e973474b3ebc00"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/12-manual-reviewed.txt",
+      "bytes": 3847,
+      "sha256": "8644a574cb1ad8b8f0df06a42fa40abf4a659ca936aef5010a7c55ffa12c11b2"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/13-manual-saved.png",
+      "bytes": 124278,
+      "sha256": "39f294834a741f3ffad6cada5671090753be32284bb910985abce41b0498c1ca"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/13-manual-saved.txt",
+      "bytes": 3312,
+      "sha256": "9c7322f3dd19195010a2117278db16acc8a1f83eb797cf78845da116dfdfb63a"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/14-edit-decimals.png",
+      "bytes": 51470,
+      "sha256": "9df521c89d1cd4dbff30bec82ea5dd35aac3295a89a17793a3cba0c55d64c89b"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/14-edit-decimals.txt",
+      "bytes": 4167,
+      "sha256": "4fa2f04a5f9bd1bc09ce2f39cac266e2b29948c2fca4ce7eeb8be1318c877867"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/15-name-only-correction-saved.png",
+      "bytes": 124737,
+      "sha256": "7573f25cb190e0b0cf1528f0709c4e2a2974442a7c6c7396feb9a9310f4e2fd3"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/15-name-only-correction-saved.txt",
+      "bytes": 3332,
+      "sha256": "ae547a702921f23acb38c4e1c108a2a27673f02db3eea2ddc57a1942cb9d185b"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/16-repeat-review.png",
+      "bytes": 56378,
+      "sha256": "a63bd8c96db5fd750da68f193cc962c774d0df36fbff2d437df7b2b2214dfc00"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/16-repeat-review.txt",
+      "bytes": 4251,
+      "sha256": "30c718391b2fdec4f7a164e55f98b939a4ac6bcbf19675b307b201eb631618eb"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/17-repeat-saved-current-view.png",
+      "bytes": 126736,
+      "sha256": "28cf93865afc16ecd1525cfa81a09f366b2bbbec887d99a250c58a1c00150f4d"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/17-repeat-saved-current-view.txt",
+      "bytes": 3336,
+      "sha256": "e6985985d49e9d26f0adbc529286d3fa244e1a8471da0589cd7d2609ce2ffe22"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/18-yesterday-repeat.png",
+      "bytes": 104003,
+      "sha256": "593c7d3ff09741b5ad9fbd272a223cc70da5d18926b53de65f7af5c8c60ebcd8"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/18-yesterday-repeat.txt",
+      "bytes": 3368,
+      "sha256": "8a163c0b36e5f3ab18a7702c2b1295bdc9180db469a5fe40bc4a9551faf35eb3"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/19-backfill-corrected.png",
+      "bytes": 126486,
+      "sha256": "6bba96fd244c5d9c1b8908813623eead796cf812201e535fab645f001f4ec942"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/19-backfill-corrected.txt",
+      "bytes": 3338,
+      "sha256": "15f574e68557a107a0981d6e3cdc2aa7ba51f9753e065fbd139611cddc2832fb"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/20-selected-day-chat.png",
+      "bytes": 58380,
+      "sha256": "ff39c7970e7e7563501c4e9261c652a9eac3c61ec4bacebf27da5ad712e5502d"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/20-selected-day-chat.txt",
+      "bytes": 1229,
+      "sha256": "9bcda4e50bfa9db78454352dce94198419b57c42e6c2ac4e4f3aeb79782a6765"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/21-calories-only-before-save.png",
+      "bytes": 49626,
+      "sha256": "0adb2b4ba129f050469e180b2e56a91db870ed7344ab9548a9fd4d6017d2dade"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/21-calories-only-before-save.txt",
+      "bytes": 4302,
+      "sha256": "9c043029b6ea155167a4962637201981f1667b58efca2fda654bf5fa74081444"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/22-calories-only-saved.png",
+      "bytes": 92890,
+      "sha256": "48293ef8453aa26cc36a0a2003d3a5656b954dacc540c0a2a1a6259fbe06df64"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/22-calories-only-saved.txt",
+      "bytes": 3805,
+      "sha256": "96eb7c4d094bc6ea5228b58c3e23e3a0041b3e0601f2f69852be86a7804e2178"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/23-before-live-message.png",
+      "bytes": 64792,
+      "sha256": "a57f1d5cfdd568fd494cf94b18253cad2475912dc2452818238c78079cd62114"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/23-before-live-message.txt",
+      "bytes": 1673,
+      "sha256": "1ec2a293a07c6dd8a8d69303d090574610c540dadcf17dfa16bc865b673c1a91"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/24-live-pending.png",
+      "bytes": 57086,
+      "sha256": "aa0eab11a9207b901eccdcd53354d8f3c608932986f312069afe1a8c1dc4c9d9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/24-live-pending.txt",
+      "bytes": 1812,
+      "sha256": "e2ebdddc8d95641183f70a09eb016f73422851a001da945ef5d782f1119f6502"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/25-first-live-reply.png",
+      "bytes": 63988,
+      "sha256": "b31bc4a3081bc8053b8253753afe38824cdd00b0901c8d5acce837918e84ea59"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/25-first-live-reply.txt",
+      "bytes": 1559,
+      "sha256": "fb472657e543275fe33e337f136c800d7888a55ba915247f2302c28669c1970a"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/26-uncertain-followup-reply.png",
+      "bytes": 58725,
+      "sha256": "87f3c294dbd510d337b83768c7b21c154c7fc22cf4bc2d5fcb5107aa8a3db332"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/26-uncertain-followup-reply.txt",
+      "bytes": 2231,
+      "sha256": "9f27f8a56535dadccc8d70ae80a1d6f9d621eb1a40ee1906ae31eec67b851e31"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/27-before-live-message.png",
+      "bytes": 59656,
+      "sha256": "e6f68191bd16d27f285941ab446f97c1867c07f2c9516f8a46f50ac8573f43d9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/27-before-live-message.txt",
+      "bytes": 2379,
+      "sha256": "ea5f5d308012fa3f44d9c20d361d75a8134e162c4f3a8a4c9450896dd8d9d7e1"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/27-live-pending.png",
+      "bytes": 60978,
+      "sha256": "369bd63f2c9bfb1aa0bf5f85e98278d6b17c67702e3fde90c710f8fd4f9dae93"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/27-live-pending.txt",
+      "bytes": 2518,
+      "sha256": "ff2c080f82a00dd5d7e98b5e27892b35743af29ab8b23411b3047d5bcb5aac66"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/28-portion-estimate.png",
+      "bytes": 54041,
+      "sha256": "f7a7e8d1262531a2d104dea220f8cec3295bb182673529bf2aaa38b9e4dde9e9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/28-portion-estimate.txt",
+      "bytes": 3135,
+      "sha256": "503f52fbf99802f1ad22ba8069afed99bb47dac8ec2753b5973bb65cda03446b"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/29-live-meal-accepted.png",
+      "bytes": 67016,
+      "sha256": "375f692690a3490f552a2b17f16354c35d884a199b569d1d468ab8541b0a14c2"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/29-live-meal-accepted.txt",
+      "bytes": 3008,
+      "sha256": "0fee9564ae0391d3121e53364cae1d5ec6c766f9602de3d100f536089b12107a"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/32-activity-saved.png",
+      "bytes": 94600,
+      "sha256": "a8de44357c663d4857386715425ff6b9b6908fbaa8d2fa38a84415be54daedd4"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/32-activity-saved.txt",
+      "bytes": 3020,
+      "sha256": "738b855c8e318f5d671171ac6f0171a9ee38319af228782779aae8dbb4736ea7"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/34-adjust-workout.png",
+      "bytes": 64811,
+      "sha256": "6cbcc5ef4d911aadc525350cffa01d3222efc998232616ab20336f535ff9c4ab"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/34-adjust-workout.txt",
+      "bytes": 8282,
+      "sha256": "0070f66f91592b9b69d1f62cc056d4154dc4f62533e9fdb2f5a44f933c1c0bd4"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/35-shared-exercise-load.png",
+      "bytes": 69183,
+      "sha256": "3ad19b28cab27a40a1f7b5b5a216ec46e79e6ff8b44ea59674b35c23ebc5edd9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/35-shared-exercise-load.txt",
+      "bytes": 7780,
+      "sha256": "30384995e5368e6f9eca740483ca70eec0e0b3a055c9a691d1003cc93a88a7ea"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/36-flexible-sets.png",
+      "bytes": 70889,
+      "sha256": "55184b4a7c4126dbdc88b5eac2869de38e96531f58d6fb392e431a046076ccdb"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/36-flexible-sets.txt",
+      "bytes": 9101,
+      "sha256": "027b741d70e605c995c584542a64297561eca6d8bc8a68193fb56bdcaf8362e9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/37-fit-technique-rest.png",
+      "bytes": 70114,
+      "sha256": "286817f701dd83ededafe5ee2f3ddec26e5252713749b801f435e6e29ee9ef3f"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/37-fit-technique-rest.txt",
+      "bytes": 9770,
+      "sha256": "a8d3f04a20c55aa2d9de140dfe1fb3ea299b20e3d1dc90ce749605ae968e105f"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/44-history.png",
+      "bytes": 100336,
+      "sha256": "7122bf79c2337eff992f5276c31adfeebcab72c73ec0f6869e9f2170fb25cef9"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/44-history.txt",
+      "bytes": 3511,
+      "sha256": "a15aab88b1512fe9dddf34534ead3435c6deb33e79665c2a3d6f793c6baafca0"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/50-you.png",
+      "bytes": 109679,
+      "sha256": "62cd49714e3395777c077ecde23be8211de3c6c98a466abc03e5f79eb20d2b85"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/50-you.txt",
+      "bytes": 4816,
+      "sha256": "ece24567d03823e06b8cbb53940e3d73d7d3344f4a903fd2a8c71003dfc6c861"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/51-weekly-review.png",
+      "bytes": 69416,
+      "sha256": "3fd57922f151b6e7ff5ae971283f55effa02e38f3b189dcf6be25a7bda68d6a2"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/51-weekly-review.txt",
+      "bytes": 6875,
+      "sha256": "10eeb4e67b8f9eafab262a826362a36763b206a2f36627f6fb10aeb5b6e6d5ab"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/52-preferences.png",
+      "bytes": 96774,
+      "sha256": "d11d10659c142a89a360292496ffac2c66cc631a486b360c8a2482af2cd0d3aa"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/52-preferences.txt",
+      "bytes": 4816,
+      "sha256": "ece24567d03823e06b8cbb53940e3d73d7d3344f4a903fd2a8c71003dfc6c861"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/54-preferences-expanded.png",
+      "bytes": 57611,
+      "sha256": "2c27398440cec155bbe071a9cdd2f7c0243d6b1699919df2866006e0d0c076e7"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/54-preferences-expanded.txt",
+      "bytes": 6365,
+      "sha256": "58a4e8cec120d338cbfe4273642bffd81de338455575cd5649f7047e481dbfe1"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/55-preferences-saved.png",
+      "bytes": 103422,
+      "sha256": "e1a3df9ba95268b0b80da33d7a21d74b58cef3f18152650840e5f642a56b4b61"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/55-preferences-saved.txt",
+      "bytes": 4898,
+      "sha256": "3d6143a94be1a87bdf8aac42b051c89ca387b88e8a1663bd6c36035da3296e16"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/60-reloaded.png",
+      "bytes": 110134,
+      "sha256": "74b2954ebfa53f80545012b4f0ff3fba4219ba45a118297068a6b6f2f546d7c5"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/60-reloaded.txt",
+      "bytes": 4816,
+      "sha256": "ece24567d03823e06b8cbb53940e3d73d7d3344f4a903fd2a8c71003dfc6c861"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/61-preferences-persisted.png",
+      "bytes": 57354,
+      "sha256": "d3fa11d5472299b3a514d308cb29074cc53cd79be769579e367fa4586eeacd02"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/61-preferences-persisted.txt",
+      "bytes": 6427,
+      "sha256": "14938bf66ecec76cac9232d9520fa879e06f70d836174f758f0a8a5c3a0ca5b4"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/63-repeat-portion-choice.png",
+      "bytes": 55258,
+      "sha256": "78f033679d7a0f412cd8291cc284920eda3c3ef938789608fd843ac2adb74119"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/63-repeat-portion-choice.txt",
+      "bytes": 4632,
+      "sha256": "28f84ea1bd0c23b9e13d0fe25f3bf74c31d975e804163c369bd83dec22b03cbb"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/64-double-manual-math.png",
+      "bytes": 53965,
+      "sha256": "0d01ab2fed8e7761032d32964c557a65139be83942d30a9615f88297dd169d49"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/64-double-manual-math.txt",
+      "bytes": 4581,
+      "sha256": "bc6566a823949b411f3258275b8e8e81dd749acdfa8bd0c6d048654c4d62d4fe"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/65-double-repeat-saved.png",
+      "bytes": 91257,
+      "sha256": "33fff499416ed8948234d6bebe76fa94663f9d2448d9a10dcc5ff4ad6d6d3017"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/65-double-repeat-saved.txt",
+      "bytes": 3987,
+      "sha256": "c30201746c6ba8ece28d0a0ca5e0df93aaa213a71ba5166c6471a774020a5b90"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/console.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/HARNESS-prefs-expand.png",
+      "bytes": 68259,
+      "sha256": "bf91201633a89af5fc2ebed0c5e224b2bf19e311d3d7b3dad091e2a3bd749f60"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/HARNESS-prefs-expand.txt",
+      "bytes": 5587,
+      "sha256": "84beea223255482e9c8ce431c63bea2fda5722037eb7eadb7fb3a8b4c885a57b"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/HARNESS-repeat-backfill.png",
+      "bytes": 56976,
+      "sha256": "570c0aeb94ec3182714bd5902381253dc9583ecf944e48c195574b72f2934558"
+    },
+    {
+      "path": "shared/evidence/fit-new-tracker/HARNESS-repeat-backfill.txt",
+      "bytes": 4159,
+      "sha256": "f362b06cb6f8f859bfdf654c9c96c7c7411b326d09bd87e6beaf8f75ac9d1d87"
+    },
+    {
+      "path": "shared/findings.json",
+      "bytes": 11265,
+      "sha256": "fabe253bfc7c38d837cc0111558365548b989753bed07947e24589dbfad80316"
+    },
+    {
+      "path": "shared/finish.mjs",
+      "bytes": 543,
+      "sha256": "a33a0b7cc633bc898d39faeca2df645034061863268571c6a22d4e32c30f28ba"
+    },
+    {
+      "path": "shared/report.md",
+      "bytes": 10669,
+      "sha256": "2242f583175ad3aef12d4e5ab7c7792edb83e8d12643c060a130ae39c160a396"
+    },
+    {
+      "path": "shared/session.mjs",
+      "bytes": 1013,
+      "sha256": "55908d6270ff8041a2bb8ce54364bde5062152b2e32d74a0711bb12c6893368b"
+    },
+    {
+      "path": "shared/steps.mjs",
+      "bytes": 11566,
+      "sha256": "a4eddc249689961ef951691102fb65fa0cbed2faa83f9c1be0ab8d996523cc50"
+    },
+    {
+      "path": "snapshot-source.mjs",
+      "bytes": 1314,
+      "sha256": "7e2b4f0958f47a8175611b50a0bac942256307cc5f0342313dfa63b560c2a391"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 41481,
+      "sha256": "dca1232fe7b1941aff42c927312f486a6ff154745c5dc31a82dce8dbe554c287"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 41481,
+      "sha256": "e4ef9e7735a18d7a9178ddc142fc8bbb45911a3a546fa2953dc691d12b71bf07"
+    },
+    {
+      "path": "verification.md",
+      "bytes": 9068,
+      "sha256": "be7cb5dd40a761d6734de51f8232cf0fd12d08c2fbc26f72c28cceb16748ae8d"
+    },
+    {
+      "path": "verify-artifacts.mjs",
+      "bytes": 3208,
+      "sha256": "6640f06158b3933528cb4c70283404932f5ccbda503218adea305c5d5072509a"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { mockCloud } from "../../tests/cloud-fixture";
+import { mockCloud } from "../../e2e-shared/cloud-fixture";
 
 async function start(page: Page, movement = false) {
   await mockCloud(page);

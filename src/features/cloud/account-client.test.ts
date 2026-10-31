@@ -8,6 +8,7 @@ import {
   registerAccountConfig,
   requestPasswordCode,
 } from "./account-client";
+import { browserAccountDeletion } from "./useAccountSecurity";
 const config = {
   url: "https://example.supabase.co",
   publishableKey: "sb_publishable_012345678901234567890",
@@ -134,5 +135,58 @@ describe("password recovery and update", () => {
     expect(isolated.auth.updateUser).toHaveBeenCalledWith({
       password: "new-password",
     });
+  });
+});
+
+describe("browser account deletion transport", () => {
+  const signedIn = () =>
+    ({
+      auth: {
+        getSession: vi.fn(async () => ({
+          data: { session: { user: { id: "owner" }, access_token: "token" } },
+          error: null,
+        })),
+      },
+    }) as unknown as SupabaseClient;
+  const body = { confirmation: "DELETE", password: "current" };
+  it.each([404, 501])(
+    "explains hosted-only deletion when the server answers %s instead of showing a raw error",
+    async (status) => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async () =>
+          new Response(JSON.stringify({ error: "Not found." }), { status }),
+        ),
+      );
+      try {
+        await expect(
+          browserAccountDeletion(signedIn(), body, "owner"),
+        ).rejects.toThrow(
+          "Use your hosted account connection to manage your account.",
+        );
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    },
+  );
+  it("keeps the server's own explanation for other failures and confirms success only on deleted:true", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        new Response(JSON.stringify({ error: "Your password could not be confirmed." }), { status: 401 }),
+      ),
+    );
+    try {
+      await expect(browserAccountDeletion(signedIn(), body, "owner")).rejects.toThrow(
+        "Your password could not be confirmed.",
+      );
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async () => new Response(JSON.stringify({ deleted: true }), { status: 200 })),
+      );
+      await expect(browserAccountDeletion(signedIn(), body, "owner")).resolves.toEqual({ deleted: true });
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

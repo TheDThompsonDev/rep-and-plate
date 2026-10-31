@@ -1,0 +1,477 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\danny\\Documents\\coding\\fitness\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "mobile/playwright.config.ts",
+      "mobile/e2e/round-two-remediation.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\playwright.config.ts",
+    "rootDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/danny/Documents/coding/fitness/mobile/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/danny/Documents/coding/fitness/mobile/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run web -- --port 8081",
+      "url": "http://127.0.0.1:8081",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "round-two-remediation.spec.ts",
+      "file": "round-two-remediation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "dated manual entry opens its day and persistent notice cannot block Chat Send",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5799,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Edit Older audit meal', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: 'Edit Older audit meal', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Older audit meal', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Edit Older audit meal', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: 'Edit Older audit meal', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Older audit meal', exact: true })\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:14:84",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                      "column": 84,
+                      "line": 14
+                    },
+                    "snippet": "  12 |   for(const [name,value] of Object.entries({calories:'215','protein (g)':'18.3','carbs (g)':'33','fat (g)':'0.4'})) await page.getByRole('textbox',{name,exact:true}).fill(value);\n  13 |   await page.getByRole('button',{name:'Save meal',exact:true}).click();\n> 14 |   await expect(page.getByRole('button',{name:'Edit Older audit meal',exact:true})).toBeVisible();\n     |                                                                                    ^\n  15 |   await page.getByRole('button',{name:'Chat',exact:true}).click();\n  16 |   await page.getByRole('textbox',{name:'Message Rep & Plate',exact:true}).fill('I ate an apple');\n  17 |   await page.getByRole('button',{name:'Send message',exact:true}).click();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 84,
+                        "line": 14
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Edit Older audit meal', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: 'Edit Older audit meal', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Edit Older audit meal', exact: true })\u001b[22m\n\n\n  12 |   for(const [name,value] of Object.entries({calories:'215','protein (g)':'18.3','carbs (g)':'33','fat (g)':'0.4'})) await page.getByRole('textbox',{name,exact:true}).fill(value);\n  13 |   await page.getByRole('button',{name:'Save meal',exact:true}).click();\n> 14 |   await expect(page.getByRole('button',{name:'Edit Older audit meal',exact:true})).toBeVisible();\n     |                                                                                    ^\n  15 |   await page.getByRole('button',{name:'Chat',exact:true}).click();\n  16 |   await page.getByRole('textbox',{name:'Message Rep & Plate',exact:true}).fill('I ate an apple');\n  17 |   await page.getByRole('button',{name:'Send message',exact:true}).click();\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:14:84"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:15:45.066Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-date-e4a52-tice-cannot-block-Chat-Send\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-date-e4a52-tice-cannot-block-Chat-Send\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                    "column": 84,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-f3aa7d1f7b3e5d0e99c3",
+          "file": "round-two-remediation.spec.ts",
+          "line": 6,
+          "column": 5
+        },
+        {
+          "title": "unconfigured targets show recorded totals without goal judgments",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5437,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText(/calories left|calories above target/)\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByText(/calories left|calories above target/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/calories left|calories above target/)\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText(/calories left|calories above target/)\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByText(/calories left|calories above target/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/calories left|calories above target/)\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:26:71",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                      "column": 71,
+                      "line": 26
+                    },
+                    "snippet": "  24 | test('unconfigured targets show recorded totals without goal judgments',async({page})=>{\n  25 |   await page.goto('/');await page.getByRole('button',{name:'Nutrition',exact:true}).click();\n> 26 |   await expect(page.getByText(/calories left|calories above target/)).toHaveCount(0);\n     |                                                                       ^\n  27 |   await expect(page.getByText('Recorded nutrition · daily targets are optional',{exact:true})).toBeVisible();\n  28 | });\n  29 | test('repeat portion preview scales decimals and logging leaves stock unchanged',async({page})=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 71,
+                        "line": 26
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText(/calories left|calories above target/)\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByText(/calories left|calories above target/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/calories left|calories above target/)\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  24 | test('unconfigured targets show recorded totals without goal judgments',async({page})=>{\n  25 |   await page.goto('/');await page.getByRole('button',{name:'Nutrition',exact:true}).click();\n> 26 |   await expect(page.getByText(/calories left|calories above target/)).toHaveCount(0);\n     |                                                                       ^\n  27 |   await expect(page.getByText('Recorded nutrition · daily targets are optional',{exact:true})).toBeVisible();\n  28 | });\n  29 | test('repeat portion preview scales decimals and logging leaves stock unchanged',async({page})=>{\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:26:71"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:15:51.477Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-unco-bb9ff-tals-without-goal-judgments\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-unco-bb9ff-tals-without-goal-judgments\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                    "column": 71,
+                    "line": 26
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-ebc73250d4c9153838d9",
+          "file": "round-two-remediation.spec.ts",
+          "line": 24,
+          "column": 5
+        },
+        {
+          "title": "repeat portion preview scales decimals and logging leaves stock unchanged",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 12051,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 74,
+                        "line": 32
+                      },
+                      "message": "Error: locator.fill: Test timeout of 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Portion multiplier', exact: true })\u001b[22m\n\n\n  30 |   const state=initialState();state.meals=[{id:'portion-source',title:'Yogurt',day:today(),time:'12:00',category:'Breakfast',calories:215,protein:18.3,carbs:33,fat:0.4,source:'Manual entry',confidence:'confirmed',note:''}];\n  31 |   await page.addInitScript(({state,key})=>localStorage.setItem(key,JSON.stringify(state)),{state,key});await page.goto('/');await page.getByRole('button',{name:'Nutrition',exact:true}).click();await page.getByRole('button',{name:'Edit Yogurt',exact:true}).click();await page.getByRole('button',{name:'Repeat meal',exact:true}).click();\n> 32 |   await page.getByRole('textbox',{name:'Portion multiplier',exact:true}).fill('1.5');\n     |                                                                          ^\n  33 |   await expect(page.getByRole('textbox',{name:'protein (g)',exact:true})).toHaveValue('27.45');await expect(page.getByRole('textbox',{name:'fat (g)',exact:true})).toHaveValue('0.6');\n  34 |   expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).meals.length,key)).toBe(1);\n  35 |   await page.getByRole('button',{name:'Save meal',exact:true}).click();await expect.poll(()=>page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).meals.length,key)).toBe(2);\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:32:74"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:15:57.528Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-repe-890b4-ging-leaves-stock-unchanged\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-repe-890b4-ging-leaves-stock-unchanged\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-10dd97ae498f62800fc2",
+          "file": "round-two-remediation.spec.ts",
+          "line": 29,
+          "column": 5
+        },
+        {
+          "title": "remaining loads preserve performed sets and timer and routine survive navigation",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 12047,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 182,
+                        "line": 41
+                      },
+                      "message": "Error: locator.click: Test timeout of 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Apply set 2 load to remaining sets', exact: true })\u001b[22m\n\n\n  39 |   await page.goto('/');await page.getByRole('button',{name:'Workouts',exact:true}).click();await page.getByRole('button',{name:'Start Upper Body',exact:true}).click();\n  40 |   await page.getByRole('textbox',{name:'Bench Press set 1 weight (lb)',exact:true}).fill('45');await page.getByRole('textbox',{name:'Bench Press set 1 reps',exact:true}).fill('8');await page.getByRole('button',{name:'Save Bench Press set 1',exact:true}).click();\n> 41 |   await page.getByRole('textbox',{name:'Bench Press set 2 weight (lb)',exact:true}).fill('50');await page.getByRole('button',{name:'Apply set 2 load to remaining sets',exact:true}).click();\n     |                                                                                                                                                                                      ^\n  42 |   await expect(page.getByRole('textbox',{name:'Bench Press set 1 weight (lb)',exact:true})).toHaveValue('45');await expect(page.getByRole('textbox',{name:'Bench Press set 3 weight (lb)',exact:true})).toHaveValue('50');\n  43 |   await page.getByRole('button',{name:'90 seconds',exact:true}).click();const until=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).workout.restUntil,key);\n  44 |   await page.getByRole('button',{name:'Nutrition',exact:true}).click();await page.getByRole('button',{name:'Workouts',exact:true}).click();await expect(page.getByText(/Rest timer · \\d+s/)).toBeVisible();await page.reload();await page.getByRole('button',{name:'Workouts',exact:true}).click();expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).workout.restUntil,key)).toBe(until);\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:41:182"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:16:10.192Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-rema-02229--routine-survive-navigation\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-rema-02229--routine-survive-navigation\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-15209460363783ebe3d7",
+          "file": "round-two-remediation.spec.ts",
+          "line": 38,
+          "column": 5
+        },
+        {
+          "title": "older workout correction remains reachable after twelve sessions",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 12095,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 12000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 74,
+                        "line": 52
+                      },
+                      "message": "Error: locator.click: Test timeout of 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Load older workouts', exact: true })\u001b[22m\n\n\n  50 |   const state=initialState();state.workout.history=Array.from({length:13},(_,i)=>({title:`Saved session ${i}`,startedAt:`2026-08-${String(i+1).padStart(2,'0')}T12:00:00Z`,finishedAt:`2026-08-${String(i+1).padStart(2,'0')}T12:15:00Z`,exercises:[{name:'Bench press',weight:40,target:8,sets:[8],previous:[]}]}));\n  51 |   await page.addInitScript(({state,key})=>localStorage.setItem(key,JSON.stringify(state)),{state,key});await page.goto('/');await page.getByRole('button',{name:'Workouts',exact:true}).click();\n> 52 |   await page.getByRole('button',{name:'Load older workouts',exact:true}).click();\n     |                                                                          ^\n  53 |   await page.getByRole('button',{name:'Correct Saved session 0',exact:true}).click();\n  54 |   await expect(page.getByRole('textbox',{name:'Bench press set 1 reps',exact:true})).toHaveValue('8');\n  55 | });\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:52:74"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:16:23.313Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-olde-de624-hable-after-twelve-sessions\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-olde-de624-hable-after-twelve-sessions\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-f7de987e10aa8c8ee742",
+          "file": "round-two-remediation.spec.ts",
+          "line": 49,
+          "column": 5
+        },
+        {
+          "title": "guest saving copy and malformed backup explain current records correctly",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 12000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5581,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('Your account saves changes automatically.')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByText('Your account saves changes automatically.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Your account saves changes automatically.')\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('Your account saves changes automatically.')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByText('Your account saves changes automatically.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Your account saves changes automatically.')\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:58:91",
+                    "location": {
+                      "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                      "column": 91,
+                      "line": 58
+                    },
+                    "snippet": "  56 | test('guest saving copy and malformed backup explain current records correctly',async({page})=>{\n  57 |   await page.goto('/');await page.getByRole('button',{name:'Your profile',exact:true}).click();await page.getByRole('button',{name:'Cloud & your records',exact:true}).click();\n> 58 |   await expect(page.getByText('Your account saves changes automatically.',{exact:false})).toHaveCount(0);\n     |                                                                                           ^\n  59 |   await expect(page.getByText('Your records are on this device.',{exact:false})).toBeVisible();\n  60 |   const before=await page.evaluate(k=>localStorage.getItem(k),key);const chooser=page.waitForEvent('filechooser');await page.getByRole('button',{name:'Import a backup file',exact:true}).click();await(await chooser).setFiles({name:'broken.json',mimeType:'application/json',buffer:Buffer.from('{broken')});\n  61 |   await expect(page.getByText('This file is not a valid Rep & Plate backup.',{exact:false})).toBeVisible();expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(before);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                        "column": 91,
+                        "line": 58
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('Your account saves changes automatically.')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByText('Your account saves changes automatically.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Your account saves changes automatically.')\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  56 | test('guest saving copy and malformed backup explain current records correctly',async({page})=>{\n  57 |   await page.goto('/');await page.getByRole('button',{name:'Your profile',exact:true}).click();await page.getByRole('button',{name:'Cloud & your records',exact:true}).click();\n> 58 |   await expect(page.getByText('Your account saves changes automatically.',{exact:false})).toHaveCount(0);\n     |                                                                                           ^\n  59 |   await expect(page.getByText('Your records are on this device.',{exact:false})).toBeVisible();\n  60 |   const before=await page.evaluate(k=>localStorage.getItem(k),key);const chooser=page.waitForEvent('filechooser');await page.getByRole('button',{name:'Import a backup file',exact:true}).click();await(await chooser).setFiles({name:'broken.json',mimeType:'application/json',buffer:Buffer.from('{broken')});\n  61 |   await expect(page.getByText('This file is not a valid Rep & Plate backup.',{exact:false})).toBeVisible();expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(before);\n    at C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts:58:91"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T19:16:36.625Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-gues-732fe-n-current-records-correctly\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\test-results\\round-two-remediation-gues-732fe-n-current-records-correctly\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\danny\\Documents\\coding\\fitness\\mobile\\e2e\\round-two-remediation.spec.ts",
+                    "column": 91,
+                    "line": 58
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cec238258c96144e63df-1ec0cb51b2e6e4405ab0",
+          "file": "round-two-remediation.spec.ts",
+          "line": 56,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T19:15:44.143Z",
+    "duration": 58282.451,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

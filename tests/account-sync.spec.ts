@@ -1,5 +1,6 @@
+import { openProfile } from '../e2e-shared/profile-navigation';
 import {test,expect,type Page} from '@playwright/test';
-import {mockCloud,stored} from './cloud-fixture';
+import {mockCloud,stored} from '../e2e-shared/cloud-fixture';
 import {initialState} from '../src/domain';
 async function enter(page:Page,name:string){
  await page.goto('/');await page.getByRole('button',{name:'Sign in',exact:true}).click();
@@ -40,7 +41,7 @@ test('large restored photos survive reload when the localStorage compatibility m
  test.setTimeout(60000);
  const cloud=await mockCloud(page),state=initialState();state.profile.name='Photo keeper';
  const photo=Buffer.alloc(4_000_000,65),user='11111111-1111-4111-8111-111111111111';
- state.messages[0].image=`rp-media:${user}/${'a'.repeat(64)}.png`;
+ state.messages.push({id:'photo',role:'user',text:'Dinner',time:'6:00 PM',image:`rp-media:${user}/${'a'.repeat(64)}.png`});
  cloud.remote={user_id:user,revision:9,updated_at:new Date().toISOString(),state};
  await page.route('https://fuelcloudtest.supabase.co/storage/v1/object/**',route=>route.fulfill({headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*'},contentType:'image/png',body:photo}));
  await enter(page,'Photo keeper');
@@ -55,7 +56,7 @@ test('large restored photos survive reload when the localStorage compatibility m
  const saved=await inspect();expect(saved.imageLength).toBeGreaterThan(5_000_000);expect(saved.mirrorLength).toBeLessThan(saved.imageLength);
  await page.reload();await expect(status).toContainText('Saved to your account',{timeout:20000});
  expect(await inspect()).toEqual(saved);expect(cloud.saveCalls).toBe(0);
- await page.getByRole('button',{name:'Your profile',exact:true}).click();await expect(page.getByRole('heading',{name:'Looking ahead, Photo keeper.'})).toBeVisible();
+ await openProfile(page);await expect(page.getByRole('heading',{name:'Looking ahead, Photo keeper.'})).toBeVisible();
 });
 test('an interrupted account switch cannot hydrate or upload another account’s active copy',async({page})=>{
  const cloud=await mockCloud(page);await enter(page,'Account A');
@@ -72,7 +73,7 @@ test('an interrupted account switch cannot hydrate or upload another account’s
  expect((await stored(page)).profile.name).toBe('Account A');expect(cloud.remote.state.profile.name).toBe('Account A');
 });
 test('signing out during a photo restore never applies or uploads the former account’s pending copy',async({page})=>{
- const cloud=await mockCloud(page),state=initialState(),user='11111111-1111-4111-8111-111111111111';state.profile.name='Pending cloud copy';state.messages[0].image=`rp-media:${user}/${'b'.repeat(64)}.png`;
+ const cloud=await mockCloud(page),state=initialState(),user='11111111-1111-4111-8111-111111111111';state.profile.name='Pending cloud copy';state.messages.push({id:'photo',role:'user',text:'Dinner',time:'6:00 PM',image:`rp-media:${user}/${'b'.repeat(64)}.png`});
  cloud.remote={user_id:user,revision:9,updated_at:new Date().toISOString(),state};
  let release!:()=>void,seen!:()=>void;const gate=new Promise<void>(resolve=>{release=resolve;}),started=new Promise<void>(resolve=>{seen=resolve;});
  await page.route('https://fuelcloudtest.supabase.co/storage/v1/object/**',async route=>{seen();await gate;await route.fulfill({headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*'},contentType:'image/png',body:Buffer.from('test-photo')});});

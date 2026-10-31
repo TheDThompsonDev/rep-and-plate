@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "completedAt": "2026-10-02T12:52:47.8256119Z",
+  "stableReviewedFiles": 28,
+  "sourceManifest": "source-manifest.json",
+  "checks": [
+    {
+      "result": "passed",
+      "criterion": "Shared input, target and AI contract validation",
+      "command": "node node_modules/vitest/vitest.mjs run src server",
+      "log": "unit.log",
+      "count": 428
+    },
+    {
+      "result": "passed",
+      "criterion": "Complete desktop and mobile-browser journeys",
+      "command": "node node_modules/@playwright/test/cli.js test --reporter=list",
+      "log": "browser.log",
+      "count": 326
+    },
+    {
+      "result": "passed",
+      "criterion": "Native onboarding, targets, goals and account restore",
+      "count": 7,
+      "renderer": "Expo web",
+      "log": "native-browser.log"
+    },
+    {
+      "result": "passed",
+      "criterion": "Production build",
+      "warning": "Existing bundle-size warning",
+      "log": "build.log"
+    },
+    {
+      "result": "passed",
+      "criterion": "Native types",
+      "log": "native-types.log"
+    },
+    {
+      "result": "passed",
+      "criterion": "Native lint",
+      "errors": 0,
+      "log": "native-lint.log",
+      "existingWarnings": 9
+    },
+    {
+      "result": "passed",
+      "criterion": "Whitespace check and source integrity",
+      "log": "diff-check.log",
+      "changedAfterReview": 0
+    }
+  ],
+  "semanticReview": "Optional schema compatibility, no guessed inputs, applicability, unit conversion, explicit target activation, atomic durable completion, details-only preservation, saved calorie approach, fresh-account checks, profile edits and validated AI context reviewed. Mobile web screenshots inspected. No open finding.",
+  "learning": "Candidate retained in report, pending user acceptance; NUTRITION-SETUP-001 failure history retained in docs/context/error-ledger.md.",
+  "limits": [
+    "Estimates are editable adult starting assumptions, not clinically validated targets or weight-goal deadlines",
+    "Physical devices and live provider personalization not tested",
+    "CYC managed startup hit existing source fingerprint bound; configured checks run directly",
+    "No commit or deployment requested"
+  ]
+}

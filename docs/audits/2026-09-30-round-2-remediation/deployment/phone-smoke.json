@@ -1,0 +1,13 @@
+{
+  "url": "https://repandplate.com",
+  "viewport": "390x844",
+  "mode": "Isolated fresh guest; actual deployed assets and APIs, no route mocks",
+  "checks": [
+    "Fresh visitor sees invitation gate",
+    "Phone onboarding and goal-free nutrition load",
+    "Blank manual nutrients and fractional repeat work on deployed code",
+    "Saved routine and rest persist across tabs and reload",
+    "390px layout has no horizontal overflow or page errors"
+  ],
+  "errors": []
+}

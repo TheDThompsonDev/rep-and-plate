@@ -1,0 +1,132 @@
+{
+  "stages": [
+    {
+      "label": "Welcome",
+      "headings": [
+        "Track your food.Build your fitness.With a little help from Spot."
+      ],
+      "fields": 0,
+      "buttons": [
+        "Sign in ",
+        "Meet Spot ",
+        "See what I can do",
+        "Start with my groceries",
+        "Create account"
+      ]
+    },
+    {
+      "label": "Spot",
+      "headings": [
+        "Hey. I’m Spot.",
+        "You opened the app. I called a press conference."
+      ],
+      "fields": 0,
+      "buttons": [
+        "Sign in ",
+        "Next",
+        "Back",
+        "Skip to account"
+      ]
+    },
+    {
+      "label": "Example",
+      "headings": [
+        "Here’s what you can do with me."
+      ],
+      "fields": 0,
+      "buttons": [
+        "Sign in ",
+        "Meal",
+        "Workout",
+        "Receipt",
+        "Try with something from today",
+        "Back",
+        "More about Spot"
+      ]
+    },
+    {
+      "label": "Account choice",
+      "headings": [
+        "Make it official."
+      ],
+      "fields": 2,
+      "buttons": [
+        "Sign in ",
+        "Create account",
+        "Already have an account? Sign in",
+        "Try on this device first",
+        "Meet Spot first"
+      ]
+    },
+    {
+      "label": "Name/focus",
+      "headings": [
+        "What should I call you?"
+      ],
+      "fields": 5,
+      "buttons": [
+        "Sign in ",
+        "That’s me. Let’s go.",
+        "Back to account"
+      ]
+    },
+    {
+      "label": "Goals/weight",
+      "headings": [
+        "What are you working toward?"
+      ],
+      "fields": 4,
+      "buttons": [
+        "Sign in ",
+        "Save my starting point",
+        "Set this up later",
+        "Back to your introduction"
+      ]
+    },
+    {
+      "label": "Personal details",
+      "headings": [
+        "Your daily targets."
+      ],
+      "fields": 7,
+      "buttons": [
+        "Sign in ",
+        "Estimate my targets",
+        "Use my own targets",
+        "Save details without targets",
+        "Skip targets for now",
+        "Back to your goals"
+      ]
+    },
+    {
+      "label": "Target review",
+      "headings": [
+        "Your daily targets."
+      ],
+      "fields": 4,
+      "buttons": [
+        "Sign in ",
+        "Use these daily targets",
+        "Edit my details",
+        "Save details without targets",
+        "Skip targets for now",
+        "Back to your goals"
+      ]
+    },
+    {
+      "label": "Refresh while unfinished",
+      "headings": [
+        "Track your food.Build your fitness.With a little help from Spot."
+      ],
+      "fields": 0,
+      "buttons": [
+        "Sign in ",
+        "Meet Spot ",
+        "See what I can do",
+        "Start with my groceries",
+        "Create account"
+      ]
+    }
+  ],
+  "limits": "Synthetic guest walkthrough. No existing records, account creation, paid AI or human usability testing."
+}

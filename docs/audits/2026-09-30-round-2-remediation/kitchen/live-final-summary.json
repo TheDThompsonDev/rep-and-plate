@@ -1,0 +1,16 @@
+{
+  "status": 422,
+  "details": null,
+  "effects": {
+    "intakeUnchanged": true,
+    "pantryEventsUnchanged": true,
+    "groceriesUnchanged": true,
+    "plansBefore": 0,
+    "plansAfter": 0,
+    "planStatuses": []
+  },
+  "errors": [
+    "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+  ],
+  "error": "A planned ingredient no longer exists in your pantry. Please regenerate the plan."
+}

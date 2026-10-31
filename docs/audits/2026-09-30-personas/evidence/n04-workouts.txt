@@ -1,0 +1,30 @@
+- button "Open menu":
+  - img
+- button "Rep & Plate home": Rep & Plate
+- button "Your profile":
+  - img
+- text: YOUR MOVEMENT What should you do today? A workout that meets you here. Choose a starter session or build one around your goals and equipment.
+- button "Build my workout"
+- text: Upper Body 4 exercises · starter template
+- button "Start Upper Body"
+- text: Lower Body 4 exercises · starter template
+- button "Start Lower Body"
+- text: Full Body 3 exercises · starter template
+- button "Start Full Body"
+- text: Your recent sessions
+- img "Spot summoning a shaker bottle in a beam of golden light."
+- text: Emotionally warmed up. You bring the reps. I’ve already summoned the shaker. No reps yet. Tell Spot what you did.
+- button "Tell Spot"
+- button "Chat"
+- button "Nutrition":
+  - img
+  - text: Nutrition
+- button "Scan a barcode":
+  - img
+  - text: Scan
+- button "Workouts":
+  - img
+  - text: Workouts
+- button "Kitchen":
+  - img
+  - text: Kitchen

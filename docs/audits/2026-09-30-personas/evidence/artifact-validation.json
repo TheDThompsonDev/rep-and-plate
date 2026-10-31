@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "issues": [],
+  "frictionEntries": 31,
+  "highPriority": 6,
+  "personas": 5,
+  "checkpoints": 177,
+  "existingWeb": {
+    "startTime": "2026-09-30T14:26:56.044Z",
+    "duration": 257829.193,
+    "expected": 240,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "existingNative": {
+    "startTime": "2026-09-30T14:34:58.057Z",
+    "duration": 40584.529,
+    "expected": 18,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "auditChecks": {
+    "startTime": "2026-09-30T14:42:32.579Z",
+    "duration": 16484.66,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  },
+  "sourceFilesHashed": 317
+}

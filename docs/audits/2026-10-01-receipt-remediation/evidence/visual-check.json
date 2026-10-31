@@ -1,0 +1,35 @@
+{
+  "method": "Isolated browser contexts and controlled receipt data; no live OCR",
+  "checks": [
+    {
+      "width": 320,
+      "exampleFit": true,
+      "sourceFit": true,
+      "dialogFit": true,
+      "keyboardDinnerFocus": true,
+      "keyboardSourceDisclosure": true,
+      "zoomPressed": true,
+      "pageErrors": []
+    },
+    {
+      "width": 390,
+      "exampleFit": true,
+      "sourceFit": true,
+      "dialogFit": true,
+      "keyboardDinnerFocus": true,
+      "keyboardSourceDisclosure": true,
+      "zoomPressed": true,
+      "pageErrors": []
+    },
+    {
+      "width": 1100,
+      "exampleFit": true,
+      "sourceFit": true,
+      "dialogFit": true,
+      "keyboardDinnerFocus": true,
+      "keyboardSourceDisclosure": true,
+      "zoomPressed": true,
+      "pageErrors": []
+    }
+  ]
+}
