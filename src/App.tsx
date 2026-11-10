@@ -1,4 +1,15 @@
 import Onboarding from "./features/onboarding/Onboarding";
+import DailyExperience from "./features/daily/DailyExperience";
+import { dailyPreferences, toggleUsualMeal } from "./features/daily/model";
+import { CaptureInbox } from "./features/capture-inbox/CaptureInbox";
+import { appendCapture, newCapture } from "./features/capture-inbox/model";
+import type { CaptureItem } from "./features/capture-inbox/contracts";
+import { recordLocalEvent } from "./features/life-context/model";
+import { trackMealTransition } from "./features/life-context/tracking";
+import { releaseHouseholdPortion } from "./features/household/client";
+import { addHouseholdTransfer } from "./features/household/domain";
+import { remainingRecipePortions } from "./features/recipes/portions";
+import type { HouseholdMealProposal, HouseholdTransfer } from "./features/household/contracts";
 import { HeaderAccountContext } from './features/cloud/header-account';
 import { QuickAccount } from './features/cloud/QuickAccount';
 import { FirstLog } from './features/onboarding/FirstLog';
@@ -33,6 +44,10 @@ const PantryLinkReview = lazy(
   () => import("./features/pantry/PantryLinkReview"),
 );
 const RecipeDialog = lazy(() => import("./features/recipes/RecipeDialog"));
+const DecisionsDialog = lazy(() => import("./features/decisions/DecisionsDialog"));
+const CoachingDialog = lazy(() => import("./features/coaching/CoachingDialog"));
+const LifeContextPanel = lazy(() => import("./features/life-context/LifeContextPanel").then(module => ({ default: module.LifeContextPanel })));
+const HouseholdDialog = lazy(() => import("./features/household/HouseholdDialog"));
 const ProductScanner = lazy(() => import("./features/scanner/ProductScanner"));
 const LabelCapture = lazy(() => import("./features/labels/LabelCapture"));
 const PantryDialog = lazy(() =>
@@ -62,7 +77,7 @@ const VoiceCapture = lazy(() =>
 );
 import { defaultPreferences } from "./features/preferences/contracts";
 import { mealPlanSchema } from "./features/planning/contracts";
-import { getPantryLots, mealFromPantry } from "./features/pantry/ledger";
+import { getPantryLots, mealFromPantry, deleteMealWithPantry } from "./features/pantry/ledger";
 import { mealPortionSelections } from "./features/planning/meal-plans";
 import { resolveRecipePortionProposal } from "./features/recipes/proposals";
 import { productSchema, type FoodProduct } from "./features/products/contracts";
@@ -83,7 +98,7 @@ import {
   retainComposerDraft,
   PROCESSING_DRAFT_NOTICE,
 } from "./ai-client";
-import { type ChatAction } from "./ai-contract";
+import { type ChatAction, type CapturePurpose } from "./ai-contract";
 import { startPlan, replyToWorkout, recordSet } from "./workouts";
 import {
   ArrowRight,
@@ -101,6 +116,8 @@ import {
   timestamp,
   interpretText,
   resolveReview,
+  repeatMeal,
+  mealSchema,
   sumNutrition,
   today,
   upgradeChat,
@@ -120,6 +137,11 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
       "Device saving could not finish. Export your records before closing the app.",
     ),
   );
+  const visitId = useRef(id());
+  useEffect(() => {
+    const at = new Date().toISOString();
+    setState(current => recordLocalEvent(current, { id: visitId.current + ":" + String(cloudEpoch()), kind: "visit", at, source: "web" }));
+  }, [state.lifeContext?.research.enabled, setState]);
   const { dialogs, openDialog, closeDialog, closeDialogs } = useDialogs();
   const [page, setPage] = useState<Page>(() =>
     location.hash === '#receipt' ? 'Kitchen' : location.hash === "#connections"
@@ -147,6 +169,8 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
   const [composer, setComposer] = useState("");
   const [reviewMessageId, setReviewMessageId] = useState<string | null>(null);
   const [captureContext, setCaptureContext] = useState("");
+  const [capturePurpose, setCapturePurpose] = useState<CapturePurpose | undefined>();
+  const [decisionCapturePrompt, setDecisionCapturePrompt] = useState("");
   const [shoppingTab, setShoppingTab] = useState<"swaps" | "list" | "spending">(
     "swaps",
   );
@@ -191,6 +215,7 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
       closeDialog('capture');
       setReceiptCapture(false);
       setCaptureContext('');
+      setCapturePurpose(undefined);
       setUpload(null);
     }
     setCaptureError("");
@@ -216,6 +241,7 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
   }
   const openReceipt = useCallback(() => {
     setReceiptCapture(true);
+    setCapturePurpose(undefined);
     setCaptureContext('');
     setCaptureError('');
     setUpload(null);
@@ -336,6 +362,10 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
         break;
     }
   }
+  function focusChatCapture() {
+    navigate("Chat");
+    requestAnimationFrame(() => document.querySelector<HTMLInputElement>(".fuel-composer input")?.focus());
+  }
   function submitText(e?: FormEvent, preset?: string) {
     e?.preventDefault();
     const text = (preset ?? composer).trim();
@@ -432,7 +462,6 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
         text,
       );
     if (
-      aiStatus.available &&
       !localCommand &&
       interpretText(text).kind !== "workout"
     ) {
@@ -582,6 +611,7 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
   }
   async function onFile(file?: File, meal = false) {
     if (!file) return;
+    const captureEpoch = cloudEpoch();
     setCaptureError("");
     const reportError = (message: string) => {
       setCaptureError(message);
@@ -626,15 +656,24 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
         );
         return;
       }
-      if (!dialogs.capture) setCaptureContext("");
+      if (captureEpoch !== cloudEpoch()) return;
+      if (!dialogs.capture && !capturePurpose) setCaptureContext("");
       setUpload({ name: file.name, image, meal });
       openDialog('capture');
     } catch {
       reportError("That image couldn’t be opened. Please try another.");
     }
   }
-  function saveUploadForReview() {
+  async function saveUploadForReview() {
     if (!upload) return;
+    if (capturePurpose) {
+      try {
+        const item = { ...newCapture({ text: decisionCapturePrompt || captureContext || "Help me review this photo.", image: upload.image, purpose: capturePurpose === "menu" ? "menu" : "meal" }), capturePurpose };
+        await saveCaptureInbox(appendCapture(stateForSync.current.captureInbox ?? [], item));
+        closeDialog("capture"); setUpload(null); setCapturePurpose(undefined); setDecisionCapturePrompt(""); navigate("Chat"); notify("Photo saved in Send to Spot for later.");
+      } catch (error) { notify(error instanceof Error ? error.message : "This capture could not be saved."); }
+      return;
+    }
     setState((s) => receiptCapture ? saveReceiptCapture(s, upload.image, upload.name, captureContext) : ({
       ...s,
       reviews: [
@@ -711,6 +750,74 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
           },
     );
   }
+  async function saveCaptureInbox(items: CaptureItem[]) {
+    const epoch = cloudEpoch();
+    setState(current => ({ ...current, captureInbox: items }));
+    await persistBrowserRecords(stateForSync.current);
+    if (epoch !== cloudEpoch()) throw Error("Your account changed. Open your inbox again.");
+  }
+  async function sendSavedCapture(item: CaptureItem) {
+    const epoch = cloudEpoch();
+    let image = item.image;
+    if (image && !image.startsWith("data:image/")) throw Error("This photo has not finished restoring. Reopen account saving and try again.");
+    if (image && image.length > 4400000) {
+      const original = new Image(); original.src = image; await original.decode();
+      const scale = Math.min(1, 1800 / Math.max(original.width, original.height));
+      const canvas = document.createElement("canvas"); canvas.width = Math.round(original.width * scale); canvas.height = Math.round(original.height * scale);
+      const context = canvas.getContext("2d"); if (!context) throw Error("This photo could not be prepared.");
+      context.fillStyle = "#fff"; context.fillRect(0, 0, canvas.width, canvas.height); context.drawImage(original, 0, 0, canvas.width, canvas.height);
+      image = canvas.toDataURL("image/jpeg", 0.78);
+      if (image.length > 4400000) throw Error("Crop this photo before sending it. Your original remains in your inbox.");
+    }
+    if (epoch !== cloudEpoch()) return "blocked" as const;
+    const text = item.text || (item.purpose === "meal" ? "Estimate the food I ate in this photo." : item.purpose === "menu" ? "Help me choose from this menu. I have not eaten it." : "Help me understand this saved capture. Ask what it is for if unclear; do not assume it is food I ate.");
+    const prompt = item.purpose === "receipt" ? receiptPrompt(text) : text;
+    navigate("Chat");
+    return sendAI(prompt, image, undefined, item.purpose === "meal" ? "meal" : undefined, item.capturePurpose ?? (item.purpose === "menu" ? "menu" : undefined), item.id);
+  }
+  async function askDecision(text: string, purpose: CapturePurpose) {
+    try {
+      const item = { ...newCapture({ text, purpose: purpose === "menu" ? "menu" : "general" }), capturePurpose: purpose };
+      await saveCaptureInbox(appendCapture(stateForSync.current.captureInbox ?? [], item));
+      navigate("Chat");
+      const result = await sendSavedCapture(item);
+      if (result === "complete") await saveCaptureInbox((stateForSync.current.captureInbox ?? []).filter(capture => capture.id !== item.id));
+      else notify("Your request is saved in Send to Spot. Send it when your account and connection are ready.");
+    } catch (error) { notify(error instanceof Error ? error.message : "Your request could not be saved. Please try again."); }
+  }
+  function startDecisionCapture(text: string, purpose: CapturePurpose) {
+    setReceiptCapture(false); setCapturePurpose(purpose); setDecisionCapturePrompt(text); setCaptureContext(""); setUpload(null); openDialog("capture");
+  }
+  function repeatSavedMeal(mealId: string) {
+    try {
+      closeMealEditor();
+      setEditMeal(repeatMeal(stateForSync.current, mealId).meals.at(-1)!);
+    } catch (error) { notify(error instanceof Error ? error.message : "This meal could not be repeated."); }
+  }
+  function saveHouseholdTransfer(transfer: HouseholdTransfer) {
+    setState(current => ({ ...current, recipeBatches: (current.recipeBatches ?? []).map(batch => batch.id === transfer.sourceBatchId ? addHouseholdTransfer(batch, transfer.householdBatchId, transfer.portions) : batch) }));
+  }
+  async function logHouseholdMeal(proposal: HouseholdMealProposal) {
+    const before = stateForSync.current, epoch = cloudEpoch();
+    if (before.meals.some(meal => meal.householdReservationId === proposal.householdReservationId)) return true;
+    const meal = mealSchema.parse({ id: proposal.householdReservationId, title: proposal.title, category: "Dinner", day: today(), time: clockTime(), source: "Shared household meal", confidence: "estimated", note: proposal.portions + " portions from the household batch. Nutrition uses the shared preparation snapshot.", ...proposal.nutrition, householdReservationId: proposal.householdReservationId, householdBatchId: proposal.householdBatchId });
+    const next = trackMealTransition(before, { ...before, meals: [...before.meals, meal] }, meal.id, "web");
+    await persistBrowserRecords(next);
+    if (epoch !== cloudEpoch()) return false;
+    if (stateForSync.current !== before) { await persistBrowserRecords(stateForSync.current); throw Error("Your records changed during this review. Review the portion again."); }
+    setState(next); notify("Your portion is logged privately."); return true;
+  }
+  async function removeHouseholdMeal() {
+    const before = stateForSync.current, epoch = cloudEpoch();
+    if (!editMeal?.householdReservationId) return;
+    const reservation = editMeal.householdReservationId;
+    const next = deleteMealWithPantry(before, editMeal.id);
+    await persistBrowserRecords(next);
+    if (epoch !== cloudEpoch() || stateForSync.current !== before) { await persistBrowserRecords(stateForSync.current); throw Error("Your records changed. Review the meal again."); }
+    setState(next); closeMealEditor();
+    try { await releaseHouseholdPortion(reservation); notify("Meal removed and portions returned to the household."); }
+    catch { notify("Meal removed privately. Open Household meals to return its reserved portion when connected."); }
+  }
   function voice() {
     openDialog('voice');
   }
@@ -746,7 +853,7 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
             id="main"
             className="main-content chat-main"
           >
-            {page !== 'Chat' && firstLog && !tracked && <FirstLog focus={firstLog} onMeal={() => manualMeal(today())} onMovement={() => { navigate('Workouts'); setFirstMovement(true); }} onLater={dismissFirstLog} />}
+            {page !== 'Chat' && firstLog && !tracked && <FirstLog focus={firstLog} onMeal={focusChatCapture} onMovement={() => { navigate('Workouts'); setFirstMovement(true); }} onLater={dismissFirstLog} />}
 
             {page === "Nutrition" && (
               <NutritionPage
@@ -779,7 +886,11 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
             {page === "Chat" && (
               <ChatProvider
                 value={{
-                  firstTrackingStep: firstLog && !tracked ? <FirstLog focus={firstLog} onMeal={() => manualMeal(today())} onMovement={() => { navigate('Workouts'); setFirstMovement(true); }} onLater={dismissFirstLog} /> : undefined,
+                  dailyExperience: tracked ? <DailyExperience state={state} onChange={setState} onRepeatMeal={repeatSavedMeal} onResumeWorkout={() => navigate("Workouts")} onDecide={() => openDialog("decisions")} onReview={() => navigate("You")} onCapture={focusChatCapture} /> : undefined,
+                  captureInboxEntry: <CaptureInbox key={recordRevision} items={state.captureInbox ?? []} scopeKey={String(recordRevision)} onChange={saveCaptureInbox} onSend={sendSavedCapture} disabled={processing} />,
+                  onDecide: () => openDialog("decisions"),
+                  onCoaching: () => openDialog("coaching"),
+                  firstTrackingStep: firstLog && !tracked ? <FirstLog focus={firstLog} onMeal={focusChatCapture} onMovement={() => { navigate('Workouts'); setFirstMovement(true); }} onLater={dismissFirstLog} /> : undefined,
                   replayIntro: replaySpotIntro,
                   onReplayIntro: (replay) =>
                     replay ? onReplayOnboarding() : setReplaySpotIntro(false),
@@ -883,18 +994,20 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
                     }
                   },
                   onAddMeal: (messageId) =>
-                    setState((s) => addProposedMeal(s, messageId)),
+                    setState((s) => trackMealTransition(s, addProposedMeal(s, messageId), messageId, "web")),
                   onComposerChange: setComposer,
                   onSend: submitText,
                   onCamera: () => {
                     if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') { openChatAccount(); return; }
                     setReceiptCapture(false);
+                    setCapturePurpose(undefined);
                     mealCamera.current = true;
                     cameraRef.current?.click();
                   },
                   onAttach: () => {
                     if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') { openChatAccount(); return; }
                     setReceiptCapture(false);
+                    setCapturePurpose(undefined);
                     fileRef.current?.click();
                   },
                   onVoice: () => {
@@ -919,6 +1032,8 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
 
             {page === "Kitchen" && (
               <KitchenPage
+                onDecide={() => openDialog("decisions")}
+                onHousehold={() => openDialog("household")}
                 state={state}
                 onNavigate={navigate}
                 onScan={openScanner}
@@ -956,6 +1071,9 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
             {(page === "You" || page === "Review") && (
               <YouPage
                 key={recordRevision}
+                onLifeContext={() => openDialog("lifeContext")}
+                onCoaching={() => openDialog("coaching")}
+                onRepeatMeal={repeatSavedMeal}
                 onSaveBodyWeight={(entry) =>
                   setState((s) => ({
                     ...s,
@@ -1046,6 +1164,8 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
               closeDialog('capture');
               setUpload(null);
               setReceiptCapture(false);
+              setCapturePurpose(undefined);
+              setDecisionCapturePrompt("");
             }}
           >
             <div className="capture-modal">
@@ -1072,7 +1192,9 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
                     {aiStatus?.available
                       ? receiptCapture
                         ? "Check that the store, items, and prices are readable. We’ll identify your groceries and research their nutrition, keeping purchases separate from meals you ate."
-                        : mealPhoto
+                        : capturePurpose === "menu"
+                          ? "Spot will help you compare choices from this menu. Choosing food does not log a meal."
+                          : mealPhoto
                           ? "Spot will estimate the foods and portions it can see. You review the estimate before anything is added to your day."
                           : "Send a meal photo, grocery receipt, or order screenshot. Rep & Plate will read it and look for useful nutrition sources."
                       : receiptCapture ? 'Save the photo for later, or use the receipt access option above. Saving a photo does not extract groceries.' : "AI is unavailable. You can still save this image for review."}
@@ -1080,7 +1202,7 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
                       <label className="fuel-capture-context">
                         Anything to add? (optional)
                         <textarea
-                          maxLength={2000}
+                          maxLength={4000}
                           value={captureContext}
                           onChange={(e) => setCaptureContext(e.target.value)}
                           placeholder={receiptCapture ? 'e.g. Two packs of chicken, one is already used' : mealPhoto ? 'e.g. Cooked in olive oil, I ate about half the rice' : 'e.g. My grocery receipt, or what I had for lunch'}
@@ -1095,7 +1217,7 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
                           const image = upload.image;
                           const text = receiptCapture
                             ? receiptPrompt(captureContext)
-                            : captureContext.trim() ||
+                            : decisionCapturePrompt ? decisionCapturePrompt + (captureContext.trim() ? " Additional context: " + captureContext.trim() : "") : captureContext.trim() ||
                               (mealPhoto
                                 ? "Estimate this meal from my photo."
                                 : "Please help me understand this photo or receipt. If these are groceries I purchased, research their nutrition and save the grocery list separately from meals I ate.");
@@ -1104,10 +1226,12 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
                           setUpload(null);
                           setReceiptCapture(false);
                           navigate("Chat");
-                          void sendAI(text, image, undefined, intent);
+                          void sendAI(text, image, undefined, intent, capturePurpose);
+                          setCapturePurpose(undefined);
+                          setDecisionCapturePrompt("");
                         }}
                       >
-                        {receiptCapture ? 'Read my receipt' : mealPhoto ? 'Estimate this meal' : 'Send to Rep & Plate'} <ArrowRight size={17} />
+                        {receiptCapture ? 'Read my receipt' : capturePurpose === 'menu' ? 'Help me choose' : mealPhoto ? 'Estimate this meal' : 'Send to Rep & Plate'} <ArrowRight size={17} />
                       </button>
                     </>
                   )}
@@ -1169,6 +1293,10 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
           </Modal>
         )}
         <Suspense fallback={null}>
+          {dialogs.coaching && <CoachingDialog key={recordRevision} records={state} onClose={() => closeDialog("coaching")} />}
+          {dialogs.decisions && <DecisionsDialog state={state} onClose={() => closeDialog("decisions")} onAsk={(text, purpose) => { void askDecision(text, purpose); }} onCapture={startDecisionCapture} />}
+          {dialogs.lifeContext && <Modal title="Life right now" onClose={() => closeDialog("lifeContext")}><LifeContextPanel state={state} onChange={setState} /></Modal>}
+          {dialogs.household && <HouseholdDialog candidates={(state.recipeBatches ?? []).filter(batch => remainingRecipePortions(batch) > 0).map(batch => ({ id: batch.id, title: batch.name, remainingPortions: remainingRecipePortions(batch), perPortion: { calories: batch.nutrition.calories / batch.totalPortions, protein: batch.nutrition.protein / batch.totalPortions, carbs: batch.nutrition.carbs / batch.totalPortions, fat: batch.nutrition.fat / batch.totalPortions } }))} loggedReservationIds={state.meals.flatMap(meal => meal.householdReservationId ? [meal.householdReservationId] : [])} onClose={() => closeDialog("household")} onPublished={saveHouseholdTransfer} onLogMeal={logHouseholdMeal} />}
           {connectionsStarted && (
             <ConnectionsHub
               state={state}
@@ -1498,10 +1626,12 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
             newManual={meals.newManual}
             repeatDraft={meals.repeatDraft}
             onRepeat={meals.repeat}
+            isUsual={dailyPreferences(state).usualMealIds.includes(editMeal.id)}
+            onToggleUsual={state.meals.some(meal => meal.id === editMeal.id) && !meals.isProposal ? () => { try { setState(current => toggleUsualMeal(current, editMeal.id)); } catch (error) { notify(error instanceof Error ? error.message : "Could not save this usual."); } } : undefined}
             onPantryLinks={meals.pantryLinks}
             onClose={meals.close}
             onSave={meals.save}
-            onDelete={meals.remove}
+            onDelete={editMeal.householdReservationId ? () => { void removeHouseholdMeal().catch(error => notify(error instanceof Error ? error.message : "Could not remove this meal.")); } : meals.remove}
           />
         )}
         {dialogs.headerAccount && (

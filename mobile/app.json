@@ -28,7 +28,30 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-sharing",
+      [
+        "expo-sharing",
+        {
+          "ios": {
+            "enabled": true,
+            "appGroupId": "group.com.dannyshealth.app",
+            "activationRule": {
+              "supportsText": true,
+              "supportsWebUrlWithMaxCount": 1,
+              "supportsImageWithMaxCount": 8
+            }
+          },
+          "android": {
+            "enabled": true,
+            "singleShareMimeTypes": [
+              "text/plain",
+              "image/*"
+            ],
+            "multipleShareMimeTypes": [
+              "image/*"
+            ]
+          }
+        }
+      ],
       [
         "expo-audio",
         {

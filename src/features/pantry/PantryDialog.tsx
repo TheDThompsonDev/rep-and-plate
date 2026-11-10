@@ -1,3 +1,4 @@
+import PantryPriorities from "./PantryPriorities";
 import { useState } from "react";
 import {
   ArrowRight,
@@ -154,6 +155,8 @@ export function PantryDialog({
 }) {
   const [details, setDetails] = useState(false);  const [addingIngredient,setAddingIngredient]=useState(false);
   const [reviewItem,setReviewItem]=useState<{receiptId:string;itemId:string}|undefined>();
+  const [reviewFocus, setReviewFocus] = useState('');
+  const [showOtherReviews, setShowOtherReviews] = useState(false);
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [title, setTitle] = useState("");
   const [existingMealId, setExistingMealId] = useState("");
@@ -335,7 +338,7 @@ export function PantryDialog({
             <p>Scan a product or share a receipt in Chat.</p>
           </div>
         )}
-        {reviewQueue.length>0&&<section className="pantry-date-reminders" aria-label="Pantry review queue"><h3>{reviewQueue.length} food {reviewQueue.length===1?'item needs':'items need'} a check</h3><p>Start with product and nutrition details, then quantities. Nonfood receipt lines do not block your pantry.</p><ol>{reviewQueue.slice(0,3).map(lot=><li key={lot.id}><strong>{lot.item.name}</strong><span>{lot.item.needsReview||!lot.item.nutrition?'Confirm product and nutrition':'Confirm servings purchased'}</span><button className="button secondary" onClick={()=>{setReviewItem({receiptId:lot.receiptId,itemId:lot.item.id});setDetails(true);}}>Review {lot.item.name}</button></li>)}</ol>{reviewQueue.length>3&&<p>{reviewQueue.length-3} more after these.</p>}<p>Total servings = packages purchased × servings per package. For example, 2 tubs × 5 servings = 10 servings. Use the package label; leave an unknown amount blank.</p></section>}
+        {reviewQueue.length > 0 && <section aria-label="Pantry review queue"><PantryPriorities lots={reviewQueue} focus={reviewFocus} onFocusChange={setReviewFocus} showOther={showOtherReviews} onShowOtherChange={setShowOtherReviews} onReview={lot => { setReviewItem({receiptId:lot.receiptId,itemId:lot.item.id}); setDetails(true); }} /></section>}
         {dateReminders.length > 0 && (
           <section
             className="pantry-date-reminders"

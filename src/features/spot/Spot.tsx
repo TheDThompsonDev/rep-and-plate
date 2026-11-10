@@ -1,3 +1,4 @@
+import { weeklyActionInsights } from "../decisions/weekly-actions";
 import {
   createContext,
   useContext,
@@ -456,9 +457,10 @@ export function SpotWorkoutCheck({
     </SpotCheck>
   );
 }
-export function SpotWeeklyReview({ state }: { state: AppState }) {
+export function SpotWeeklyReview({ state, onRepeatMeal }: { state: AppState; onRepeatMeal?: (mealId: string) => void }) {
   const [side, setSide] = useState<SpotSide>("plate");
   const week = spotWeek(state);
+  const observation = weeklyActionInsights(state, week.end)[0];
   return (
     <section className="spot-weekly" aria-label="Weekly Spot Check">
       <div className="spot-weekly-heading">
@@ -482,6 +484,7 @@ export function SpotWeeklyReview({ state }: { state: AppState }) {
           Rep · Training
         </button>
       </div>
+      {side === "plate" && observation && <div className="daily-next-action"><h4>{observation.title}</h4><p>{observation.description}</p><details><summary>Why Spot noticed this</summary><p>{observation.detail}</p></details>{onRepeatMeal && <button className="button primary" onClick={() => onRepeatMeal(observation.action.mealId)}>{observation.action.label}</button>}</div>}
       <div className="spot-week-numbers">
         {side === "plate" ? (
           <>

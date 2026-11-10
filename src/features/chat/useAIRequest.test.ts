@@ -244,6 +244,28 @@ describe('useAIRequest send lifecycle', () => {
     expect(state().messages).toHaveLength(2);
   });
 
+  it('keeps offline captures and retries the same request after reconnect without duplication', async () => {
+    statusReply = () => ({ status: 200, json: { available: false, jev: false } });
+    const { api, state } = await mount();
+    await flush();
+    const captureId = 'a676fa48-ff37-4c15-a2d5-ec79e810701b';
+    await act(async () => { expect(await api().sendAI('Help me choose from this menu', undefined, undefined, undefined, 'menu', captureId)).toBe('saved'); });
+    expect(state().messages).toHaveLength(1);
+    expect(state().messages[0]).toMatchObject({ id: captureId, capturePurpose: 'menu', aiStatus: 'error' });
+    expect(state().meals).toHaveLength(0);
+    statusReply = () => ({ status: 200, json: { available: true, jev: false } });
+    act(() => api().reconnect());
+    await flush();
+    act(() => { void api().sendAI('Help me choose from this menu', undefined, undefined, undefined, 'menu', captureId); });
+    await flush();
+    expect(chats).toHaveLength(1);
+    expect(chats[0].request).toMatchObject({ requestId: captureId, capturePurpose: 'menu' });
+    await act(async () => { chats[0].result(conversation(captureId)); await flush(); });
+    expect(state().messages.filter(m => m.id === captureId)).toHaveLength(1);
+    await act(async () => { expect(await api().sendAI('Help me choose from this menu', undefined, undefined, undefined, 'menu', captureId)).toBe('complete'); });
+    expect(chats).toHaveLength(1);
+  });
+
   it('routes sign-in and unavailable states before any request is made', async () => {
     statusReply = () => ({ status: 401 });
     const gated = await mount();
@@ -263,6 +285,8 @@ describe('useAIRequest send lifecycle', () => {
       'Connected chat isn’t available right now. Your capture is saved; reconnect and try again.',
     );
     expect(chats).toHaveLength(0);
+    expect(offline.state().messages).toHaveLength(1);
+    expect(offline.state().messages[0]).toMatchObject({ text: "Hello", aiStatus: "error" });
   });
 
   it('shows local processing briefly and aborts an in-flight request on unmount', async () => {

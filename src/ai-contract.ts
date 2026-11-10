@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { lifeAIContextSchema } from "./features/life-context/contracts";
 import { activityProposalSchema } from './activity-contract.ts';
 import { workoutCaptureSchema } from './features/spot/contracts.ts';
 import { receiptPurchaseSchema, receiptLinePriceSchema } from './features/shopping/contracts.ts';
@@ -99,7 +100,10 @@ export type AIResult = z.infer<typeof aiResultSchema>;
 export type AIStatus = { available: boolean; jev: boolean; model?: string };
 /** One text limit for every composer (web, voice, native) and the server. */
 export const CHAT_INPUT_LIMIT = 4000;
+export const capturePurposeSchema = z.enum(["decide", "menu", "rough-meal", "clarify-meal"]);
+export type CapturePurpose = z.infer<typeof capturePurposeSchema>;
 export const aiRequestSchema = z.object({
+  capturePurpose: capturePurposeSchema.optional(),
   captureDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   /** Set when the photo came from the chat meal camera: the user is logging food they ate. */
   captureIntent: z.literal("meal").optional(),
@@ -120,6 +124,7 @@ export const aiRequestSchema = z.object({
     )
     .max(20),
   context: z.object({
+    lifeContext: lifeAIContextSchema.optional(),
     fitnessGoal: fitnessGoalSchema.optional(),
     /** Training-week answers only (days, equipment, experience); never loads or derived sessions. */
     trainingProgram: trainingAnswersSchema.optional(),

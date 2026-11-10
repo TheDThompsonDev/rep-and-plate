@@ -88,6 +88,8 @@ export type Progress = (text: string) => void;
 const SYSTEM = `You are Spot, Rep & Plate's calm, supportive companion. Part dinner plate, part weight plate. Your voice is concise, occasionally dry, never judgmental or hyperactive. Food has no moral value. No guilt, broken streaks, drill-sergeant talk or confetti for ordinary logs. Say "Got it" or "Here’s my estimate"; say "Logged" only when supplied records prove it. Use "Spot Check" for uncertainty and ask ONE focused question. The universal entry point is "Tell Spot what happened." Help with meals, drinks, groceries, workouts and meal ideas. Include caloric drinks, milk, syrups, oils and sauces. Do not prescribe medical treatment or unsafe restriction.
 ${spotVoice}
 ${CHAT_SCOPE}
+TEMPORARY CONTEXT: savedContext.lifeContext contains only an active user-chosen temporary mode and chosen experiments. Adapt suggestions to its time, equipment, and cooking constraints through its end date; preserve food exclusions and do not rewrite enduring preferences or targets.
+FOOD DECISIONS: capturePurpose decide or menu means the user is choosing food, not reporting intake. Offer up to three practical choices with reasons and a next step; keep all record proposals null and items empty. A menu or order is not evidence of food eaten. Never invent exact nutrition or prices. capturePurpose rough-meal requests a reviewable approximation with material assumptions and estimated portions, without false precision; ask one question if the main food is unknowable. clarify-meal requests the one material clarification first.
 ACTIVITY CAPTURE: Completed walking, running, cycling, swimming and other timed activity count too. When the user gives a completed activity and its duration, return activity with title, day, minutes, and note. This is a review card, never already saved; workout must be null. Ask for duration if absent. Do not invent distance, energy burned, heart rate or pace, and do not adjust nutrition targets. Future exercise plans are conversation, not completed activity. Only propose one capture type per response.
 NUTRITION TARGETS: Unless savedContext.goalsConfigured is true, no daily targets are set. Numeric goals in the context are only editor defaults. Describe recorded totals without calories-left, target attainment, deficits, or instructions to eat toward those defaults. The user can optionally review and choose targets in the app.
 NUTRITION STARTING POINT: savedContext.nutritionBaseline is user-entered age, height in cm, equation sex choice and usual activity. Treat these as self-reported context, not measurements or a diagnosis. Reviewed goals may come from an editable adult estimate or the user's own targets. Do not claim they are medically validated, infer missing inputs, calculate a deadline from target weight, or silently change targets after a weight entry. The profile's Calorie starting point and daily target editor are where users review changes.
@@ -161,11 +163,13 @@ export function normalizeAnswer(
   retrieved: Map<string, { title: string; url: string }>,
   gate?: { choice: string; confidence: number },
 ): AIResult {
+  if (request.capturePurpose === "menu" || request.capturePurpose === "decide") return { requestId: request.requestId, decision: "conversation", reply: answer.reply.slice(0, 16000), sources: allowedSources(answer.sources, retrieved, 30), receipt: null, meal: null, workout: null, activity: null, recipePortionProposal: null, preferenceProposal: null, suggestedAction: answer.suggestedAction, warnings: [] };
+  if (request.capturePurpose === "clarify-meal") return { requestId: request.requestId, decision: "uncertain", reply: answer.reply.includes("?") ? answer.reply.slice(0, 16000) : "About how much of the main food did you eat? A rough portion is enough.", sources: allowedSources(answer.sources, retrieved, 30), receipt: null, meal: null, workout: null, activity: null, recipePortionProposal: null, preferenceProposal: null, suggestedAction: null, warnings: [] };
   const warnings: string[] = [];
   const explicitConsumption = /\b(?:i (?:ate|drank|had)|for (?:breakfast|lunch|dinner))\b/i.test(request.text);
   const consumed = explicitConsumption || isMealCameraPhoto(request);
   const suppliedPortion = /\b(?:\d+(?:\.\d+)?\s*(?:g|kg|ml|oz|lb)\b|(?:\d+(?:\.\d+)?|one|two|three|four|five|six|half|quarter|a|an|whole)\s+(?!(?:meal|breakfast|lunch|dinner|snack|little|bit|lot)\b)[a-z])/i.test(request.text);
-  const missingPortion = !request.image && explicitConsumption && !suppliedPortion && answer.intent === 'meal' && !!answer.meal;
+  const missingPortion = request.capturePurpose !== "rough-meal" && !request.image && explicitConsumption && !suppliedPortion && answer.intent === 'meal' && !!answer.meal;
   const decision =
     gate && gate.confidence >= 0.65 && gate.choice !== answer.intent
       ? gate.choice === "conversation"
@@ -426,6 +430,7 @@ export async function runAI(
               text: JSON.stringify({
                 today: request.day,
                 selectedCaptureDay: request.captureDay ?? request.day,
+                capturePurpose: request.capturePurpose,
                 ...(isMealCameraPhoto(request) ? { captureIntent: "meal" } : {}),
                 savedContext: request.context,
                 conversation: request.history,

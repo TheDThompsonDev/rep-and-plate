@@ -8,8 +8,13 @@ The app provides one authenticated API, a command-line client, and an MCP stdio 
 - Read a limited health context: nutrition summaries, pantry, preferences, and workout history, according to granted scopes.
 - Propose a **meal log** for a meal the user reports eating, including estimated nutrition for that portion.
 - Retrieve a proposal's status after the user reviews it.
+- Read the persistent coaching day/week and propose, explicitly approve or undo
+  coaching changes using separately granted coaching permissions.
+- Bring activities and daily nutrition totals from other apps into one record
+  with `import_records`, and start daily or weekly check-ins from MCP prompts. See the
+  [daily coaching guide](COACHING.md) for the remote MCP endpoint and review flow.
 
-A proposal stays pending until you select **Log this meal** or dismiss it in Connections. Only log food you actually ate. Accepting a proposal saves the meal on the device where you review it; account synchronization is separate. Acceptance does not deduct pantry ingredients. Future meal planning, direct agent writes, workout logging, automatic pantry updates, remote MCP hosting, and event subscriptions are not included.
+A meal proposal stays pending until you select **Log this meal** or dismiss it in Connections. Only log food you actually ate. Accepting a meal proposal saves the meal on the reviewing device; synchronization is separate and pantry stock is unchanged. Coaching proposals follow their own explicit review flow and persist in the shared server record. Automatic pantry updates, external provider synchronization and background event subscriptions are not included.
 
 ## Create a connection
 
@@ -48,7 +53,7 @@ The meal payload requires `title`, calendar `day` (`YYYY-MM-DD`), 24-hour `time`
 
 ## MCP agents
 
-The adapter uses the [official MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) over stdio. It exposes `capabilities`, `read_context`, `propose_meal`, and `get_action` according to the connection's permitted operations. It emits only protocol messages on stdout. Runtime errors go to stderr; tool errors include `isError: true` and a structured error body.
+The adapter uses the [official MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) over stdio. It exposes `capabilities`, `read_context`, `propose_meal`, `get_action`, and the coaching tools (`get_coaching_day`, `propose_coaching_change`, `resolve_coaching_change`, `undo_coaching_change`, `import_records`) according to the connection's permitted operations. It emits only protocol messages on stdout. Runtime errors go to stderr; tool errors include `isError: true` and a structured error body.
 
 Configure your MCP client to start Node with **absolute paths** to this checkout's installed `tsx` executable and adapter. For example, on Windows:
 
@@ -73,6 +78,31 @@ Configure your MCP client to start Node with **absolute paths** to this checkout
 Replace both paths with your checkout location; macOS/Linux paths use `/absolute/path/to/fitness/...`. If Node is not on the MCP client's PATH, use its absolute executable path as `command`. The enclosing configuration and secret injection mechanism vary by MCP client; prefer its secret store to a plaintext token. The `env` example shows the required names, not a recommendation to commit credentials. Restart the MCP adapter after changing credentials or permissions. Revocation is checked by the server on every request.
 
 For a manual smoke check, `npm --silent run agents:mcp` starts the adapter, but it waits for MCP messages rather than interactive commands. Use your MCP client's tool listing to verify the connection.
+
+### Remote MCP (no checkout required)
+
+The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_ORIGIN/api/agents/mcp`. It authenticates each request with the connection token as a Bearer credential, so it works in hosts that can send a fixed `Authorization` header. The deployment must include this route; an older deployment answers `404 NOT_FOUND`.
+
+| Host | How to connect | Status |
+| --- | --- | --- |
+| Codex CLI/app | `codex mcp add rep-and-plate --url https://YOUR_APP_ORIGIN/api/agents/mcp --bearer-token-env-var REP_PLATE_TOKEN` | Flags checked against the installed CLI's help; not exercised against a hosted account. |
+| Claude Code | Project `.mcp.json` entry below; the token stays in the environment. | Configuration format only; not exercised against a hosted account. |
+| Claude (web/desktop/mobile) | **Add custom connector**, using the address above and the request-headers field for `Authorization: Bearer …` where your account offers it. | Unverified. Some accounts only offer OAuth, which this server does not implement. |
+| ChatGPT | Not supported yet. | Custom connectors accept OAuth or no authentication, not a fixed bearer header. |
+
+```json
+{
+  "mcpServers": {
+    "rep-and-plate": {
+      "type": "http",
+      "url": "https://YOUR_APP_ORIGIN/api/agents/mcp",
+      "headers": { "Authorization": "Bearer ${REP_PLATE_TOKEN}" }
+    }
+  }
+}
+```
+
+Reaching ChatGPT and OAuth-only Claude accounts needs an OAuth 2.1 authorization flow in front of the same scoped connections. That is not implemented.
 
 ## Direct HTTP integrations
 

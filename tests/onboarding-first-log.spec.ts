@@ -44,6 +44,9 @@ test("first tracking prompt survives reload and completes only after a real meal
   await page
     .getByRole("button", { name: "Log my first meal", exact: true })
     .click();
+  await expect(page.getByRole("textbox", { name: "Message Rep & Plate", exact: true })).toBeFocused();
+  await page.getByRole("button", { name: "Nutrition", exact: true }).click();
+  await page.getByRole("button", { name: "Enter meal manually", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByLabel("Meal name", { exact: true })).toHaveValue("");
   expect((await readBrowserRecords(page)).meals).toHaveLength(0);
@@ -75,6 +78,21 @@ test("first tracking prompt survives reload and completes only after a real meal
     carbs: 50,
     fat: 15,
   });
+});
+
+test("quick start reaches capture without collecting targets", async ({ page }) => {
+  await mockCloud(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Start with one meal", exact: true }).click();
+  await page.getByRole("button", { name: "Try on this device first" }).click();
+  await page.getByLabel("Your name", { exact: true }).fill("Alex");
+  await page.getByRole("button", { name: "Log first, personalize later", exact: true }).click();
+  await page.getByRole("button", { name: "Let’s do this", exact: true }).click();
+  await expect(page.getByRole("textbox", { name: "Message Rep & Plate" })).toBeVisible();
+  const state = await readBrowserRecords(page);
+  expect(state.profile.targetsConfigured).toBe(false);
+  expect(state.profile.fitnessGoal).toBeUndefined();
+  expect(state.meals).toHaveLength(0);
 });
 
 test("movement focus opens the real activity form and later is a durable choice", async ({

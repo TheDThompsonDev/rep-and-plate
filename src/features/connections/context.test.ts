@@ -31,7 +31,9 @@ describe('agent context and reviewed actions', () => {
     const context = buildAgentContext(state, '2026-09-29', 'America/Chicago');
     expect(context.nutrition.days.at(-1)).toEqual({ day: '2026-09-29', meals: 0, totals: { calories: 0, protein: 0, carbs: 0, fat: 0 } });
     expect(context.workouts).toEqual([]);
-    expect(JSON.stringify(context)).not.toContain('PRIVATE');
+    const { activities, ...privateFieldsExcluded } = context;
+    expect(JSON.stringify(privateFieldsExcluded)).not.toContain('PRIVATE');
+    expect(activities).toEqual([{ id: 'walk', title: 'PRIVATE WALK', day: '2026-09-29', minutes: 20, note: 'PRIVATE NOTE' }]);
   });
   it('saves one reviewed meal and a durable receipt that survives undo', () => {
     const saved = resolveAgentMeal(initialState(), action, 'accepted', now);
@@ -73,5 +75,29 @@ describe('agent context and reviewed actions', () => {
     const context=buildAgentContext(state,'2026-09-29','America/Chicago');
     expect(context.workouts).toHaveLength(1);
     expect(context.workouts[0].exercises[0].sets).toEqual([{reps:8,weight:50}]);
+  });
+  it('bounds activity context to recorded fields in the last 28 days and preserves legacy optional context', () => {
+    const state = initialState();
+    state.activities = [
+      { id: 'old', title: 'Old walk', day: '2026-10-11', minutes: 10, note: '' },
+      { id: 'first', title: 'Recorded walk', day: '2026-10-12', minutes: 15, note: 'Self reported' },
+      { id: 'today', title: 'Recorded run', day: '2026-11-08', minutes: 25, note: 'No distance recorded' },
+      { id: 'future', title: 'Future', day: '2026-11-09', minutes: 30, note: '' },
+    ];
+    const context = buildAgentContext(state, '2026-11-08', 'America/Chicago');
+    expect(context.activities?.map(activity => activity.id)).toEqual(['today', 'first']);
+    expect(Object.keys(context.activities![0]).sort()).toEqual(['day', 'id', 'minutes', 'note', 'title']);
+    expect(JSON.stringify(context.activities)).not.toContain('distanceMiles');
+    const legacy = { ...context }; delete legacy.activities;
+    expect(agentContextSchema.safeParse(legacy).success).toBe(true);
+    expect(agentContextSchema.safeParse({ ...context, activities: [{ ...context.activities![0], day: '2026-10-11' }] }).success).toBe(false);
+    expect(agentContextSchema.safeParse({ ...context, activities: [{ ...context.activities![0], day: '2026-11-09' }] }).success).toBe(false);
+  });
+  it('marks bounded activity projection as truncated without inventing unrecorded measurements', () => {
+    const state = initialState();
+    state.activities = Array.from({ length: 201 }, (_, index) => ({ id: `activity-${index}`, title: 'Walking', day: '2026-11-08', minutes: 10, note: '' }));
+    const context = buildAgentContext(state, '2026-11-08', 'America/Chicago');
+    expect(context.activities).toHaveLength(200);
+    expect(context.truncated).toContain('activities');
   });
 });

@@ -156,7 +156,7 @@ describe("HealthProvider", () => {
     const reply = deferred<unknown>();
     device.chat.mockReturnValue(reply.promise);
 
-    let first: Promise<void>;
+    let first: ReturnType<ReturnType<typeof store>["send"]>;
     act(() => { first = store().send("Oats and milk for breakfast"); });
     await settle();
     expect(store().busy).toBe(true);

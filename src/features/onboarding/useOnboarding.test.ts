@@ -143,6 +143,21 @@ describe('useOnboarding (guest device)', () => {
     expect(device.record()).toMatchObject({ firstLogPending: false });
   });
 
+  it('takes the quick-start path without collecting goals or changing targets', async () => {
+    const device = fakeAdapter();
+    const { flow } = await loaded(device.adapter);
+    act(() => flow().tryLocal());
+    act(() => flow().patchDraft({ name: 'Alex' }));
+    await act(() => flow().prepare('Alex', 'ready'));
+    expect(flow().step).toBe('ready');
+    const saved = { state: null as AppState | null, recordAtSave: undefined };
+    await act(() => flow().finish(flow().draft.focus, 'Alex', saveLikeOnboarding(flow, saved)));
+    expect(saved.state!.profile.targetsConfigured).toBe(false);
+    expect(saved.state!.profile.fitnessGoal).toBeUndefined();
+    expect(flow().entered).toBe(true);
+    expect(flow().firstLog).toBe(defaultFocus);
+  });
+
   it('completes with goals and targets both skipped, saving only the name', async () => {
     const device = fakeAdapter();
     const { flow } = await loaded(device.adapter);

@@ -49,7 +49,12 @@ export async function pickPhoto(camera: boolean) {
     );
   return `data:image/jpeg;base64,${photo.base64}`;
 }
-export function Capture({ receipt = false }: { receipt?: boolean }) {
+export async function photoFromUri(uri: string) {
+  const photo = await manipulateAsync(uri, [{ resize: { width: 1600 } }], { compress: 0.78, format: SaveFormat.JPEG, base64: true });
+  if (!photo.base64 || photo.base64.length > 4300000) throw Error("This image is too large. Crop it and share it again.");
+  return `data:image/jpeg;base64,${photo.base64}`;
+}
+export function Capture({ receipt = false, prompt, purpose, onDone }: { receipt?: boolean; prompt?: string; purpose?: import("../../src/ai-contract").CapturePurpose; onDone?: () => void }) {
   const h = useHealth(),
     [image, setImage] = useState<string | null>(null),
     [note, setNote] = useState(""),
@@ -77,7 +82,7 @@ export function Capture({ receipt = false }: { receipt?: boolean }) {
   return (
     <Sheet
       title={receipt ? "Add a grocery receipt" : "Show me what happened"}
-      onClose={() => h.setTool(null)}
+      onClose={() => { onDone?.(); h.setTool(null); }}
     >
       <Text style={s.muted}>
         {receipt
@@ -122,12 +127,12 @@ export function Capture({ receipt = false }: { receipt?: boolean }) {
             disabled={busy || h.busy}
             onPress={() =>
               void h.send(
-                (receipt
+                (prompt || (receipt
                   ? "This is a grocery receipt for items I purchased. Identify the store and items, research nutrition and save groceries separately from meals eaten. Do not log these purchases as food eaten."
-                  : "Please help me understand this photo.") +
+                  : "Please help me understand this photo.")) +
                   (note.trim() ? ` Additional context: ${note.trim()}` : ""),
-                image,
-              )
+                image, undefined, purpose,
+              ).finally(() => onDone?.())
             }
           />
           <Text style={s.tiny}>

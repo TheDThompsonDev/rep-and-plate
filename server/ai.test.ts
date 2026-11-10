@@ -34,6 +34,16 @@ function modelFixture() {
 }
 afterEach(() => vi.restoreAllMocks());
 describe("AI grounding and boundaries", () => {
+  it.each(['menu','decide'] as const)('keeps %s requests read-only even when a provider emits groceries', capturePurpose => {
+    const result = normalizeAnswer(modelFixture(), {...requestFixture(),capturePurpose},new Map());
+    expect(result.decision).toBe('conversation');
+    expect(result.receipt).toBeNull(); expect(result.meal).toBeNull(); expect(result.workout).toBeNull();
+    expect(result.recipePortionProposal).toBeNull(); expect(result.preferenceProposal).toBeNull();
+  });
+  it('respects an explicit choice to clarify before making an estimate', () => {
+    const result = normalizeAnswer(modelFixture(), {...requestFixture(),capturePurpose:'clarify-meal'},new Map());
+    expect(result.decision).toBe('uncertain'); expect(result.receipt).toBeNull(); expect(result.meal).toBeNull(); expect(result.reply).toContain('?');
+  });
   it('keeps an uncertain follow-up footer neutral instead of questioning established meal intent',()=>{
     const answer={...modelFixture(),items:[],intent:'uncertain' as const,reply:'We can use a common serving for review, or keep a note. Which would you prefer?'};
     const result=normalizeAnswer(answer,{...requestFixture(),text:'I already ate it and cannot remember how much.',history:[{role:'user',text:'I ate peanut butter for breakfast.'},{role:'assistant',text:'How much peanut butter?'}]},new Map());

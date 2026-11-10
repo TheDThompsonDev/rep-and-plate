@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { dailyPreferencesSchema } from "./features/daily/contracts";
+import { lifeContextSchema } from "./features/life-context/contracts";
+import { captureInboxSchema } from "./features/capture-inbox/contracts";
 import { activityProposalSchema, activitySchema } from './activity-contract';
 import { agentResolutionSchema } from './features/connections/contracts';
 import { bodyWeightEntrySchema } from './features/progress/body-weight';
@@ -33,6 +36,8 @@ export const nutritionSchema = z.object({
 });
 export type Nutrition = z.infer<typeof nutritionSchema>;
 export const mealSchema = nutritionSchema.extend({
+  householdReservationId: z.string().uuid().optional(),
+  householdBatchId: z.string().uuid().optional(),
   example: z.boolean().optional(),
   recipeBatchId: z.string().optional(),
   recipePortions: z.number().positive().max(10000).optional(),
@@ -61,6 +66,7 @@ const reviewSchema = z.object({
 });
 export type ReviewItem = z.infer<typeof reviewSchema>;
 const messageSchema = z.object({
+  capturePurpose: z.enum(["decide", "menu", "rough-meal", "clarify-meal"]).optional(),
   captureIntent: z.enum(['receipt', 'meal']).optional(),
   captureReviewId: z.string().optional(),
   captureDay: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
@@ -107,6 +113,9 @@ export const exerciseSchema = z.object({
 });
 export type Exercise = z.infer<typeof exerciseSchema>;
 export const stateSchema = z.object({
+  dailyPreferences: dailyPreferencesSchema.unwrap().optional(),
+  lifeContext: lifeContextSchema.optional(),
+  captureInbox: captureInboxSchema.optional(),
   activities: z.array(activitySchema).optional(),
   agentResolutions: z.array(agentResolutionSchema).optional(),
   bodyWeights: z.array(bodyWeightEntrySchema).max(10000).optional(),
@@ -368,7 +377,7 @@ export function repeatMeal(state: AppState, mealId: string, day = today(), multi
   if (!meal || isExampleMeal(meal)) throw new Error('Choose a saved personal meal to repeat.');
   const date = new Date(`${day}T12:00:00`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !Number.isFinite(date.getTime()) || date.getDate() !== Number(day.slice(-2)) || day > today()) throw new Error('Choose a valid meal date that is not in the future.');
-  const {recipeBatchId: _batch,recipePortions: _portions,...copy} = scaleMealPortion(meal,multiplier);
+  const {recipeBatchId: _batch,recipePortions: _portions,householdReservationId: _reservation,householdBatchId: _household,...copy} = scaleMealPortion(meal,multiplier);
   return {...state,meals:[...state.meals,{...copy,id:id(),day,time:clockTime(),example:false,source:'Repeated saved meal',note:`${multiplier === 1 ? 'Same portions and nutrition' : `${multiplier} × the original portion and nutrition`} as ${meal.title}. Pantry and prepared portions were not changed.`,components:copy.components?.map(({lotId:_lot,...component})=>({...component,id:id()}))}]};
 }
 export function initialState(): AppState {

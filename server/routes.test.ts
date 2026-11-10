@@ -55,7 +55,7 @@ describe("ROUTES table", () => {
     ]);
     expect(ROUTES.filter((route) => route.scope === "local-only")).toEqual([]);
     for (const route of ROUTES.filter((r) => r.scope === "hosted-only")) expect(route.hostedOnly).toMatch(/hosted Rep & Plate service/);
-    expect(ROUTES.filter((route) => route.handler === "agents").map((route) => route.path)).toEqual(["/api/agents/v1", "/api/agents/manage"]);
+    expect(ROUTES.filter((route) => route.handler === "agents").map((route) => route.path)).toEqual(["/api/agents/v1", "/api/agents/mcp", "/api/agents/manage"]);
     for (const route of ROUTES.filter((r) => r.handler === "agents")) expect(route.path.startsWith(AGENT_ROUTE_PREFIX)).toBe(true);
     expect(ROUTES.filter((route) => route.public).map((route) => route.path)).toEqual(["/api/cloud/config"]);
     expect(hostedApiRoutes.map((route) => route.path)).toContain("/api/account/delete");

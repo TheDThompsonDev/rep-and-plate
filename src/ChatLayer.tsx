@@ -60,6 +60,10 @@ const scrollToBottom = (
 export default function ChatLayer() {
   const {
     firstTrackingStep,
+    dailyExperience,
+    captureInboxEntry,
+    onDecide,
+    onCoaching,
     replayIntro,
     onReplayIntro: setReplayIntro,
     onCorrectMeal,
@@ -248,13 +252,21 @@ export default function ChatLayer() {
         onNutrition={() => onSend(undefined, "How am I doing today?")}
         onProfile={onProfile}
       />
+      <div className="chat-experience-shortcuts">
+        {onCoaching && <button onClick={onCoaching}>Coaching plan</button>}
+        {dailyExperience && <button onClick={() => threadRef.current?.scrollTo({top:0,behavior:"smooth"})}>Today &amp; usuals</button>}
+        {onDecide && <button onClick={onDecide}>Food help</button>}
+        <button onClick={() => threadRef.current?.querySelector(".capture-inbox")?.scrollIntoView({block:"start",behavior:"smooth"})}>Saved captures</button>
+      </div>
       <div
         className="fuel-conversation"
         ref={threadRef}
         onScroll={onThreadScroll}
       >
         {firstTrackingStep}
-        <SpotWelcome
+        {dailyExperience}
+        {captureInboxEntry}
+        {(intro || comeback || !dailyExperience) && <SpotWelcome
           key={intro ? "intro" : "welcome"}
           intro={intro}
           comeback={comeback}
@@ -268,7 +280,7 @@ export default function ChatLayer() {
             setCatchup(true);
             inputRef.current?.focus();
           }}
-        />
+        />}
         <details className="chat-interaction-guide" ref={examplesRef}>
           <summary role="button">What can I say to Spot?</summary>
           <InteractionGuide tryLabel="Use my own words" onTry={() => {

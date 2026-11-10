@@ -1,3 +1,4 @@
+import { NativeExperience } from "./NativeExperience";
 import {
   SpotAvatar,
   SpotCheckHeading,
@@ -370,6 +371,7 @@ export function ChatScreen() {
         data={h.state.messages.filter((m) => m.id !== "welcome")}
         ListHeaderComponent={
           <>
+            <NativeExperience />
             <SpotWelcome
               key={intro ? "intro" : "welcome"}
               intro={intro}

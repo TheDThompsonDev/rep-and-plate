@@ -1,3 +1,4 @@
+import { weeklyActionInsights } from "../decisions/weekly-actions";
 import type { AppState } from "../../domain";
 import { today, personalMeals } from "../../domain";
 
@@ -149,6 +150,7 @@ export function nutritionInsights(state: AppState, end = today()) {
     )
     .join("\n");
   return [
+    ...weeklyActionInsights(state, end),
     {
       tone: "protein",
       title: `${meals.length} ${meals.length === 1 ? "meal" : "meals"} across ${days.size} logged ${days.size === 1 ? "day" : "days"}.`,

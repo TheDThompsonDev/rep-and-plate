@@ -61,6 +61,7 @@ import {
   type Workout,
 } from "./workouts";
 import "./workouts.css";
+import TrainingContinuityPanel from "./features/progress/TrainingContinuityPanel";
 
 function Photo({ name = "", hero = false }: { name?: string; hero?: boolean }) {
   const tile = hero ? 0 : workoutPhoto(name);
@@ -331,6 +332,7 @@ export default function WorkoutPage({
         </div>
       )}
       <div className="workout-scroll" ref={scroll}>
+        <TrainingContinuityPanel state={state} onChange={setState} />
         {!!state.activities?.length && (
           <details className="workout-technique">
             <summary>

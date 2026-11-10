@@ -1,5 +1,27 @@
 # Rep & Plate
 
+## Daily coaching
+
+**Chat → Coaching plan** connects agreed goals, running/strength sessions,
+reviewed adjustments, explicit outcomes, memories and weekly check-ins. Web,
+native and MCP use one server-owned coaching record. The stateless remote MCP
+endpoint is `/api/agents/mcp`, with optional interactive review controls in
+supporting hosts. See [coaching setup, behavior and verification](docs/COACHING.md).
+
+## Everyday experience
+
+Chat now brings forward one useful next step and familiar meals you can review
+and repeat. **Food help** supports meal choices, menu comparisons and reviewed
+rough estimates. **Saved captures** holds text, links and photos for later.
+**You → Life right now** adds temporary travel/busy-week context, small experiments
+and optional usage evidence. Workouts can reuse reviewed loads, shorten a session
+and substitute exercises while keeping performed sets intact.
+
+**Kitchen → Household meals** shares prepared portions with separate private food
+logs. It requires the included household Supabase migration; incoming OS shares
+require a rebuilt native app. Browser uploads, paste and drop work independently.
+See the [implementation, verification and rollout notes](docs/context/experience.md).
+
 ## Private preview
 
 [repandplate.com](https://repandplate.com) is behind a server-side invitation-code

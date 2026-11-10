@@ -6,6 +6,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { recordLocalEvent } from "../life-context/model";
 import { apiFetch } from "../../api-fetch";
 import { AccountAccessError } from "../../account-access";
 import {
@@ -14,7 +15,7 @@ import {
   markCaptureStopped,
   requestAI,
 } from "../../ai-client";
-import type { AIStatus } from "../../ai-contract";
+import type { CapturePurpose, AIStatus } from "../../ai-contract";
 import { clockTime, id, timestamp, type AppState } from "../../domain";
 
 export type ChatAccess = "signin" | "setup" | "restricted";
@@ -119,17 +120,12 @@ export function useAIRequest({
     cancelPendingAI();
     if (messageId) setState((s) => markCaptureStopped(s, messageId));
   }
-  async function sendAI(text: string, image?: string, retryId?: string, captureIntent?: "meal") {
-    if (aiBusy.current) return;
+  async function sendAI(text: string, image?: string, retryId?: string, captureIntent?: "meal", capturePurpose?: CapturePurpose, captureId?: string): Promise<"complete" | "saved" | "blocked" | "busy"> {
+    if (aiBusy.current) return "busy";
+    retryId ??= captureId && state.messages.some(m => m.id === captureId) ? captureId : undefined;
     if (aiStatus?.access === 'signin' || aiStatus?.access === 'setup') {
       onAccountRequired();
-      return;
-    }
-    if (!aiStatus?.available) {
-      notify(
-        "Connected chat isn’t available right now. Your capture is saved; reconnect and try again.",
-      );
-      return;
+      return "blocked";
     }
     const previousMessage = retryId ? state.messages.find(m => m.id === retryId) : undefined;
     const reread = previousMessage?.captureIntent === 'receipt' && previousMessage.aiStatus === 'complete' &&
@@ -139,19 +135,30 @@ export function useAIRequest({
       : retryId
       ? state.messages.find((m) => m.id === retryId)
       : {
-          id: id(),
+          id: captureId ?? id(),
           role: "user" as const,
           text,
           time: clockTime(),
           at: timestamp(),
           image,
           captureIntent: image ? captureIntent : undefined,
+          capturePurpose,
           ai: true,
           aiStatus: "pending" as const,
           captureDay: captureDay ?? undefined,
         };
-    if (!message) return;
-    if (message.aiStatus === 'complete') return;
+    if (!message) return "blocked";
+    if (message.aiStatus === 'complete') return "complete";
+    if (!aiStatus?.available) {
+      const error = "Connected chat isn’t available right now. Your capture is saved; reconnect and try again.";
+      setState(s => ({ ...s, messages: s.messages.some(m => m.id === message.id)
+        ? s.messages.map(m => m.id === message.id ? { ...m, aiStatus: "error" as const, aiError: error } : m)
+        : [...s.messages, { ...message, aiStatus: "error" as const, aiError: error }] }));
+      notify(error);
+      return "saved";
+    }
+    const started = Date.now();
+    const startedAt = new Date(started).toISOString();
     const generation = ++aiGeneration.current;
     const controller = new AbortController();
     aiRequestController.current = controller;
@@ -159,7 +166,7 @@ export function useAIRequest({
     aiBusy.current = true;
     setProcessing(true);
     setAIStage("Connecting to Rep & Plate…");
-    setState((s) => ({
+    setState((previous) => { const s = recordLocalEvent(previous, { id: message.id, kind: "capture_started", at: startedAt, source: "web" }); return ({
       ...s,
       messages: reread
         ? [...s.messages.map(m => m.id === retryId ? { ...m, captureReviewId: undefined } : m), message]
@@ -170,7 +177,7 @@ export function useAIRequest({
               : m,
           )
         : [...s.messages, message],
-    }));
+    }); });
     try {
       const result = await requestAI(
         buildAIRequest(state, message),
@@ -179,26 +186,28 @@ export function useAIRequest({
         },
         controller.signal,
       );
-      if (generation !== aiGeneration.current) return;
+      if (generation !== aiGeneration.current) return "saved";
       setState((s) =>
-        generation === aiGeneration.current ? applyAIResult(s, result) : s,
+        generation === aiGeneration.current ? recordLocalEvent(applyAIResult(s, result), { id: message.id, kind: "capture_completed", at: new Date().toISOString(), durationMs: Math.min(3600000, Date.now() - started), source: "web" }) : s,
       );
+      return "complete";
     } catch (error) {
-      if (generation !== aiGeneration.current) return;
+      if (generation !== aiGeneration.current) return "saved";
       const messageText =
         error instanceof Error && error.name === "TimeoutError"
           ? "That took longer than expected. Your capture is still here; please retry."
           : error instanceof Error
             ? error.message
             : "Something interrupted that response. Please retry.";
-      setState((s) => ({
+      setState((s) => recordLocalEvent({
         ...s,
         messages: s.messages.map((m) =>
           m.id === message.id
             ? { ...m, aiStatus: "error", aiError: messageText }
             : m,
         ),
-      }));
+      }, { id: message.id + ":" + started, kind: "capture_failed", at: new Date().toISOString(), source: "web" }));
+      return "saved";
     } finally {
       if (generation === aiGeneration.current) {
         aiRequestController.current = null;

@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "Rep & Plate",
+  "short_name": "Rep & Plate",
+  "description": "Tell Spot what happened. Food, movement, and a little help with the details.",
+  "start_url": "/#chat",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#006249",
+  "icons": [{ "src": "/capture-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }],
+  "share_target": {
+    "action": "/?share=1",
+    "method": "GET",
+    "params": { "title": "title", "text": "text", "url": "url" }
+  }
+}

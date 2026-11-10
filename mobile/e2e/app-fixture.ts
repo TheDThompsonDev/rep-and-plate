@@ -1,5 +1,6 @@
 import { test as base } from "@playwright/test";
-export * from "@playwright/test";
+export { expect } from "@playwright/test";
+export type { Page, Locator, Route } from "@playwright/test";
 // Feature journeys start as a returning local user. onboarding.spec.ts tests the real entry path.
 export const test = base.extend<{ returningDevice: void }>({
   returningDevice: [

@@ -7,7 +7,10 @@ async function ready(page:any){await page.route('**/api/status',route=>route.ful
 test('review queue opens saved candidates and offers direct manual label correction',async({page})=>{
  const state=await ready(page);state.groceries=[{id:'review-route',fingerprint:'review-route',store:'Audit market',date:'2026-09-30',note:'',sources:[],items:[{id:'oats',receiptText:'OATS',name:'Uncertain oats',quantity:'1 package',serving:'',servingsPurchased:null,nutrition:null,match:'unresolved',needsReview:true,availability:'available',note:'',sources:[],productCandidates:[product]}]}];
  state.groceries[0].items.push({...state.groceries[0].items[0],id:'oats2',name:'Second oats'});
- await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open pantry',exact:true}).click();await page.getByRole('button',{name:'Review Uncertain oats',exact:true}).click();
+ await seedBrowserRecords(page,state);await page.reload();await page.getByRole('button',{name:'Kitchen',exact:true}).click();await page.getByRole('button',{name:'Open pantry',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Review Uncertain oats',exact:true})).not.toBeVisible();
+ await page.getByLabel('Ingredients I need now',{exact:true}).fill('oats');
+ await page.getByRole('button',{name:'Review Uncertain oats',exact:true}).click();
  await expect(page.getByRole('dialog')).toContainText('Choose a possible product');await expect(page.getByRole('radio')).toHaveCount(1);
  await page.getByRole('button',{name:'Enter package details manually',exact:true}).click();await expect(page.getByLabel('Product name',{exact:true})).toHaveValue('Uncertain oats');
  await page.getByLabel('Serving size',{exact:true}).fill('40 g');await page.getByLabel('Total servings purchased',{exact:true}).fill('5');

@@ -1236,3 +1236,5 @@
     scroll-behavior: auto;
   }
 }
+
+.chat-experience-shortcuts{display:flex;gap:8px;padding:7px 16px;flex-wrap:wrap;border-bottom:1px solid #edf2ee}.chat-experience-shortcuts button{font:inherit;font-size:12px;min-height:36px;padding:7px 11px;border:1px solid #d9e7df;border-radius:20px;background:#f7fbf8;color:#225a46;cursor:pointer}.chat-experience-shortcuts button:focus-visible{outline:3px solid #55a17c;outline-offset:2px}

@@ -1,3 +1,4 @@
+import { NativeTrainingContinuity } from "./TrainingContinuity";
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { id, today, type Exercise } from "../../src/domain";
@@ -72,6 +73,7 @@ export function NativeWorkout({ startWithMovement = false, onFirstMovementClose 
     .reverse();
   return (
     <Screen>
+      <NativeTrainingContinuity />
       <Text style={s.eyebrow}>YOUR MOVEMENT</Text>
       <Text style={s.title}>
         {w.status === "active" ? w.title : "Your training log"}

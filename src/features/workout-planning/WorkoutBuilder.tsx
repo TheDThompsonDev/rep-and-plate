@@ -1,3 +1,4 @@
+import { activeLifeMode } from "../life-context/model";
 import { apiFetch } from "../../api-fetch";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "../../components";
@@ -17,17 +18,18 @@ export default function WorkoutBuilder({
   onClose: () => void;
   onStart: (plan: WorkoutProposal) => void;
 }) {
+  const temporaryMode = activeLifeMode(state.lifeContext);
   const [goal, setGoal] = useState(
     (state.preferences?.workoutPreferences ?? "").slice(0, 1500),
   );
   // The saved training week's equipment is the best default; cooking preferences are the fallback.
   const [equipment, setEquipment] = useState(
-    (state.profile.trainingProgram
+    (temporaryMode?.equipment ?? (state.profile.trainingProgram
       ? programEquipmentText(state.profile.trainingProgram).replace(/ · /g, ", ")
       : state.preferences?.equipment.join(", ")
-    )?.slice(0, 300) || "Bodyweight",
+    ))?.slice(0, 300) || "Bodyweight",
   );
-  const [minutes, setMinutes] = useState(30);
+  const [minutes, setMinutes] = useState(Math.min(120, temporaryMode?.availableMinutes ?? 30));
   const [plan, setPlan] = useState<WorkoutProposal | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -55,6 +57,7 @@ export default function WorkoutBuilder({
   return (
     <Modal title="A workout for you" onClose={onClose}>
       <div className="scanner-content">
+        {temporaryMode && <p className="workout-history-context">Using {temporaryMode.name} through {temporaryMode.endDay}. Your usual training preferences are preserved.</p>}
         <p>
           Tell Rep & Plate your goal, experience, and any movements you need to avoid.
           Review the proposal before starting.
@@ -78,7 +81,7 @@ export default function WorkoutBuilder({
               const response = await apiFetch("/api/plans/workout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ goal, equipment, minutes, history }),
+                body: JSON.stringify({ goal, equipment, minutes, history, temporaryContext: temporaryMode ? {name: temporaryMode.name,details:temporaryMode.details} : undefined }),
                 signal: AbortSignal.any([
                   controller.signal,
                   AbortSignal.timeout(120000),

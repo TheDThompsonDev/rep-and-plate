@@ -46,6 +46,7 @@ export const ROUTES: readonly Route[] = [
   shared("/api/voice", "POST", true),
   shared("/api/shopping/prices", "POST", true),
   shared("/api/agents/v1", "POST", false, "agents"),
+  shared("/api/agents/mcp", "POST", false, "agents"),
   shared("/api/agents/manage", "POST", false, "agents"),
   // Hosted-only allow-list. Deletion needs the Supabase admin credentials and maintenance the
   // cron secret; the loopback server holds neither, so it answers 501 with the copy below.

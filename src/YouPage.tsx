@@ -49,6 +49,9 @@ import { sumProposalComponents } from "./features/meals/proposals";
 type Props = {
   state: AppState;
   aiAvailable: boolean;
+  onLifeContext?: () => void;
+  onCoaching?: () => void;
+  onRepeatMeal?: (mealId: string) => void;
   onAccount: (mode?: 'signin' | 'signup') => void;
   onSaveFitness: (draft: FitnessSetupDraft) => void;
   onSaveNutrition: (result: NutritionSetupResult) => void;
@@ -82,6 +85,9 @@ type Panel =
 export default function YouPage({
   state,
   aiAvailable,
+  onLifeContext,
+  onCoaching,
+  onRepeatMeal,
   onAccount,
   onConnections,
   onMeetSpot,
@@ -431,6 +437,8 @@ export default function YouPage({
             </button>
           </div>
         </section>
+        {onCoaching && <button className="you-review-summary" onClick={onCoaching}><span><strong>Your coaching plan</strong><small>Today, your agreed week, feedback, and what your coach remembers.</small></span><ChevronRight size={20} /></button>}
+        {onLifeContext && <button className="you-review-summary" onClick={onLifeContext}><span><strong>Life right now</strong><small>Temporary routines, small experiments, and what works for you.</small></span><ChevronRight size={20} /></button>}
         <div className="you-section-heading">
           <h2>Your week, taking shape.</h2>
           <button onClick={() => setPanel("weekly")}>
@@ -828,7 +836,7 @@ export default function YouPage({
       {panel === "weekly" && (
         <Modal title="Weekly Spot Check" onClose={() => setPanel(null)} wide>
           <div className="you-weekly-review">
-            <SpotWeeklyReview state={state} />
+            <SpotWeeklyReview state={state} onRepeatMeal={onRepeatMeal} />
             <p className="you-week-range">
               {week.start} to {week.end} · Last seven days
             </p>

@@ -8,15 +8,19 @@ import {requireDeviceOwner,sessionSignal} from './auth';
 import {cloudEpoch,cloudPaused} from '../../src/features/cloud/sync-control';
 import {useConnections,type ConnectionsPlatform} from '../../src/features/connections/useConnections';
 import type {AgentScope} from '../../src/features/connections/contracts';
+import {coachingConnectionScopes,toggleConnectionScope} from '../../src/features/connections/permissions';
 
 const access:{scope:AgentScope;label:string;detail:string}[]=[
   {scope:'nutrition:read',label:'Nutrition summaries',detail:'Seven days of totals and your nutrition goals.'},
   {scope:'pantry:read',label:'Pantry',detail:'Available ingredients and remaining servings.'},
   {scope:'preferences:read',label:'Food preferences',detail:'Restrictions, favorites, dislikes, and cooking preferences.'},
   {scope:'workouts:read',label:'Completed workouts',detail:'Your most recent completed workouts.'},
+  {scope:'activities:read',label:'Recorded activities',detail:'Activity dates, durations and your recorded notes.'},
+  {scope:'coaching:read',label:'Coaching plan and memory',detail:'Your agreed plan, priorities, feedback and decision history.'},
+  {scope:'coaching:write',label:'Change your coaching plan',detail:'Prepare changes and apply them after explicit approval in your assistant. Requires coaching read access.'},
   {scope:'meals:propose',label:'Propose meal logs',detail:'Send meals here for your review before anything is logged.'},
 ];
-const platform:ConnectionsPlatform={
+export const nativeConnections:ConnectionsPlatform={
   foreground:()=>AppState.currentState==='active',
   async session(){
     if(cloudPaused())throw Error('Reconnect your account before opening Connections.');
@@ -51,7 +55,7 @@ const platform:ConnectionsPlatform={
 export function Connections(){
   const h=useLoadedHealth();
   const open=h.tool==='agents';
-  const c=useConnections(h.state,h.applyAgentAction,platform,open);
+  const c=useConnections(h.state,h.applyAgentAction,nativeConnections,open);
   const [name,setName]=useState('');
   const [scopes,setScopes]=useState<AgentScope[]>(['meals:propose']);
   const [now,setNow]=useState(()=>Date.now());
@@ -71,10 +75,11 @@ export function Connections(){
       <Card>
         <Text accessibilityRole="header" style={s.h2}>Connect an agent</Text>
         <Field label="Connection name" placeholder="My assistant" value={name} onChangeText={setName} maxLength={80}/>
+        <Button label="Use daily coaching permissions" secondary onPress={()=>setScopes([...coachingConnectionScopes])}/>
         {access.map(item=><View key={item.scope} style={s.between}>
           <View style={s.grow}><Text style={s.h3}>{item.label}</Text><Text style={s.muted}>{item.detail}</Text></View>
           <Switch accessibilityLabel={item.label} value={scopes.includes(item.scope)} disabled={disabled}
-            onValueChange={enabled=>setScopes(previous=>enabled?[...previous,item.scope]:previous.filter(scope=>scope!==item.scope))}/>
+            onValueChange={enabled=>setScopes(previous=>toggleConnectionScope(previous,item.scope,enabled))}/>
         </View>)}
         <Text style={s.muted}>Access expires in 30 days. You can disconnect earlier at any time.</Text>
         <Button label="Create connection" disabled={disabled||!name.trim()||!scopes.length} onPress={()=>void c.create(name,scopes)}/>
@@ -84,6 +89,9 @@ export function Connections(){
         <Text style={s.text}>This token appears only now. Select and copy it into your agent’s secure connection settings. Closing this screen hides it.</Text>
         <Text style={s.h3}>Endpoint</Text>
         <Text selectable style={s.text}>{c.session.url}/api/agents/v1</Text>
+        <Text style={s.h3}>Remote MCP endpoint</Text>
+        <Text selectable style={s.text}>{c.session.url}/api/agents/mcp</Text>
+        <Text style={s.muted}>Set the connector request header Authorization to Bearer followed by the access token below.</Text>
         <Text style={s.h3}>Access token</Text>
         <Text selectable style={s.text}>{c.credential.token}</Text>
         <Text style={s.muted}>For the CLI, set REP_PLATE_URL to {c.session.url} and REP_PLATE_TOKEN to this token. Keep the token out of chats and shared files. You never need to share your password.</Text>

@@ -8,6 +8,8 @@ import { mealSchema, scaleMealPortion, today, type Meal } from "../../domain";
  * `useMealEditor.ts` decides which of the optional actions apply. */
 export default function MealEditor({
   onRepeat,
+  onToggleUsual,
+  isUsual = false,
   isProposal = false,
   newManual = false,
   repeatDraft = false,
@@ -19,6 +21,8 @@ export default function MealEditor({
 }: {
   meal: Meal;
   onRepeat?: () => void;
+  onToggleUsual?: () => void;
+  isUsual?: boolean;
   isProposal?: boolean;
   newManual?: boolean;
   repeatDraft?: boolean;
@@ -154,6 +158,7 @@ export default function MealEditor({
             if you close this form.
           </p>
         )}
+        {onToggleUsual && <button type="button" className="button secondary" aria-pressed={isUsual} onClick={onToggleUsual}>{isUsual ? "Remove from my usuals" : "Make this my usual"}</button>}
         {onRepeat && (
           <button className="button secondary" type="button" onClick={onRepeat}>
             Repeat meal

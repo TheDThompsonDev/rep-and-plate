@@ -3,6 +3,7 @@ import { agentRequestSchema, manageRequestSchema, type AgentContext } from '../.
 import { AgentError, AgentService } from './service.ts';
 import type { AgentStore } from './store.ts';
 import { BODY_LIMITS } from '../routes.ts';
+import { createAgentMcpHandler } from './mcp.ts';
 
 export type AgentDependencies = {
   store: AgentStore;
@@ -16,7 +17,9 @@ export type AgentDependencies = {
 };
 export function createAgentHandler(deps: AgentDependencies) {
   const service = new AgentService(deps.store, deps.now, deps.snapshot);
+  const mcp = createAgentMcpHandler(deps);
   return async (req: IncomingMessage, res: ServerResponse) => {
+    if ((req.url ?? '').split('?')[0] === '/api/agents/mcp') return mcp(req, res);
     let lease: string | undefined;
     const json = (status: number, body: unknown) => { res.statusCode = status; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(body)); };
     res.setHeader('Cache-Control', 'no-store');

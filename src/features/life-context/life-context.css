@@ -1,0 +1,27 @@
+.life-context-panel { display: grid; gap: 1.5rem; color: #183b32; }
+.life-context-panel > section { border-top: 1px solid #dce8e0; padding-top: 1.25rem; }
+.life-context-panel h2, .life-context-panel h3, .life-context-panel h4 { margin: 0 0 .6rem; }
+.life-context-panel h2 { font-size: 1.55rem; }
+.life-context-panel h3 { font-size: 1.15rem; }
+.life-context-panel p { margin: .45rem 0 .85rem; line-height: 1.55; }
+.life-context-panel small, .life-context-hint { color: #53665e; font-size: .85rem; line-height: 1.5; }
+.life-context-form { display: grid; gap: .85rem; margin-top: 1rem; }
+.life-context-form label { display: grid; gap: .35rem; font-size: .9rem; font-weight: 600; }
+.life-context-form label span { font-weight: 400; color: #53665e; }
+.life-context-form input, .life-context-form select, .life-context-form textarea { width: 100%; min-height: 44px; box-sizing: border-box; border: 1px solid #b9cdc1; border-radius: 10px; padding: .7rem; font: inherit; color: inherit; background: #fff; }
+.life-context-form textarea { min-height: 80px; resize: vertical; }
+.life-context-form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.life-context-actions { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; }
+.life-context-card { border: 1px solid #d7e6db; border-radius: 14px; background: #f5faf6; padding: 1rem; margin-top: 1rem; overflow-wrap: anywhere; }
+.life-context-status { display: block; margin-bottom: .5rem; color: #28614b; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.life-context-consent { display: flex; gap: .65rem; align-items: center; min-height: 44px; font-weight: 600; }
+.life-context-consent input { width: 20px; height: 20px; accent-color: #006249; flex-shrink: 0; }
+.life-context-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin: 1rem 0; }
+.life-context-metrics div { border-radius: 10px; background: #f2f7f3; padding: .8rem; }
+.life-context-metrics dt { font-size: .8rem; color: #53665e; line-height: 1.4; }
+.life-context-metrics dd { margin: .35rem 0 0; font-weight: 700; font-size: .95rem; }
+.life-context-error, .life-context-notice { padding: .8rem 1rem; border-radius: 10px; }
+.life-context-error { color: #8b2626; background: #fff1ed; }
+.life-context-notice { background: #edf7ee; color: #245d40; }
+.life-context-panel button:focus-visible, .life-context-panel input:focus-visible, .life-context-panel select:focus-visible, .life-context-panel textarea:focus-visible { outline: 3px solid #2f9371; outline-offset: 3px; }
+@media (max-width: 420px) { .life-context-form-row, .life-context-metrics { grid-template-columns: 1fr; } .life-context-actions > button { flex: 1 1 auto; } }

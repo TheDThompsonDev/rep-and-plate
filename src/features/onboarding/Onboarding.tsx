@@ -188,11 +188,12 @@ export default function Onboarding({
                       </p>
                       <button
                         className="welcome-primary"
-                        onClick={flow.startTour}
+                        onClick={() => flow.user ? flow.setStep("setup") : flow.account("signup")}
                       >
-                        Meet Spot <ArrowRight size={19} />
+                        Start with one meal <ArrowRight size={19} />
                       </button>
-                      <button className="welcome-secondary" onClick={() => flow.setStep('guide')}>See what I can do</button>
+                      <button className="welcome-secondary" onClick={flow.startTour}>Meet Spot</button>
+                      <button className="welcome-link" onClick={() => flow.setStep('guide')}>See what I can do</button>
                       <button className="welcome-link" onClick={() => { setFocus('Groceries & dinner'); flow.user ? flow.setStep('setup') : flow.account('signup'); }}>Start with my groceries</button>
                       {flow.user ? (
                         <button
@@ -485,6 +486,14 @@ export default function Onboarding({
                           <ArrowRight size={19} />
                         </button>
                       </form>
+                      <button
+                        className="welcome-secondary"
+                        disabled={flow.busy || !name.trim() || (!flow.localMode && !flow.confirmed)}
+                        onClick={() => { setFitness(null); setNutrition(null); void flow.prepare(name, "ready"); }}
+                      >
+                        Log first, personalize later
+                      </button>
+                      <p className="welcome-fine">Your goals and daily targets can wait. Start with a real meal or workout.</p>
                       <button
                         className="welcome-link"
                         disabled={flow.busy}
