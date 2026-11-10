@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { coachingCommandSchema, coachingImportInputSchema } from '../coaching/contracts';
+import { MAX_LIFETIME_DAYS } from './setup';
 
 export const scopeSchema = z.enum(['nutrition:read', 'pantry:read', 'preferences:read', 'workouts:read', 'meals:propose', 'activities:read', 'coaching:read', 'coaching:write']);
 export type AgentScope = z.infer<typeof scopeSchema>;
@@ -70,10 +71,13 @@ export const agentRequestSchema = z.discriminatedUnion('operation', [
   coachingImportRequest,
 ]);
 export type AgentRequest = z.infer<typeof agentRequestSchema>;
+const lifetimeSchema = z.number().int().min(1).max(MAX_LIFETIME_DAYS);
 export const manageRequestSchema = z.discriminatedUnion('operation', [
   z.object({ operation: z.literal('list') }).strict(),
-  z.object({ operation: z.literal('create'), name: z.string().trim().min(1).max(80), scopes: z.array(scopeSchema).min(1).max(8), expiresInDays: z.number().int().min(1).max(90) }).strict(),
+  z.object({ operation: z.literal('create'), name: z.string().trim().min(1).max(80), scopes: z.array(scopeSchema).min(1).max(8), expiresInDays: lifetimeSchema }).strict(),
   z.object({ operation: z.literal('revoke'), connectionId: z.string().uuid() }).strict(),
+  // Keeps the same access key working for longer, so the assistant never has to be set up again.
+  z.object({ operation: z.literal('renew'), connectionId: z.string().uuid(), expiresInDays: lifetimeSchema }).strict(),
   z.object({ operation: z.literal('publish'), context: agentContextSchema, dataUpdatedAt: z.string().datetime().nullable() }).strict(),
   z.object({ operation: z.literal('resolve'), actionId: z.string().uuid(), status: z.enum(['accepted', 'dismissed']) }).strict(),
   coachingReadRequest,

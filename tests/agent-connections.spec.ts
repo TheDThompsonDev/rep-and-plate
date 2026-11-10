@@ -8,9 +8,9 @@ import { createAgentHandler } from '../server/agents/http';
 import { SqliteAgentStore } from '../server/agents/sqlite';
 
 const execute = promisify(execFile);
-async function setup(page: Page) {
+async function setup(page: Page, options: { now?: () => number; lifetime?: string } = {}) {
   const store = new SqliteAgentStore(':memory:');
-  const server = createServer(createAgentHandler({ store }));
+  const server = createServer(createAgentHandler({ store, now: options.now }));
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   const base = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
   let failResolve = false;
@@ -30,6 +30,7 @@ async function setup(page: Page) {
   await page.getByRole('button', { name: 'Connections Your assistants, access, and meal proposals' }).click();
   await page.getByRole('button', { name: 'Connect an assistant', exact: true }).click();
   await page.getByRole('textbox', { name: 'Connection name' }).fill('Test assistant');
+  if (options.lifetime) await page.getByRole('combobox', { name: 'Keep this connection working for' }).selectOption({ label: options.lifetime });
   await page.getByRole('button', { name: 'Create connection', exact: true }).click();
   const key = page.getByRole('textbox', { name: 'Access key', exact: true });
   await expect(key).toBeVisible();
@@ -134,5 +135,30 @@ test('a conflicting server outcome stays visible without discarding a saved meal
     await page.getByRole('button', { name: 'Refresh', exact: true }).click();
     await expect(page.getByRole('alert')).toContainText('differs');
     expect((await saved(page)).meals).toHaveLength(1);
+  } finally { await fixture.close(); }
+});
+
+test('a new connection has paste-ready steps for each assistant and can be kept going with the same key', async ({ page }) => {
+  // The server starts 20 days in the past, so a 30-day key has 10 days left when the browser looks at it.
+  let offset = -20 * 86_400_000;
+  const fixture = await setup(page, { now: () => Date.now() + offset, lifetime: '30 days' });
+  try {
+    const address = `${new URL(page.url()).origin}/api/agents/mcp`;
+    await expect(page.getByRole('list', { name: 'Steps for Claude Code' })).toContainText(`claude mcp add --transport http rep-and-plate --scope user ${address} --header "Authorization: Bearer ${fixture.token}"`);
+    await expect(page.getByRole('dialog', { name: 'Connections' })).not.toContainText('npm ');
+    await page.getByRole('button', { name: 'Codex', exact: true }).click();
+    await expect(page.getByRole('list', { name: 'Steps for Codex' })).toContainText(`codex mcp add rep-and-plate --url ${address} --bearer-token-env-var REP_PLATE_TOKEN`);
+    await page.getByRole('button', { name: 'ChatGPT', exact: true }).click();
+    await expect(page.getByText('Not available yet ·')).toBeVisible();
+    await expect(page.getByRole('list', { name: 'Steps for ChatGPT' }).getByRole('button')).toHaveCount(0);
+    await page.getByRole('button', { name: 'I’ve saved the key' }).click();
+
+    await expect(page.getByText(/Works for 10 more days/)).toBeVisible();
+    offset = 0;
+    await page.getByRole('button', { name: 'Keep Test assistant connected' }).click();
+    await expect(page.getByText(/Works for 90 more days/)).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Keep Test assistant connected' })).toHaveCount(0);
+    // Same key, no second setup.
+    expect((await fixture.call({ operation: 'capabilities' })).status).toBe(200);
   } finally { await fixture.close(); }
 });

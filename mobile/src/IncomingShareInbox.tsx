@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useIncomingShare } from 'expo-sharing';
+import { Image, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useIncomingShare, type UseIncomingShareResult } from 'expo-sharing';
 import { CAPTURE_TEXT_LIMIT, type CaptureItem, type CapturePurpose, type CaptureSendResult } from '../../src/features/capture-inbox/contracts';
 import { appendCapture, newCapture } from '../../src/features/capture-inbox/model';
 
@@ -18,9 +18,14 @@ const choices: { value: CapturePurpose; label: string }[] = [
   { value: 'receipt', label: 'Groceries' }, { value: 'menu', label: 'Help me choose' }, { value: 'workout', label: 'Movement' },
 ];
 
+// A browser cannot receive a share and expo-sharing throws there, which blanked the whole app.
+// The platform never changes while the app runs, so the hook choice is fixed for its lifetime.
+const nothingShared: UseIncomingShareResult = { sharedPayloads: [], resolvedSharedPayloads: [], clearSharedPayloads: () => {}, isResolving: false, error: null, refreshSharePayloads: () => {} };
+const useShares: () => UseIncomingShareResult = Platform.OS === 'web' ? () => nothingShared : useIncomingShare;
+
 /** Incoming shares are explicitly claimed by the current account before processing. */
 export function IncomingShareInbox({ items, scopeKey, createId, imageFromUri, onChange, onSend, disabled = false }: Props) {
-  const incoming = useIncomingShare();
+  const incoming = useShares();
   const [text, setText] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [photoError, setPhotoError] = useState(false);

@@ -19,7 +19,7 @@ A meal proposal stays pending until you select **Log this meal** or dismiss it i
 ## Create a connection
 
 1. Open **You → Connections** on the web, or **You → Agent connections** in the native app.
-2. Create a separately named connection for each agent, choose its permissions, and copy its token. Access lasts 30 days and the token is displayed only once.
+2. Create a separately named connection for each agent, choose its permissions, and copy its token. Choose how long it works (30 days, 90 days or 1 year; 90 by default). The token is displayed only once, with paste-ready steps for Claude Code, Codex and other MCP clients. From 14 days before it stops working, Connections offers **Keep connected**, which adds 90 days to the same token so the assistant is never set up again, and the assistant is asked to mention it in its next steps. A token that stopped working up to 30 days ago can be kept the same way; a disconnected one cannot.
 3. Context sharing starts when you create a connection. The hosted backend reads your latest synchronized account snapshot. Local development publishes a limited snapshot while the app is running; reopen Connections after restarting the app to resume publishing. Local connections belong to this browser installation and profile. The native development pairing bridge does not support agent management; use the web app locally or a hosted account on native.
 4. Give the agent runtime `REP_PLATE_URL` (the app origin, without a path) and `REP_PLATE_TOKEN` through its environment or secret manager.
 5. Run the connection check below. Revoke access from Connections when no longer needed.
@@ -86,7 +86,7 @@ The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_OR
 | Host | How to connect | Status |
 | --- | --- | --- |
 | Codex CLI/app | `codex mcp add rep-and-plate --url https://YOUR_APP_ORIGIN/api/agents/mcp --bearer-token-env-var REP_PLATE_TOKEN` | Flags checked against the installed CLI's help; not exercised against a hosted account. |
-| Claude Code | Project `.mcp.json` entry below; the token stays in the environment. | Configuration format only; not exercised against a hosted account. |
+| Claude Code | `claude mcp add --transport http rep-and-plate --scope user https://YOUR_APP_ORIGIN/api/agents/mcp --header "Authorization: Bearer <token>"`, or the project `.mcp.json` entry below, which keeps the token in the environment. | Syntax checked against the Claude Code MCP documentation; not exercised against a hosted account. |
 | Claude (web/desktop/mobile) | **Add custom connector**, using the address above and the request-headers field for `Authorization: Bearer …` where your account offers it. | Unverified. Some accounts only offer OAuth, which this server does not implement. |
 | ChatGPT | Not supported yet. | Custom connectors accept OAuth or no authentication, not a fixed bearer header. |
 

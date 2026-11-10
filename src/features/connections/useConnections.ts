@@ -5,6 +5,7 @@ import { agentReviewConflicts, buildAgentContext } from './context';
 import { agentActionSchema, connectionSchema, type AgentAction, type AgentConnection, type AgentOverview, type AgentScope, type ManageRequest } from './contracts';
 import { z } from 'zod';
 import { onAccountChange } from '../cloud/sync-control';
+import { defaultLifetimeDays } from './setup';
 
 export type ConnectionSession = {
   identity: string;
@@ -124,10 +125,12 @@ export function useConnections(state: AppState, apply: ApplyAgentAction, platfor
     overview, error, loading, busy, session, credential,
     clearCredential: () => setCredential(null),
     refresh: () => perform(async () => {}),
-    create: (name: string, scopes: AgentScope[]) => perform(async active => {
-      const result = z.object({ connection: connectionSchema, token: z.string() }).parse(await active.request({ operation: 'create', name, scopes, expiresInDays: 30 }));
+    create: (name: string, scopes: AgentScope[], expiresInDays: number = defaultLifetimeDays) => perform(async active => {
+      const result = z.object({ connection: connectionSchema, token: z.string() }).parse(await active.request({ operation: 'create', name, scopes, expiresInDays }));
       if (active.active()) { lastPublished.current = ''; if (visible.current) setCredential(result); }
     }),
+    /** Same key, later end date: the assistant keeps working without being set up again. */
+    renew: (id: string, expiresInDays: number = defaultLifetimeDays) => perform(async active => { await active.request({ operation: 'renew', connectionId: id, expiresInDays }); }),
     revoke: (id: string) => perform(async active => { await active.request({ operation: 'revoke', connectionId: id }); if (credential?.connection.id === id) setCredential(null); }),
     resolve: (action: AgentAction, status: 'accepted' | 'dismissed') => perform(async active => {
       // Re-read before applying: another device may have resolved or revoked it.

@@ -26,6 +26,7 @@ test('native hosted agent review persists before acknowledgment and survives a f
     if(body.operation==='create'){
       expect(body.name).toBe('Dinner assistant');
       expect(body.scopes.sort()).toEqual(['meals:propose','nutrition:read']);
+      expect(body.expiresInDays).toBe(365);
       connected=true;
       return route.fulfill({headers,json:{connection,token:'rp_agent_native_test_only'}});
     }
@@ -43,6 +44,11 @@ test('native hosted agent review persists before acknowledgment and survives a f
       if(acknowledgments===1)return route.fulfill({status:503,headers,json:{error:{message:'Temporary test failure'}}});
       action.status='accepted';action.resolvedAt=new Date().toISOString();
       return route.fulfill({headers,json:{action}});
+    }
+    if(body.operation==='renew'){
+      expect(body).toMatchObject({connectionId:connection.id,expiresInDays:90});
+      connection.expiresAt=new Date(Date.now()+90*86400000).toISOString();
+      return route.fulfill({headers,json:{connection}});
     }
     if(body.operation==='revoke'){
       expect(body.connectionId).toBe(connection.id);connection.revokedAt=new Date().toISOString();
@@ -63,9 +69,14 @@ test('native hosted agent review persists before acknowledgment and survives a f
   await page.getByRole('button',{name:'Agent connections',exact:true}).click();
   await page.getByRole('textbox',{name:'Connection name',exact:true}).fill('Dinner assistant');
   await page.getByRole('switch',{name:'Nutrition summaries',exact:true}).click();
+  await page.getByRole('button',{name:'1 year',exact:true}).click();
   await page.getByRole('button',{name:'Create connection',exact:true}).click();
   await expect(page.getByText('rp_agent_native_test_only',{exact:true})).toBeVisible();
   await expect(page.getByText('https://health-beta.example/api/agents/v1',{exact:true})).toBeVisible();
+  // Paste-ready steps per assistant, with nothing that needs a checkout of this project.
+  await expect(page.getByText('claude mcp add --transport http rep-and-plate --scope user https://health-beta.example/api/agents/mcp --header "Authorization: Bearer rp_agent_native_test_only"',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'ChatGPT',exact:true}).click();
+  await expect(page.getByText(/^Not available yet · /)).toBeVisible();
   await page.getByRole('button',{name:'I saved the token',exact:true}).click();
   await expect(page.getByText('rp_agent_native_test_only',{exact:true})).toHaveCount(0);
   await expect(page.getByText('Agent lentil bowl',{exact:true})).toBeVisible();
@@ -78,6 +89,11 @@ test('native hosted agent review persists before acknowledgment and survives a f
   expect(saved.meals.filter((meal:{id:string})=>meal.id===`agent-meal:${action.id}`)).toHaveLength(1);
   expect(saved.agentResolutions.filter((receipt:{actionId:string})=>receipt.actionId===action.id)).toHaveLength(1);
   expect(publishes).toBeGreaterThan(0);
+  // The fixture's token has one day left: keeping it extends the same token.
+  await expect(page.getByText(/^Works for 1 more day/)).toBeVisible();
+  await page.getByRole('button',{name:'Keep Dinner assistant connected',exact:true}).click();
+  await expect(page.getByText(/^Works for 90 more days/)).toBeVisible();
+  await expect(page.getByRole('button',{name:'Keep Dinner assistant connected',exact:true})).toHaveCount(0);
   await page.getByRole('button',{name:'Disconnect Dinner assistant',exact:true}).click();
   await expect(page.getByText('Disconnected',{exact:true})).toBeVisible();
 });

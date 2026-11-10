@@ -4,6 +4,7 @@ import type { AgentStore, Document, StoredConnection } from './store.ts';
 import { agentRequestSchema, manageRequestSchema, type AgentScope } from '../../src/features/connections/contracts.ts';
 import { coachingStateSchema, type CoachingState } from '../../src/features/coaching/contracts.ts';
 import { CoachingError, emptyCoachingState, proposeCoaching, resolveCoaching, undoCoaching, importCoachingEvidence, coachingBrief, coachingWeeklyReview, coachingEvidenceView, coachingNextSteps } from '../../src/features/coaching/model.ts';
+import { expiryNextStep, RENEWABLE_AFTER_EXPIRY_DAYS } from '../../src/features/connections/setup.ts';
 import { ZodError } from 'zod';
 
 const DAY = 86_400_000;
@@ -162,6 +163,15 @@ export class AgentService {
           for (const action of document.actions) if (action.connectionId === connection.id && action.status === 'pending') { action.status = 'revoked'; action.resolvedAt = at; }
           return { connection: publicConnection(connection) };
         }
+        case 'renew': {
+          const connection = document.connections.find(c => c.id === request.connectionId);
+          if (!connection) return error(404, 'NOT_FOUND', 'Connection not found.');
+          if (connection.revokedAt) return error(409, 'DISCONNECTED', 'This connection was disconnected. Create a new one.');
+          if (now - Date.parse(connection.expiresAt) > RENEWABLE_AFTER_EXPIRY_DAYS * DAY) return error(409, 'EXPIRED', 'This connection stopped working too long ago to keep. Create a new one.');
+          // Never shortens access: disconnecting is the way to end it early.
+          connection.expiresAt = new Date(Math.max(Date.parse(connection.expiresAt), now + request.expiresInDays * DAY)).toISOString();
+          return { connection: publicConnection(connection) };
+        }
         case 'resolve': {
           const action = document.actions.find(a => a.id === request.actionId);
           if (!action) return error(404, 'NOT_FOUND', 'Proposal not found.');
@@ -191,7 +201,10 @@ export class AgentService {
       if (isCoaching(request)) {
         if (!connection.scopes.includes('coaching:read') || (request.operation !== 'coaching.read' && !connection.scopes.includes('coaching:write')))
           return error(403, 'SCOPE_REQUIRED', 'Reading coaching requires coaching:read; changing it also requires coaching:write.');
-        return this.coachingOperation(document, request, `connection:${connection.id}`, now, snapshot, connection.scopes);
+        const result = this.coachingOperation(document, request, `connection:${connection.id}`, now, snapshot, connection.scopes);
+        // The assistant is the only place an assistant-first user will hear that their key is running out.
+        const expiring = expiryNextStep(connection.expiresAt, now);
+        return expiring ? { ...result, nextSteps: [expiring, ...result.nextSteps].slice(0, 4) } : result;
       }
       switch (request.operation) {
         case 'capabilities': return { version: 1, connection: publicConnection(connection), scopes: connection.scopes, operations: ['capabilities', ...(connection.scopes.some(s => s.endsWith(':read')) ? ['context.read'] : []), ...(canPropose ? ['meals.propose', 'actions.get'] : []), ...(connection.scopes.includes('coaching:read') ? ['coaching.read', ...(connection.scopes.includes('coaching:write') ? ['coaching.propose', 'coaching.resolve', 'coaching.undo', 'coaching.import'] : [])] : [])], context: { mode: this.snapshot ? 'cloud_snapshot' : 'published_snapshot', publishedAt: document.publishedAt }, limits: { proposalExpiresInDays: 7, maxActions: 1000 }, guidance: 'Meal proposals require review in Rep & Plate. Proposing never logs consumption. Context is a saved snapshot, not a live device feed. Accepted means logged on the reviewing device; cloud synchronization may follow separately.' + (connection.scopes.includes('coaching:read') ? ' Coaching proposals remain pending until explicitly accepted with APPLY_REVIEWED_CHANGE. Coaching never automatically logs food or exercise completion. A reported outcome requires its own reviewed command. Records brought in from other apps with coaching.import are evidence with a named source: they never change the plan, complete a session or log food, and need SAVE_REPORTED_RECORDS after the user agrees. Read freshness before using health context; missing records remain unknown.' : '') };
