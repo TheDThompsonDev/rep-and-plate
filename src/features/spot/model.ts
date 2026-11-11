@@ -130,6 +130,8 @@ export function resolveWorkoutCapture(
               exercises: p.exercises.map((e) => ({
                 name: e.name,
                 weight: e.weight,
+                weightConfirmed: true,
+                setWeights: e.reps.map(() => e.weight),
                 target: e.reps[0],
                 previous: [],
                 sets: e.reps,

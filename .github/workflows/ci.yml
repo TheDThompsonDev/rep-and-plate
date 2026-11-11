@@ -78,8 +78,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # --with-deps asks Ubuntu's package mirror for extra fonts and libraries. Runners sometimes
+      # cannot resolve that mirror, and apt then retries for ten minutes before failing the job
+      # without running a test. The hosted image already carries Chromium's system libraries, so
+      # give the full install three minutes and otherwise install the browser alone.
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: timeout 180 npx playwright install --with-deps chromium || npx playwright install chromium
 
       # playwright.config.ts starts `npm run dev` itself. The Vite dev server
       # hosts the API in-process with no provider keys, which is the
@@ -97,4 +101,49 @@ jobs:
           path: |
             playwright-report/
             test-results/
+          retention-days: 7
+
+  # The Expo app compiled for the browser. This suite was not in CI before, and a crash that
+  # blanked the whole native app for returning users went unnoticed as a result.
+  native-browser:
+    name: Native web browser suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
+
+      # Playwright lives in the root package, and the native app imports shared code from ../src.
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install native dependencies
+        run: npm --prefix mobile ci
+
+      # --with-deps asks Ubuntu's package mirror for extra fonts and libraries. Runners sometimes
+      # cannot resolve that mirror, and apt then retries for ten minutes before failing the job
+      # without running a test. The hosted image already carries Chromium's system libraries, so
+      # give the full install three minutes and otherwise install the browser alone.
+      - name: Install Chromium
+        run: timeout 180 npx playwright install --with-deps chromium || npx playwright install chromium
+
+      # mobile/playwright.config.ts starts `expo start --web` itself and compiles the app once
+      # before the first test. Every spec mocks its own routes; no environment is needed.
+      - name: Native web tests
+        working-directory: mobile
+        run: node ../node_modules/@playwright/test/cli.js test
+
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-playwright-results
+          path: mobile/test-results/
           retention-days: 7

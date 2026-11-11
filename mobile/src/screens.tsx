@@ -353,6 +353,7 @@ export function KitchenScreen() {
     spending = receiptSpending(state.groceries ?? []);
   return (
     <Screen>
+      <Button secondary label="Help me choose a meal" onPress={() => h.setTool("foodHelp")} /><Button secondary label="Household meals" onPress={() => h.setTool("household")} />
       <View style={{ gap: 8 }}>
         <Text style={s.eyebrow}>YOUR KITCHEN</Text>
         <Text style={s.title}>What sounds good tonight?</Text>
@@ -493,6 +494,8 @@ export function YouScreen() {
     review = weeklyReview(state);
   return (
     <Screen>
+      <Button secondary label="Life right now" onPress={() => h.setTool("lifeContext")} />
+      <Button secondary label="Your coaching plan" onPress={() => h.setTool("coaching")} />
       <Text style={s.eyebrow}>A LITTLE MORE YOU</Text>
       <Text style={s.title}>
         {state.profile.name

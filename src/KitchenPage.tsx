@@ -44,6 +44,8 @@ type Props = {
   onShopping: () => void;
   onPreferences: () => void;
   onTargets?: () => void;
+  onDecide?: () => void;
+  onHousehold?: () => void;
 };
 
 export default function KitchenPage({
@@ -59,6 +61,8 @@ export default function KitchenPage({
   onShopping,
   onPreferences,
   onTargets,
+  onDecide,
+  onHousehold,
 }: Props) {
   const lots = getPantryLots(state);
   const stock = sortPantryByDate(lots.filter(hasPantryStock));
@@ -145,6 +149,8 @@ export default function KitchenPage({
           </span>
         </button>
         <div className="kitchen-quick-actions">
+          {onDecide && <button onClick={onDecide}><Utensils size={20} /><span>Help me choose a meal</span></button>}
+          {onHousehold && <button onClick={onHousehold}><CookingPot size={20} /><span>Household meals</span></button>}
           <button onClick={onScan}>
             <ScanBarcode size={20} />
             <span>Scan a food</span>

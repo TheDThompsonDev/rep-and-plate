@@ -35,13 +35,21 @@ async function start(page: Page, movement = false) {
     .click();
 }
 
-test("native first meal uses the real manual form and stays saved after reload", async ({
+test("native first meal prompt opens Spot and a manual meal stays saved after reload", async ({
   page,
 }) => {
   await start(page);
   await page.reload();
   await page
     .getByRole("button", { name: "Log my first meal", exact: true })
+    .click();
+  // The prompt opens Spot’s composer; the manual form remains one step away and still completes the first log.
+  await expect(
+    page.getByRole("textbox", { name: "Message Rep & Plate", exact: true }),
+  ).toBeFocused();
+  await page.getByRole("button", { name: "Nutrition", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Enter meal manually", exact: true })
     .click();
   await expect(
     page.getByRole("textbox", { name: "Meal name", exact: true }),

@@ -6,6 +6,10 @@ import type { AppState, Meal, Page } from "../../domain";
  * as props (audit Q2); App builds this object once per render in `ChatProvider`
  * and ChatLayer's body is unchanged apart from where the names come from. */
 export type ChatContextValue = {
+  dailyExperience?: ReactNode;
+  captureInboxEntry?: ReactNode;
+  onDecide?: () => void;
+  onCoaching?: () => void;
   firstTrackingStep?: ReactNode;
   replayIntro: boolean;
   onReplayIntro: (replay: boolean) => void;

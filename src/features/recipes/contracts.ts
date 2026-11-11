@@ -24,6 +24,7 @@ export const recipeBatchSchema = z.object({
       reversedAt: z.string().optional(),
     }),
   ),
+  householdTransfers: z.array(z.object({ householdBatchId: z.string().uuid(), portions: z.number().finite().positive().max(1000) })).max(100).optional(),
   undoneAt: z.string().optional(),
 });
 export type RecipeBatch = z.infer<typeof recipeBatchSchema>;

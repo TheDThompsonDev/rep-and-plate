@@ -1,3 +1,4 @@
+import { lifeContextForAI } from "./features/life-context/model";
 import { apiFetch } from "./api-fetch";
 import { programAnswers } from "./features/progress/training-program";
 import { aiResultSchema, aiNutritionSchema, type AIRequest, type AIResult } from "./ai-contract";
@@ -30,11 +31,13 @@ export function buildAIRequest(state: AppState, message: Message, selectedDay?: 
     captureIntent: image && message.captureIntent === "meal" ? "meal" : undefined,
     day: today(),
     captureDay,
+    capturePurpose: message.capturePurpose,
     history: previous
       .filter((m) => m.ai && m.aiStatus !== "error" && m.aiStatus !== "pending")
       .slice(-12)
       .map((m) => ({ role: m.role, text: m.text.slice(0, 18000) })),
     context: {
+      lifeContext: lifeContextForAI(state.lifeContext, today()),
       fitnessGoal: state.profile.fitnessGoal,
       trainingProgram: state.profile.trainingProgram ? programAnswers(state.profile.trainingProgram) : undefined,
       nutritionBaseline: state.profile.nutritionBaseline,
@@ -119,6 +122,12 @@ export function buildAIRequest(state: AppState, message: Message, selectedDay?: 
   };
 }
 export function applyAIResult(state: AppState, result: AIResult): AppState {
+  const source = state.messages.find(message => message.id === result.requestId);
+  // Choosing from a menu is separate from recording consumption, even if a provider drifts.
+  if (source?.capturePurpose === "decide" || source?.capturePurpose === "menu") {
+    result = { ...result, decision: "conversation", receipt: null, meal: null,
+      workout: null, activity: null, recipePortionProposal: null, preferenceProposal: null };
+  }
   if (
     state.messages.some(
       (m) => m.role === "assistant" && m.requestId === result.requestId,

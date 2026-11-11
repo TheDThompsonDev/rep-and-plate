@@ -11,5 +11,5 @@ export function hasFirstLog(state: AppState): boolean {
 export const firstLogCopy = {
   title: "Make today your starting point.",
   detail:
-    "Log one meal to see your calories and macros, or record some movement. You can start manually right now.",
+    "Send a photo, describe a meal, or record some movement. Start with one thing.",
 };

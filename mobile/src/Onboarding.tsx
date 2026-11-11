@@ -164,7 +164,8 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                       {text(
                         "Tell Spot what you ate or how you moved. Review the details, track your calories and workouts, and see your day add up. Grocery receipts help keep the foods you buy handy for later.",
                       )}
-                      <Button label="Meet Spot" onPress={flow.startTour} />
+                      <Button label="Start with one meal" onPress={() => flow.user ? flow.setStep("setup") : flow.account("signup")} />
+                      <Button secondary label="Meet Spot" onPress={flow.startTour} />
                       <Button secondary label="See what I can do" onPress={() => flow.setStep('guide')}/>
                       <Button
                         secondary
@@ -421,6 +422,8 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                         }
                         onPress={() => void flow.prepare(name)}
                       />
+                      <Button secondary label="Log first, personalize later" disabled={flow.busy || !name.trim() || (!flow.localMode && !flow.confirmed)} onPress={() => { setFitness(null); setNutrition(null); void flow.prepare(name, "ready"); }} />
+                      <Text style={s.tiny}>Your goals and targets can wait. Start with a real meal or workout.</Text>
                       {link("Back to account", () => flow.account("signin"))}
                     </>
                   )}

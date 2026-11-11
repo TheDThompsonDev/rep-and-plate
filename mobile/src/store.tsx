@@ -31,6 +31,9 @@ import {
 } from "../../src/features/cloud/sync-control";
 import { resolveAgentMeal } from "../../src/features/connections/context";
 import type { AgentAction } from "../../src/features/connections/contracts";
+import { recordLocalEvent } from "../../src/features/life-context/model";
+import { trackMealTransition } from "../../src/features/life-context/tracking";
+import type { CapturePurpose } from "../../src/ai-contract";
 import { sessionSignal } from "./auth";
 import { OwnedStateGate } from "../../src/platform/owned-state";
 import { applyFitnessSetup, type FitnessSetupDraft } from '../../src/features/progress/fitness-goal';
@@ -38,6 +41,10 @@ import { applyNutritionSetup, type NutritionSetupResult } from '../../src/featur
 import { chat, loadConnection } from "./api";
 export type Tab = "Chat" | "Nutrition" | "Workouts" | "Kitchen" | "You";
 export type Tool =
+  | "coaching"
+  | "foodHelp"
+  | "lifeContext"
+  | "household"
   | "label"
   | "capture"
   | "receipt"
@@ -102,7 +109,7 @@ type Store = {
     action: AgentAction,
     status: "accepted" | "dismissed",
   ) => Promise<void>;
-  send: (text: string, image?: string, retry?: string) => Promise<void>;
+  send: (text: string, image?: string, retry?: string, purpose?: CapturePurpose, captureId?: string) => Promise<"complete" | "saved" | "blocked" | "busy">;
   cancel: () => void;
 };
 const Context = createContext<Store>(null!);
@@ -172,8 +179,13 @@ export function HealthProvider({ children }: { children: ReactNode }) {
             setRecordsReady(false);
             return;
           }
-          current.current = next;
-          setState(next);
+          const visited = recordLocalEvent(next, { id: `native-visit-${today()}`, kind: "visit", at: new Date().toISOString(), source: "native" });
+          if (visited !== next) {
+            gate.set(visited);
+            void saveDevice(visited).catch(() => setNotice("Usage evidence could not be saved."));
+          }
+          current.current = visited;
+          setState(visited);
           setRecordsReady(true);
           setError("");
           if (previousOwner !== gate.owner) {
@@ -220,7 +232,19 @@ export function HealthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const refresh = () => setDay(today());
     const sub = Lifecycle.addEventListener("change", (v) => {
-      if (v === "active") refresh();
+      if (v === "active") {
+        refresh();
+        const before = gate.current;
+        if (before) {
+          const visited = recordLocalEvent(before, { id: `native-visit-${today()}`, kind: "visit", at: new Date().toISOString(), source: "native" });
+          if (visited !== before) {
+            gate.set(visited);
+            current.current = visited;
+            setState(visited);
+            void saveDevice(visited).catch(() => setNotice("Usage evidence could not be saved."));
+          }
+        }
+      }
       void spotVisit.touch().catch(() => {});
     });
     const timer = setInterval(refresh, 15000);
@@ -228,12 +252,15 @@ export function HealthProvider({ children }: { children: ReactNode }) {
       sub.remove();
       clearInterval(timer);
     };
-  }, []);
+  }, [gate]);
   function change(update: (s: AppState) => AppState) {
     if (recordsRevision !== scope.current || !gate.current || !current.current)
       return false;
     try {
-      const next = stateSchema.parse(update(current.current));
+      const actionId = id();
+      const before = current.current;
+      let next = trackMealTransition(before, stateSchema.parse(update(before)), actionId, "native");
+      if (next.lifeContext?.research.enabled && !before.lifeContext?.research.enabled) next = recordLocalEvent(next, { id: actionId, kind: "visit", at: new Date().toISOString(), source: "native" });
       gate.set(next);
       current.current = next;
       setState(next);
@@ -300,7 +327,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
         : "Proposal dismissed.",
     );
   }
-  async function send(text: string, image?: string, retry?: string) {
+  async function send(text: string, image?: string, retry?: string, purpose?: CapturePurpose, captureId?: string): Promise<"complete" | "saved" | "blocked" | "busy"> {
     if (controller.current) {
       // A reply is still processing. A transcript or typed message is held in
       // the Chat composer with the shared notice (web submitText rule) rather
@@ -312,15 +339,17 @@ export function HealthProvider({ children }: { children: ReactNode }) {
         setTab("Chat");
         setTool(null);
       }
-      return;
+      return "busy";
     }
-    if (!gate.current || !current.current || (!text.trim() && !image)) return;
+    if (!gate.current || !current.current || (!text.trim() && !image)) return "blocked";
+    retry ??= captureId && current.current.messages.some(m => m.id === captureId) ? captureId : undefined;
     const message: Message = retry
       ? current.current.messages.find((m) => m.id === retry)!
       : {
-          id: id(),
+          id: captureId ?? id(),
           role: "user",
           text: text.trim(),
+          capturePurpose: purpose,
           image,
           time: clockTime(),
           at: timestamp(),
@@ -328,16 +357,18 @@ export function HealthProvider({ children }: { children: ReactNode }) {
           aiStatus: "pending",
           captureDay,
         };
-    if (!message) return;
+    if (!message) return "blocked";
+    if (message.aiStatus === "complete") return "complete";
     const source = current.current,
       abort = new AbortController();
+    const started = Date.now();
     const attemptEpoch = cloudEpoch();
     controller.current = abort;
     setBusy(true);
     setProgress("Thinking through the details…");
     setTab("Chat");
     setTool(null);
-    change((s) => ({
+    change((previous) => { const s = recordLocalEvent(previous, { id: message.id, kind: "capture_started", at: new Date(started).toISOString(), source: "native" }); return ({
       ...s,
       messages: retry
         ? s.messages.map((m) =>
@@ -346,9 +377,12 @@ export function HealthProvider({ children }: { children: ReactNode }) {
               : m,
           )
         : [...s.messages, message],
-    }));
+    }); });
     const timeout = setTimeout(() => abort.abort(), 185000);
     try {
+      // Keep the source capture on this owner’s device before contacting a provider.
+      await saveDevice(current.current!);
+      if (attemptEpoch !== cloudEpoch() || abort.signal.aborted) return "saved";
       const result = await chat(
         buildAIRequest(source, message),
         (text) => {
@@ -357,13 +391,16 @@ export function HealthProvider({ children }: { children: ReactNode }) {
         },
         abort.signal,
       );
-      if (!abort.signal.aborted && attemptEpoch === cloudEpoch())
-        change((s) => applyAIResult(s, result));
+      if (!abort.signal.aborted && attemptEpoch === cloudEpoch()) {
+        change((s) => recordLocalEvent(applyAIResult(s, result), { id: message.id, kind: "capture_completed", at: new Date().toISOString(), durationMs: Math.min(3600000, Date.now() - started), source: "native" }));
+        return "complete";
+      }
+      return "saved";
     } catch (e) {
       if (attemptEpoch === cloudEpoch() && controller.current === abort)
-        change((s) => ({
-          ...s,
-          messages: s.messages.map((m) =>
+        change((previous) => ({
+          ...recordLocalEvent(previous, { id: message.id, kind: "capture_failed", at: new Date().toISOString(), durationMs: Math.min(3600000, Date.now() - started), source: "native" }),
+          messages: previous.messages.map((m) =>
             m.id === message.id
               ? {
                   ...m,
@@ -377,6 +414,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
               : m,
           ),
         }));
+      return "saved";
     } finally {
       clearTimeout(timeout);
       if (controller.current === abort) {

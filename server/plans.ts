@@ -123,6 +123,7 @@ export function createPlanApi(config: Config) {
           equipment: z.string().min(1).max(300),
           minutes: z.number().int().min(5).max(120),
           history: z.array(completedWorkoutContextSchema).max(5),
+          temporaryContext: z.object({name:z.string().max(80),details:z.string().max(1000)}).optional(),
         })
         .safeParse(body);
       if (!input.success)

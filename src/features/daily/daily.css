@@ -1,0 +1,30 @@
+.daily-experience { display: grid; gap: 14px; margin: 16px 0 20px; color: #163e33; }
+.daily-next-action { padding: 20px; border: 1px solid #cee7db; border-radius: 22px; background: linear-gradient(135deg, #edf8f1, #f8fbf8); }
+.daily-eyebrow { font-size: 10px; line-height: 1.5; font-weight: 800; letter-spacing: .1em; color: #47735e; }
+.daily-next-action h2 { margin: 7px 0 6px; font-size: clamp(18px, 2.5vw, 23px); line-height: 1.25; letter-spacing: -.025em; }
+.daily-next-action p { margin: 0; font-size: 14px; line-height: 1.5; color: #526b61; }
+.daily-action-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 16px; }
+.daily-primary, .daily-dismiss, .daily-pin, .daily-different, .daily-meal-review { font: inherit; cursor: pointer; }
+.daily-primary { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 18px; padding: 10px 16px; border: 0; border-radius: 13px; background: #006249; color: #fff; font-size: 14px; font-weight: 700; }
+.daily-dismiss { min-height: 44px; padding: 8px 5px; border: 0; background: transparent; color: #526b61; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.daily-familiar { padding: 16px 18px 9px; border: 1px solid #e3ece5; border-radius: 20px; background: #fff; }
+.daily-familiar-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; }
+.daily-familiar-heading h2 { margin: 0; font-size: 16px; line-height: 1.4; }
+.daily-familiar-heading > span { font-size: 11px; color: #60786d; }
+.daily-familiar-help { margin: 5px 0 8px; color: #60786d; font-size: 12px; line-height: 1.5; }
+.daily-meal-list { list-style: none; padding: 0; margin: 0; }
+.daily-meal-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; border-top: 1px solid #edf1ec; padding: 6px 0; }
+.daily-meal-review { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 66px; width: 100%; padding: 5px 0; border: 0; background: transparent; color: inherit; text-align: left; }
+.daily-meal-review > img { width: 42px; height: 46px; flex: 0 0 42px; border-radius: 10px; object-fit: cover; }
+.daily-meal-review > span:first-of-type { display: grid; gap: 3px; min-width: 0; }
+.daily-meal-review strong { font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
+.daily-meal-review small { color: #3f6654; font-size: 11px; line-height: 1.4; }
+.daily-meal-origin { color: #6f8077; font-size: 10px; line-height: 1.4; }
+.daily-meal-arrow { margin-left: auto; color: #4b7d63; }
+.daily-pin { min-height: 44px; max-width: 90px; padding: 6px 7px; border: 1px solid #dbe7de; border-radius: 10px; background: #fff; color: #476a57; font-size: 11px; line-height: 1.4; }
+.daily-pin.is-pinned { background: #edf7ed; border-color: #bcdbbf; color: #225c33; }
+.daily-more > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: #32694e; font-size: 12px; font-weight: 700; }
+.daily-different { width: 100%; min-height: 44px; padding: 9px 0; border: 0; background: transparent; color: #32694e; text-align: left; font-size: 12px; }
+.daily-notice { margin: 0; padding: 10px 14px; color: #725028; background: #fff6e7; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+.daily-experience button:focus-visible, .daily-more > summary:focus-visible { outline: 3px solid #55a17c; outline-offset: 3px; }
+@media (max-width: 420px) { .daily-next-action { padding: 16px; } .daily-familiar { padding: 14px 13px 8px; } .daily-meal-row { gap: 5px; } .daily-pin { max-width: 75px; } }

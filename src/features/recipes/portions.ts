@@ -7,7 +7,8 @@ export function remainingRecipePortions(batch: RecipeBatch): number {
     batch.totalPortions -
       batch.consumptions
         .filter((entry) => !entry.reversedAt)
-        .reduce((sum, entry) => sum + entry.portions, 0),
+        .reduce((sum, entry) => sum + entry.portions, 0) -
+      (batch.householdTransfers ?? []).reduce((sum, transfer) => sum + transfer.portions, 0),
   );
 }
 

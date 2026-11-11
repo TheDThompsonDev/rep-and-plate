@@ -1,0 +1,19 @@
+.training-continuity { margin: 16px 0; padding: 18px; display: grid; gap: 12px; background: #f5faf6; border: 1px solid #dce9df; border-radius: 20px; color: #234c3a; }
+.training-continuity h3 { margin: 0; font-size: 17px; line-height: 1.4; }
+.training-continuity p { margin: 0; font-size: 13px; line-height: 1.6; }
+.training-continuity small { display: block; font-size: 12px; line-height: 1.5; color: #5b7466; }
+.training-continuity-field { display: grid; gap: 7px; font-size: 13px; font-weight: 700; }
+.training-continuity-field input, .training-continuity-field select { width: 100%; min-height: 44px; box-sizing: border-box; padding: 10px 12px; border: 1px solid #bdd3c3; border-radius: 10px; background: #fff; color: #234c3a; font: inherit; font-weight: 400; }
+.training-continuity button { min-height: 44px; padding: 10px 13px; border: 1px solid #bdd3c3; border-radius: 11px; color: #195839; background: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.training-continuity button:disabled, .training-continuity input:disabled { opacity: .55; cursor: default; }
+.training-continuity button:focus-visible, .training-continuity input:focus-visible, .training-continuity select:focus-visible, .training-continuity summary:focus-visible { outline: 3px solid #55a17c; outline-offset: 3px; }
+.training-continuity-previous { display: grid; gap: 8px; padding: 13px; border: 1px solid #dce9df; border-radius: 13px; background: #fff; }
+.training-continuity-previous strong { font-size: 13px; }
+.training-continuity-previous > span { font-size: 13px; line-height: 1.6; }
+.training-continuity-muted { color: #5b7466; }
+.training-continuity-options > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-size: 13px; font-weight: 700; }
+.training-continuity-option { display: grid; gap: 10px; padding: 14px 0; border-top: 1px solid #dce9df; }
+.training-continuity-checkbox { display: flex; align-items: center; gap: 9px; min-height: 44px; font-size: 13px; }
+.training-continuity-checkbox input { width: 20px; height: 20px; accent-color: #006249; }
+.training-continuity-notice { padding: 10px 12px; background: #e5f2e8; border-radius: 11px; }
+@media (max-width: 420px) { .training-continuity { padding: 15px; } .training-continuity-previous { padding: 11px; } }

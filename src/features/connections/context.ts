@@ -25,13 +25,19 @@ export function buildAgentContext(state: AppState, day: string, timezone: string
   const sessions = [...(state.workout.history ?? []),...(state.workout.status === 'finished' ? [{...state.workout,title:state.workout.title ?? 'Workout'}] : [])];
   const history = [...new Map(sessions.filter(w => w.finishedAt).map(w=>[`${w.startedAt}:${w.title}`,w])).values()].sort((a,b)=>b.finishedAt!.localeCompare(a.finishedAt!));
   const { calories, protein, carbs, fat } = state.profile;
+  const activityStart = new Date(anchor); activityStart.setUTCDate(activityStart.getUTCDate() - 27);
+  const activityStartDay = activityStart.toISOString().slice(0, 10);
+  const activities = (state.activities ?? []).filter(activity => daySchema.safeParse(activity.day).success &&
+    activity.day >= activityStartDay && activity.day <= day && Number.isFinite(activity.minutes) && activity.minutes > 0 && activity.minutes <= 1440)
+    .sort((a, b) => b.day.localeCompare(a.day) || a.id.localeCompare(b.id));
   return agentContextSchema.parse({
     day, timezone,
     nutrition: { days, goals: { calories, protein, carbs, fat }, goalsConfigured: !!state.profile.targetsConfigured },
     pantry: lots.slice(0, 200).map(lot => ({ id: short(lot.id), name: short(lot.item.name), remainingServings: lot.inconsistent ? null : lot.remaining, serving: short(lot.item.serving), needsReview: lot.item.needsReview || lot.inconsistent })),
     preferences: preferences.slice(0, 60).map(short),
     workouts: history.slice(0, 10).map(w => ({ title: short(w.title), finishedAt: w.finishedAt!, exercises: w.exercises.slice(0, 50).map(e => ({ name: short(e.name), weightUnit: 'lb', sets: e.sets.flatMap((reps, index) => reps === null ? [] : [{ reps, weight: e.setWeights?.[index] ?? e.weight }]).slice(0, 100) })) })),
-    truncated: [...(lots.length > 200 ? ['pantry'] : []), ...(preferences.length > 60 ? ['preferences'] : []), ...(history.length > 10 || history.some(w => w.exercises.length > 50 || w.exercises.some(e => e.sets.length > 100)) ? ['workouts'] : [])],
+    activities: activities.slice(0, 200).map(activity => ({ id: short(activity.id), title: short(activity.title), day: activity.day, minutes: activity.minutes, note: activity.note.slice(0, 1000) })),
+    truncated: [...(lots.length > 200 ? ['pantry'] : []), ...(preferences.length > 60 ? ['preferences'] : []), ...(history.length > 10 || history.some(w => w.exercises.length > 50 || w.exercises.some(e => e.sets.length > 100)) ? ['workouts'] : []), ...(activities.length > 200 ? ['activities'] : [])],
   });
 }
 

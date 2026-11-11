@@ -1,0 +1,12 @@
+.pantry-priorities { display: grid; gap: .75rem; background: #f0f7f2; border: 1px solid #d7e8dc; padding: 1rem; border-radius: 16px; }
+.pantry-priorities-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .35rem; }
+.pantry-priorities h3 { font-size: 1rem; margin: 0; }
+.pantry-priorities-heading > span, .pantry-priorities > p, .pantry-priorities > small { color: #52695c; font-size: .8125rem; line-height: 1.5; margin: 0; }
+.pantry-priorities label { display: grid; gap: .4rem; font-size: .875rem; font-weight: 600; }
+.pantry-priorities input { width: 100%; box-sizing: border-box; min-height: 44px; padding: .65rem .75rem; border: 1px solid #c8ddce; border-radius: 10px; background: white; color: #173f2d; font: inherit; }
+.pantry-priorities ul { list-style: none; display: grid; gap: .5rem; padding: 0; margin: 0; }
+.pantry-priorities li { display: flex; align-items: center; gap: .75rem; justify-content: space-between; background: white; border-radius: 10px; padding: .5rem .75rem; font-size: .875rem; }
+.pantry-priorities li > span { overflow-wrap: anywhere; }
+.pantry-priorities li button, .pantry-priorities-defer { min-height: 44px; flex-shrink: 0; padding: .5rem .75rem; border: 1px solid #c8ddce; border-radius: 10px; background: white; color: #15543b; font: inherit; font-size: .8125rem; cursor: pointer; }
+.pantry-priorities-label { font-size: .875rem; }
+.pantry-priorities-defer { justify-self: start; }

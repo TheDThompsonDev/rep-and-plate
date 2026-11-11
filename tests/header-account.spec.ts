@@ -39,7 +39,14 @@ test('header sign-out is immediately visible and preserves device records', asyn
   expect(cloud.signouts).toBe(1);
   expect(await stored(page)).toEqual(before);
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+  // These device records were never bound to the account, so a reload returns to the app as a
+  // guest. Assert that settled state. The Welcome screen and its "Sign in" button are on screen
+  // for about ten milliseconds while the app loads, and waiting for them passed or failed on timing.
+  await page.getByRole('button', { name: 'Open account menu', exact: true }).click();
+  const signedOut = page.getByRole('dialog', { name: 'Your account', exact: true });
+  await expect(signedOut.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+  await expect(signedOut).not.toContainText('fixture@example.test');
+  expect(await stored(page)).toEqual(before);
 });
 
 test('server sign-out failure still ends the local session and preserves records', async ({ page }) => {

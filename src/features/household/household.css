@@ -1,0 +1,24 @@
+.household-dialog { display: grid; gap: 1.25rem; color: var(--text, #18392e); }
+.household-dialog p { line-height: 1.55; margin: .35rem 0; }
+.household-dialog h3 { margin: 0 0 .6rem; font-size: 1.05rem; }
+.household-dialog label { display: grid; gap: .4rem; font-size: .875rem; font-weight: 600; }
+.household-dialog input, .household-dialog select { box-sizing: border-box; width: 100%; min-height: 44px; padding: .7rem .8rem; border: 1px solid #cdded5; border-radius: 12px; background: white; color: #18392e; font: inherit; }
+.household-intro { font-size: 1rem; font-weight: 600; }
+.household-privacy, .household-invite small { color: #536a5f; font-size: .8125rem; line-height: 1.5; }
+.household-connect { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.household-connect form, .household-publish, .household-invite { display: grid; gap: .75rem; }
+.household-heading { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; border-top: 1px solid #e1ebe5; padding-top: 1rem; }
+.household-heading label { flex: 1; min-width: 150px; }
+.household-heading > span { padding: .75rem 0; color: #536a5f; font-size: .875rem; }
+.household-invite, .household-publish, .household-review { background: #f1f8f3; border: 1px solid #dcebe0; padding: 1rem; border-radius: 16px; }
+.household-batches { display: grid; gap: .75rem; }
+.household-batch, .household-pending-item { display: grid; gap: .5rem; border: 1px solid #dce5df; border-radius: 14px; padding: 1rem; }
+.household-batch > span, .household-batch small { color: #536a5f; font-size: .875rem; }
+.household-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .65rem; }
+.household-error { color: #8a2d24; border: 1px solid #efd2cc; background: #fff4ef; border-radius: 12px; padding: .85rem; }
+.household-notice { color: #145a40; border: 1px solid #c5e4d2; background: #edf8f0; border-radius: 12px; padding: .85rem; }
+.household-pending { display: grid; gap: .75rem; }
+.household-members summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.household-member { padding: .8rem 0; border-bottom: 1px solid #e1ebe5; }
+.household-dialog .button { min-height: 44px; }
+@media (max-width: 560px) { .household-connect { grid-template-columns: 1fr; } .household-actions .button { flex: 1 1 140px; } }

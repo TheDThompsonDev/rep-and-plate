@@ -330,7 +330,7 @@ export function useOnboarding(adapter: OnboardingAdapter) {
       }
     });
   }
-  async function prepare(name: string) {
+  async function prepare(name: string, nextStep: "goals" | "ready" = "goals") {
     await run(async () => {
       requireOnboardingName(name);
       if (!localMode) {
@@ -347,7 +347,7 @@ export function useOnboarding(adapter: OnboardingAdapter) {
         throw Error(
           "These records are linked to an account. Sign in with that account to continue.",
         );
-      if (alive.current) setStep("goals");
+      if (alive.current) setStep(nextStep);
     });
   }
   async function finish(

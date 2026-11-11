@@ -1,3 +1,4 @@
+import { trackMealTransition } from "../life-context/tracking";
 import { useCallback, useState, type Dispatch, type SetStateAction } from "react";
 import { repeatMeal, today, type AppState, type Meal, type ReviewItem } from "../../domain";
 import { deleteMealWithPantry } from "../pantry/ledger";
@@ -51,7 +52,8 @@ export function useMealEditor({ state, setState, notify, captureDay, onPantryLin
       notify("Estimate updated. Review and confirm it before logging.");
       return;
     }
-    setState((previous) => saveEditedMeal(previous, meal));
+    const actionId = crypto.randomUUID();
+    setState((previous) => trackMealTransition(previous, saveEditedMeal(previous, meal), actionId, "web"));
     setEditMeal(null);
     notify("Meal updated. Your day is up to date.");
   }

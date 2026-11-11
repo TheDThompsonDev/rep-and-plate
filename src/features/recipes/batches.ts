@@ -223,6 +223,7 @@ export function undoRecipePreparation(
     (entry) => entry.id === batchId,
   );
   if (!batch || batch.undoneAt) return state;
+  if (batch.householdTransfers?.length) throw Error("This batch has shared household portions. Keep its preparation history to preserve the shared stock.");
   if (batch.consumptions.some((entry) => !entry.reversedAt))
     throw new Error(
       "Undo this batch's logged portions before undoing its preparation.",

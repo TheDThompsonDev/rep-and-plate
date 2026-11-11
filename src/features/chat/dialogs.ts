@@ -5,6 +5,11 @@ import { useCallback, useReducer } from "react";
  * from an open PantryDialog that needs sign-in), and receipt capture reopens
  * after the account dialog closes. Three kinds carry what they were opened for. */
 export type Dialog =
+  | { kind: "coaching" }
+  | { kind: "decisions" }
+  | { kind: "lifeContext" }
+  | { kind: "household" }
+  | { kind: "captureInbox" }
   | { kind: "profile" }
   | { kind: "capture" }
   | { kind: "scanner" }
@@ -34,6 +39,11 @@ export type DialogAction =
  * capture may survive the sign-in it asked for; cloud, header account and
  * connections stay open on purpose. */
 export const RECORD_BOUND_DIALOGS = [
+  "coaching",
+  "decisions",
+  "lifeContext",
+  "household",
+  "captureInbox",
   "planner",
   "preferences",
   "shopping",

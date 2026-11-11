@@ -74,13 +74,11 @@ test("a typed meal without connected chat gets guidance instead of a sample meal
     "Same breakfast as yesterday",
   ]) {
     await send(page, text);
-    await expect(
-      page
-        .getByText(/I can’t answer freely while connected chat is unavailable/)
-        .last(),
-    ).toBeVisible();
-    await expect(page.getByText(/Enter meal manually/).last()).toBeVisible();
+    // The message is kept as a capture to retry, with a way back to chat; nothing is estimated or logged.
+    await expect(page.getByText(/Your capture is saved; reconnect and try again\./).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: "Reconnect to retry this capture", exact: true }).last()).toBeVisible();
   }
+  await expect(page.getByText(/Manual food logging and workouts still work/)).toBeVisible();
   await expect(page.locator(".fuel-meal-card")).toHaveCount(0);
   await expect(page.getByText("Example · not counted")).toHaveCount(0);
   await expect(page.getByText(/sample estimate/i)).toHaveCount(0);

@@ -75,8 +75,10 @@ test('receipt purchase date and prioritized review queue lead straight to the un
   await seedBrowserRecords(page,state);await page.reload();
   await page.getByRole('button',{name:'Open pantry',exact:true}).click();
   const queue=page.getByRole('region',{name:'Pantry review queue'});
-  await expect(queue).toContainText('1 food item needs a check');await expect(queue).not.toContainText('Soap');
+  await expect(queue).toContainText('1 item needs review');await expect(queue).not.toContainText('Soap');
   await expect(page.locator('.pantry-lot-heading')).toContainText('Purchased 2026-09-25');
+  // Pending checks are collapsed until asked for, so the pantry opens on what is usable.
+  await page.getByRole('button',{name:'Show 1 pending check',exact:true}).click();
   await page.getByRole('button',{name:'Review Whole milk',exact:true}).click();
   await expect(page.getByRole('dialog')).toContainText('Check this grocery item');
   await expect(page.getByLabel('Product name',{exact:true})).toHaveValue('Whole milk');
