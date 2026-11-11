@@ -87,7 +87,7 @@ The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_OR
 | --- | --- | --- |
 | Codex CLI/app | `codex mcp add rep-and-plate --url https://YOUR_APP_ORIGIN/api/agents/mcp --bearer-token-env-var REP_PLATE_TOKEN` | Exercised on 2026-11-10 in real Codex sessions (CLI 0.167) against a local server: check-in, import, propose and wait all worked. Codex asks for its own approval before `resolve_coaching_change`, so applying a change needs an interactive session. Not exercised against a hosted account. Codex CLI 0.142 could not run the account's models at all; update Codex first. |
 | Claude Code | `claude mcp add --transport http rep-and-plate --scope user https://YOUR_APP_ORIGIN/api/agents/mcp --header "Authorization: Bearer <token>"`, or the project `.mcp.json` entry below, which keeps the token in the environment. | Syntax checked against the Claude Code MCP documentation; not exercised against a hosted account. |
-| Claude (web/desktop/mobile) | **Add custom connector**, using the address above and the request-headers field for `Authorization: Bearer …` where your account offers it. | Unverified. Some accounts only offer OAuth, which this server does not implement. |
+| Claude chat (web and desktop) | **Customize**, then **Connectors**, **Add**, **Add custom connector**. Paste the address above, choose **No sign in** for Authentication, and under **Request headers** add `Authorization` with the value `Bearer <token>`. Turn it on per chat from the **+** menu. | Form fields checked against Claude's help article on 2026-11-11. Claude connects from Anthropic's servers, so the address must be public: a local development server cannot be used. Not exercised against a hosted account. |
 | ChatGPT | Not supported yet. | Custom connectors accept OAuth or no authentication, not a fixed bearer header. |
 
 ```json
@@ -102,7 +102,29 @@ The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_OR
 }
 ```
 
-Reaching ChatGPT and OAuth-only Claude accounts needs an OAuth 2.1 authorization flow in front of the same scoped connections. That is not implemented.
+Reaching ChatGPT needs an OAuth 2.1 authorization flow in front of the same scoped connections. That is not implemented.
+
+## Try it on your own computer
+
+Nothing needs to be deployed. The development server serves the same MCP endpoint and keeps connections in a local file (`.fuel-data/agents.sqlite`), so no account is needed.
+
+1. Start the app and leave it running:
+
+   ```bash
+   npm run dev
+   ```
+
+2. Open `http://127.0.0.1:5173/#you`, choose **Connections**, then **Connect an assistant**. Name it, press **Use daily coaching permissions**, and create it.
+3. The screen now shows your access key and paste-ready steps for Claude Code, Codex and other tools, already filled in with the local address `http://127.0.0.1:5173/api/agents/mcp`. Follow the steps for your assistant.
+4. Start a conversation and say: `Check in with Rep & Plate: what is on for me today?`
+
+Things to know:
+
+- The assistant must run on the same computer. The server refuses requests that are not addressed to `localhost` or `127.0.0.1`.
+- The connection stops answering when you stop `npm run dev`, and works again when you restart it.
+- Codex reads the key from the `REP_PLATE_TOKEN` environment variable, so restart Codex after setting it. Codex CLI 0.142 could not run current models; update it first.
+- Plan changes need two yeses: yours in the conversation, and your assistant's own approval prompt for `resolve_coaching_change`.
+- To remove it afterwards: `claude mcp remove rep-and-plate` or `codex mcp remove rep-and-plate`, and **Disconnect** in Connections.
 
 ## Direct HTTP integrations
 

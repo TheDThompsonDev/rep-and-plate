@@ -29,6 +29,7 @@ export type SetupGuide = {
 
 export function setupGuides(appUrl: string, token: string): SetupGuide[] {
   const address = mcpAddress(appUrl);
+  const onThisComputer = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)/i.test(appUrl);
   const header = `Authorization: Bearer ${token}`;
   // In a real Codex trial the assistant used Rep & Plate every time it was named and only sometimes when it was not.
   const say: SetupStep = { text: 'Start a conversation and say this. Naming Rep & Plate is what makes your assistant use it:', copy: firstMessage, copyLabel: 'Copy first message' };
@@ -52,15 +53,28 @@ export function setupGuides(appUrl: string, token: string): SetupGuide[] {
         say,
       ],
     },
-    {
-      id: 'claude', name: 'Claude app', status: 'limited',
-      summary: 'Works only if your account shows a request-headers field for custom connectors.',
-      steps: [
-        { text: 'In Claude, open Settings, then Connectors, then Add custom connector. Use this address:', copy: address, copyLabel: 'Copy address' },
-        { text: 'If a request-headers field is offered, add this header:', copy: header, copyLabel: 'Copy header' },
-        { text: 'If Claude asks you to sign in instead, this connection cannot be used there yet. Use Claude Code for now.' },
-      ],
-    },
+    // Claude chat reaches a connector from Anthropic's servers, never from the person's device, so
+    // an app running on this computer is out of its reach. Checked against Claude's help article
+    // "Get started with custom connectors using remote MCP" on 2026-11-11: the form offers
+    // Authentication "No sign in" and Request headers for a fixed bearer token.
+    onThisComputer
+      ? {
+          id: 'claude', name: 'Claude app', status: 'unavailable',
+          summary: 'Not from this computer.',
+          steps: [
+            { text: 'Claude chat connects from Anthropic’s servers, so it cannot reach an app that is running only on this computer. Use Claude Code here, or connect Claude chat from your hosted Rep & Plate account.' },
+          ],
+        }
+      : {
+          id: 'claude', name: 'Claude app', status: 'ready',
+          summary: 'Add it once as a custom connector, then use it in any chat.',
+          steps: [
+            { text: 'In Claude, open Customize, then Connectors. Choose Add, then Add custom connector, and paste this as the server address:', copy: address, copyLabel: 'Copy address' },
+            { text: 'For Authentication, choose No sign in.' },
+            { text: 'Under Request headers, add a header named Authorization with this value:', copy: `Bearer ${token}`, copyLabel: 'Copy header value' },
+            { text: 'In a chat, open the + menu, turn Rep & Plate on under Connectors, and say:', copy: firstMessage, copyLabel: 'Copy first message' },
+          ],
+        },
     {
       id: 'chatgpt', name: 'ChatGPT', status: 'unavailable',
       summary: 'Not available yet.',

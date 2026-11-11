@@ -126,8 +126,12 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
               ]}
             >
               <Text style={[s.h2, { color: "#073f35" }]}>Rep & Plate</Text>
+              {/* No account action while loading: the device may be about to open the app, and a
+                  press here could be undone when loading finishes. */}
               {flow.replaying
                 ? link("Close tour", flow.closeReplay)
+                : flow.loading
+                  ? null
                 : flow.user
                   ? link("Sign out", () => void flow.signOut())
                   : link("Sign in", () => flow.account("signin"))}
@@ -145,7 +149,7 @@ export function NativeOnboarding({ children }: { children: ReactNode }) {
                 alignSelf: "center",
               }}
             >
-              {!['guide', 'goals', 'nutrition'].includes(flow.step) && <SpotScene
+              {!flow.loading && !['guide', 'goals', 'nutrition'].includes(flow.step) && <SpotScene
                 scene={flow.step === "intro" ? intro.scene : "press-conference"}
               />}
               {flow.loading ? (
