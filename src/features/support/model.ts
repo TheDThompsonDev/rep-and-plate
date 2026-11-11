@@ -23,6 +23,10 @@ export const dataHandling = [
     text: "Relevant messages, saved context and any capture you submit are sent to the AI services needed to answer. Qwen leads the conversation, OpenAI can provide a backup response and voice transcription, and Jev checks purchase-versus-meal intent. These providers process submitted content under their own terms. Avoid including payment details or other information you do not want processed.",
   },
   {
+    title: "Connected assistants",
+    text: "Nothing is shared with an outside assistant unless you create a connection in Connections. Each connection can read only what you allow. Photos, your conversations with Spot and your password are never available to it. What a connected assistant reads is processed by that assistant’s provider under its own terms. It can suggest meals, which are logged only after you review them. Records an assistant saves for you, such as runs, lifts or nutrition totals relayed from your other apps, are stored by Rep & Plate with their source, apart from your agreed plan and food diary. Rep & Plate does not sign in to those apps itself. You can review these records under Coaching and remove them in the web app. Rep & Plate keeps a one-way fingerprint of each access key, not the key. A connection stops working when its period ends or as soon as you disconnect it. Account deletion removes your connections, coaching plan and imported records.",
+  },
+  {
     title: "Temporary uploads and service records",
     text: "Private uploads used to read a capture are separate from photos saved with your records. A daily cleanup removes temporary captures older than 24 hours and expired response caches. Service monitoring stores account and request identifiers, model, timing, token counts and success or failure for up to 90 days plus the cleanup interval. It does not store message text, images or provider error details in monitoring records.",
   },

@@ -3,7 +3,7 @@ import { Client } from '@modelcontextprotocol/client';
 import { InMemoryTransport, McpServer, type CallToolResult } from '@modelcontextprotocol/server';
 import { Window } from 'happy-dom';
 import { describe, expect, it, vi } from 'vitest';
-import { registerCoachingTools, coachingAppSupported, projectCoachingMcpResult } from './coaching-mcp';
+import { registerCoachingTools, coachingAppSupported, projectCoachingMcpResult, freshnessView } from './coaching-mcp';
 import { coachingAppHtml, coachingAppResource, COACHING_APP_MIME, COACHING_APP_URI } from '../../server/agents/coaching-app';
 import type { AgentRequest } from '../../src/features/connections/contracts';
 
@@ -46,6 +46,8 @@ describe('coaching MCP registration', () => {
       const result = await connection.client.callTool({ name: 'get_coaching_day', arguments: { day: '2026-11-08' } });
       expect(result.structuredContent).toMatchObject({ state: { revision: 3, profile: canonical.state.profile }, freshness: canonical.freshness });
       expect(result.content).toEqual([expect.objectContaining({ type: 'text', text: expect.stringContaining('"stale": true') })]);
+      // A real Codex session read a bare "stale" flag as "your plan is out of date"; the result now says what it covers.
+      expect((result.content as { text: string }[])[0].text).toContain('do not describe the plan as stale');
       expect(result._meta).toMatchObject({ coachingOperations: ['coaching.read'] });
       expect(connection.seen).toEqual([{ operation: 'coaching.read', day: '2026-11-08' }]);
       const resource = await connection.client.readResource({ uri: COACHING_APP_URI });
@@ -196,5 +198,29 @@ describe('coaching MCP App resource', () => {
       win.document.body.replaceChildren();
       await new Promise(resolve => setTimeout(resolve, 0));
     } finally { await win.happyDOM.close(); }
+  });
+});
+
+describe('what freshness tells the assistant', () => {
+  const current = 'The coaching plan, reported outcomes, memories and records from other apps shown here are current.';
+  it('says the plan is current when no app records exist, which is normal for an assistant-only user', () => {
+    const view = freshnessView({ mode: 'cloud_snapshot', publishedAt: null, dataUpdatedAt: null, sourceRevision: null, ageSeconds: null, stale: true });
+    expect(view.summary).toContain(current);
+    expect(view.summary).toContain('unknown, not zero');
+    expect(view.summary).toContain('do not describe the plan as stale');
+    expect(view.appliesTo).toContain('never the coaching plan');
+    expect(view.stale).toBe(true);
+  });
+  it('gives the age of old app records in plain words and limits when to mention it', () => {
+    const view = freshnessView({ mode: 'cloud_snapshot', dataUpdatedAt: '2026-11-10T09:00:00Z', ageSeconds: 3 * 3600, stale: true });
+    expect(view.summary).toContain(current);
+    expect(view.summary).toContain('last saved 3 hours ago');
+    expect(view.summary).toContain('only when your advice depends on them');
+    expect(freshnessView({ dataUpdatedAt: '2026-11-07T09:00:00Z', ageSeconds: 3 * 86400, stale: true }).summary).toContain('3 days ago');
+  });
+  it('states fresh app records without a warning', () => {
+    const view = freshnessView({ mode: 'cloud_snapshot', dataUpdatedAt: '2026-11-10T11:59:00Z', ageSeconds: 60, stale: false });
+    expect(view.summary).toContain('saved under two minutes ago');
+    expect(view.summary).not.toContain('may miss');
   });
 });

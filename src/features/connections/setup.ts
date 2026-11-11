@@ -30,7 +30,8 @@ export type SetupGuide = {
 export function setupGuides(appUrl: string, token: string): SetupGuide[] {
   const address = mcpAddress(appUrl);
   const header = `Authorization: Bearer ${token}`;
-  const say: SetupStep = { text: 'Start a conversation and say:', copy: firstMessage, copyLabel: 'Copy first message' };
+  // In a real Codex trial the assistant used Rep & Plate every time it was named and only sometimes when it was not.
+  const say: SetupStep = { text: 'Start a conversation and say this. Naming Rep & Plate is what makes your assistant use it:', copy: firstMessage, copyLabel: 'Copy first message' };
   return [
     {
       id: 'claude-code', name: 'Claude Code', status: 'ready',

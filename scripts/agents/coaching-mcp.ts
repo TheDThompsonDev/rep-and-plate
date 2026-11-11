@@ -121,7 +121,7 @@ export function projectCoachingMcpResult(value: unknown): Row {
       skippedSessions: rows(weekly.skipped).length, unreportedSessions: rows(weekly.unreported).length,
       observations: Array.isArray(weekly.observations) ? weekly.observations.slice(0, 10) : [],
     },
-    freshness: fields(source.freshness, ['mode', 'publishedAt', 'dataUpdatedAt', 'sourceRevision', 'ageSeconds', 'stale']),
+    freshness: freshnessView(source.freshness),
     omitted: { sessions: Math.max(0, allSessions.length - sessions.length), outcomes: Math.max(0, rows(state.outcomes).length - outcomes.length), pendingProposals: Math.max(0, pending.length - proposals.length) },
   };
   if (Array.isArray(source.nextSteps)) result.nextSteps = source.nextSteps.filter((step): step is string => typeof step === 'string').slice(0, 4);
@@ -132,6 +132,26 @@ export function projectCoachingMcpResult(value: unknown): Row {
   if (source.entry) result.entry = decisionSummary(source.entry);
   if (typeof source.replayed === 'boolean') result.replayed = source.replayed;
   return result;
+}
+
+/** Roughly how long ago, in the words a person would use. */
+const ago = (seconds: number) => seconds < 120 ? 'under two minutes' : seconds < 5400 ? `${Math.round(seconds / 60)} minutes` : seconds < 172800 ? `${Math.round(seconds / 3600)} hours` : `${Math.round(seconds / 86400)} days`;
+
+/**
+ * "stale" describes only food and workouts recorded in the Rep & Plate app. Read bare, an assistant
+ * told an assistant-only user their plan was out of date on every check-in, so the result says in
+ * words what is current and what is not.
+ */
+export function freshnessView(raw: unknown): Row {
+  const freshness = fields(raw, ['mode', 'publishedAt', 'dataUpdatedAt', 'sourceRevision', 'ageSeconds', 'stale']);
+  const age = typeof freshness.ageSeconds === 'number' ? freshness.ageSeconds : null;
+  const current = 'The coaching plan, reported outcomes, memories and records from other apps shown here are current.';
+  const summary = !freshness.dataUpdatedAt || age === null
+    ? `${current} No food or workouts recorded in the Rep & Plate app are available to this connection, so those are unknown, not zero. That is normal for someone who works mainly through an assistant; do not describe the plan as stale or out of date.`
+    : freshness.stale
+      ? `${current} Food and workouts recorded in the Rep & Plate app were last saved ${ago(age)} ago and may miss newer entries. Mention that only when your advice depends on them.`
+      : `${current} Food and workouts recorded in the Rep & Plate app were saved ${ago(age)} ago.`;
+  return { appliesTo: 'Food and workouts recorded in the Rep & Plate app only, never the coaching plan.', summary, ...freshness };
 }
 
 function dailyText(view: Row): string {
@@ -189,9 +209,9 @@ export function registerCoachingTools(server: McpServer, call: CoachingMcpCall, 
 
   if (operations.includes('coaching.read')) server.registerTool('get_coaching_day', {
     title: 'Your coaching day',
-    description: 'Start here. Read the saved coaching plan, today/upcoming sessions, weekly brief, pending proposals, records brought in from other apps, and nextSteps: the most useful things to raise now, in priority order. Check snapshot freshness and missing records before advising; this does not read a live device.',
+    description: 'Start here, and use this whenever the user talks about their training, a workout they did, eating around training or how their week is going, even if they do not name Rep & Plate. Read the saved coaching plan, today/upcoming sessions, weekly brief, pending proposals, records brought in from other apps, and nextSteps: the most useful things to raise now, in priority order. The plan itself is always current. freshness describes only food and workouts recorded in the app, which are a saved snapshot and not a live device feed; read its summary before relying on them.',
     inputSchema: z.object({ day: daySchema.optional() }).strict(), annotations: read, ...ui,
-  }, ({ day }) => invoke({ operation: 'coaching.read', ...(day ? { day } : {}) }, 'Saved coaching plan, next steps and freshness are shown below. Pending proposals have not been applied.'));
+  }, ({ day }) => invoke({ operation: 'coaching.read', ...(day ? { day } : {}) }, 'Saved coaching plan and next steps are shown below and are current. freshness covers app-recorded food and workouts only. Pending proposals have not been applied.'));
 
   if (operations.includes('coaching.propose')) server.registerTool('propose_coaching_change', {
     title: 'Review a coaching change',

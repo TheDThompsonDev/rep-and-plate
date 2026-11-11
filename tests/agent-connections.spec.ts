@@ -162,3 +162,17 @@ test('a new connection has paste-ready steps for each assistant and can be kept 
     expect((await fixture.call({ operation: 'capabilities' })).status).toBe(200);
   } finally { await fixture.close(); }
 });
+
+test('the privacy page explains what connected assistants can see and keep', async ({ page }) => {
+  await page.route('**/api/cloud/config', route => route.fulfill({ json: { available: false } }));
+  await page.route('**/api/status', route => route.fulfill({ json: { available: false } }));
+  await page.goto('/#you');
+  await page.getByRole('button', { name: /Your data & privacy/ }).click();
+  await page.getByText('How your data is handled', { exact: true }).click();
+  const section = page.getByRole('region', { name: 'Help and your data' });
+  await expect(section.getByRole('heading', { name: 'Connected assistants', exact: true })).toBeVisible();
+  await expect(section).toContainText('Nothing is shared with an outside assistant unless you create a connection');
+  await expect(section).toContainText('Rep & Plate does not sign in to those apps itself');
+  await expect(section).toContainText('Account deletion removes your connections, coaching plan and imported records');
+});
+

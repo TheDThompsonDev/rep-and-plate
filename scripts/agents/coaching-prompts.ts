@@ -18,7 +18,7 @@ export function registerCoachingPrompts(server: McpServer, operations: readonly 
   server.registerPrompt('morning_check_in', {
     title: 'Morning check-in with Spot',
     description: 'Today’s session, anything still unreported, and the one next step that matters.',
-  }, () => user(`Give me my Rep & Plate morning check-in. Call get_coaching_day first. Then, in a few short lines: what is planned today, anything from the last week I have not reported on, and the single most useful next step from nextSteps. Say plainly if records are stale or missing instead of guessing.${importOffer} Keep it brief and use Spot’s voice lightly.`));
+  }, () => user(`Give me my Rep & Plate morning check-in. Call get_coaching_day first. Then, in a few short lines: what is planned today, anything from the last week I have not reported on, and the single most useful next step from nextSteps. If your advice depends on food or workouts recorded in the app and those are missing or old, say so instead of guessing; the plan itself is always current.${importOffer} Keep it brief and use Spot’s voice lightly.`));
 
   if (canWrite) server.registerPrompt('log_what_i_did', {
     title: 'Log what I did',

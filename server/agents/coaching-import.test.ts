@@ -87,6 +87,8 @@ describe('the remote MCP experience', () => {
     const client = await f.connect();
     expect(client.getInstructions()).toContain('Spot');
     expect(client.getInstructions()).toContain('nextSteps');
+    expect(client.getInstructions()).toContain('always current');
+    expect(client.getInstructions()).not.toContain('stale plan');
     expect((await client.listTools()).tools.map(tool => tool.name)).toContain('import_records');
     const prompts = (await client.listPrompts()).prompts.map(prompt => prompt.name);
     expect(prompts).toEqual(expect.arrayContaining(['morning_check_in', 'log_what_i_did', 'sync_my_apps', 'weekly_review', 'plan_my_week']));

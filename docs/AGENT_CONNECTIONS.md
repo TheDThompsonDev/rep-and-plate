@@ -85,7 +85,7 @@ The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_OR
 
 | Host | How to connect | Status |
 | --- | --- | --- |
-| Codex CLI/app | `codex mcp add rep-and-plate --url https://YOUR_APP_ORIGIN/api/agents/mcp --bearer-token-env-var REP_PLATE_TOKEN` | Flags checked against the installed CLI's help; not exercised against a hosted account. |
+| Codex CLI/app | `codex mcp add rep-and-plate --url https://YOUR_APP_ORIGIN/api/agents/mcp --bearer-token-env-var REP_PLATE_TOKEN` | Exercised on 2026-11-10 in real Codex sessions (CLI 0.167) against a local server: check-in, import, propose and wait all worked. Codex asks for its own approval before `resolve_coaching_change`, so applying a change needs an interactive session. Not exercised against a hosted account. Codex CLI 0.142 could not run the account's models at all; update Codex first. |
 | Claude Code | `claude mcp add --transport http rep-and-plate --scope user https://YOUR_APP_ORIGIN/api/agents/mcp --header "Authorization: Bearer <token>"`, or the project `.mcp.json` entry below, which keeps the token in the environment. | Syntax checked against the Claude Code MCP documentation; not exercised against a hosted account. |
 | Claude (web/desktop/mobile) | **Add custom connector**, using the address above and the request-headers field for `Authorization: Bearer …` where your account offers it. | Unverified. Some accounts only offer OAuth, which this server does not implement. |
 | ChatGPT | Not supported yet. | Custom connectors accept OAuth or no authentication, not a fixed bearer header. |

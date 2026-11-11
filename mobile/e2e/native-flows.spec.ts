@@ -208,7 +208,12 @@ test("native barcode confirmation keeps purchases separate and exports a portabl
   const download = await downloadPromise;
   const path = await download.path();
   const fs = await import("node:fs/promises");
-  const backup = JSON.parse(await fs.readFile(path!, "utf8"));
+  // Windows can briefly lock a fresh download while it is scanned; read it once the lock clears.
+  let exported = "";
+  await expect(async () => {
+    exported = await fs.readFile(path!, "utf8");
+  }).toPass({ timeout: 15000 });
+  const backup = JSON.parse(exported);
   expect(backup.state.groceries.at(-1).items[0].servingsPurchased).toBe(4);
   expect(backup.state.meals).toHaveLength(0);
   const chooserPromise = page.waitForEvent("filechooser");

@@ -3,6 +3,8 @@ import { defineConfig } from "@playwright/test";
 // by relative path; the matching tsconfig lists that directory in `include`.
 export default defineConfig({
   testDir: "./e2e",
+  // Compiles the app once before any test; see e2e/warm-bundle.ts.
+  globalSetup: "./e2e/warm-bundle.ts",
   fullyParallel: false,
   workers: 1,
   use: {

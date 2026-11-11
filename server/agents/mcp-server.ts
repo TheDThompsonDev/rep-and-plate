@@ -19,7 +19,7 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
       coaching
         ? 'Rep & Plate is where the user\u2019s plan lives between conversations: the agreed goal and week, what they reported, what they asked you to remember, and records brought in from their other apps. Start with get_coaching_day and raise its nextSteps; they are the reasons to check in today. Keep agreed plans, proposals, explicitly reported outcomes and imported records distinct. Read the latest revision before proposing. Show a proposed change and get an explicit yes before applying it.'
         : 'Start with capabilities to see what this connection may read or propose.',
-      'Check freshness; missing data is unknown, never zero. Never infer approval, consumption, workout completion, injury, recovery readiness or calorie allowances. Report completed writes from the tool result, not from memory. A stale plan must be read and reviewed again.',
+      'The plan, outcomes, memories and imported records you read are always current. "freshness" describes only food and workouts recorded in the Rep & Plate app: read its summary and mention it only when your advice depends on those records. Missing data is unknown, never zero. Never infer approval, consumption, workout completion, injury, recovery readiness or calorie allowances. Report completed writes from the tool result, not from memory. If a change is refused because the plan moved on, read it again and prepare a new proposal.',
     ].join('\n\n'),
   });
   const call = async (request: AgentRequest) => {
