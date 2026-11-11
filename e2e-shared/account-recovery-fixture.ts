@@ -27,11 +27,14 @@ export async function exercisePasswordRecovery(page: Page, native = false) {
     created_at: new Date().toISOString(),
   };
   await page.route(
-    "https://fuelcloudtest.supabase.co/auth/v1/otp",
+    // The request names where its email should lead, so match the path, not the exact address.
+    (url) => url.origin === "https://fuelcloudtest.supabase.co" && url.pathname === "/auth/v1/otp",
     async (route) => {
       if (route.request().method() === "OPTIONS")
         return route.fulfill({ status: 204, headers });
       expect(route.request().postDataJSON().create_user).toBe(false);
+      // The email must lead back to the app in use, as a bare origin, not to the project default.
+      expect(new URL(route.request().url()).searchParams.get("redirect_to")).toMatch(/^https?:\/\/[^/]+$/);
       codes++;
       await route.fulfill({ headers, json: {} });
     },

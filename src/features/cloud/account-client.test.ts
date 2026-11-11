@@ -5,8 +5,11 @@ vi.mock("@supabase/supabase-js", () => ({ createClient: mocks.create }));
 import {
   changeAccountPassword,
   recoverPassword,
+  authEmailOptions,
   registerAccountConfig,
   requestPasswordCode,
+  signUpEmailOptions,
+  usableAppOrigin,
 } from "./account-client";
 import { browserAccountDeletion } from "./useAccountSecurity";
 const config = {
@@ -190,3 +193,38 @@ describe("browser account deletion transport", () => {
     }
   });
 });
+
+describe("where auth emails lead", () => {
+  const client = () => ({ auth: {} }) as unknown as SupabaseClient;
+
+  it("names the app the person is using, so links do not depend on the project's Site URL", async () => {
+    const hosted = client();
+    registerAccountConfig(hosted, config, "https://repandplate.example/some/page?x=1");
+    expect(authEmailOptions(hosted)).toEqual({ emailRedirectTo: "https://repandplate.example" });
+    expect(signUpEmailOptions(hosted)).toEqual({ options: { emailRedirectTo: "https://repandplate.example" } });
+    await requestPasswordCode(hosted, "person@example.test");
+    expect(isolated.auth.signInWithOtp).toHaveBeenCalledWith({
+      email: "person@example.test",
+      options: { shouldCreateUser: false, emailRedirectTo: "https://repandplate.example" },
+    });
+  });
+
+  it("accepts a development address on this computer and nothing a browser could not open safely", () => {
+    expect(usableAppOrigin("http://127.0.0.1:5173/")).toBe("http://127.0.0.1:5173");
+    expect(usableAppOrigin("http://localhost:8081")).toBe("http://localhost:8081");
+    for (const bad of [undefined, null, "", "not a url", "http://repandplate.example", "https://user:pass@repandplate.example", "exp://192.168.1.4:8081", "file:///C:/app"])
+      expect(usableAppOrigin(bad)).toBeNull();
+  });
+
+  it("adds nothing when the app's address is unknown, and forgets an address that is withdrawn", () => {
+    const unknown = client();
+    registerAccountConfig(unknown, config);
+    expect(authEmailOptions(unknown)).toEqual({});
+    expect(signUpEmailOptions(unknown)).toEqual({});
+    registerAccountConfig(unknown, config, "https://repandplate.example");
+    registerAccountConfig(unknown, config, "exp://device");
+    expect(authEmailOptions(unknown)).toEqual({});
+    expect(authEmailOptions(client())).toEqual({});
+  });
+});
+

@@ -24,6 +24,7 @@ export async function mockCloud(page: Page) {
     saveCalls: 0,
     deleteCalls: 0,
     signups: 0,
+    signupRedirects: [] as (string | null)[],
     conflict: false,
     failedSave: false,
     failedSignOut: false,
@@ -74,6 +75,7 @@ export async function mockCloud(page: Page) {
     }
     if (url.pathname === "/auth/v1/signup") {
       control.signups++;
+      control.signupRedirects.push(url.searchParams.get("redirect_to"));
       await route.fulfill({
         headers,
         json: control.signupConfirmed

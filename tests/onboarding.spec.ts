@@ -97,6 +97,8 @@ test("new users meet Spot outside the app, create an account, confirm, set up an
     .click();
   await expect(page.getByRole("status")).toContainText("Check your email");
   expect(cloud.signups).toBe(1);
+  // The confirmation email must lead back to this app, not to whatever the project's Site URL says.
+  expect(cloud.signupRedirects).toEqual([new URL(page.url()).origin]);
   await expect(page.getByRole("navigation")).toHaveCount(0);
   await page.getByLabel("Password", { exact: true }).fill("test-password-only");
   await page

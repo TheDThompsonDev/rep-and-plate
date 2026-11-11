@@ -37,7 +37,7 @@ test("hosted native sign-in binds device records and blocks a different account 
       },
     }),
   );
-  await page.route(`${project}/auth/v1/otp`, (r) => r.fulfill({ json: {} }));
+  await page.route(`${project}/auth/v1/otp*`, (r) => r.fulfill({ json: {} }));
   await page.route(`${project}/auth/v1/verify`, (r) =>
     r.fulfill({
       json: {

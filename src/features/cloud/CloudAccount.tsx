@@ -17,6 +17,7 @@ import {
   type SnapshotMetadata,
 } from "./client";
 import "./cloud.css";
+import { signUpEmailOptions } from "./account-client";
 import { isHostedBrowser } from "../../api-fetch";
 import { requireBrowserOwner } from "./client";
 import { PasswordRecovery } from "./PasswordRecovery";
@@ -341,7 +342,7 @@ export default function CloudAccount({
                 const email = String(values.get("email")).trim();
                 const password = String(values.get("password"));
                 const response = signingUp
-                  ? await client.auth.signUp({ email, password })
+                  ? await client.auth.signUp({ email, password, ...signUpEmailOptions(client) })
                   : await client.auth.signInWithPassword({ email, password });
                 if (response.error) {
                   const code = response.error.code;

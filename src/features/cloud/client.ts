@@ -89,7 +89,7 @@ export async function getCloudClient(): Promise<SupabaseClient | null> {
         },
       });
       projects.set(client, config.url);
-      registerAccountConfig(client,config);
+      registerAccountConfig(client, config, globalThis.location?.origin);
       return client;
     })().catch((error) => {
       configuredClient = undefined;
