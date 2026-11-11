@@ -64,3 +64,19 @@ test('server sign-out failure still ends the local session and preserves records
   expect(await stored(page)).toEqual(before);
   expect(cloud.signouts).toBe(1);
 });
+
+test('the account menu opens Connections directly from any screen', async ({ page }) => {
+  await mockCloud(page);
+  for (const hash of ['', '#kitchen']) {
+    await page.goto(`/${hash}`);
+    await page.getByRole('button', { name: 'Open account menu', exact: true }).click();
+    await page.getByRole('dialog', { name: 'Your account', exact: true }).getByRole('button', { name: 'Connect an assistant', exact: true }).click();
+    const connections = page.getByRole('dialog', { name: 'Connections', exact: true });
+    await expect(connections).toBeVisible();
+    await expect(page.getByRole('dialog', { name: 'Your account', exact: true })).toHaveCount(0);
+    await expect(connections.getByRole('heading', { name: 'Bring your own assistant.' })).toBeVisible();
+    await page.getByRole('button', { name: 'Close dialog' }).click();
+    await expect(connections).toHaveCount(0);
+  }
+});
+
