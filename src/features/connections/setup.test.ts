@@ -27,7 +27,16 @@ describe('setting up an assistant', () => {
     const chatgpt = guides.find(guide => guide.id === 'chatgpt')!;
     expect(chatgpt.status).toBe('unavailable');
     expect(chatgpt.steps.every(step => !step.copy)).toBe(true);
-    expect(guides.find(guide => guide.id === 'claude')!.status).toBe('limited');
+    const claude = guides.find(guide => guide.id === 'claude')!;
+    expect(claude.status).toBe('ready');
+    expect(claude.steps.map(step => step.copy)).toEqual(['https://repandplate.example/api/agents/mcp', undefined, `Bearer ${token}`, firstMessage]);
+    expect(claude.steps[1].text).toContain('No sign in');
+    // Claude chat connects from Anthropic's servers, so a local address must not be offered as working.
+    for (const local of ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://[::1]:5173']) {
+      const here = setupGuides(local, token).find(guide => guide.id === 'claude')!;
+      expect(here.status).toBe('unavailable');
+      expect(here.steps.every(step => !step.copy)).toBe(true);
+    }
     expect(mcpAddress('http://localhost:5173')).toBe('http://localhost:5173/api/agents/mcp');
   });
 });
