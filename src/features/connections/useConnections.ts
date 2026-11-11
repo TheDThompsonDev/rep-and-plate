@@ -6,6 +6,7 @@ import { agentActionSchema, connectionSchema, type AgentAction, type AgentConnec
 import { z } from 'zod';
 import { onAccountChange } from '../cloud/sync-control';
 import { defaultLifetimeDays } from './setup';
+import { AccountAccessError } from '../../account-access';
 
 export type ConnectionSession = {
   identity: string;
@@ -25,6 +26,12 @@ export function useConnections(state: AppState, apply: ApplyAgentAction, platfor
   const openRef = useRef(open); openRef.current = open;
   const [overview, setOverview] = useState<AgentOverview>({ connections: [], actions: [], publishedAt: null });
   const [error, setError] = useState('');
+  // Why Connections cannot start, when the cause is the account: the screen offers the way to fix it.
+  const [access, setAccess] = useState<'signin' | 'setup' | null>(null);
+  const fail = useCallback((cause: unknown, fallback: string) => {
+    setAccess(cause instanceof AccountAccessError ? cause.reason : null);
+    setError(cause instanceof Error ? cause.message : fallback);
+  }, []);
   const [loading, setLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [session, setSession] = useState<ConnectionSession | null>(null);
@@ -60,6 +67,7 @@ export function useConnections(state: AppState, apply: ApplyAgentAction, platfor
     ownerRef.current = next.identity;
     sessionRef.current = next;
     setSession(next);
+    setAccess(null);
     return next;
   }, [platform]);
 
@@ -106,23 +114,23 @@ export function useConnections(state: AppState, apply: ApplyAgentAction, platfor
       running = true;
       lastPoll.current = Date.now();
       if (openRef.current) setLoading(true);
-      try { await refresh(); } catch (e) { if (alive && visible.current) setError(e instanceof Error ? e.message : 'Connections could not refresh.'); }
+      try { await refresh(); } catch (e) { if (alive && visible.current) fail(e, 'Connections could not refresh.'); }
       finally { running = false; if (alive) setLoading(false); }
     };
     void poll();
     const timer = setInterval(() => void poll(), 60000);
     return () => { alive = false; generation.current++; clearInterval(timer); };
-  }, [open, session?.identity, overview.connections.length, refresh, platform]); // stable identity avoids restarting on each refresh
+  }, [open, session?.identity, overview.connections.length, refresh, platform, fail]); // stable identity avoids restarting on each refresh
 
   async function perform(task: (active: ConnectionSession) => Promise<void>) {
     if (busyRef.current) return;
     busyRef.current = true; setBusy(true); setError('');
     try { const active = await checked(); await task(active); if (active.active()) await refresh(); }
-    catch (e) { setError(e instanceof Error ? e.message : 'That change could not be saved.'); }
+    catch (e) { fail(e, 'That change could not be saved.'); }
     finally { busyRef.current = false; setBusy(false); }
   }
   return {
-    overview, error, loading, busy, session, credential,
+    overview, error, access, loading, busy, session, credential,
     clearCredential: () => setCredential(null),
     refresh: () => perform(async () => {}),
     create: (name: string, scopes: AgentScope[], expiresInDays: number = defaultLifetimeDays) => perform(async active => {
