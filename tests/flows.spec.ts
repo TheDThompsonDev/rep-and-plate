@@ -263,7 +263,7 @@ test("chat help answers questions without creating tracking records", async ({
   await expect(page.getByText(/Try “How am I doing today\?”/)).toBeVisible();
   await send(page, "Can you suggest something for dinner?");
   // A free-form message is now kept as a capture to retry once chat is back, not answered with a canned reply.
-  await expect(page.getByText(/Your capture is saved\; reconnect and try again\./).first()).toBeVisible();
+  await expect(page.getByText(/Your capture is saved; reconnect and try again\./).first()).toBeVisible();
   expect((await stored(page)).reviews).toEqual(before.reviews);
 });
 
@@ -347,7 +347,7 @@ test("unsupported text stays in conversation without creating a review item", as
 }) => {
   await seedExamples(page);
   await send(page, "Something unfamiliar for lunch");
-  await expect(page.getByText(/Your capture is saved\; reconnect and try again\./).first()).toBeVisible();
+  await expect(page.getByText(/Your capture is saved; reconnect and try again\./).first()).toBeVisible();
   expect((await stored(page)).meals).toHaveLength(4);
   expect((await stored(page)).reviews).toHaveLength(2);
   await send(page, "What needs review?");

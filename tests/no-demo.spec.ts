@@ -75,7 +75,7 @@ test("a typed meal without connected chat gets guidance instead of a sample meal
   ]) {
     await send(page, text);
     // The message is kept as a capture to retry, with a way back to chat; nothing is estimated or logged.
-    await expect(page.getByText(/Your capture is saved\; reconnect and try again\./).first()).toBeVisible();
+    await expect(page.getByText(/Your capture is saved; reconnect and try again\./).first()).toBeVisible();
     await expect(page.getByRole("button", { name: "Reconnect to retry this capture", exact: true }).last()).toBeVisible();
   }
   await expect(page.getByText(/Manual food logging and workouts still work/)).toBeVisible();
