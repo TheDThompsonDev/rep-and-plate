@@ -1642,6 +1642,8 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
             />
             <div className="header-account-links">
               <button className="button secondary" onClick={() => { closeDialog('headerAccount'); navigate('You'); }}>View your profile</button>
+              {/* Connections was only on the profile page, below the weight card, where its own owner could not find it. */}
+              <button className="button secondary" onClick={() => { closeDialog('headerAccount'); setConnectionsStarted(true); openDialog('connections'); }}>Connect an assistant</button>
               <button className="button secondary" onClick={() => { closeDialog('headerAccount'); openProfileAccount('signin'); }}>Account settings & backups</button>
             </div>
           </Modal>

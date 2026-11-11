@@ -36,3 +36,13 @@ test('native header opens sign-in directly, then sign-out preserves the records'
   expect(cloud.signouts).toBe(1);
   await expect.poll(ownedRecords).toMatchObject({ meals: before.meals, bodyWeights: before.bodyWeights });
 });
+
+test('native account menu opens assistant connections directly', async ({ page }) => {
+  await mockCloud(page);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open account menu', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Connect an assistant', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Agent connections', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Your account', exact: true })).toHaveCount(0);
+});
+

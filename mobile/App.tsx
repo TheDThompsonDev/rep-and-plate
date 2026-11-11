@@ -137,6 +137,7 @@ function HealthApp() {
         {headerAccountOpen && <Sheet title="Your account" onClose={() => setHeaderAccountOpen(false)}>
           <QuickAccount onSignIn={() => { setHeaderAccountOpen(false); h.setTool('cloud'); }} />
           <Button label="View your profile" secondary onPress={() => { setHeaderAccountOpen(false); h.setTab('You'); }} />
+          <Button label="Connect an assistant" secondary onPress={() => { setHeaderAccountOpen(false); h.setTool('agents'); }} />
           <Button label="Account settings & backups" secondary onPress={() => { setHeaderAccountOpen(false); h.setTool('cloud'); }} />
         </Sheet>}
         <AccountSync />
