@@ -385,3 +385,24 @@
     }
   }
 }
+
+/* Shown instead of Welcome while a device that finished setup loads. Quiet on purpose: a fast
+   load shows only the page background, and the status line appears if it takes longer. */
+.app-opening {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  color: #365e4f;
+  font-family: var(--font-body, "DM Sans", sans-serif);
+  font-size: 14px;
+}
+.app-opening p {
+  margin: 0;
+  opacity: 0;
+  animation: app-opening-status 0.2s ease 0.6s forwards;
+}
+@keyframes app-opening-status {
+  to {
+    opacity: 1;
+  }
+}

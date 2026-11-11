@@ -104,6 +104,28 @@ The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_OR
 
 Reaching ChatGPT and OAuth-only Claude accounts needs an OAuth 2.1 authorization flow in front of the same scoped connections. That is not implemented.
 
+## Try it on your own computer
+
+Nothing needs to be deployed. The development server serves the same MCP endpoint and keeps connections in a local file (`.fuel-data/agents.sqlite`), so no account is needed.
+
+1. Start the app and leave it running:
+
+   ```bash
+   npm run dev
+   ```
+
+2. Open `http://127.0.0.1:5173/#you`, choose **Connections**, then **Connect an assistant**. Name it, press **Use daily coaching permissions**, and create it.
+3. The screen now shows your access key and paste-ready steps for Claude Code, Codex and other tools, already filled in with the local address `http://127.0.0.1:5173/api/agents/mcp`. Follow the steps for your assistant.
+4. Start a conversation and say: `Check in with Rep & Plate: what is on for me today?`
+
+Things to know:
+
+- The assistant must run on the same computer. The server refuses requests that are not addressed to `localhost` or `127.0.0.1`.
+- The connection stops answering when you stop `npm run dev`, and works again when you restart it.
+- Codex reads the key from the `REP_PLATE_TOKEN` environment variable, so restart Codex after setting it. Codex CLI 0.142 could not run current models; update it first.
+- Plan changes need two yeses: yours in the conversation, and your assistant's own approval prompt for `resolve_coaching_change`.
+- To remove it afterwards: `claude mcp remove rep-and-plate` or `codex mcp remove rep-and-plate`, and **Disconnect** in Connections.
+
 ## Direct HTTP integrations
 
 Send JSON to `POST /api/agents/v1` on the configured app origin with `Authorization: Bearer <connection token>` and `Content-Type: application/json`:

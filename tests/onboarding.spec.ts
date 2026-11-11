@@ -278,3 +278,43 @@ test("auth errors and unavailable artwork leave the onboarding usable", async ({
   await expect(page.getByRole("alert")).toContainText("Sign-in didn’t work");
   await expect(page.getByRole("navigation")).toHaveCount(0);
 });
+
+// Records every screen that is ever attached, however briefly, so a flash cannot hide between checks.
+async function watchScreens(page: import("@playwright/test").Page) {
+  await page.addInitScript(() => {
+    const seen = new Set<string>();
+    (window as unknown as { screensSeen: Set<string> }).screensSeen = seen;
+    new MutationObserver(() => {
+      for (const main of document.querySelectorAll("main[aria-label]")) seen.add(main.getAttribute("aria-label")!);
+      if ([...document.querySelectorAll("button")].some((button) => button.textContent?.trim() === "Sign in")) seen.add("button:Sign in");
+    }).observe(document, { childList: true, subtree: true });
+  });
+  return () => page.evaluate(() => [...(window as unknown as { screensSeen: Set<string> }).screensSeen].sort());
+}
+
+test("a device that finished setup opens the app without showing Welcome or Sign in", async ({ page }) => {
+  await mockCloud(page);
+  await page.addInitScript(() =>
+    localStorage.setItem("rep-and-plate.onboarding.v1", JSON.stringify({ version: 1, mode: "guest", focus: "A little of both" })),
+  );
+  const screens = await watchScreens(page);
+  for (let visit = 0; visit < 3; visit++) {
+    await page.goto("/");
+    await expect(page.getByRole("textbox", { name: "Message Rep & Plate" })).toBeVisible();
+    const seen = await screens();
+    expect(seen).not.toContain("Welcome to Rep & Plate");
+    expect(seen).not.toContain("button:Sign in");
+  }
+});
+
+test("a new device still starts on Welcome, and its account button waits for loading to finish", async ({ page }) => {
+  await mockCloud(page);
+  const screens = await watchScreens(page);
+  await page.goto("/");
+  await expect(page.getByRole("main", { name: "Welcome to Rep & Plate" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Sign in", exact: true })).toBeEnabled();
+  const seen = await screens();
+  expect(seen).toContain("Welcome to Rep & Plate");
+  expect(seen).not.toContain("Opening Rep & Plate");
+});
+

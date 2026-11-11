@@ -9,7 +9,7 @@ import {
   hydrateBrowserRecords,
   persistBrowserRecords,
 } from "../../platform/browser-records";
-import { introduction, focusChoices, firstStepForFocus, ONBOARDING_KEY } from "./model";
+import { introduction, focusChoices, firstStepForFocus, ONBOARDING_KEY, parseOnboarding } from "./model";
 import { useOnboarding, type OnboardingAdapter } from "./useOnboarding";
 import { spotScenes } from "../spot/scenes";
 import "./onboarding.css";
@@ -38,6 +38,16 @@ export default function Onboarding({
   children: (replay: () => void, firstLog: string | null, dismissFirstLog: () => void) => ReactNode;
 }) {
   const flow = useOnboarding(adapter);
+  // A device that already finished setup is almost always on its way into the app. Rendering the
+  // Welcome screen while its records and session were read made Welcome, and its Sign in button,
+  // flash on every load. This synchronous look at the saved setup lets such a device wait quietly.
+  const [returning] = useState(() => {
+    try {
+      return parseOnboarding(localStorage.getItem(ONBOARDING_KEY)) !== null;
+    } catch {
+      return false;
+    }
+  });
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState("");
   const { name, focus, fitness, nutrition, nutritionInput } = flow.draft;
@@ -77,11 +87,17 @@ export default function Onboarding({
       await persistBrowserRecords(next);
       location.hash = focus === 'Groceries & dinner' ? 'receipt' : 'chat';
     });
-  const show = !flow.entered || flow.replaying;
+  const opening = flow.loading && returning && !flow.entered;
+  const show = (!flow.entered || flow.replaying) && !opening;
   return (
     <>
       {flow.entered && (
         <div hidden={flow.replaying}>{children(flow.replay, flow.firstLog, flow.dismissFirstLog)}</div>
+      )}
+      {opening && (
+        <main className="app-opening" aria-label="Opening Rep & Plate" aria-busy="true">
+          <p role="status">Opening your records…</p>
+        </main>
       )}
       {show && (
         <main className={`welcome-shell welcome-shell-${flow.step}`} aria-label="Welcome to Rep & Plate">
@@ -92,13 +108,13 @@ export default function Onboarding({
             {flow.replaying ? (
               <button onClick={flow.closeReplay}>Close tour</button>
             ) : flow.user ? (
-              <button disabled={flow.busy} onClick={() => void flow.signOut()}>
+              <button disabled={flow.busy || flow.loading} onClick={() => void flow.signOut()}>
                 <LogOut size={16} />
                 Sign out
               </button>
             ) : (
               <button
-                disabled={flow.busy}
+                disabled={flow.busy || flow.loading}
                 onClick={() => flow.account("signin")}
               >
                 Sign in <ArrowRight size={16} />
