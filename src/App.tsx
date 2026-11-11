@@ -1301,6 +1301,7 @@ function App({ onReplayOnboarding, firstLog, dismissFirstLog }: { onReplayOnboar
             <ConnectionsHub
               state={state}
               open={!!dialogs.connections}
+              onAccount={() => openProfileAccount('signin')}
               onClose={() => {
                 closeDialog('connections');
                 if (location.hash === "#connections") navigate("You");

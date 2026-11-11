@@ -6,6 +6,7 @@ import { type SupabaseClient } from "@supabase/supabase-js";
 import { Button, Card, Field, Sheet, s } from "./ui";
 import { useLoadedHealth } from "./store";
 import { cloudClient } from "./api";
+import { authEmailOptions, signUpEmailOptions } from "../../src/features/cloud/account-client";
 import { requireDeviceOwner, invalidateSession } from "./auth";
 import { exportRecords, importRecords } from "./storage";
 import {
@@ -137,7 +138,7 @@ export function Cloud() {
             onPress={() =>
               void run(async () => {
                 const r = signingUp
-                  ? await client.auth.signUp({ email: email.trim(), password })
+                  ? await client.auth.signUp({ email: email.trim(), password, ...signUpEmailOptions(client) })
                   : await client.auth.signInWithPassword({
                       email: email.trim(),
                       password,
@@ -177,7 +178,7 @@ export function Cloud() {
               void run(async () => {
                 const r = await client.auth.signInWithOtp({
                   email: email.trim(),
-                  options: { shouldCreateUser: false },
+                  options: { shouldCreateUser: false, ...authEmailOptions(client) },
                 });
                 if (r.error) throw r.error;
                 setError("Check your email for a sign-in code.");

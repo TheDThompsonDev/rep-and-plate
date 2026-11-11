@@ -1,3 +1,4 @@
+import { signUpEmailOptions } from "../cloud/account-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import {
@@ -262,7 +263,7 @@ export function useOnboarding(adapter: OnboardingAdapter) {
         );
       const result =
         mode === "signup"
-          ? await client.auth.signUp({ email: email.trim(), password })
+          ? await client.auth.signUp({ email: email.trim(), password, ...signUpEmailOptions(client) })
           : await client.auth.signInWithPassword({
               email: email.trim(),
               password,

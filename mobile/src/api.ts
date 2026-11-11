@@ -94,7 +94,7 @@ export async function cloudClient() {
       "Cloud is not configured on this server. You can still export your records.",
     );
   supportUrl=config.supportUrl;
-  return configureAuth(config);
+  return configureAuth(config, selected.url);
 }
 export async function api(path: string, body?: unknown, signal?: AbortSignal) {
   if (!connection) await loadConnection();

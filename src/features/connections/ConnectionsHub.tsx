@@ -19,7 +19,7 @@ const access: { scope: AgentScope; title: string; detail: string }[] = [
   { scope: 'coaching:write', title: 'Change your coaching plan', detail: 'Prepare plan changes and save records from your other apps, each only after you say yes in your assistant. Includes feedback and memory changes.' },
   { scope: 'meals:propose', title: 'Suggest meal records', detail: 'Send estimates for you to review before logging.' },
 ];
-export default function ConnectionsHub({ state, onApply, open, onClose }: { state: AppState; onApply: ApplyAgentAction; open: boolean; onClose: () => void }) {
+export default function ConnectionsHub({ state, onApply, open, onClose, onAccount }: { state: AppState; onApply: ApplyAgentAction; open: boolean; onClose: () => void; onAccount?: () => void }) {
   const model = useConnections(state, onApply, browserConnections, open);
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState('');
@@ -40,11 +40,18 @@ export default function ConnectionsHub({ state, onApply, open, onClose }: { stat
   const guides = credential && model.session ? setupGuides(model.session.url, credential.token) : [];
   const guide = guides.find(g => g.id === guideId) ?? guides[0];
   const previous = overview.actions.filter(a => a.status !== 'pending' || state.agentResolutions?.some(r => r.actionId === a.id));
-  return <Modal title="Connections" onClose={onClose} wide><div className="connections-content">
+  return <Modal title="Connections" onClose={onClose} wide><div className="connections-content" aria-busy={busy || model.loading}>
     <section className="connections-intro"><span className="connections-mark"><Link2 size={27} /></span><div><small>YOUR TOOLS, WORKING TOGETHER</small><h3>Bring your own assistant.</h3><p>Keep your food and fitness in one place, wherever the conversation starts.</p></div></section>
     <div className="connections-note"><ShieldCheck size={19} /><p>You choose what each tool can access. Photos and private chat stay out of these connections.</p></div>
     <p className="connections-caption">{model.session?.mode === 'local' ? 'Local connection · for agents on this computer. Open Connections after restarting the app to refresh shared context. Remote agents need the hosted account service.' : 'Account connection · agents read the latest records saved to your account. Unsynced device changes may not appear yet.'}</p>
-    {model.error && <p className="connections-error" role="alert">{model.error}</p>}
+    {model.access && onAccount
+      // Connections cannot start until the account is ready. Saying so without a way to act left
+      // its owner stuck on a button that would not press.
+      ? <div className="connections-error connections-blocked" role="alert">
+          <p>{model.access === 'signin' ? 'Sign in to your Rep & Plate account to connect an assistant.' : 'One step first: confirm that the records on this device belong to your account. Then come back here to connect an assistant.'}</p>
+          <button type="button" className="button primary" onClick={() => { onClose(); onAccount(); }}>{model.access === 'signin' ? 'Sign in' : 'Open your account'}</button>
+        </div>
+      : model.error && <p className="connections-error" role="alert">{model.error}</p>}
     {copyError && <p className="connections-error" role="alert">{copyError}</p>}
     <div className="connections-heading"><h3>Your connections <span>{connected.length}</span></h3><button className="text-button" disabled={busy} onClick={() => void model.refresh()}>{model.loading ? 'Refreshing…' : 'Refresh'}</button></div>
     {!connected.length && !model.loading && <div className="connections-empty"><Link2 size={22} /><div><strong>Your coach, with the full picture.</strong><p>Connect Claude Code, Codex or another assistant. It can check in on your plan, bring in records from your other apps and send meal estimates back here.</p></div></div>}

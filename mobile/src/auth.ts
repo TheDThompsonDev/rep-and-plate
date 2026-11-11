@@ -23,7 +23,7 @@ export function resetAuth() {
   project = "";
   account = null;
 }
-export function configureAuth(config: CloudConfig): Promise<SupabaseClient> {
+export function configureAuth(config: CloudConfig, appOrigin?: string): Promise<SupabaseClient> {
   if (initialize && project === config.url) return initialize;
   resetAuth();
   project = config.url;
@@ -36,7 +36,8 @@ export function configureAuth(config: CloudConfig): Promise<SupabaseClient> {
     },
   });
   client = c;
-  registerAccountConfig(c,config);
+  // Auth emails should lead to the hosted app this device is connected to, not the project default.
+  registerAccountConfig(c, config, appOrigin);
   const subscription = c.auth.onAuthStateChange((_event, session) => {
     const next = session?.user.id ?? null;
     if (account !== next) {

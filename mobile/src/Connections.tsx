@@ -75,6 +75,8 @@ export function Connections(){
     <Text style={s.muted}>Photos, chat messages, and your account password are never shared through these tools. Agents read your latest records saved to your account. Changes waiting to sync may not appear yet.</Text>
     {c.loading&&<Text accessibilityLiveRegion="polite" style={s.muted}>Refreshing connections…</Text>}
     {!!c.error&&<Text accessibilityRole="alert" style={s.text}>{c.error}</Text>}
+    {/* Without a session the fix is always in the account screen, so offer the way there. */}
+    {!!c.error&&!c.session&&<Button label="Open Cloud & your records" onPress={()=>h.setTool('cloud')}/>}
     <Button label="Refresh connections" secondary disabled={c.busy} onPress={()=>void c.refresh()}/>
     {c.session&&<>
       <Card>
