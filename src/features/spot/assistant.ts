@@ -23,7 +23,7 @@ const lines: Record<SpotMoment, readonly string[]> = {
     'Empty week. I’ve been staring at the door like a dog waiting for its owner.',
   ],
   no_goal: [
-    'I’m looking at a blank week. Are we practicing minimalism? I’m one empty square away from starting a podcast. The equipment is suspiciously cheap.',
+    'you haven’t logged any meals, any workouts. I’m looking at a blank week. Are we practicing minimalism? Give me a goal to start tracking before I go out and start a podcast. We know the equipment is cheap enough for me to do it!',
     'An empty calendar. My whiteboard has never felt so mysterious.',
     'I’ve ordered the motivational posters. The calendar remains unimpressed.',
   ],
