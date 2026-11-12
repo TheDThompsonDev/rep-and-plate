@@ -1,14 +1,7 @@
-import { createHash } from 'node:crypto';
-
-export const UI_ORIGIN = 'https://repandplate.com';
-export const publicUiPath = (name: 'coaching' | 'spot') => `/mcp/${name}.html`;
-
-/** Stable, cached bridge. Presentation is fetched afresh without changing MCP tool metadata. */
-export function appShell(name: 'coaching' | 'spot') {
-  const script = String.raw`(() => {
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-/hGzLqpAWb8DvRo/I8Cf//zmcSsFynn3ttjAumVDVqs='; style-src 'sha256-0bKUQPjqoD/N8Jx8RxoofootLwo4G+q6kaWP2fzBCus='; frame-src https://repandplate.com; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>Rep &amp; Plate</title><style>html,body{margin:0;padding:0;background:transparent}iframe{display:block;width:100%;border:0;height:150px}p{font:14px/1.5 system-ui;padding:12px}p[hidden]{display:none}</style></head><body><iframe id="view" title="Rep &amp; Plate" sandbox="allow-scripts allow-same-origin allow-forms"></iframe><p id="notice" role="status" hidden></p><script>(() => {
     'use strict';
     const frame = document.getElementById('view'), notice = document.getElementById('notice');
-    const viewOrigin = ${JSON.stringify(UI_ORIGIN)};
+    const viewOrigin = "https://repandplate.com";
     let hostOrigin = null, initializeId = null, teardownId = null, disposed = false;
     const sendHost = message => parent.postMessage(message,hostOrigin && hostOrigin !== 'null' ? hostOrigin : '*');
     const timer = setTimeout(() => { frame.style.display = 'none'; notice.hidden = false; notice.textContent = 'The card could not load. You can continue in chat.'; },15000);
@@ -35,14 +28,7 @@ export function appShell(name: 'coaching' | 'spot') {
       }
     };
     addEventListener('message',receive);
-    const url = new URL(${JSON.stringify(publicUiPath(name))},viewOrigin);
+    const url = new URL("/mcp/coaching.html",viewOrigin);
     // No records, credentials, or account identifiers enter this public URL.
     url.searchParams.set('load',crypto.randomUUID()); frame.src = url.href;
-  })();`;
-  const style = 'html,body{margin:0;padding:0;background:transparent}iframe{display:block;width:100%;border:0;height:150px}p{font:14px/1.5 system-ui;padding:12px}p[hidden]{display:none}';
-  const hash = (text: string) => createHash('sha256').update(text).digest('base64');
-  const csp = `default-src 'none'; script-src 'sha256-${hash(script)}'; style-src 'sha256-${hash(style)}'; frame-src ${UI_ORIGIN}; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'`;
-  const text = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="${csp}"><title>Rep &amp; Plate</title><style>${style}</style></head><body><iframe id="view" title="Rep &amp; Plate" sandbox="allow-scripts allow-same-origin allow-forms"></iframe><p id="notice" role="status" hidden></p><script>${script}</script></body></html>`;
-  return { uri: `ui://rep-and-plate/${name}-shell-v1.html`, mimeType: 'text/html;profile=mcp-app', text,
-    _meta: { ui: { csp: { connectDomains: [], resourceDomains: [], frameDomains: [UI_ORIGIN], baseUriDomains: [] }, permissions: {}, prefersBorder: name === 'coaching' } } };
-}
+  })();</script></body></html>

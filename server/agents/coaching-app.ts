@@ -2,7 +2,6 @@ import { createHash } from 'node:crypto';
 import { spotBannerMarkup, spotBannerScript } from './spot-banner.ts';
 import { coachingAppStyle as style } from './coaching-style.ts';
 import { uiResourceUri } from './ui-resource.ts';
-import { appShell } from './app-shell.ts';
 
 export const LEGACY_COACHING_APP_URI = 'ui://rep-and-plate/coaching.html';
 export const COACHING_APP_MIME = 'text/html;profile=mcp-app';
@@ -299,6 +298,9 @@ ${spotBannerMarkup}
 </details>
 <script>${script}</script></body></html>`;
 
-export const coachingAppResource = appShell('coaching');
-export const COACHING_APP_URI = coachingAppResource.uri;
-export const COACHING_APP_ALIASES = [LEGACY_COACHING_APP_URI, 'ui://rep-and-plate/coaching-c045f8ff1d97819f.html', uiResourceUri('coaching', coachingAppHtml)];
+export const COACHING_APP_URI = uiResourceUri('coaching', coachingAppHtml);
+export const coachingAppResource = {
+  uri: COACHING_APP_URI, mimeType: COACHING_APP_MIME, text: coachingAppHtml,
+  _meta: { ui: { csp: { connectDomains: [], resourceDomains: [], frameDomains: [], baseUriDomains: [] }, permissions: {}, prefersBorder: true } },
+};
+export const COACHING_APP_ALIASES = [LEGACY_COACHING_APP_URI, 'ui://rep-and-plate/coaching-c045f8ff1d97819f.html', 'ui://rep-and-plate/coaching-shell-v1.html'];

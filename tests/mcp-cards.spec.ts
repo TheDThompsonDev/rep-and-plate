@@ -8,18 +8,19 @@ import { McpServer } from '@modelcontextprotocol/server';
 import { AgentService } from '../server/agents/service';
 import { SqliteAgentStore } from '../server/agents/sqlite';
 import { registerCoachingTools } from '../scripts/agents/coaching-mcp';
-import { coachingAppHtml, COACHING_APP_MIME, COACHING_APP_URI } from '../server/agents/coaching-app';
+import { COACHING_APP_MIME, COACHING_APP_URI } from '../server/agents/coaching-app';
 import type { CoachingCommand, CoachingState } from '../src/features/coaching/contracts';
 
 const day = '2026-11-12';
 const operations = ['coaching.read', 'coaching.propose', 'coaching.resolve', 'coaching.undo', 'coaching.import'];
 const host = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Test conversation</title><style>html,body{margin:0;background:#181b19;color:#fff;font:14px system-ui}main{max-width:760px;margin:auto}iframe{display:block;border:1px solid #3e4d43;border-radius:14px;width:100%;box-sizing:border-box;background:#181b19}h1{font-size:14px;font-weight:400;color:#aab9af;margin:16px 12px}</style></head><body><main><h1>Rep &amp; Plate · Synthetic conversation host</h1><iframe id="app" title="Rep and Plate" src="/app"></iframe></main><script>
-window.calls=[];
+window.calls=[];window.initializations=0;
 addEventListener('message',async event=>{
  const frame=document.querySelector('iframe'); if(event.source!==frame.contentWindow)return;
  const m=event.data;
  const reply=value=>event.source.postMessage({jsonrpc:'2.0',...value},event.origin);
  if(m.method==='ui/initialize'){
+   window.initializations++;
    const params=new URL(location).searchParams;
    reply({id:m.id,result:{protocolVersion:'2026-01-26',hostCapabilities:params.has('readonly')?{}:{serverTools:{}},hostContext:{theme:params.get('theme')||'dark'}}});
  }
@@ -33,7 +34,7 @@ addEventListener('message',async event=>{
 });
 </script></body></html>`;
 
-async function fixture(page: Page, seeded = false, legacy = false) {
+async function fixture(page: Page, seeded = false, legacy: boolean | 'blocked-shell' = false, blockFrames = true) {
   const store = new SqliteAgentStore(':memory:');
   const service = new AgentService(store, () => Date.parse(`${day}T15:00:00Z`));
   const state = async () => (await service.manage('card-test', { operation: 'coaching.read', day }) as { state: CoachingState }).state;
@@ -64,10 +65,10 @@ async function fixture(page: Page, seeded = false, legacy = false) {
   const client = new Client({ name: 'browser-host', version: '1.0.0' }, { capabilities: { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: [COACHING_APP_MIME] } } } });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await mcp.connect(serverTransport); await client.connect(clientTransport);
-  // Reuse the exact resource a host could cache; only the public view changes between releases.
-  const cachedShell = legacy ? { text: readFileSync(new URL('./fixtures/mcp/coaching-b34d29c.html', import.meta.url), 'utf8') } : (await client.readResource({ uri: COACHING_APP_URI })).contents[0] as { text: string };
-  if (legacy) expect(createHash('sha256').update(cachedShell.text).digest('hex')).toBe('c045f8ff1d97819fbb0e74d27800bc33cdcb94d2959f3a952a30e234cf7a6836');
-  let viewHtml = coachingAppHtml;
+  // The host starts collapsed until the app initializes and reports its size.
+  const cachedShell = legacy ? { text: readFileSync(new URL(legacy === true ? './fixtures/mcp/coaching-b34d29c.html' : './fixtures/mcp/coaching-shell-v1.html', import.meta.url), 'utf8') } : (await client.readResource({ uri: COACHING_APP_URI })).contents[0] as { text: string };
+  if (legacy === true) expect(createHash('sha256').update(cachedShell.text).digest('hex')).toBe('c045f8ff1d97819fbb0e74d27800bc33cdcb94d2959f3a952a30e234cf7a6836');
+  if (legacy === 'blocked-shell') expect(createHash('sha256').update(cachedShell.text).digest('hex')).toBe('33a2124d6670a82e366f09957002ccc9becd3862e4621e4e89321724813a075d');
   const viewRequests: string[] = [];
   let oldPayload = false;
   const toolResult = async (input: Parameters<typeof client.callTool>[0]) => {
@@ -76,28 +77,28 @@ async function fixture(page: Page, seeded = false, legacy = false) {
     if (oldPayload && result.structuredContent) delete (result.structuredContent as Record<string, unknown>).spot;
     return result;
   };
-  await page.route('https://repandplate.com/mcp/coaching.html*', async route => {
+  await page.route('https://repandplate.com/**', async route => {
     viewRequests.push(route.request().url());
-    await route.fulfill({ contentType: 'text/html', headers: { 'cache-control': 'no-store' }, body: viewHtml });
+    await route.abort();
   });
   const server: Server = createServer((request, response) => {
     void (async () => {
       response.setHeader('Cache-Control', 'no-store');
-      if (request.url === '/app') { response.setHeader('Content-Type', 'text/html'); response.end(cachedShell.text); return; }
+      if (request.url === '/app') { response.setHeader('Content-Type', 'text/html'); if (blockFrames) response.setHeader('Content-Security-Policy', "frame-src 'none'"); response.end(cachedShell.text); return; }
       if (request.url === '/read') { response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(await toolResult({ name: 'get_coaching_day', arguments: { day } }))); return; }
       if (request.url === '/call') {
         const chunks: Buffer[] = []; for await (const chunk of request) chunks.push(Buffer.from(chunk));
         response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(await toolResult(JSON.parse(Buffer.concat(chunks).toString())))); return;
       }
-      response.setHeader('Content-Type', 'text/html'); response.end(host);
+      response.setHeader('Content-Type', 'text/html'); response.end(host.replace('iframe{display:block;', 'iframe{height:0;display:block;'));
     })().catch(error => { response.statusCode = 500; response.end(String(error)); });
   });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-  const frame = legacy ? page.frameLocator('#app') : page.frameLocator('#app').frameLocator('#view');
+  const frame = page.frameLocator('#app');
   return {
     state, save, propose, service, session, frame,
-    cachedShell, viewRequests, setView: (html: string) => { viewHtml = html; },
+    cachedShell, viewRequests,
     setOldPayload: (value: boolean) => { oldPayload = value; },
     navigate: () => page.goto(url),
     open: async (query = '') => {
@@ -112,6 +113,27 @@ async function fixture(page: Page, seeded = false, legacy = false) {
     },
   };
 }
+
+test('the card renders when the host blocks all nested frames', async ({ page }) => {
+  const f = await fixture(page, false, false, true);
+  try {
+    await f.open();
+    await expect(f.frame.getByRole('heading', { name: 'Nothing planned for today' })).toBeVisible();
+    await expect(f.frame.locator('#spot')).toBeVisible();
+    await expect(page.frameLocator('#app').locator('iframe')).toHaveCount(0);
+  } finally { await f.close(); }
+});
+
+test('the retired shell reproduces a collapsed card under the host frame restriction', async ({ page }) => {
+  const f = await fixture(page, false, 'blocked-shell');
+  try {
+    await page.clock.install();
+    await f.navigate();
+    await page.clock.fastForward(16000);
+    expect(await page.evaluate(() => (window as unknown as { initializations: number }).initializations)).toBe(0);
+    expect((await page.locator('#app').boundingBox())!.height).toBeLessThanOrEqual(2);
+  } finally { await f.close(); }
+});
 
 test('the previously deployed cached card keeps Spot on the same connection', async ({ page }, info) => {
   const f = await fixture(page, false, true);
@@ -151,25 +173,21 @@ test('empty plan asks one question in the card at narrow and wide widths', async
   } finally { await f.close(); }
 });
 
-test('a cached shell on the same MCP connection loads a new view release', async ({ page }) => {
+test('a cached inline card refreshes current data on the same MCP connection', async ({ page }) => {
   const f = await fixture(page);
   try {
-    f.setView(coachingAppHtml.replace('<body>', '<body data-release="one">'));
     await f.open();
-    await expect(f.frame.locator('body')).toHaveAttribute('data-release', 'one');
     const shell = f.cachedShell.text;
-    f.setView(coachingAppHtml.replace('<body>', '<body data-release="two">'));
-    await f.open();
-    await expect(f.frame.locator('body')).toHaveAttribute('data-release', 'two');
+    await f.save({ type: 'setup', profile: { primaryGoal: 'Build a steady routine', priorities: [], constraints: [], notes: '' }, reason: 'Chosen goal.' });
+    await f.frame.getByRole('button', { name: 'Refresh plan' }).click();
+    await expect(f.frame.locator('#summary-goal')).toHaveText('Build a steady routine');
     expect(f.cachedShell.text).toBe(shell);
-    expect(f.viewRequests).toHaveLength(2);
-    expect(new Set(f.viewRequests).size).toBe(2);
-    expect((await f.state()).revision).toBe(0);
-    expect(await page.evaluate(() => (window as unknown as { calls: unknown[] }).calls)).toEqual([]);
+    expect(f.viewRequests).toHaveLength(0);
+    expect((await f.state()).revision).toBe(1);
   } finally { await f.close(); }
 });
 
-test('messages from a foreign frame cannot invoke a tool through the shell', async ({ page }) => {
+test('messages from a foreign frame or origin cannot invoke a tool through the card', async ({ page }) => {
   const f = await fixture(page, true);
   try {
     await f.open();
@@ -177,14 +195,13 @@ test('messages from a foreign frame cannot invoke a tool through the shell', asy
       const shell = (node as HTMLIFrameElement).contentWindow!;
       shell.postMessage({ jsonrpc: '2.0', method: 'tools/call', id: 'forged', params: { name: 'undo_coaching_change', arguments: {} } }, '*');
     });
-    // The shell accepts this host message but the real app rejects an unsolicited tools/call.
-    // A sibling window must also fail the shell's source check, even with the same origin.
+    // An unsolicited host command and a sibling frame cannot invoke app actions.
     await page.evaluate(() => {
       const sibling = document.createElement('iframe'); document.body.append(sibling);
       sibling.contentWindow!.eval(`parent.document.querySelector('#app').contentWindow.postMessage({jsonrpc:'2.0',method:'tools/call',id:'sibling',params:{name:'undo_coaching_change',arguments:{}}},'*')`);
     });
     await page.frameLocator('#app').locator('body').evaluate(() => {
-      dispatchEvent(new MessageEvent('message', { source: document.querySelector('iframe')!.contentWindow, origin: 'https://foreign.example', data: { jsonrpc: '2.0', method: 'tools/call', id: 'wrong-origin', params: { name: 'undo_coaching_change', arguments: {} } } }));
+      dispatchEvent(new MessageEvent('message', { source: parent, origin: 'https://foreign.example', data: { jsonrpc: '2.0', method: 'tools/call', id: 'wrong-origin', params: { name: 'undo_coaching_change', arguments: {} } } }));
     });
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     await expect(f.frame.getByRole('heading', { name: 'Today’s plan' })).toBeVisible();
@@ -193,18 +210,12 @@ test('messages from a foreign frame cannot invoke a tool through the shell', asy
   } finally { await f.close(); }
 });
 
-test('an unavailable public view leaves a visible chat fallback', async ({ page }) => {
+test('the card needs no public view or external request to render', async ({ page }) => {
   const f = await fixture(page);
   try {
-    await page.route('https://repandplate.com/mcp/coaching.html*', route => route.abort());
-    await page.clock.install();
-    await f.navigate();
-    await page.clock.fastForward(16000);
-    await expect(page.frameLocator('#app').getByRole('status')).toHaveText('The card could not load. You can continue in chat.');
-    await expect(page.frameLocator('#app').locator('#view')).toBeHidden();
-    const notice = await page.frameLocator('#app').getByRole('status').boundingBox();
-    const card = await page.locator('#app').boundingBox();
-    expect(notice!.y + notice!.height).toBeLessThanOrEqual(card!.y + card!.height);
+    await f.open();
+    await expect(f.frame.locator('#spot-says')).toContainText('starting a podcast');
+    expect(f.viewRequests).toHaveLength(0);
     expect((await f.state()).revision).toBe(0);
   } finally { await f.close(); }
 });

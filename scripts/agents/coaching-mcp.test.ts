@@ -45,7 +45,7 @@ describe('coaching MCP registration', () => {
   it('fetches the compact template instead of reusing a host-cached legacy dashboard', async () => {
     const connection = await connect(['coaching.read']);
     try {
-      const cache = new Map<string, string>([['ui://rep-and-plate/coaching.html', '<h1>Old cached dashboard</h1>']]);
+      const cache = new Map<string, string>([['ui://rep-and-plate/coaching.html', '<h1>Old cached dashboard</h1>'], ['ui://rep-and-plate/coaching-shell-v1.html','<iframe>Blocked shell</iframe>']]);
       const tool = (await connection.client.listTools()).tools.find(item => item.name === 'get_coaching_day')!;
       const uri = (tool._meta?.ui as { resourceUri: string }).resourceUri;
       let html = cache.get(uri);
@@ -54,10 +54,13 @@ describe('coaching MCP registration', () => {
         if (!('text' in resource)) throw new Error('Expected an HTML text resource.');
         html = resource.text;
       }
-      expect(html).toContain('/mcp/coaching.html');
-      expect(uri).toBe('ui://rep-and-plate/coaching-shell-v1.html');
+      expect(html).toContain('id="summary-title"');
+      expect(html).not.toContain('<iframe');
+      expect(uri).toMatch(/^ui:\/\/rep-and-plate\/coaching-[a-f0-9]{16}\.html$/);
       const legacy = await connection.client.readResource({ uri: 'ui://rep-and-plate/coaching.html' });
       expect(legacy.contents[0]).toMatchObject({ uri: 'ui://rep-and-plate/coaching.html', text: coachingAppResource.text });
+      const shell = await connection.client.readResource({ uri: 'ui://rep-and-plate/coaching-shell-v1.html' });
+      expect(shell.contents[0]).toMatchObject({ text: coachingAppResource.text });
     } finally { await connection.close(); }
   });
   it('keeps the joke in the card and gives the assistant a fresh non-repeating response contract', async () => {
@@ -193,7 +196,7 @@ describe('coaching MCP App resource', () => {
     const style = /<style>([\s\S]*?)<\/style>/.exec(coachingAppHtml)?.[1];
     expect(executable).toBeTruthy(); expect(style).toBeTruthy();
     for (const source of [executable!, style!]) expect(coachingAppHtml).toContain(`sha256-${createHash('sha256').update(source).digest('base64')}`);
-    expect(coachingAppResource._meta.ui.csp).toEqual({ connectDomains: [], resourceDomains: [], frameDomains: ['https://repandplate.com'], baseUriDomains: [] });
+    expect(coachingAppResource._meta.ui.csp).toEqual({ connectDomains: [], resourceDomains: [], frameDomains: [], baseUriDomains: [] });
     expect(executable).not.toMatch(/innerHTML|insertAdjacentHTML|\bfetch\s*\(/);
   });
 

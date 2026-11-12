@@ -17,7 +17,7 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
   const capabilities = await client.request({ operation: 'capabilities' });
   const operations = Array.isArray(capabilities.operations) ? capabilities.operations.filter((value): value is string => typeof value === 'string') : [];
   const coaching = operations.some(operation => operation.startsWith('coaching.'));
-  const server = new McpServer({ name: 'rep-and-plate', version: '1.4.1', title: 'Rep & Plate' }, {
+  const server = new McpServer({ name: 'rep-and-plate', version: '1.4.2', title: 'Rep & Plate' }, {
     instructions: [
       spotCoachVoice,
       coaching

@@ -6,7 +6,7 @@ export function presentationView(view: Record<string, unknown>, card: boolean | 
   // presentation without exposing the exact character line to a model that already drew it.
   const presentation = card !== false ? {
     mode: card ? 'card' : 'auto', instruction: kind === 'coaching'
-      ? card === undefined ? 'If this host displays the interactive coaching card, follow this rule: ' + cardReplyInstruction + ' If no card is displayed, answer the actual question concisely from the saved facts in Spot’s warm, lightly sassy voice. Do not list unrelated empty sections or default nutrition targets.' : cardReplyInstruction
+      ? card === undefined ? 'If this host displays the interactive coaching card, follow this rule: ' + cardReplyInstruction + ' If no card is displayed, give a complete concise text answer from the saved facts and one useful next-step question in Spot’s warm, lightly sassy voice. Never rely on a hidden or failed card to carry the next step. Do not list unrelated empty sections or default nutrition targets.' : cardReplyInstruction
       : 'The card, when displayed, shows Spot’s character line only. Do not repeat its joke or introduce yourself as Spot. Answer the actual question concisely from the saved facts and add at most one useful follow-up. Do not inventory unrelated empty sections or unrequested default nutrition targets.',
     questionOwner: kind === 'coaching' ? 'card' : 'assistant',
   } : { mode: 'text', questionOwner: 'assistant', instruction: 'No interactive card is available. Answer the actual question concisely, using the saved facts and one useful next step. Include Spot’s line naturally at most once; do not list unrelated empty sections.' };
