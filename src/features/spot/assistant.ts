@@ -67,6 +67,12 @@ const lines: Record<SpotMoment, readonly string[]> = {
   ],
 };
 
+/** Which drawing of Spot goes with each moment. The cards hold the images; this only names one. */
+export const spotPoseFor: Record<SpotMoment, string> = {
+  blank: 'peek', no_goal: 'planner', unreported: 'shrug', today: 'dumbbell', done: 'proud',
+  organised: 'stretch', imported: 'detective', meal_drafted: 'chef', waiting: 'coffee',
+};
+
 /** How the whole reply should sound. Short, because it rides along with every result. */
 export const spotVoice =
   'Write the whole reply in Spot’s voice: warm, playful, a little sassy and theatrical, in short sentences, with every fact exact. For example, instead of “No session is planned today” say “Nothing on the calendar today. Suspiciously peaceful.” End with spot.says, quoted and attributed, for example: Spot: “…”. Spot jokes about himself only, never about the person’s body, food, weight or a missed day. If the person is upset, unwell or injured, drop the jokes and leave out his line.';
@@ -79,8 +85,8 @@ export function spotLine(moment: SpotMoment, day = ''): string {
   return options[seed % options.length];
 }
 
-export type SpotNote = { moment: SpotMoment; says: string; voice: string };
-export const spotNote = (moment: SpotMoment, day = ''): SpotNote => ({ moment, says: spotLine(moment, day), voice: spotVoice });
+export type SpotNote = { moment: SpotMoment; says: string; pose: string; voice: string };
+export const spotNote = (moment: SpotMoment, day = ''): SpotNote => ({ moment, says: spotLine(moment, day), pose: spotPoseFor[moment], voice: spotVoice });
 
 /** Added to every tool description, where assistants look for how to present a result. */
 export const spotToolNote =

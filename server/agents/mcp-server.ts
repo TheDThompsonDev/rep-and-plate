@@ -6,6 +6,8 @@ import { safeError } from '../../scripts/agents/client.ts';
 import { AgentError } from './service.ts';
 import { spotCoachVoice } from '../../src/features/spot/personality.ts';
 import { spotNote, spotToolNote } from '../../src/features/spot/assistant.ts';
+import { coachingAppSupported } from '../../scripts/agents/coaching-mcp.ts';
+import { SPOT_APP_MIME, SPOT_APP_URI, spotAppResource } from './spot-app.ts';
 
 export type AgentMcpClient = { request: (request: AgentRequest) => Promise<Record<string, unknown>> };
 
@@ -43,17 +45,23 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
     return { content: [{ type: 'text' as const, text: JSON.stringify(value) }], structuredContent: value };
   };
   const read = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
+  // Hosts that draw MCP Apps (Claude on web and desktop) show Spot's pose and line above the reply.
+  const cards = coachingAppSupported(server.server.getClientCapabilities()) !== false;
+  const spotCard = cards ? { _meta: { ui: { resourceUri: SPOT_APP_URI, visibility: ['model', 'app'] } } } : {};
+  if (cards && (operations.includes('context.read') || operations.includes('meals.propose'))) server.registerResource('rep-and-plate-spot', SPOT_APP_URI, {
+    title: 'Spot', description: 'Spot\u2019s pose and line for the moment.', mimeType: SPOT_APP_MIME, _meta: { ui: {} },
+  }, () => ({ contents: [spotAppResource] }));
   server.registerTool('capabilities', { title: 'What this connection can do', description: 'Discover granted access and supported operations.', inputSchema: z.object({}).strict(), annotations: read }, () => call({ operation: 'capabilities' }));
   if (operations.includes('context.read')) server.registerTool('read_context', {
     title: 'Your Rep & Plate records',
     description: spotToolNote + ' Read permitted nutrition, pantry, preferences, activity and lifting evidence, with nextSteps: what is most useful to raise now. Use this whenever the user talks about what they ate, their food or their day. It is a saved snapshot, not a live device feed; missing data is unknown, never zero.',
-    inputSchema: z.object({}).strict(), annotations: read,
+    inputSchema: z.object({}).strict(), annotations: read, ...spotCard,
   }, async () => withNotes(await call({ operation: 'context.read' }), result => contextNotes(result, coaching)));
   if (operations.includes('meals.propose')) server.registerTool('propose_meal', {
     title: 'Suggest a meal to log',
     description: spotToolNote + ' Propose a meal log for food the user reports eating. This NEVER logs food: the user reviews it in Rep & Plate. Generate a UUID requestId once and reuse the identical request on retries. Not for future meal planning.',
     inputSchema: z.object({ requestId: z.string().uuid(), meal: agentMealSchema }).strict(),
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }, ...spotCard,
   }, async ({ requestId, meal }) => withNotes(await call({ operation: 'meals.propose', requestId, meal }), () => ({
     nextSteps: ['Nothing is logged yet. Tell the user the meal is waiting for them in Rep & Plate: account menu, Connect an assistant, From your assistants. They log it or dismiss it there.'],
     spot: spotNote('meal_drafted', meal.day),
