@@ -20,6 +20,8 @@ Web and native approvals persist the meal and receipt before server acknowledgme
 
 ### Claude card delivery (2026-11-12)
 
+Current delivery supersedes the external-frame shell: Claude restricts nested frames, and the shell could leave the view collapsed before initialization. Coaching and basic Spot now use self-contained, content-hashed MCP resources with no external-frame dependency. Copy/data upgrades keep the compatible response contract; renderer changes require resource discovery, not new credentials. Frozen restrictive-policy tests preserve both the failed shell and the working inline path. See [inline recovery](../audits/2026-11-12-mcp-ux/inline-recovery.md). Earlier shell claims below describe a retired approach.
+
 Follow-up correction: removing character data from structured results broke cached pre-shell cards. Structured UI data now retains Spot while card-mode text excludes his line. The coaching card owns the question across both versions, and a frozen deployed-HTML regression checks recovery through the same existing Refresh plan button. This supersedes the earlier question-in-prose design. See [compatibility recovery](../audits/2026-11-12-mcp-ux/compatibility-recovery.md).
 
 User-confirmed recovery: clicking Refresh plan on the existing Claude card returned Spot without reconnecting. The subsequent copy preference brings back the blank-week minimalism/podcast joke and cheap-equipment punchline in the no-goal rotation. The goal prompt remains in the card once; blank-plan copy does not claim meals or workouts are absent when those sources may be unknown. The revised exact wording remains subject to user feedback.
