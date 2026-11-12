@@ -5,7 +5,7 @@ import type { AppState } from '../../domain';
 import { browserConnections } from './browser';
 import { useConnections, type ApplyAgentAction } from './useConnections';
 import type { AgentScope } from './contracts';
-import { coachingConnectionScopes, toggleConnectionScope } from './permissions';
+import { defaultConnectionScopes, toggleConnectionScope } from './permissions';
 import { connectionLifetimes, defaultLifetimeDays, expiryNotice, setupGuides, type SetupGuide } from './setup';
 import './connections.css';
 
@@ -22,8 +22,8 @@ const access: { scope: AgentScope; title: string; detail: string }[] = [
 export default function ConnectionsHub({ state, onApply, open, onClose, onAccount }: { state: AppState; onApply: ApplyAgentAction; open: boolean; onClose: () => void; onAccount?: () => void }) {
   const model = useConnections(state, onApply, browserConnections, open);
   const [adding, setAdding] = useState(false);
-  const [name, setName] = useState('');
-  const [scopes, setScopes] = useState<AgentScope[]>(['nutrition:read', 'pantry:read', 'preferences:read', 'meals:propose']);
+  const [name, setName] = useState('My assistant');
+  const [scopes, setScopes] = useState<AgentScope[]>(() => [...defaultConnectionScopes]);
   const [copied, setCopied] = useState('');
   const [days, setDays] = useState<number>(defaultLifetimeDays);
   const [guideId, setGuideId] = useState<SetupGuide['id']>('claude-code');
@@ -63,15 +63,16 @@ export default function ConnectionsHub({ state, onApply, open, onClose, onAccoun
       {guide && <div className="connection-setup"><h4>Set up your assistant</h4>
         <div className="connection-guides" role="group" aria-label="Choose your assistant">{guides.map(g => <button key={g.id} type="button" aria-pressed={g.id === guide.id} onClick={() => setGuideId(g.id)}>{g.name}</button>)}</div>
         <p className="connection-guide-summary">{guide.status !== 'ready' && <strong>{guide.status === 'limited' ? 'Limited · ' : 'Not available yet · '}</strong>}{guide.summary}</p>
-        <ol className="connection-steps" aria-label={`Steps for ${guide.name}`}>{guide.steps.map((step, index) => { const id = `${guide.id}-${index}`; return <li key={id}><span>{step.text}</span>{step.copy && <><pre>{step.copy}</pre><button type="button" className="text-button" onClick={() => copy(step.copy!, id)}>{copied === id ? 'Copied' : step.copyLabel ?? 'Copy'}</button></>}</li>; })}</ol>
+        <ol className="connection-steps" aria-label={`Steps for ${guide.name}`}>{guide.steps.map((step, index) => { const id = `${guide.id}-${index}`; return <li key={id} className={step.important ? 'connection-step-important' : undefined}><span>{step.important && <strong>Easy to miss. </strong>}{step.text}</span>{step.copy && <><pre>{step.copy}</pre><button type="button" className="text-button" onClick={() => copy(step.copy!, id)}>{copied === id ? 'Copied' : step.copyLabel ?? 'Copy'}</button></>}</li>; })}</ol>
         {model.session?.mode === 'local' && <p className="connections-caption">This address is on this computer, so only an assistant running here can reach it.</p>}
         <p className="connections-caption">The commands above contain your access key. Keep them out of chats and shared files.</p>
       </div>}
       <button className="text-button" onClick={model.clearCredential}>I’ve saved the key</button>
     </section>}
     {adding ? <form className="connection-form" onSubmit={e => { e.preventDefault(); void model.create(name, scopes, days); }}><h3>Connect an assistant</h3><label>Connection name<input autoFocus value={name} maxLength={80} onChange={e => setName(e.target.value)} placeholder="For example, my daily assistant" required /></label>
-      <button type="button" className="button secondary" onClick={() => setScopes([...coachingConnectionScopes])}>Use daily coaching permissions</button><fieldset><legend>Allow this connection to…</legend>{access.map(a => <label className="connection-permission" key={a.scope}><input type="checkbox" checked={scopes.includes(a.scope)} onChange={e => setScopes(s => toggleConnectionScope(s, a.scope, e.target.checked))} /><span><strong>{a.title}</strong><small>{a.detail}</small></span></label>)}</fieldset>
-      <label>Keep this connection working for<select aria-label="Keep this connection working for" value={days} onChange={e => setDays(Number(e.target.value))}>{connectionLifetimes.map(option => <option key={option.days} value={option.days}>{option.label}</option>)}</select></label><p className="connections-caption">You can keep it going or disconnect at any time. Meal suggestions always need your review.</p><div className="connections-actions"><button type="submit" className="button primary" disabled={busy || !name.trim() || !scopes.length}>{busy ? 'Connecting…' : 'Create connection'}</button><button type="button" className="text-button" onClick={() => setAdding(false)}>Cancel</button></div>
+      <p className="connection-form-summary">Your assistant becomes your coach. It can read your records and plan, bring in records from your other apps, draft meals for you to review, and propose plan changes that apply only after your yes.</p>
+      <details className="connection-advanced"><summary>Change what it can do</summary><fieldset><legend>Allow this connection to…</legend>{access.map(a => <label className="connection-permission" key={a.scope}><input type="checkbox" checked={scopes.includes(a.scope)} onChange={e => setScopes(s => toggleConnectionScope(s, a.scope, e.target.checked))} /><span><strong>{a.title}</strong><small>{a.detail}</small></span></label>)}</fieldset>
+      <label>Keep this connection working for<select aria-label="Keep this connection working for" value={days} onChange={e => setDays(Number(e.target.value))}>{connectionLifetimes.map(option => <option key={option.days} value={option.days}>{option.label}</option>)}</select></label></details><p className="connections-caption">It works for {connectionLifetimes.find(option => option.days === days)?.label ?? `${days} days`}. You can keep it going or disconnect at any time.</p><div className="connections-actions"><button type="submit" className="button primary" disabled={busy || !name.trim() || !scopes.length}>{busy ? 'Connecting…' : 'Create connection'}</button><button type="button" className="text-button" onClick={() => setAdding(false)}>Cancel</button></div>
     </form> : <button className="button primary connection-add" disabled={busy || !model.session} onClick={() => { setAdding(true); setCopied(''); }}>Connect an assistant</button>}
     <section aria-label="Agent proposals"><div className="connections-heading"><h3>From your assistants <span>{pending.length}</span></h3></div><p className="connections-caption">Only log meals you actually ate. These estimates do not deduct pantry ingredients.</p>
       {!pending.length && <p className="connections-empty-line">You’re all caught up. New meal proposals will appear here.</p>}

@@ -8,7 +8,7 @@ import {requireDeviceOwner,sessionSignal} from './auth';
 import {cloudEpoch,cloudPaused} from '../../src/features/cloud/sync-control';
 import {useConnections,type ConnectionsPlatform} from '../../src/features/connections/useConnections';
 import type {AgentScope} from '../../src/features/connections/contracts';
-import {coachingConnectionScopes,toggleConnectionScope} from '../../src/features/connections/permissions';
+import {defaultConnectionScopes,toggleConnectionScope} from '../../src/features/connections/permissions';
 import {connectionLifetimes,defaultLifetimeDays,expiryNotice,setupGuides} from '../../src/features/connections/setup';
 
 const access:{scope:AgentScope;label:string;detail:string}[]=[
@@ -57,8 +57,8 @@ export function Connections(){
   const h=useLoadedHealth();
   const open=h.tool==='agents';
   const c=useConnections(h.state,h.applyAgentAction,nativeConnections,open);
-  const [name,setName]=useState('');
-  const [scopes,setScopes]=useState<AgentScope[]>(['meals:propose']);
+  const [name,setName]=useState('My assistant');
+  const [scopes,setScopes]=useState<AgentScope[]>(()=>[...defaultConnectionScopes]);
   const [days,setDays]=useState(String(defaultLifetimeDays));
   const [guideName,setGuideName]=useState('Claude Code');
   const [now,setNow]=useState(()=>Date.now());
@@ -82,7 +82,7 @@ export function Connections(){
       <Card>
         <Text accessibilityRole="header" style={s.h2}>Connect an agent</Text>
         <Field label="Connection name" placeholder="My assistant" value={name} onChangeText={setName} maxLength={80}/>
-        <Button label="Use daily coaching permissions" secondary onPress={()=>setScopes([...coachingConnectionScopes])}/>
+        <Text style={s.text}>Your assistant becomes your coach. Everything below is on to start with; turn off anything you do not want it to see or do.</Text>
         {access.map(item=><View key={item.scope} style={s.between}>
           <View style={s.grow}><Text style={s.h3}>{item.label}</Text><Text style={s.muted}>{item.detail}</Text></View>
           <Switch accessibilityLabel={item.label} value={scopes.includes(item.scope)} disabled={disabled}
@@ -108,7 +108,7 @@ export function Connections(){
           <Choice values={guides.map(item=>item.name)} value={guide.name} onChange={setGuideName}/>
           <Text style={s.muted}>{guide.status==='limited'?'Limited · ':guide.status==='unavailable'?'Not available yet · ':''}{guide.summary}</Text>
           {guide.steps.map((step,index)=><View key={`${guide.id}-${index}`}>
-            <Text style={s.text}>{index+1}. {step.text}</Text>
+            <Text style={[s.text,step.important&&{fontWeight:'700'}]}>{index+1}. {step.important?'Easy to miss. ':''}{step.text}</Text>
             {!!step.copy&&<Text selectable style={s.muted}>{step.copy}</Text>}
           </View>)}
           <Text style={s.muted}>Most assistants run on a computer, so send yourself these steps or open Rep & Plate there. Press and hold any line to copy it.</Text>

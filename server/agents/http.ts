@@ -1,3 +1,4 @@
+import { connectionKey } from './token.ts';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { agentRequestSchema, manageRequestSchema, type AgentContext } from '../../src/features/connections/contracts.ts';
 import { AgentError, AgentService } from './service.ts';
@@ -55,9 +56,7 @@ export function createAgentHandler(deps: AgentDependencies) {
           owner = `local:${profile}`;
         }
       } else {
-        const authorization = req.headers.authorization;
-        if (!authorization?.startsWith('Bearer ') || authorization.length > 256) throw new AgentError(401, 'INVALID_TOKEN', 'Supply your connection token as a Bearer credential.');
-        token = authorization.slice(7);
+        token = connectionKey(req.headers);
         owner = await service.tokenOwner(token);
       }
       if (deps.active && !await deps.active(owner)) throw new AgentError(403, 'ACCOUNT_UNAVAILABLE', 'This account is unavailable.');

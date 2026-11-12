@@ -8,7 +8,7 @@ import { createAgentHandler } from '../server/agents/http';
 import { SqliteAgentStore } from '../server/agents/sqlite';
 
 const execute = promisify(execFile);
-async function setup(page: Page, options: { now?: () => number; lifetime?: string } = {}) {
+async function setup(page: Page, options: { now?: () => number; lifetime?: string; without?: string[] } = {}) {
   const store = new SqliteAgentStore(':memory:');
   const server = createServer(createAgentHandler({ store, now: options.now }));
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -30,6 +30,8 @@ async function setup(page: Page, options: { now?: () => number; lifetime?: strin
   await page.getByRole('button', { name: 'Connections Your assistants, access, and meal proposals' }).click();
   await page.getByRole('button', { name: 'Connect an assistant', exact: true }).click();
   await page.getByRole('textbox', { name: 'Connection name' }).fill('Test assistant');
+  if (options.lifetime || options.without) await page.getByText('Change what it can do', { exact: true }).click();
+  for (const permission of options.without ?? []) await page.getByRole('checkbox', { name: new RegExp(`^${permission}`) }).uncheck();
   if (options.lifetime) await page.getByRole('combobox', { name: 'Keep this connection working for' }).selectOption({ label: options.lifetime });
   await page.getByRole('button', { name: 'Create connection', exact: true }).click();
   const key = page.getByRole('textbox', { name: 'Access key', exact: true });
@@ -48,7 +50,8 @@ function proposal() {
 const saved = (page: Page) => readBrowserRecords(page);
 
 test('CLI connects, proposes once, user logs, refresh preserves outcome, revocation takes effect', async ({ page }, info) => {
-  const fixture = await setup(page);
+  // A new connection is a full coach by default; turning a permission off still withholds that data.
+  const fixture = await setup(page, { without: ['Workout history'] });
   try {
     const env = { ...process.env, REP_PLATE_URL: fixture.base, REP_PLATE_TOKEN: fixture.token };
     const result = await execute(process.execPath, ['--import', 'tsx', 'scripts/health.ts', 'context', '--json'], { env });
