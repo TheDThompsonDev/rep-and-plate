@@ -7,7 +7,7 @@ import { McpServer } from '@modelcontextprotocol/server';
 import { AgentService } from '../server/agents/service';
 import { SqliteAgentStore } from '../server/agents/sqlite';
 import { registerCoachingTools } from '../scripts/agents/coaching-mcp';
-import { coachingAppHtml, COACHING_APP_MIME } from '../server/agents/coaching-app';
+import { coachingAppHtml, COACHING_APP_MIME, COACHING_APP_URI } from '../server/agents/coaching-app';
 import type { CoachingCommand, CoachingState } from '../src/features/coaching/contracts';
 
 const day = '2026-11-12';
@@ -63,10 +63,18 @@ async function fixture(page: Page, seeded = false) {
   const client = new Client({ name: 'browser-host', version: '1.0.0' }, { capabilities: { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: [COACHING_APP_MIME] } } } });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await mcp.connect(serverTransport); await client.connect(clientTransport);
+  // Reuse the exact resource a host could cache; only the public view changes between releases.
+  const cachedShell = (await client.readResource({ uri: COACHING_APP_URI })).contents[0] as { text: string };
+  let viewHtml = coachingAppHtml;
+  const viewRequests: string[] = [];
+  await page.route('https://repandplate.com/mcp/coaching.html*', async route => {
+    viewRequests.push(route.request().url());
+    await route.fulfill({ contentType: 'text/html', headers: { 'cache-control': 'no-store' }, body: viewHtml });
+  });
   const server: Server = createServer((request, response) => {
     void (async () => {
       response.setHeader('Cache-Control', 'no-store');
-      if (request.url === '/app') { response.setHeader('Content-Type', 'text/html'); response.end(coachingAppHtml); return; }
+      if (request.url === '/app') { response.setHeader('Content-Type', 'text/html'); response.end(cachedShell.text); return; }
       if (request.url === '/read') { response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(await client.callTool({ name: 'get_coaching_day', arguments: { day } }))); return; }
       if (request.url === '/call') {
         const chunks: Buffer[] = []; for await (const chunk of request) chunks.push(Buffer.from(chunk));
@@ -77,9 +85,11 @@ async function fixture(page: Page, seeded = false) {
   });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-  const frame = page.frameLocator('#app');
+  const frame = page.frameLocator('#app').frameLocator('#view');
   return {
     state, save, propose, service, session, frame,
+    cachedShell, viewRequests, setView: (html: string) => { viewHtml = html; },
+    navigate: () => page.goto(url),
     open: async (query = '') => {
       await page.goto(url + query);
       await expect(frame.locator('#summary-title')).not.toHaveText('Getting your coaching plan…');
@@ -93,13 +103,13 @@ async function fixture(page: Page, seeded = false) {
   };
 }
 
-test('empty plan is a small illustrated question at narrow and wide widths', async ({ page }, info) => {
+test('empty plan leaves the question to chat at narrow and wide widths', async ({ page }, info) => {
   const f = await fixture(page);
   try {
     for (const width of [320, 390, 760]) {
       await page.setViewportSize({ width, height: 844 }); await f.open();
-      await expect(f.frame.getByRole('heading', { name: 'What are we training for?' })).toBeVisible();
-      await expect(f.frame.locator('#next-step')).toContainText('Tell me your goal in chat');
+      await expect(f.frame.getByRole('heading', { name: 'Let’s build your week' })).toBeVisible();
+      await expect(f.frame.locator('#next-step')).toBeHidden();
       await expect(f.frame.locator('#more-plan')).toBeHidden();
       await expect(f.frame.getByText('0 completed', { exact: false })).toBeHidden();
       await expect(f.frame.locator('#notice')).toBeHidden();
@@ -109,6 +119,64 @@ test('empty plan is a small illustrated question at narrow and wide widths', asy
       expect(await f.frame.locator('html').evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
       await page.locator('#app').screenshot({ path: info.outputPath(`spot-setup-${width}.png`) });
     }
+    expect((await f.state()).revision).toBe(0);
+  } finally { await f.close(); }
+});
+
+test('a cached shell on the same MCP connection loads a new view release', async ({ page }) => {
+  const f = await fixture(page);
+  try {
+    f.setView(coachingAppHtml.replace('<body>', '<body data-release="one">'));
+    await f.open();
+    await expect(f.frame.locator('body')).toHaveAttribute('data-release', 'one');
+    const shell = f.cachedShell.text;
+    f.setView(coachingAppHtml.replace('<body>', '<body data-release="two">'));
+    await f.open();
+    await expect(f.frame.locator('body')).toHaveAttribute('data-release', 'two');
+    expect(f.cachedShell.text).toBe(shell);
+    expect(f.viewRequests).toHaveLength(2);
+    expect(new Set(f.viewRequests).size).toBe(2);
+    expect((await f.state()).revision).toBe(0);
+    expect(await page.evaluate(() => (window as unknown as { calls: unknown[] }).calls)).toEqual([]);
+  } finally { await f.close(); }
+});
+
+test('messages from a foreign frame cannot invoke a tool through the shell', async ({ page }) => {
+  const f = await fixture(page, true);
+  try {
+    await f.open();
+    await page.locator('#app').evaluate(node => {
+      const shell = (node as HTMLIFrameElement).contentWindow!;
+      shell.postMessage({ jsonrpc: '2.0', method: 'tools/call', id: 'forged', params: { name: 'undo_coaching_change', arguments: {} } }, '*');
+    });
+    // The shell accepts this host message but the real app rejects an unsolicited tools/call.
+    // A sibling window must also fail the shell's source check, even with the same origin.
+    await page.evaluate(() => {
+      const sibling = document.createElement('iframe'); document.body.append(sibling);
+      sibling.contentWindow!.eval(`parent.document.querySelector('#app').contentWindow.postMessage({jsonrpc:'2.0',method:'tools/call',id:'sibling',params:{name:'undo_coaching_change',arguments:{}}},'*')`);
+    });
+    await page.frameLocator('#app').locator('body').evaluate(() => {
+      dispatchEvent(new MessageEvent('message', { source: document.querySelector('iframe')!.contentWindow, origin: 'https://foreign.example', data: { jsonrpc: '2.0', method: 'tools/call', id: 'wrong-origin', params: { name: 'undo_coaching_change', arguments: {} } } }));
+    });
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await expect(f.frame.getByRole('heading', { name: 'Today’s plan' })).toBeVisible();
+    expect(await page.evaluate(() => (window as unknown as { calls: unknown[] }).calls)).toEqual([]);
+    expect((await f.state()).revision).toBe(2);
+  } finally { await f.close(); }
+});
+
+test('an unavailable public view leaves a visible chat fallback', async ({ page }) => {
+  const f = await fixture(page);
+  try {
+    await page.route('https://repandplate.com/mcp/coaching.html*', route => route.abort());
+    await page.clock.install();
+    await f.navigate();
+    await page.clock.fastForward(16000);
+    await expect(page.frameLocator('#app').getByRole('status')).toHaveText('The card could not load. You can continue in chat.');
+    await expect(page.frameLocator('#app').locator('#view')).toBeHidden();
+    const notice = await page.frameLocator('#app').getByRole('status').boundingBox();
+    const card = await page.locator('#app').boundingBox();
+    expect(notice!.y + notice!.height).toBeLessThanOrEqual(card!.y + card!.height);
     expect((await f.state()).revision).toBe(0);
   } finally { await f.close(); }
 });

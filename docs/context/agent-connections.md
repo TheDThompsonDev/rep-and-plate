@@ -18,6 +18,10 @@ Web and native approvals persist the meal and receipt before server acknowledgme
 
 ## Verification map
 
+### Claude card delivery (2026-11-12)
+
+The user confirmed the compact Spot card in Claude, then reported duplicated card/prose and reconnect friction. The current follow-up gives the card UI-only character copy and Claude a fresh response policy with saved facts. A stable cached bridge loads two public static renderer pages afresh; routine renderer upgrades reuse the connection. Private APIs, scopes and reviewed writes retain their boundaries. Once-only discovery of the shell and live Claude prose remain distinct from local same-connection browser proof. See [delivery design and checks](../audits/2026-11-12-mcp-ux/conversation-and-upgrades.md); earlier hash-per-template evidence is historical.
+
 - `src/features/connections/context.test.ts`: privacy projection, real completed set loads, duplicate approval, undo/replay, dismissal, expiration and visible terminal conflicts.
 - `server/agents/agents.test.ts`: real SQLite durability, hashed credentials, scopes, authorization, owner isolation, CAS races/revocation, replay conflict, expiration, HTTP rejection and separate quota wiring.
 - `scripts/agents/client.test.ts`: actual CLI process and official MCP SDK client/server stdio exchange with an HTTP fixture.

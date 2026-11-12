@@ -14,6 +14,11 @@ async function unlock(now = Date.now()) {
   return response!.headers.get('set-cookie')!;
 }
 describe('private preview boundary', () => {
+  it('serves only the two public static MCP views without exposing private APIs or arbitrary files', async () => {
+    for (const path of ['/mcp/coaching.html', '/mcp/spot.html']) expect(await previewGate(request(path), env)).toBeNull();
+    for (const path of ['/mcp/secrets.html', '/mcp/coaching.html/extra', '/api/agents/mcp']) expect((await previewGate(request(path), env))?.status).toBe(401);
+    expect((await previewGate(request('/mcp/coaching.html', { method: 'POST' }), env))?.status).toBe(403);
+  });
   it('locks hosted deployments by default, allows unconfigured local development, and supports explicit launch', () => {
     expect(previewEnabled({ VERCEL: '1' })).toBe(true);
     expect(previewEnabled({})).toBe(false);

@@ -19,6 +19,7 @@ mobile/android/
 mobile/web-build/
 .vercel/
 .generated/
+public/mcp/
 
 .vercel
 .codex-remote-attachments/

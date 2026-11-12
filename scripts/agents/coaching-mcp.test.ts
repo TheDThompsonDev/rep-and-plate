@@ -16,7 +16,7 @@ const canonical = {
   freshness: { mode: 'published_snapshot', stale: true, dataUpdatedAt: null, ageSeconds: null },
 };
 
-async function connect(granted = operations, supplied?: (request: AgentRequest) => Promise<CallToolResult>) {
+async function connect(granted = operations, supplied?: (request: AgentRequest) => Promise<CallToolResult>, cards = true) {
   const seen: AgentRequest[] = [];
   const server = new McpServer({ name: 'coaching-test', version: '1.0.0' });
   registerCoachingTools(server, async request => {
@@ -24,13 +24,24 @@ async function connect(granted = operations, supplied?: (request: AgentRequest) 
     return supplied ? supplied(request) : { content: [{ type: 'text', text: JSON.stringify(canonical) }], structuredContent: canonical };
   }, granted);
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-  const client = new Client({ name: 'coaching-client-test', version: '1.0.0' }, { capabilities: { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: [COACHING_APP_MIME] } } } });
+  const client = new Client({ name: 'coaching-client-test', version: '1.0.0' }, { capabilities: cards ? { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: [COACHING_APP_MIME] } } } : {} });
   await server.connect(serverTransport);
   await client.connect(clientTransport);
   return { client, server, seen, close: async () => { await client.close(); await server.close(); } };
 }
 
 describe('coaching MCP registration', () => {
+  it('retains the complete text answer and character line for a negotiated text-only client', async () => {
+    const connection = await connect(['coaching.read'], undefined, false);
+    try {
+      const result = await connection.client.callTool({ name: 'get_coaching_day', arguments: {} });
+      const view = result.structuredContent as { spot: { says: string }; presentation: { mode: string }; state: unknown };
+      expect(view.presentation.mode).toBe('text');
+      expect(view.spot.says).toBeTruthy();
+      expect((result.content as { text: string }[])[0].text).toContain(view.spot.says);
+      expect(view.state).toBeTruthy();
+    } finally { await connection.close(); }
+  });
   it('fetches the compact template instead of reusing a host-cached legacy dashboard', async () => {
     const connection = await connect(['coaching.read']);
     try {
@@ -43,10 +54,23 @@ describe('coaching MCP registration', () => {
         if (!('text' in resource)) throw new Error('Expected an HTML text resource.');
         html = resource.text;
       }
-      expect(html).toContain('What are we training for?');
-      expect(uri).toMatch(/^ui:\/\/rep-and-plate\/coaching-[a-f0-9]{16}\.html$/);
+      expect(html).toContain('/mcp/coaching.html');
+      expect(uri).toBe('ui://rep-and-plate/coaching-shell-v1.html');
       const legacy = await connection.client.readResource({ uri: 'ui://rep-and-plate/coaching.html' });
-      expect(legacy.contents[0]).toMatchObject({ uri: 'ui://rep-and-plate/coaching.html', text: coachingAppHtml });
+      expect(legacy.contents[0]).toMatchObject({ uri: 'ui://rep-and-plate/coaching.html', text: coachingAppResource.text });
+    } finally { await connection.close(); }
+  });
+  it('keeps the joke in the card and gives the assistant a fresh non-repeating response contract', async () => {
+    const connection = await connect(['coaching.read']);
+    try {
+      const result = await connection.client.callTool({ name: 'get_coaching_day', arguments: {} });
+      const view = result.structuredContent as Record<string, unknown>;
+      const card = result._meta?.repAndPlateView as { spot: { says: string } };
+      expect(view.presentation).toMatchObject({ mode: 'card' });
+      expect(card.spot.says).toBeTruthy();
+      expect(JSON.stringify({ content: result.content, structuredContent: view })).not.toContain(card.spot.says);
+      expect((result.content as { text: string }[])[0].text).toContain('Do not recap the card');
+      expect((result.content as { text: string }[])[0].text).toContain('default nutrition targets');
     } finally { await connection.close(); }
   });
   it('detects negotiated UI support without requiring the extension', () => {
@@ -167,7 +191,7 @@ describe('coaching MCP App resource', () => {
     const style = /<style>([\s\S]*?)<\/style>/.exec(coachingAppHtml)?.[1];
     expect(executable).toBeTruthy(); expect(style).toBeTruthy();
     for (const source of [executable!, style!]) expect(coachingAppHtml).toContain(`sha256-${createHash('sha256').update(source).digest('base64')}`);
-    expect(coachingAppResource._meta.ui.csp).toEqual({ connectDomains: [], resourceDomains: [], frameDomains: [], baseUriDomains: [] });
+    expect(coachingAppResource._meta.ui.csp).toEqual({ connectDomains: [], resourceDomains: [], frameDomains: ['https://repandplate.com'], baseUriDomains: [] });
     expect(executable).not.toMatch(/innerHTML|insertAdjacentHTML|\bfetch\s*\(/);
   });
 

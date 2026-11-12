@@ -59,7 +59,7 @@ describe('the small Spot card for the basic tools', () => {
     const style = /<style>([\s\S]*?)<\/style>/.exec(spotAppHtml)![1];
     for (const source of [script, style]) expect(spotAppHtml).toContain(`sha256-${createHash('sha256').update(source).digest('base64')}`);
     expect(spotAppHtml).toContain("img-src data:; connect-src 'none'");
-    expect(spotAppResource._meta.ui.csp).toEqual({ connectDomains: [], resourceDomains: [], frameDomains: [], baseUriDomains: [] });
+    expect(spotAppResource._meta.ui.csp).toEqual({ connectDomains: [], resourceDomains: [], frameDomains: ['https://repandplate.com'], baseUriDomains: [] });
     expect(script).not.toMatch(/innerHTML|insertAdjacentHTML|\bfetch\s*\(/);
   });
 
@@ -158,10 +158,10 @@ describe('the server offers the Spot card', () => {
     cleanup.push(() => client.close());
     const tools = (await client.listTools()).tools;
     for (const name of ['read_context', 'propose_meal']) expect(tools.find(tool => tool.name === name)?._meta, name).toMatchObject({ ui: { resourceUri: SPOT_APP_URI }, 'ui/resourceUri': SPOT_APP_URI });
-    expect(SPOT_APP_URI).toMatch(/^ui:\/\/rep-and-plate\/spot-[a-f0-9]{16}\.html$/);
+    expect(SPOT_APP_URI).toBe('ui://rep-and-plate/spot-shell-v1.html');
     const resource = await client.readResource({ uri: SPOT_APP_URI });
-    expect((resource.contents[0] as { text: string }).text).toBe(spotAppHtml);
+    expect((resource.contents[0] as { text: string }).text).toBe(spotAppResource.text);
     const legacy = await client.readResource({ uri: 'ui://rep-and-plate/spot.html' });
-    expect(legacy.contents[0]).toMatchObject({ uri: 'ui://rep-and-plate/spot.html', text: spotAppHtml });
+    expect(legacy.contents[0]).toMatchObject({ uri: 'ui://rep-and-plate/spot.html', text: spotAppResource.text });
   });
 });

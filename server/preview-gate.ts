@@ -53,6 +53,8 @@ export async function previewGate(request: Request, env: Environment, now = Date
   const url = new URL(request.url);
   const path = url.pathname;
   const read = request.method === 'GET' || request.method === 'HEAD';
+  // Public renderer code contains no account data. All private reads/writes still use MCP auth.
+  if (read && (path === '/mcp/coaching.html' || path === '/mcp/spot.html')) return null;
   // Native clients do not share a browser cookie jar. Only delegate API requests:
   // betaHandler still verifies the bearer token, origin, membership and quotas.
   const endpoint = path === '/api/health' ? `/api/${url.searchParams.get('endpoint') ?? ''}` : path;
