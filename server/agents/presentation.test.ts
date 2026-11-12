@@ -10,14 +10,15 @@ describe('card and conversation responsibilities', () => {
     expect(result.modelView.state).toEqual(view.state);
     expect(result.modelView.brief).toEqual(view.brief);
     expect(result.structuredView.spot).toEqual(view.spot);
-    expect(result.presentation.questionOwner).toBe('card');
+    expect(result.presentation.questionOwner).toBe('assistant');
     expect(result.presentation).not.toHaveProperty('suggestedReply');
-    expect(result.presentation.instruction).toContain('Do not add a follow-up question');
-    expect(result.presentation.instruction).toContain('Do not recap the card');
+    expect(result.presentation.instruction).toContain('Always write a useful coaching reply below the card');
+    expect(result.presentation.instruction).toContain('one focused follow-up question');
+    expect(result.presentation.instruction).not.toMatch(/omit prose|minimal acknowledgment|Do not add a follow-up question/);
   });
-  it('leaves an outstanding review in the card without adding a second question', () => {
+  it('keeps review data intact while allowing a useful explanation below it', () => {
     const result = presentationView({ ...view, state: { ...view.state, proposals: [{ status: 'pending' }] } }, true);
-    expect(result.presentation.questionOwner).toBe('card');
+    expect(result.presentation.questionOwner).toBe('assistant');
     expect(result.presentation).not.toHaveProperty('suggestedReply');
   });
   it('retains Spot and complete facts for text-only consumers', () => {
