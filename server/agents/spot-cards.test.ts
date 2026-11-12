@@ -20,7 +20,7 @@ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await c
 const moments: SpotMoment[] = ['blank', 'no_goal', 'unreported', 'today', 'done', 'organised', 'imported', 'meal_drafted', 'waiting'];
 
 /** Load a card as a host would and complete the MCP Apps handshake. */
-async function mount(html: string) {
+async function mount(html: string, protocolVersion = '2026-01-26') {
   const win = new Window({ url: 'https://view.example/', settings: { enableJavaScriptEvaluation: true, suppressInsecureJavaScriptEnvironmentWarning: true, disableJavaScriptFileLoading: true, disableCSSFileLoading: true } });
   const posted: Record<string, unknown>[] = [];
   const host = { postMessage: (message: Record<string, unknown>) => posted.push(message) };
@@ -35,7 +35,7 @@ async function mount(html: string) {
     win.dispatchEvent(event);
   };
   const init = posted.find(message => message.method === 'ui/initialize')!;
-  receive({ jsonrpc: '2.0', id: init.id, result: { protocolVersion: '2026-01-26', hostCapabilities: {} } });
+  receive({ jsonrpc: '2.0', id: init.id, result: { protocolVersion, hostCapabilities: {} } });
   for (let i = 0; i < 3; i++) await Promise.resolve();
   cleanup.push(() => win.happyDOM.close());
   return { win, posted, receive };
@@ -82,6 +82,16 @@ describe('the small Spot card for the basic tools', () => {
   });
 });
 
+describe('a host on another protocol version', () => {
+  it('still gets Spot instead of an empty frame', async () => {
+    for (const html of [spotAppHtml, coachingAppHtml]) {
+      const { win, receive } = await mount(html, '2026-06-01');
+      receive({ jsonrpc: '2.0', method: 'ui/notifications/tool-result', params: { structuredContent: { state: { revision: 0 }, spot: spotNote('blank', '2026-11-12') } } });
+      expect((win.document.getElementById('spot') as unknown as { hidden: boolean }).hidden).toBe(false);
+    }
+  });
+});
+
 describe('the coaching card', () => {
   it('shows Spot above the plan', async () => {
     expect(coachingAppHtml).toContain("img-src data:; connect-src 'none'");
@@ -105,7 +115,7 @@ describe('the server offers the Spot card', () => {
     await client.connect(new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${(server.address() as AddressInfo).port}/api/agents/mcp`), { requestInit: { headers: { 'x-api-key': token } } }));
     cleanup.push(() => client.close());
     const tools = (await client.listTools()).tools;
-    for (const name of ['read_context', 'propose_meal']) expect(tools.find(tool => tool.name === name)?._meta, name).toMatchObject({ ui: { resourceUri: SPOT_APP_URI } });
+    for (const name of ['read_context', 'propose_meal']) expect(tools.find(tool => tool.name === name)?._meta, name).toMatchObject({ ui: { resourceUri: SPOT_APP_URI }, 'ui/resourceUri': SPOT_APP_URI });
     const resource = await client.readResource({ uri: SPOT_APP_URI });
     expect((resource.contents[0] as { text: string }).text).toBe(spotAppHtml);
   });

@@ -194,7 +194,8 @@ export function coachingAppSupported(capabilities: unknown): boolean | undefined
 export function registerCoachingTools(server: McpServer, call: CoachingMcpCall, operations: readonly string[]) {
   if (!operations.some(operation => operation.startsWith('coaching.'))) return;
   const supported = coachingAppSupported(server.server.getClientCapabilities());
-  const ui = supported === false ? {} : { _meta: { ui: { resourceUri: COACHING_APP_URI, visibility: ['model', 'app'] } } };
+  // The official MCP Apps helper also writes the legacy flat key, which some hosts still read.
+  const ui = supported === false ? {} : { _meta: { ui: { resourceUri: COACHING_APP_URI, visibility: ['model', 'app'] }, 'ui/resourceUri': COACHING_APP_URI } };
   const appVisibility = { _meta: { ui: { visibility: ['model', 'app'] } } };
   const read = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
   const propose = { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false };
