@@ -124,7 +124,7 @@ test('the previously deployed cached card keeps Spot on the same connection', as
     f.setOldPayload(false);
     await f.frame.getByRole('button', { name: 'Refresh plan' }).click();
     await expect(f.frame.locator('#spot')).toBeVisible();
-    await expect(f.frame.locator('#spot-says')).toContainText('clipboard');
+    await expect(f.frame.locator('#spot-says')).toContainText('starting a podcast');
     expect(f.viewRequests).toHaveLength(0);
     expect((await f.state()).revision).toBe(0);
     await page.locator('#app').screenshot({ path: info.outputPath('cached-card-restored.png') });
