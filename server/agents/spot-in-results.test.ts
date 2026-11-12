@@ -79,8 +79,8 @@ describe('a new connection is a coach by default', () => {
     expect(view.spot).toEqual(character(result));
     expect(text(result)).not.toContain(spotLine('no_goal', day));
     expect(view.presentation.mode).toBe('auto');
-    expect(view.presentation.questionOwner).toBe('card');
-    expect(view.presentation.instruction).toContain('Do not add a follow-up question');
+    expect(view.presentation.questionOwner).toBe('assistant');
+    expect(view.presentation.instruction).toContain('Always write a useful coaching reply below the card');
     expect(view.presentation.instruction).toContain('If no card is displayed');
   });
   it('changes Spot’s line with the moment', async () => {

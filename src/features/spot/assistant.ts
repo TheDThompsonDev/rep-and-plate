@@ -72,7 +72,7 @@ export const spotPoseFor: Record<SpotMoment, string> = {
 
 /** How the whole reply should sound. Short, because it rides along with every result. */
 export const spotVoice =
-  'Use a warm voice, a little sassy when appropriate, with every fact exact. Follow presentation.instruction from the latest result. Do not repeat card facts, its joke or its question, or introduce yourself as Spot. In a text-only conversation, work his line naturally into the reply once. Spot jokes about himself only, never about the person’s body, food, weight or a missed day. If the person is upset, unwell or injured, drop the jokes and leave out his line.';
+  'Use a warm voice, a little sassy when appropriate, with every fact exact. Follow presentation.instruction from the latest result. Add a useful coaching reply below a card: a brief summary, relevant context and a focused follow-up. Do not repeat Spot’s joke or introduce yourself as Spot; advance the conversation beyond the card’s broad prompt. In a text-only conversation, work his line naturally into the reply once. Spot jokes about himself only, never about the person’s body, food, weight or a missed day. If the person is upset, unwell or injured, drop the jokes and leave out his line.';
 
 /** One line for the moment. The day picks which, so it changes between days and stays put within one. */
 export function spotLine(moment: SpotMoment, day = ''): string {
@@ -87,4 +87,4 @@ export const spotNote = (moment: SpotMoment, day = ''): SpotNote => ({ moment, s
 
 /** Added to every tool description, where assistants look for how to present a result. */
 export const spotToolNote =
-  'Follow presentation.instruction in each fresh result. The coaching card carries Spot’s joke, saved facts and next question. Do not repeat the card or ask another question in chat. Add prose only for essential information missing from it. The basic Spot card carries only the joke, so answer the actual data question concisely. Do not list unrelated empty sections. In text-only mode, give the concise answer and include Spot’s line naturally once. Never claim a change was saved until its tool result confirms it.';
+  'Follow presentation.instruction in each fresh result. Always add a useful coaching reply below the card: a brief summary, relevant saved facts and a focused follow-up or practical next step. Do not repeat Spot’s joke or replace the reply with a pointer to the card. Build on its broad prompt instead of simply rephrasing it. The basic Spot card carries only the joke, so answer the actual data question concisely. Do not list unrelated empty sections or treat missing records as zero. In text-only mode, give the concise answer and include Spot’s line naturally once. Never claim a change was saved until its tool result confirms it.';

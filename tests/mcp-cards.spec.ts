@@ -146,7 +146,7 @@ test('the previously deployed cached card keeps Spot on the same connection', as
     f.setOldPayload(false);
     await f.frame.getByRole('button', { name: 'Refresh plan' }).click();
     await expect(f.frame.locator('#spot')).toBeVisible();
-    await expect(f.frame.locator('#spot-says')).toContainText('starting a podcast');
+    await expect(f.frame.locator('#spot-says')).toContainText('start a podcast');
     expect(f.viewRequests).toHaveLength(0);
     expect((await f.state()).revision).toBe(0);
     await page.locator('#app').screenshot({ path: info.outputPath('cached-card-restored.png') });
@@ -214,7 +214,7 @@ test('the card needs no public view or external request to render', async ({ pag
   const f = await fixture(page);
   try {
     await f.open();
-    await expect(f.frame.locator('#spot-says')).toContainText('starting a podcast');
+    await expect(f.frame.locator('#spot-says')).toContainText('start a podcast');
     expect(f.viewRequests).toHaveLength(0);
     expect((await f.state()).revision).toBe(0);
   } finally { await f.close(); }

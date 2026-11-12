@@ -76,8 +76,9 @@ describe('coaching MCP registration', () => {
       expect(card.spot.says).toBeTruthy();
       expect(JSON.stringify(result.content)).not.toContain(card.spot.says);
       expect(view.spot).toEqual(card.spot);
-      expect(view.presentation).toMatchObject({ questionOwner: 'card' });
-      expect((result.content as { text: string }[])[0].text).toContain('Do not recap the card');
+      expect(view.presentation).toMatchObject({ questionOwner: 'assistant' });
+      expect((result.content as { text: string }[])[0].text).toContain('Always write a useful coaching reply below the card');
+      expect((result.content as { text: string }[])[0].text).not.toContain('omit prose');
       expect((result.content as { text: string }[])[0].text).toContain('default nutrition targets');
     } finally { await connection.close(); }
   });
