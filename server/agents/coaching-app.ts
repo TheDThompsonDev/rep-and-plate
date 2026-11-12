@@ -1,12 +1,9 @@
 import { createHash } from 'node:crypto';
-import { spotBannerMarkup, spotBannerScript, spotBannerStyle } from './spot-banner.ts';
+import { spotBannerMarkup, spotBannerScript } from './spot-banner.ts';
+import { coachingAppStyle as style } from './coaching-style.ts';
 
 export const COACHING_APP_URI = 'ui://rep-and-plate/coaching.html';
 export const COACHING_APP_MIME = 'text/html;profile=mcp-app';
-
-const style = String.raw`
-:root{color-scheme:light dark;--bg:#f5faf6;--surface:#fff;--ink:#173d31;--muted:#526e61;--line:#d5e5da;--accent:#006249;font-family:var(--font-sans,system-ui,sans-serif);font-size:14px;background:var(--bg);color:var(--ink)}*{box-sizing:border-box}body{margin:0;padding:18px}header,.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{font-size:21px;letter-spacing:-.5px;margin:2px 0}h2{font-size:16px;margin:0 0 10px}h3{font-size:14px;margin:0 0 7px}p{line-height:1.5;margin:7px 0}.eyebrow{font-size:10px;letter-spacing:1.5px;font-weight:800;color:var(--accent);margin:0}.muted,small{color:var(--muted)}.pill{font-size:11px;padding:5px 9px;border:1px solid var(--line);border-radius:99px}.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px;margin-top:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid>.card{margin-top:0}ul{padding-left:18px;margin:8px 0}li{line-height:1.5;margin:6px 0}button{border:1px solid var(--line);border-radius:10px;padding:10px 13px;min-height:42px;font:inherit;font-weight:600;background:var(--surface);color:var(--ink);cursor:pointer}button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #72b895;outline-offset:3px}label{display:grid;gap:5px;margin:10px 0;font-size:12px;font-weight:600}input,select,textarea{font:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);width:100%}textarea{min-height:74px;resize:vertical}pre{font:11px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:280px;overflow:auto}details{margin-top:10px}summary{cursor:pointer;min-height:32px;line-height:32px}#notice{padding:10px 0;min-height:34px;font-size:12px}.pending{border-left:4px solid #c39a2f}.approved{border-left:4px solid var(--accent)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.check{display:flex;gap:8px;align-items:flex-start;font-weight:400;line-height:1.5}.check input{width:auto;margin-top:4px}.beforeafter{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.beforeafter section{padding:10px;border:1px solid var(--line);border-radius:10px}#feedback[hidden]{display:none}.session{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;border-top:1px solid var(--line);padding-top:9px;margin-top:9px}.session:first-child{border-top:0;padding-top:0;margin-top:0}.session span{display:block}.session .muted{font-size:12px}.feedback-actions{margin-top:10px}.status{font-size:11px;text-transform:capitalize}@media(max-width:520px){body{padding:12px}.grid,.beforeafter{grid-template-columns:1fr}.card{padding:12px}}@media(prefers-color-scheme:dark){:root{--bg:#10231c;--surface:#182f25;--ink:#e5f3e9;--muted:#b1c9ba;--line:#385343;--accent:#86d3ac}button.primary{color:#10231c}}
-${spotBannerStyle}`;
 
 /** Static executable content only. Tool data enters exclusively through textContent. */
 const script = String.raw`
@@ -39,6 +36,11 @@ const script = String.raw`
   const title = item => String(item.title || item.name || item.label || 'Training session');
   const sessionDay = item => String(item.day || item.scheduledDay || item.date || '');
   const minutes = item => item.minutes ?? item.durationMinutes ?? item.plannedMinutes;
+  const formatDay = value => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    const date = new Date(value + 'T12:00:00');
+    return Number.isFinite(date.getTime()) ? new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric'}).format(date) : value;
+  };
   const canReview = () => allowed('coaching.resolve');
   function ingest(result) {
     const reply = record(result);
@@ -75,41 +77,84 @@ const script = String.raw`
     const list = element('ul');
     const snapshot = record(value);
     const profile = record(snapshot.profile);
-    for (const [key, field] of Object.entries(profile)) if (field !== null && field !== '' && !Array.isArray(field) && typeof field !== 'object') list.append(element('li', key.replace(/([A-Z])/g, ' $1') + ': ' + field));
+    for (const [key, field] of Object.entries(profile)) if (field !== null && field !== '' && (Array.isArray(field) ? field.length > 0 : typeof field !== 'object')) list.append(element('li', key.replace(/([A-Z])/g, ' $1') + ': ' + (Array.isArray(field) ? field.join(', ') : field)));
     for (const session of array(snapshot.sessions)) list.append(element('li', title(session) + ' · ' + sessionDay(session) + (minutes(session) !== undefined ? ' · ' + minutes(session) + ' min' : '') + (session.status ? ' · ' + session.status : '')));
-    for (const outcome of array(snapshot.outcomes)) list.append(element('li', 'Outcome: ' + outcome.status + ' · ' + outcome.day + (outcome.note ? ' · ' + outcome.note : '')));
+    for (const outcome of array(snapshot.outcomes)) {
+      const session = sessions().find(item => item.id === outcome.sessionId);
+      list.append(element('li', (session ? title(session) + ': ' : 'Result: ') + outcome.status + ' · ' + formatDay(outcome.day || '') + (outcome.actualMinutes !== undefined ? ' · ' + outcome.actualMinutes + ' min' : '') + (outcome.effort !== undefined ? ' · effort ' + outcome.effort + '/10' : '') + (outcome.note ? ' · ' + outcome.note : '')));
+    }
     for (const memory of array(snapshot.memories)) list.append(element('li', 'Remember: ' + memory.text));
     if (!list.childNodes.length) list.append(element('li', 'No values on this side of the change.'));
     target.append(list);
     const details = element('details'); details.append(element('summary','Exact changed values')); details.append(element('pre',JSON.stringify(value,null,2))); target.append(details);
   }
-  function renderSessions(target, values, empty) {
+  function renderSessions(target, values, empty, limit = 14) {
     target.replaceChildren();
     if (!values.length) { target.append(element('p',empty,'muted')); return; }
-    for (const item of values.slice(0,14)) {
+    for (const item of values.slice(0,limit)) {
       const row = element('div',undefined,'session'); const info = element('div'); info.append(element('strong',title(item)));
-      info.append(element('span',sessionDay(item) + (minutes(item) !== undefined ? ' · ' + minutes(item) + ' min' : ''),'muted'));
+      info.append(element('span',formatDay(sessionDay(item)) + (minutes(item) !== undefined ? ' · ' + minutes(item) + ' min' : ''),'muted'));
+      if (item.details) info.append(element('span',item.details,'muted'));
       const outcome = array(state().outcomes).find(value => value.sessionId === item.id);
-      if (outcome) info.append(element('span',outcome.status,'status'));
+      if (outcome) info.append(element('span','Reported ' + outcome.status,'status'));
       row.append(info);
-      if (allowed('coaching.propose') && item.id) row.append(action('Feedback',() => openFeedback(item),false));
+      if (allowed('coaching.propose') && item.id) row.append(action(outcome ? 'Update result' : 'Report result',() => openFeedback(item),false));
       target.append(row);
     }
+    if (values.length > limit) target.append(element('p',(values.length - limit) + ' more in your plan below.','muted'));
+  }
+  function renderSummary(today, upcoming, brief, saved) {
+    const goal = record(saved.profile).primaryGoal;
+    const awaiting = array(brief.awaitingFeedback);
+    const noPlan = !goal && !today.length && !upcoming.length && !awaiting.length;
+    $('summary').hidden = proposals().length > 0;
+    $('summary-title').textContent = revision() === null ? 'Getting your coaching plan…'
+      : noPlan ? 'What are we training for?'
+      : today.length ? 'Today’s plan'
+      : awaiting.length ? 'How did it go?'
+      : upcoming.length ? 'Up next' : 'Let’s plan your week';
+    $('summary-goal').textContent = goal || '';
+    $('summary-goal').hidden = !goal;
+    const primary = today.length ? today : awaiting.length ? awaiting : upcoming.slice(0,1);
+    renderSessions($('summary-sessions'),primary,'',2);
+    const prompt = $('next-step'); prompt.replaceChildren();
+    if (revision() === null) return;
+    if (!goal) { prompt.textContent = 'Tell me your goal in chat. We’ll build a week around it.'; return; }
+    const earlier = awaiting[0];
+    if (earlier) {
+      const match = array(record(data.evidence).activities).find(item => item.day === sessionDay(earlier) && item.sport === earlier.sport);
+      if (match) {
+        const source = String(match.source || 'Another app').replace(/(^|[ _.-])([a-z])/g,(_text,gap,letter) => (gap ? ' ' : '') + letter.toUpperCase());
+        prompt.append(element('span',source + ': ' + title(match) + (minutes(match) !== undefined ? ' · ' + minutes(match) + ' min' : '') + '. '));
+        prompt.append(element('span','Was that your “' + title(earlier) + '” on ' + formatDay(sessionDay(earlier)) + '? Tell me in chat.'));
+      } else prompt.textContent = 'How did “' + title(earlier) + '” on ' + formatDay(sessionDay(earlier)) + ' go? Tell me in chat, or report the result.';
+    } else if (!today.length && !upcoming.length) prompt.textContent = 'Want me to draft your next seven days? Tell me what fits this week.';
+    else if (today.length) {
+      const reported = today.every(item => array(saved.outcomes).some(outcome => outcome.sessionId === item.id));
+      prompt.textContent = reported ? 'Your reported results are saved. Want to look at what’s next?' : 'When you’re ready, tell me how it went or report the result here.';
+    } else prompt.textContent = 'Want to adjust what’s coming up? Tell me what needs to change.';
   }
   function render() {
     if (disposed) return;
     renderSpot(data.spot);
     const saved = state(), brief = record(data.brief), currentDay = day();
-    $('day').textContent = currentDay || 'Saved coaching plan';
+    $('day').textContent = formatDay(currentDay) || '';
     const fresh = record(data.freshness);
-    const stale = data.stale === true || fresh.stale === true;
     const at = data.publishedAt || fresh.publishedAt || data.dataUpdatedAt || fresh.dataUpdatedAt;
-    $('freshness').textContent = stale ? 'Snapshot may be out of date. Refresh before changing the plan.' : at ? 'Snapshot saved ' + at + '. Device activity may not be included yet.' : 'Canonical saved plan. Device activity may not be included yet.';
+    const updated = at ? new Date(at) : null;
+    $('freshness').textContent = updated && Number.isFinite(updated.getTime())
+      ? 'App-recorded food and workouts last updated ' + new Intl.DateTimeFormat(undefined,{dateStyle:'medium',timeStyle:'short'}).format(updated) + '. Newer app entries may not be included.'
+      : 'App-recorded food and workouts are unavailable on this connection. Your saved coaching plan is separate.';
     $('revision').textContent = revision() === null ? 'Awaiting saved state' : 'Revision ' + revision();
     $('refresh').disabled = !allowed('coaching.read');
     const all = sessions();
     const today = array(brief.today).length ? array(brief.today) : all.filter(item => sessionDay(item) === currentDay);
     const upcoming = array(brief.upcoming).length ? array(brief.upcoming) : all.filter(item => sessionDay(item) > currentDay);
+    renderSummary(today,upcoming,brief,saved);
+    $('review').hidden = proposals().length === 0;
+    $('more-plan').hidden = revision() === null || (!record(saved.profile).primaryGoal && !all.length && !array(brief.awaitingFeedback).length && !array(saved.journal).length);
+    $('today-card').hidden = today.length === 0;
+    $('upcoming-card').hidden = upcoming.length === 0;
     renderSessions($('today'),today,'No session is scheduled for this day.');
     renderSessions($('upcoming'),upcoming,'No upcoming sessions are saved.');
     $('brief').replaceChildren();
@@ -125,7 +170,7 @@ const script = String.raw`
     const list = $('proposals'); list.replaceChildren();
     for (const proposal of proposals()) {
       const card = element('article',undefined,'card ' + (proposal.status === 'pending' ? 'pending' : proposal.status === 'accepted' ? 'approved' : ''));
-      card.append(element('h3',proposal.status === 'pending' ? 'Proposed change · awaiting your approval' : 'Change ' + proposal.status));
+      card.append(element('h2',proposal.status === 'pending' ? 'Proposed change · awaiting your approval' : 'Change ' + proposal.status));
       const command = record(proposal.command);
       card.append(element('p',command.reason || command.type || 'Review these saved values.'));
       if (proposal.before || proposal.after) {
@@ -152,9 +197,9 @@ const script = String.raw`
     }
     if (!proposals().length) list.append(element('p','No change is awaiting approval.','muted'));
     if (record(data.omitted).pendingProposals) list.append(element('p',data.omitted.pendingProposals + ' additional pending proposals are available in Rep & Plate.','muted'));
-    $('saved-state').textContent = JSON.stringify(saved,null,2);
     $('history').replaceChildren();
     const history = array(saved.journal || saved.history || saved.entries || brief.recentChanges || data.history);
+    $('history-card').hidden = history.length === 0;
     for (const entry of history.slice(-8).reverse()) {
       const item = element('div',undefined,'session'); item.append(element('span',entry.reason || record(entry.command).reason || entry.type || 'Saved coaching change'));
       if (entry.id && entry.kind === 'apply' && entry.revision === revision()) item.append(action('Review undo',() => {
@@ -213,7 +258,7 @@ const script = String.raw`
       for (const [id, waiter] of pending) if (waiter.method === 'tools/call') { pending.delete(id); clearTimeout(waiter.timer); waiter.reject(new Error('The tool call was cancelled. Refresh the saved plan before retrying.')); }
       busy = false; notice('The tool call was cancelled. Refresh the saved plan before retrying.'); render();
     }
-    else if (message.method === 'ui/notifications/host-context-changed') { if (record(message.params).theme) document.documentElement.style.colorScheme = message.params.theme; }
+    else if (message.method === 'ui/notifications/host-context-changed') { applyHostTheme(record(message.params)); }
     else if (message.method === 'ping' && message.id !== undefined) send({jsonrpc:'2.0',id:message.id,result:{}});
   });
   render();
@@ -225,10 +270,10 @@ const script = String.raw`
     if (typeof initialization.protocolVersion !== 'string') throw new Error('This host did not complete the MCP Apps handshake. Use the complete text tools.');
     initialized = true; hostTools = !!record(initialization.hostCapabilities).serverTools;
     notify('ui/notifications/initialized',{});
-    if (record(initialization.hostContext).theme) document.documentElement.style.colorScheme = initialization.hostContext.theme;
-    notice(hostTools ? 'Ready. Pending changes require your explicit approval.' : 'This host displays coaching details but has not enabled interactive tool calls. Use the text tools for changes.');
+    applyHostTheme(record(initialization.hostContext));
+    notice(hostTools ? '' : 'You can review details here. Ask in chat to make changes; this host has not enabled card actions.');
     render();
-    if (typeof ResizeObserver === 'function') { resizeObserver = new ResizeObserver(() => notify('ui/notifications/size-changed',{width:document.documentElement.clientWidth,height:document.documentElement.scrollHeight})); resizeObserver.observe(document.body); }
+    if (typeof ResizeObserver === 'function') { resizeObserver = new ResizeObserver(() => notify('ui/notifications/size-changed',{width:document.documentElement.clientWidth,height:Math.ceil(document.body.getBoundingClientRect().height)})); resizeObserver.observe(document.body); }
   }).catch(error => { initialized = false; hostTools = false; notice(error.message + ' The complete coaching details remain available in the tool’s text result.'); render(); });
 })();
 `;
@@ -237,15 +282,18 @@ const hash = (value: string) => createHash('sha256').update(value).digest('base6
 const csp = `default-src 'none'; script-src 'sha256-${hash(script)}'; style-src 'sha256-${hash(style)}'; img-src data:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'`;
 
 export const coachingAppHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="${csp}"><title>Your coaching day · Rep & Plate</title><style>${style}</style></head><body>
+<header><div><p class="eyebrow">REP &amp; PLATE</p><span id="day" class="muted"></span></div><button id="refresh" type="button" disabled>Refresh plan</button></header>
 ${spotBannerMarkup}
-<header><div><p class="eyebrow">REP &amp; PLATE</p><h1>Your coaching day</h1><span id="day" class="muted"></span></div><button id="refresh" type="button" disabled>Refresh plan</button></header>
-<p id="freshness" class="muted"></p><span id="revision" class="pill"></span><p id="notice" role="status" aria-live="polite">Connecting to this host…</p>
-<div class="grid"><section class="card"><h2>Today</h2><div id="today"></div></section><section class="card"><h2>Upcoming</h2><div id="upcoming"></div></section></div>
-<section class="card"><h2>This week</h2><div id="brief"></div></section>
+<p id="notice" role="status" aria-live="polite"></p>
+<section id="summary" aria-labelledby="summary-title"><h1 id="summary-title">Getting your coaching plan…</h1><p id="summary-goal" class="muted" hidden></p><div id="summary-sessions"></div><p id="next-step" class="next-step"></p></section>
+<section id="review" aria-label="Changes for your review" hidden><div id="proposals"></div></section>
 <form id="feedback" class="card" hidden><h2>How did it go?</h2><p id="feedback-title"></p><input id="feedback-session" type="hidden"><label>Date<input id="feedback-day" type="date" required></label><label>Result<select id="feedback-status"><option value="completed">Completed</option><option value="skipped">Skipped</option></select></label><div class="grid"><label>Minutes, if known<input id="feedback-minutes" type="number" min="0" max="1440" step="1"></label><label>Effort, if known (1–10)<input id="feedback-effort" type="number" min="1" max="10" step="1"></label></div><label>Anything to remember?<textarea id="feedback-note" maxlength="2000"></textarea></label><p class="muted">Submitting prepares a change for your review. It will be applied after you approve it.</p><div class="actions"><button id="feedback-submit" class="primary" type="submit" disabled>Propose feedback</button><button id="feedback-close" type="button">Cancel</button></div></form>
-<section><h2>Changes for your review</h2><div id="proposals"></div></section>
-<section class="card"><h2>Recent changes</h2><div id="history"></div><div id="undo" class="actions"></div></section>
-<details class="card"><summary>Current coaching view</summary><pre id="saved-state"></pre></details>
+<details id="more-plan"><summary>More of your plan</summary>
+<div class="grid"><section id="today-card" class="card"><h2>Today</h2><div id="today"></div></section><section id="upcoming-card" class="card"><h2>Upcoming</h2><div id="upcoming"></div></section></div>
+<section class="card"><h2>This week</h2><div id="brief"></div></section>
+<section id="history-card" class="card"><h2>Recent changes</h2><div id="history"></div><div id="undo" class="actions"></div></section>
+<p id="freshness" class="muted"></p><p id="revision" class="muted"></p>
+</details>
 <script>${script}</script></body></html>`;
 
 export const coachingAppResource = {

@@ -1,0 +1,134 @@
+{
+  "date": "2026-11-12",
+  "status": "passed",
+  "implementation": "Local, not deployed",
+  "commands": [
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src server",
+      "exitCode": 0,
+      "tests": 739,
+      "files": 106,
+      "log": ".local-checks/mcp-compact-unit.log"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run scripts/agents",
+      "exitCode": 0,
+      "tests": 21,
+      "files": 2,
+      "log": ".local-checks/mcp-compact-agent-tests.log"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": ".local-checks/mcp-compact-build.log"
+    },
+    {
+      "command": "npm run agents:check",
+      "exitCode": 0,
+      "log": ".local-checks/mcp-compact-agent-types.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js .",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 72,
+      "log": ".local-checks/mcp-compact-lint.log"
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test",
+      "exitCode": 0,
+      "tests": 422,
+      "log": ".local-checks/mcp-compact-browser.log"
+    }
+  ],
+  "browserEvidence": {
+    "dedicatedCardJourneys": 8,
+    "actualWidthsTested": [
+      320,
+      390,
+      760
+    ],
+    "scenarios": [
+      "empty illustrated question",
+      "actual report → proposal → explicit approval → one persisted outcome",
+      "stale proposal rejected",
+      "host theme overriding opposite browser preference",
+      "display-only host asks in chat",
+      "card shrinks after review"
+    ],
+    "visualInspection": [
+      "implemented-setup.png",
+      "implemented-today.png",
+      "implemented-review.png",
+      "implemented-saved.png"
+    ],
+    "pngDimensions": {
+      "setup": {
+        "width": 390,
+        "height": 265
+      },
+      "today": {
+        "width": 390,
+        "height": 408
+      },
+      "review": {
+        "width": 390,
+        "height": 738
+      },
+      "saved": {
+        "width": 390,
+        "height": 471
+      }
+    },
+    "originalEmptyFixture": {
+      "width": 390,
+      "height": 1071,
+      "source": "browser-evidence.json from original 1f422a7 renderer"
+    },
+    "provenance": "Actual HTML/CSP, official MCP SDK registry/transport and isolated canonical AgentService/SQLite with synthetic data in a simulated host. PNG dimensions include the host border."
+  },
+  "semanticReview": {
+    "reviewer": "Self-review",
+    "result": "passed",
+    "examined": [
+      "compact setup/day/review hierarchy",
+      "source bounds/privacy",
+      "basic/coaching banner consumers",
+      "MCP voice versus unchanged in-app voice",
+      "unknown data distinct from zeros",
+      "imported evidence distinct from completion",
+      "CSP/text escaping",
+      "explicit approval/revision/idempotency guards",
+      "host fallback and theme",
+      "visible minutes/effort in review",
+      "native control focus styling and mobile overflow"
+    ],
+    "repaired": [
+      "today was incorrectly treated as an overdue report",
+      "readable outcome review omitted minutes",
+      "initial mobile test host omitted its viewport meta tag"
+    ],
+    "historicalCorrection": "propose_coaching_change already used the coaching resource hint; original investigation note corrected, no new tool added.",
+    "generatedArtifactCleanup": "The full browser suite rewrote docs/audits/2026-09-30-remediation/evidence/web-workout.png through an existing test. That unrelated generated snapshot was restored to its initially clean tracked version after the suite."
+  },
+  "sourceHashes": {
+    "scripts/agents/coaching-mcp.ts": "b55cc0690e16313c2b8c718768834668e72af71f1ce280180f3a0e6a737627fa",
+    "scripts/agents/coaching-mcp.test.ts": "c5435e2e1e86937a5209d63a90dc8e1812847cc8d4f927c1954b183541ba830c",
+    "server/agents/coaching-app.ts": "d299a9213988ed0f0828c87bfadfabef150ad4419857cdc85599411773829c7f",
+    "server/agents/coaching-style.ts": "9fd5a275b53ba44fb29e7a37fec75bbab257671a56340d2bff6f5153c93ef182",
+    "server/agents/spot-app.ts": "33a80c3694ee45067ce1485261eb304bcc6c3ca36d13c55106968b6239723ef6",
+    "server/agents/spot-banner.ts": "2cfc1cb842219d03fff8542b6f3563a463fe5c52d538aaf339b86d18c79646e2",
+    "server/agents/spot-cards.test.ts": "d368da4e77555025c70b6470df479888351ec23ef466d4f19af4f59a18cc2257",
+    "server/agents/spot-in-results.test.ts": "9c4987a68ce94fc998b0f16269193c5e5aa6b674954c8a98d379339aeff64a33",
+    "src/features/spot/assistant.ts": "c2920a970a6a5ddf597cffe0ebb9086103724732e2d101b166017f8039df755f",
+    "src/features/spot/personality.ts": "6583b1f402b52f5fbafaddf31141b18a2567deb77ec24cfb6812f28372ec4b47",
+    "tests/mcp-cards.spec.ts": "b267624f6b8ecf6fec5768dd6fcbe136ca69011d33dc8fd14e94851e8d628101"
+  },
+  "limits": [
+    "Live Claude rendering and assistant compliance not exercised",
+    "No deployment",
+    "No user-preference claim",
+    "Existing bundle/import and SQLite development warnings remain",
+    "Managed CYC startup failed at the pre-existing source-fingerprint ceiling before creating a run; direct checks used without policy changes"
+  ]
+}

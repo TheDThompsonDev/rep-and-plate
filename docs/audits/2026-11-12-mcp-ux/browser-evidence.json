@@ -1,0 +1,259 @@
+{
+  "date": "2026-11-12",
+  "scope": "Real HTML/CSP in synthetic MCP Apps host, synthetic data only",
+  "source": "1f422a769472d63bcc3836ee5f54ed615a2ec97d",
+  "fixtures": {
+    "blank": {
+      "nextSteps": [
+        "No primary goal is agreed yet. Ask what the plan should support, then propose a setup change.",
+        "Nothing has been brought in from other apps. If the user tracks runs, lifting or nutrition elsewhere and you can reach it, offer to bring in the last week."
+      ],
+      "freshnessSummary": "The coaching plan, reported outcomes, memories and records from other apps shown here are current. No food or workouts recorded in the Rep & Plate app are available to this connection, so those are unknown, not zero. That is normal for someone who works mainly through an assistant; do not describe the plan as stale or out of date.",
+      "importedActivities": 0,
+      "importedSources": []
+    },
+    "active": {
+      "nextSteps": [
+        "\"Easy run\" on 2026-11-11 has no reported outcome. Ask how it went. No report is unknown, not skipped.",
+        "Today: \"Full-body strength\" (strength, 35 min).",
+        "Nothing has been brought in from other apps. If the user tracks runs, lifting or nutrition elsewhere and you can reach it, offer to bring in the last week."
+      ],
+      "freshnessSummary": "The coaching plan, reported outcomes, memories and records from other apps shown here are current. No food or workouts recorded in the Rep & Plate app are available to this connection, so those are unknown, not zero. That is normal for someone who works mainly through an assistant; do not describe the plan as stale or out of date.",
+      "importedActivities": 0,
+      "importedSources": []
+    },
+    "pending": {
+      "nextSteps": [
+        "1 proposed change is waiting for a decision. Show the before and after, then ask whether to apply or dismiss.",
+        "\"Easy run\" on 2026-11-11 has no reported outcome. Ask how it went. No report is unknown, not skipped.",
+        "Today: \"Full-body strength\" (strength, 35 min).",
+        "Nothing has been brought in from other apps. If the user tracks runs, lifting or nutrition elsewhere and you can reach it, offer to bring in the last week."
+      ],
+      "freshnessSummary": "The coaching plan, reported outcomes, memories and records from other apps shown here are current. No food or workouts recorded in the Rep & Plate app are available to this connection, so those are unknown, not zero. That is normal for someone who works mainly through an assistant; do not describe the plan as stale or out of date.",
+      "importedActivities": 0,
+      "importedSources": []
+    },
+    "imported": {
+      "nextSteps": [
+        "\"Easy run\" on 2026-11-11 has no reported outcome. A Strava run (\"Morning run\", 25 min) was brought in for that day. Ask whether it was this session before recording anything.",
+        "Today: \"Full-body strength\" (strength, 35 min)."
+      ],
+      "freshnessSummary": "The coaching plan, reported outcomes, memories and records from other apps shown here are current. No food or workouts recorded in the Rep & Plate app are available to this connection, so those are unknown, not zero. That is normal for someone who works mainly through an assistant; do not describe the plan as stale or out of date.",
+      "importedActivities": 1,
+      "importedSources": [
+        {
+          "source": "strava",
+          "kind": "activity",
+          "records": 1,
+          "latestDay": "2026-11-11"
+        }
+      ]
+    }
+  },
+  "measurements": [
+    {
+      "fixture": "blank",
+      "height": 1071,
+      "width": 390,
+      "scrollWidth": 390,
+      "firstFeedbackY": null,
+      "proposalsHeadingY": 864.25,
+      "firstApplyY": null,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "I’m holding a blank week and calling it minimalism. Give me a goal before I start a podcast.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\n\nNo session is scheduled for this day.\n\nUpcoming\n\nNo upcoming sessions are saved.\n\nThis week\n\n0 completed · 0 skipped · 0 awaiting feedback\n\n0 reported minutes\n\n0 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\nNo actual outcomes were reported for this period.\n\nYour primary goal has not been agreed yet.\n\nNo session is planned for this date.\n\nNo completed or skipped outcomes have been reported.\n\nChanges for your review\n\nNo change is awaiting approval.\n\nRecent changes\nCurrent coaching view"
+    },
+    {
+      "fixture": "blank",
+      "height": 926,
+      "width": 760,
+      "scrollWidth": 760,
+      "firstFeedbackY": null,
+      "proposalsHeadingY": 700.5,
+      "firstApplyY": null,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "I’m holding a blank week and calling it minimalism. Give me a goal before I start a podcast.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\n\nNo session is scheduled for this day.\n\nUpcoming\n\nNo upcoming sessions are saved.\n\nThis week\n\n0 completed · 0 skipped · 0 awaiting feedback\n\n0 reported minutes\n\n0 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\nNo actual outcomes were reported for this period.\n\nYour primary goal has not been agreed yet.\n\nNo session is planned for this date.\n\nNo completed or skipped outcomes have been reported.\n\nChanges for your review\n\nNo change is awaiting approval.\n\nRecent changes\nCurrent coaching view"
+    },
+    {
+      "fixture": "active",
+      "height": 1169,
+      "width": 390,
+      "scrollWidth": 390,
+      "firstFeedbackY": 397.25,
+      "proposalsHeadingY": 962.25,
+      "firstApplyY": null,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "There’s a session-shaped hole in the record. I’ve connected the dots. There were no dots.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\nFull-body strength\n2026-11-12 · 35 min\nFeedback\nUpcoming\nEasy run\n2026-11-14 · 25 min\nFeedback\nThis week\n\nBuild a steady training routine\n\n0 completed · 0 skipped · 2 awaiting feedback\n\n0 reported minutes\n\n2 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\n2 planned sessions have no reported outcome. Missing reports are unknown, not missed workouts.\n\nNo actual outcomes were reported for this period.\n\nNo completed or skipped outcomes have been reported.\n\n1 earlier planned session has no reported outcome. An absent report does not mean skipped.\n\nChanges for your review\n\nNo change is awaiting approval.\n\nRecent changes\nCurrent coaching view"
+    },
+    {
+      "fixture": "active",
+      "height": 968,
+      "width": 760,
+      "scrollWidth": 760,
+      "firstFeedbackY": 363.5,
+      "proposalsHeadingY": 742.5,
+      "firstApplyY": null,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "There’s a session-shaped hole in the record. I’ve connected the dots. There were no dots.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\nFull-body strength\n2026-11-12 · 35 min\nFeedback\nUpcoming\nEasy run\n2026-11-14 · 25 min\nFeedback\nThis week\n\nBuild a steady training routine\n\n0 completed · 0 skipped · 2 awaiting feedback\n\n0 reported minutes\n\n2 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\n2 planned sessions have no reported outcome. Missing reports are unknown, not missed workouts.\n\nNo actual outcomes were reported for this period.\n\nNo completed or skipped outcomes have been reported.\n\n1 earlier planned session has no reported outcome. An absent report does not mean skipped.\n\nChanges for your review\n\nNo change is awaiting approval.\n\nRecent changes\nCurrent coaching view"
+    },
+    {
+      "fixture": "pending",
+      "height": 1572,
+      "width": 390,
+      "scrollWidth": 390,
+      "firstFeedbackY": 397.25,
+      "proposalsHeadingY": 962.25,
+      "firstApplyY": 1362.25,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "I’ve prepared a statement. It needs your yes before I read it to the press.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\nFull-body strength\n2026-11-12 · 35 min\nFeedback\nUpcoming\nEasy run\n2026-11-14 · 25 min\nFeedback\nThis week\n\nBuild a steady training routine\n\n0 completed · 0 skipped · 2 awaiting feedback\n\n0 reported minutes\n\n2 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\n2 planned sessions have no reported outcome. Missing reports are unknown, not missed workouts.\n\nNo actual outcomes were reported for this period.\n\nNo completed or skipped outcomes have been reported.\n\n1 earlier planned session has no reported outcome. An absent report does not mean skipped.\n\nChanges for your review\nProposed change · awaiting your approval\n\nMove strength training to Friday, as requested.\n\nChanged values before\nFull-body strength · 2026-11-12\nExact changed values\nChanged values after approval\nFull-body strength · 2026-11-13\nExact changed values\nI reviewed the before and after details and approve this change.\nApply reviewed change\nDismiss\nRecent changes\nCurrent coaching view"
+    },
+    {
+      "fixture": "pending",
+      "height": 1222,
+      "width": 760,
+      "scrollWidth": 760,
+      "firstFeedbackY": 349,
+      "proposalsHeadingY": 728,
+      "firstApplyY": 991,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "I’ve prepared a statement. It needs your yes before I read it to the press.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\nFull-body strength\n2026-11-12 · 35 min\nFeedback\nUpcoming\nEasy run\n2026-11-14 · 25 min\nFeedback\nThis week\n\nBuild a steady training routine\n\n0 completed · 0 skipped · 2 awaiting feedback\n\n0 reported minutes\n\n2 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\n2 planned sessions have no reported outcome. Missing reports are unknown, not missed workouts.\n\nNo actual outcomes were reported for this period.\n\nNo completed or skipped outcomes have been reported.\n\n1 earlier planned session has no reported outcome. An absent report does not mean skipped.\n\nChanges for your review\nProposed change · awaiting your approval\n\nMove strength training to Friday, as requested.\n\nChanged values before\nFull-body strength · 2026-11-12\nExact changed values\nChanged values after approval\nFull-body strength · 2026-11-13\nExact changed values\nI reviewed the before and after details and approve this change.\nApply reviewed change\nDismiss\nRecent changes\nCurrent coaching view"
+    },
+    {
+      "fixture": "imported",
+      "height": 1169,
+      "width": 390,
+      "scrollWidth": 390,
+      "firstFeedbackY": 397.25,
+      "proposalsHeadingY": 962.25,
+      "firstApplyY": null,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "There’s a session-shaped hole in the record. I’ve connected the dots. There were no dots.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\nFull-body strength\n2026-11-12 · 35 min\nFeedback\nUpcoming\nEasy run\n2026-11-14 · 25 min\nFeedback\nThis week\n\nBuild a steady training routine\n\n0 completed · 0 skipped · 2 awaiting feedback\n\n0 reported minutes\n\n2 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\n2 planned sessions have no reported outcome. Missing reports are unknown, not missed workouts.\n\nNo actual outcomes were reported for this period.\n\nNo completed or skipped outcomes have been reported.\n\n1 earlier planned session has no reported outcome. An absent report does not mean skipped.\n\nChanges for your review\n\nNo change is awaiting approval.\n\nRecent changes\nCurrent coaching view"
+    },
+    {
+      "fixture": "imported",
+      "height": 968,
+      "width": 760,
+      "scrollWidth": 760,
+      "firstFeedbackY": 363.5,
+      "proposalsHeadingY": 742.5,
+      "firstApplyY": null,
+      "freshness": "Snapshot may be out of date. Refresh before changing the plan.",
+      "headings": [
+        "Your coaching day",
+        "Today",
+        "Upcoming",
+        "This week",
+        "How did it go?",
+        "Changes for your review",
+        "Recent changes"
+      ],
+      "notice": "Ready. Pending changes require your explicit approval.",
+      "bodyText": "There’s a session-shaped hole in the record. I’ve connected the dots. There were no dots.\n\nSPOT\n\nREP & PLATE\n\nYour coaching day\n2026-11-12\nRefresh plan\n\nSnapshot may be out of date. Refresh before changing the plan.\n\nRevision 0\n\nReady. Pending changes require your explicit approval.\n\nToday\nFull-body strength\n2026-11-12 · 35 min\nFeedback\nUpcoming\nEasy run\n2026-11-14 · 25 min\nFeedback\nThis week\n\nBuild a steady training routine\n\n0 completed · 0 skipped · 2 awaiting feedback\n\n0 reported minutes\n\n2 planned sessions; 0 explicitly reported completed and 0 explicitly reported skipped. Outcomes are grouped by the date reported for the activity.\n\n2 planned sessions have no reported outcome. Missing reports are unknown, not missed workouts.\n\nNo actual outcomes were reported for this period.\n\nNo completed or skipped outcomes have been reported.\n\n1 earlier planned session has no reported outcome. An absent report does not mean skipped.\n\nChanges for your review\n\nNo change is awaiting approval.\n\nRecent changes\nCurrent coaching view"
+    }
+  ],
+  "browserErrors": [],
+  "hostLightBrowserDark": {
+    "inlineScheme": "light",
+    "background": "rgb(16, 35, 28)",
+    "ink": "rgb(229, 243, 233)"
+  },
+  "readOnlyHost": {
+    "refreshDisabled": true,
+    "notice": "This host displays coaching details but has not enabled interactive tool calls. Use the text tools for changes."
+  },
+  "conceptLayouts": [
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "images": true,
+      "minimumButtonHeight": 44
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "images": true,
+      "minimumButtonHeight": 44
+    },
+    {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "images": true,
+      "minimumButtonHeight": 44
+    }
+  ],
+  "resourceBytes": {
+    "coaching": 117447,
+    "smallSpot": 96858,
+    "poseCount": 9
+  },
+  "browserChecks": "Passed: 8 current-state renders, unchanged freshness after refresh, review gating, host-theme mismatch reproduced, read-only host, 3 concept widths, all images decoded, no horizontal overflow."
+}

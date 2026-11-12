@@ -133,6 +133,17 @@ describe('coaching MCP registration', () => {
 });
 
 describe('coaching MCP App resource', () => {
+  it('preserves a bounded earlier session to ask about without exposing the whole stored plan', () => {
+    const old = { id: randomUUID(), day: '2026-11-07', sport: 'run', title: 'Yesterday’s run', minutes: 20 };
+    const view = projectCoachingMcpResult({ ...canonical, weekly: { ...canonical.weekly, unreported: [old] } });
+    expect((view.brief as { awaitingFeedback: unknown[] }).awaitingFeedback).toEqual([old]);
+    expect((view.state as { sessions: unknown[] }).sessions).not.toContainEqual(old);
+  });
+  it('does not treat today’s planned session as an overdue report', () => {
+    const view = projectCoachingMcpResult({ ...canonical, brief: { ...canonical.brief, today: canonical.state.sessions }, weekly: { ...canonical.weekly, unreported: canonical.state.sessions } });
+    expect((view.spot as { moment: string }).moment).toBe('today');
+    expect((view.brief as { awaitingFeedback: unknown[] }).awaitingFeedback).toEqual([]);
+  });
   it('has an exact hash CSP, no external network origins, and no dynamic HTML insertion', () => {
     const executable = /<script>([\s\S]*?)<\/script>/.exec(coachingAppHtml)?.[1];
     const style = /<style>([\s\S]*?)<\/style>/.exec(coachingAppHtml)?.[1];

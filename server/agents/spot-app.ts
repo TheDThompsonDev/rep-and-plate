@@ -30,14 +30,14 @@ const script = String.raw`
       if (message.error || typeof result.protocolVersion !== 'string') return;
       parentOrigin = event.origin; initialized = true;
       notify('ui/notifications/initialized', {});
-      if (record(result.hostContext).theme) document.documentElement.style.colorScheme = result.hostContext.theme;
-      if (typeof ResizeObserver === 'function') { observer = new ResizeObserver(() => notify('ui/notifications/size-changed', { width: document.documentElement.clientWidth, height: document.documentElement.scrollHeight })); observer.observe(document.body); }
+      applyHostTheme(record(result.hostContext));
+      if (typeof ResizeObserver === 'function') { observer = new ResizeObserver(() => notify('ui/notifications/size-changed', { width: document.documentElement.clientWidth, height: Math.ceil(document.body.getBoundingClientRect().height) })); observer.observe(document.body); }
       return;
     }
     if (message.method === 'ui/resource-teardown') { disposed = true; initialized = false; if (observer) observer.disconnect(); if (message.id !== undefined) send({ jsonrpc: '2.0', id: message.id, result: {} }); return; }
     if (!initialized || disposed) return;
     if (message.method === 'ui/notifications/tool-result') { const reply = record(message.params); if (!reply.isError) renderSpot(record(reply.structuredContent).spot); }
-    else if (message.method === 'ui/notifications/host-context-changed') { if (record(message.params).theme) document.documentElement.style.colorScheme = message.params.theme; }
+    else if (message.method === 'ui/notifications/host-context-changed') { applyHostTheme(record(message.params)); }
     else if (message.method === 'ping' && message.id !== undefined) send({ jsonrpc: '2.0', id: message.id, result: {} });
   });
   if (window.parent === window || !globalThis.crypto || typeof crypto.randomUUID !== 'function') return;
