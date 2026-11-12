@@ -2,6 +2,8 @@
 
 November 12, 2026 update: the MCP coaching response now uses a small Spot illustration and a focused setup/day/review state, with wider reporting disclosed on demand. [Implementation and verification](../audits/2026-11-12-mcp-ux/implementation.md) records source boundaries, synthetic MCP/browser journeys, and pending user acceptance. No live-Claude or deployment proof is claimed. The preceding [UX investigation](../audits/2026-11-12-mcp-ux/README.md) retains original-renderer evidence and a corrected note about proposal resource metadata.
 
+Follow-up: [UI delivery investigation](../audits/2026-11-12-mcp-ux/cache-delivery.md) confirms the original merge reached production and Claude discovered the new tool descriptions while displaying the old template. UI identities are now derived from static HTML, with the former unversioned paths retained as aliases. Existing host caches/rendered cards may still require a connector refresh and fresh conversation; no health data or credentials are reset.
+
 Implemented 2026-09-29 in working files; awaiting user acceptance. Extends the earlier interoperability research with an executable provider-neutral boundary. Live deployment and vendor-specific connection proof are still pending.
 
 ## Flow and ownership

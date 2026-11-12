@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { coachingCommandSchema, coachingImportInputSchema } from '../../src/features/coaching/contracts.ts';
 import { registerCoachingPrompts } from './coaching-prompts.ts';
 import { daySchema, type AgentRequest } from '../../src/features/connections/contracts.ts';
-import { COACHING_APP_MIME, COACHING_APP_URI, coachingAppResource } from '../../server/agents/coaching-app.ts';
+import { COACHING_APP_MIME, COACHING_APP_URI, LEGACY_COACHING_APP_URI, coachingAppResource } from '../../server/agents/coaching-app.ts';
 import { spotNote, spotToolNote, type SpotMoment } from '../../src/features/spot/assistant.ts';
 
 export type CoachingMcpCall = (request: AgentRequest) => Promise<CallToolResult>;
@@ -217,11 +217,11 @@ export function registerCoachingTools(server: McpServer, call: CoachingMcpCall, 
     return { ...result, ...(view ? { structuredContent: view } : {}), content: [{ type: 'text', text: `${explanation}\n${details}` }], _meta: { ...result._meta, coachingOperations: operations.filter(operation => operation.startsWith('coaching.')) } };
   };
 
-  if (supported !== false) server.registerResource('rep-and-plate-coaching', COACHING_APP_URI, {
+  if (supported !== false) for (const [name, uri] of [['rep-and-plate-coaching', COACHING_APP_URI], ['rep-and-plate-coaching-legacy', LEGACY_COACHING_APP_URI]]) server.registerResource(name, uri, {
     title: 'Rep & Plate coaching', description: 'Canonical coaching day, upcoming sessions, and reviewed change proposals.',
     mimeType: COACHING_APP_MIME,
     _meta: { ui: {} },
-  }, () => ({ contents: [coachingAppResource] }));
+  }, () => ({ contents: [{ ...coachingAppResource, uri }] }));
 
   registerCoachingPrompts(server, operations);
 

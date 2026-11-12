@@ -1,10 +1,11 @@
 import { createHash } from 'node:crypto';
 import { spotBannerMarkup, spotBannerScript, spotBannerStyle } from './spot-banner.ts';
+import { uiResourceUri } from './ui-resource.ts';
 
 // A small card for the basic tools (records and meal drafts): Spot's pose and his line, nothing else.
 // The full coaching card covers the coaching tools. Same MCP Apps protocol and limits as that card.
 
-export const SPOT_APP_URI = 'ui://rep-and-plate/spot.html';
+export const LEGACY_SPOT_APP_URI = 'ui://rep-and-plate/spot.html';
 export const SPOT_APP_MIME = 'text/html;profile=mcp-app';
 
 const style = String.raw`
@@ -50,6 +51,8 @@ const hash = (value: string) => createHash('sha256').update(value).digest('base6
 const csp = `default-src 'none'; script-src 'sha256-${hash(script)}'; style-src 'sha256-${hash(style)}'; img-src data:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'`;
 
 export const spotAppHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="${csp}"><title>Spot · Rep & Plate</title><style>${style}</style></head><body>${spotBannerMarkup}<script>${script}</script></body></html>`;
+
+export const SPOT_APP_URI = uiResourceUri('spot', spotAppHtml);
 
 export const spotAppResource = {
   uri: SPOT_APP_URI,

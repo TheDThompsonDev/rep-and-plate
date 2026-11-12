@@ -7,7 +7,7 @@ import { AgentError } from './service.ts';
 import { spotCoachVoice } from '../../src/features/spot/personality.ts';
 import { spotNote, spotToolNote } from '../../src/features/spot/assistant.ts';
 import { coachingAppSupported } from '../../scripts/agents/coaching-mcp.ts';
-import { SPOT_APP_MIME, SPOT_APP_URI, spotAppResource } from './spot-app.ts';
+import { SPOT_APP_MIME, SPOT_APP_URI, LEGACY_SPOT_APP_URI, spotAppResource } from './spot-app.ts';
 
 export type AgentMcpClient = { request: (request: AgentRequest) => Promise<Record<string, unknown>> };
 
@@ -16,7 +16,7 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
   const capabilities = await client.request({ operation: 'capabilities' });
   const operations = Array.isArray(capabilities.operations) ? capabilities.operations.filter((value): value is string => typeof value === 'string') : [];
   const coaching = operations.some(operation => operation.startsWith('coaching.'));
-  const server = new McpServer({ name: 'rep-and-plate', version: '1.2.0', title: 'Rep & Plate' }, {
+  const server = new McpServer({ name: 'rep-and-plate', version: '1.3.0', title: 'Rep & Plate' }, {
     instructions: [
       spotCoachVoice,
       coaching
@@ -49,9 +49,9 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
   const cards = coachingAppSupported(server.server.getClientCapabilities()) !== false;
   // The official MCP Apps helper also writes the legacy flat key, which some hosts still read.
   const spotCard = cards ? { _meta: { ui: { resourceUri: SPOT_APP_URI, visibility: ['model', 'app'] }, 'ui/resourceUri': SPOT_APP_URI } } : {};
-  if (cards && (operations.includes('context.read') || operations.includes('meals.propose'))) server.registerResource('rep-and-plate-spot', SPOT_APP_URI, {
+  if (cards && (operations.includes('context.read') || operations.includes('meals.propose'))) for (const [name, uri] of [['rep-and-plate-spot', SPOT_APP_URI], ['rep-and-plate-spot-legacy', LEGACY_SPOT_APP_URI]]) server.registerResource(name, uri, {
     title: 'Spot', description: 'Spot\u2019s pose and line for the moment.', mimeType: SPOT_APP_MIME, _meta: { ui: {} },
-  }, () => ({ contents: [spotAppResource] }));
+  }, () => ({ contents: [{ ...spotAppResource, uri }] }));
   server.registerTool('capabilities', { title: 'What this connection can do', description: 'Discover granted access and supported operations.', inputSchema: z.object({}).strict(), annotations: read }, () => call({ operation: 'capabilities' }));
   if (operations.includes('context.read')) server.registerTool('read_context', {
     title: 'Your Rep & Plate records',
