@@ -31,6 +31,24 @@ async function connect(granted = operations, supplied?: (request: AgentRequest) 
 }
 
 describe('coaching MCP registration', () => {
+  it('fetches the compact template instead of reusing a host-cached legacy dashboard', async () => {
+    const connection = await connect(['coaching.read']);
+    try {
+      const cache = new Map<string, string>([['ui://rep-and-plate/coaching.html', '<h1>Old cached dashboard</h1>']]);
+      const tool = (await connection.client.listTools()).tools.find(item => item.name === 'get_coaching_day')!;
+      const uri = (tool._meta?.ui as { resourceUri: string }).resourceUri;
+      let html = cache.get(uri);
+      if (html === undefined) {
+        const resource = (await connection.client.readResource({ uri })).contents[0];
+        if (!('text' in resource)) throw new Error('Expected an HTML text resource.');
+        html = resource.text;
+      }
+      expect(html).toContain('What are we training for?');
+      expect(uri).toMatch(/^ui:\/\/rep-and-plate\/coaching-[a-f0-9]{16}\.html$/);
+      const legacy = await connection.client.readResource({ uri: 'ui://rep-and-plate/coaching.html' });
+      expect(legacy.contents[0]).toMatchObject({ uri: 'ui://rep-and-plate/coaching.html', text: coachingAppHtml });
+    } finally { await connection.close(); }
+  });
   it('detects negotiated UI support without requiring the extension', () => {
     expect(coachingAppSupported(undefined)).toBeUndefined();
     expect(coachingAppSupported({})).toBe(false);

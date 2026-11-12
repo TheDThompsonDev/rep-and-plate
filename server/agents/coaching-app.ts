@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
 import { spotBannerMarkup, spotBannerScript } from './spot-banner.ts';
 import { coachingAppStyle as style } from './coaching-style.ts';
+import { uiResourceUri } from './ui-resource.ts';
 
-export const COACHING_APP_URI = 'ui://rep-and-plate/coaching.html';
+export const LEGACY_COACHING_APP_URI = 'ui://rep-and-plate/coaching.html';
 export const COACHING_APP_MIME = 'text/html;profile=mcp-app';
 
 /** Static executable content only. Tool data enters exclusively through textContent. */
@@ -295,6 +296,8 @@ ${spotBannerMarkup}
 <p id="freshness" class="muted"></p><p id="revision" class="muted"></p>
 </details>
 <script>${script}</script></body></html>`;
+
+export const COACHING_APP_URI = uiResourceUri('coaching', coachingAppHtml);
 
 export const coachingAppResource = {
   uri: COACHING_APP_URI,
