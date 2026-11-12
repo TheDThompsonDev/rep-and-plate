@@ -25,7 +25,7 @@ test('native hosted agent review persists before acknowledgment and survives a f
     if(body.operation==='list')return route.fulfill({headers,json:{connections:connected?[connection]:[],actions:connected?[action]:[],publishedAt:null}});
     if(body.operation==='create'){
       expect(body.name).toBe('Dinner assistant');
-      expect(body.scopes.sort()).toEqual(['meals:propose','nutrition:read']);
+      expect(body.scopes.sort()).toEqual(['activities:read','coaching:read','coaching:write','meals:propose','nutrition:read','pantry:read','preferences:read','workouts:read']);
       expect(body.expiresInDays).toBe(365);
       connected=true;
       return route.fulfill({headers,json:{connection,token:'rp_agent_native_test_only'}});
@@ -68,7 +68,6 @@ test('native hosted agent review persists before acknowledgment and survives a f
   if(await close.isVisible())await close.click();
   await page.getByRole('button',{name:'Agent connections',exact:true}).click();
   await page.getByRole('textbox',{name:'Connection name',exact:true}).fill('Dinner assistant');
-  await page.getByRole('switch',{name:'Nutrition summaries',exact:true}).click();
   await page.getByRole('button',{name:'1 year',exact:true}).click();
   await page.getByRole('button',{name:'Create connection',exact:true}).click();
   await expect(page.getByText('rp_agent_native_test_only',{exact:true})).toBeVisible();

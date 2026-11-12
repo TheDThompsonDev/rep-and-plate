@@ -81,13 +81,13 @@ For a manual smoke check, `npm --silent run agents:mcp` starts the adapter, but 
 
 ### Remote MCP (no checkout required)
 
-The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_ORIGIN/api/agents/mcp`. It authenticates each request with the connection token as a Bearer credential, so it works in hosts that can send a fixed `Authorization` header. The deployment must include this route; an older deployment answers `404 NOT_FOUND`.
+The same tool registry is served over stateless MCP HTTP at `https://YOUR_APP_ORIGIN/api/agents/mcp`. It authenticates each request with the connection token, sent either as `Authorization: Bearer <token>` or on its own in an `x-api-key` header, so it works in hosts that can send a fixed request header. The deployment must include this route; an older deployment answers `404 NOT_FOUND`.
 
 | Host | How to connect | Status |
 | --- | --- | --- |
 | Codex CLI/app | `codex mcp add rep-and-plate --url https://YOUR_APP_ORIGIN/api/agents/mcp --bearer-token-env-var REP_PLATE_TOKEN` | Exercised on 2026-11-10 in real Codex sessions (CLI 0.167) against a local server: check-in, import, propose and wait all worked. Codex asks for its own approval before `resolve_coaching_change`, so applying a change needs an interactive session. Not exercised against a hosted account. Codex CLI 0.142 could not run the account's models at all; update Codex first. |
 | Claude Code | `claude mcp add --transport http rep-and-plate --scope user https://YOUR_APP_ORIGIN/api/agents/mcp --header "Authorization: Bearer <token>"`, or the project `.mcp.json` entry below, which keeps the token in the environment. | Syntax checked against the Claude Code MCP documentation; not exercised against a hosted account. |
-| Claude chat (web and desktop) | **Customize**, then **Connectors**, **Add**, **Add custom connector**. Paste the address above, choose **No sign in** for Authentication, and under **Request headers** add `Authorization` with the value `Bearer <token>`. Turn it on per chat from the **+** menu. | Form fields checked against Claude's help article on 2026-11-11. Claude connects from Anthropic's servers, so the address must be public: a local development server cannot be used. Not exercised against a hosted account. |
+| Claude chat (web and desktop) | **Customize**, then **Connectors**, **Add**, **Add custom connector**. Paste the address above, choose **No sign-in** for Authentication, and under **Request headers** pick `x-api-key` and paste the connection key on its own. Turn it on per chat from the **+** menu. | Claude reserves `Authorization` on any connector not set to No sign-in, and pre-selects sign-in for a server that answers 401, so the key goes in `x-api-key`, one of the names Claude lets every connector send. Request headers are in beta for a limited set of organizations. Claude connects from Anthropic's servers, so the address must be public. Checked against Claude's connector documentation on 2026-11-11; not yet exercised end to end. |
 | ChatGPT | Not supported yet. | Custom connectors accept OAuth or no authentication, not a fixed bearer header. |
 
 ```json

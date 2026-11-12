@@ -29,8 +29,15 @@ describe('setting up an assistant', () => {
     expect(chatgpt.steps.every(step => !step.copy)).toBe(true);
     const claude = guides.find(guide => guide.id === 'claude')!;
     expect(claude.status).toBe('ready');
-    expect(claude.steps.map(step => step.copy)).toEqual(['https://repandplate.example/api/agents/mcp', undefined, `Bearer ${token}`, firstMessage]);
-    expect(claude.steps[1].text).toContain('No sign in');
+    expect(claude.steps.map(step => step.copy)).toEqual(['https://repandplate.example/api/agents/mcp', undefined, token, firstMessage, undefined]);
+    expect(claude.steps[1].text).toContain('No sign-in');
+    // Its owner skipped this step, so it is marked and comes before the header.
+    expect(claude.steps[1].important).toBe(true);
+    expect(claude.steps.findIndex(step => step.important)).toBeLessThan(claude.steps.findIndex(step => step.copy === token));
+    // Claude reserves Authorization on sign-in connectors, so the key goes in x-api-key, bare.
+    expect(claude.steps[2].text).toContain('x-api-key');
+    expect(JSON.stringify(claude.steps)).not.toContain('Authorization');
+    expect(JSON.stringify(claude.steps)).not.toContain('Bearer');
     // Claude chat connects from Anthropic's servers, so a local address must not be offered as working.
     for (const local of ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://[::1]:5173']) {
       const here = setupGuides(local, token).find(guide => guide.id === 'claude')!;

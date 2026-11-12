@@ -4,6 +4,7 @@ import { coachingCommandSchema, coachingImportInputSchema } from '../../src/feat
 import { registerCoachingPrompts } from './coaching-prompts.ts';
 import { daySchema, type AgentRequest } from '../../src/features/connections/contracts.ts';
 import { COACHING_APP_MIME, COACHING_APP_URI, coachingAppResource } from '../../server/agents/coaching-app.ts';
+import { spotNote, type SpotMoment } from '../../src/features/spot/assistant.ts';
 
 export type CoachingMcpCall = (request: AgentRequest) => Promise<CallToolResult>;
 
@@ -124,6 +125,16 @@ export function projectCoachingMcpResult(value: unknown): Row {
     freshness: freshnessView(source.freshness),
     omitted: { sessions: Math.max(0, allSessions.length - sessions.length), outcomes: Math.max(0, rows(state.outcomes).length - outcomes.length), pendingProposals: Math.max(0, pending.length - proposals.length) },
   };
+  // Which moment this is, so the assistant has something of Spot's to say and not only a list.
+  const profile = object(state.profile);
+  const moment: SpotMoment = source.imported ? 'imported'
+    : pending.length ? 'waiting'
+    : !profile.primaryGoal && !allSessions.length ? 'no_goal'
+    : outcomes.some(item => item.status === 'completed' && item.day === day) ? 'done'
+    : rows(weekly.unreported).length ? 'unreported'
+    : today.length ? 'today'
+    : 'organised';
+  result.spot = spotNote(moment, day);
   if (Array.isArray(source.nextSteps)) result.nextSteps = source.nextSteps.filter((step): step is string => typeof step === 'string').slice(0, 4);
   if (source.evidence) result.evidence = evidenceView(source.evidence);
   if (source.imported) result.imported = source.imported; // Counts only; the saved records are in evidence.
@@ -158,7 +169,7 @@ function dailyText(view: Row): string {
   if (view.error) return JSON.stringify(view, null, 2);
   const state = object(view.state), brief = object(view.brief);
   return JSON.stringify({
-    ...(view.imported ? { imported: view.imported } : {}), ...(view.nextSteps ? { nextSteps: view.nextSteps } : {}),
+    ...(view.imported ? { imported: view.imported } : {}), ...(view.nextSteps ? { nextSteps: view.nextSteps } : {}), ...(view.spot ? { spot: view.spot } : {}),
     day: brief.day, revision: state.revision, profile: state.profile, activeMemories: state.memories,
     today: brief.today, upcoming: brief.upcoming, recentOutcomes: state.outcomes,
     missingData: brief.missingData, recentDecisions: state.journal,

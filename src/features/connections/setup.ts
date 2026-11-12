@@ -18,7 +18,7 @@ const DAY = 86_400_000;
 export const firstMessage = 'Check in with Rep & Plate: what is on for me today?';
 export const mcpAddress = (appUrl: string) => `${appUrl.replace(/\/+$/, '')}/api/agents/mcp`;
 
-export type SetupStep = { text: string; copy?: string; copyLabel?: string };
+export type SetupStep = { text: string; copy?: string; copyLabel?: string; important?: true };
 export type SetupGuide = {
   id: 'claude-code' | 'codex' | 'claude' | 'chatgpt' | 'other';
   name: string;
@@ -55,8 +55,8 @@ export function setupGuides(appUrl: string, token: string): SetupGuide[] {
     },
     // Claude chat reaches a connector from Anthropic's servers, never from the person's device, so
     // an app running on this computer is out of its reach. Checked against Claude's help article
-    // "Get started with custom connectors using remote MCP" on 2026-11-11: the form offers
-    // Authentication "No sign in" and Request headers for a fixed bearer token.
+    // "Add a connector that isn't in the directory" on 2026-11-11: the form offers Authentication
+    // "No sign-in" and Request headers; x-api-key is on its list of names every connector may send.
     onThisComputer
       ? {
           id: 'claude', name: 'Claude app', status: 'unavailable',
@@ -67,12 +67,15 @@ export function setupGuides(appUrl: string, token: string): SetupGuide[] {
         }
       : {
           id: 'claude', name: 'Claude app', status: 'ready',
-          summary: 'Add it once as a custom connector, then use it in any chat.',
+          summary: 'Add it once as a custom connector, then use it in any chat. Needs Claude’s Request headers option, which is still rolling out.',
           steps: [
-            { text: 'In Claude, open Customize, then Connectors. Choose Add, then Add custom connector, and paste this as the server address:', copy: address, copyLabel: 'Copy address' },
-            { text: 'For Authentication, choose No sign in.' },
-            { text: 'Under Request headers, add a header named Authorization with this value:', copy: `Bearer ${token}`, copyLabel: 'Copy header value' },
-            { text: 'In a chat, open the + menu, turn Rep & Plate on under Connectors, and say:', copy: firstMessage, copyLabel: 'Copy first message' },
+            { text: 'In Claude, open Customize, then Connectors. Choose Add, then Add custom connector. Name it Rep & Plate and paste this as the server address:', copy: address, copyLabel: 'Copy address' },
+            // Its own owner skipped this and was told the header name was reserved. Claude starts on
+            // a sign-in option for a server that needs a key, and refuses the key header until it is changed.
+            { text: 'Change Authentication to No sign-in before you do anything else. Claude starts on a sign-in option, and it will not accept your key until you switch.', important: true },
+            { text: 'Open Request headers (it may be under Advanced). Pick x-api-key from the list and paste this as its value, with nothing in front of it:', copy: token, copyLabel: 'Copy key' },
+            { text: 'Choose Add. Then in a chat, open the + menu, turn Rep & Plate on under Connectors, and say:', copy: firstMessage, copyLabel: 'Copy first message' },
+            { text: 'No Request headers section anywhere? Then your Claude account does not have that option yet.' },
           ],
         },
     {
