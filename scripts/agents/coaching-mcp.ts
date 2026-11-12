@@ -218,7 +218,7 @@ export function registerCoachingTools(server: McpServer, call: CoachingMcpCall, 
     const presentation = view ? presentationView(view, result.isError ? false : coachingAppSupported(server.server.getClientCapabilities())) : undefined;
     const details = presentation ? dailyText(presentation.modelView) : text.slice(0, 12000);
     const status = result.isError ? 'The request failed. Use the error details; no successful write is confirmed.' : explanation;
-    return { ...result, ...(presentation ? { structuredContent: presentation.modelView } : {}), content: [{ type: 'text', text: `${presentation?.presentation.instruction || ''}\n${status}\n${details}`.trim() }], _meta: { ...result._meta, ...(presentation ? { repAndPlateView: presentation.cardView } : {}), coachingOperations: operations.filter(operation => operation.startsWith('coaching.')) } };
+    return { ...result, ...(presentation ? { structuredContent: presentation.structuredView } : {}), content: [{ type: 'text', text: `${presentation?.presentation.instruction || ''}\n${status}\n${details}`.trim() }], _meta: { ...result._meta, ...(presentation ? { repAndPlateView: presentation.cardView } : {}), coachingOperations: operations.filter(operation => operation.startsWith('coaching.')) } };
   };
 
   if (supported !== false) for (const [index, uri] of [...new Set([COACHING_APP_URI, ...COACHING_APP_ALIASES])].entries()) server.registerResource('rep-and-plate-coaching-' + index, uri, {

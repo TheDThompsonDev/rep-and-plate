@@ -111,7 +111,7 @@ const script = String.raw`
     const noPlan = !goal && !today.length && !upcoming.length && !awaiting.length;
     $('summary').hidden = proposals().length > 0;
     $('summary-title').textContent = revision() === null ? 'Getting your coaching plan…'
-      : noPlan ? (['card','auto'].includes(record(data.presentation).mode) ? 'Let’s build your week' : 'What are we training for?')
+      : noPlan ? (['card','auto'].includes(record(data.presentation).mode) ? 'Nothing planned for today' : 'What are we training for?')
       : today.length ? 'Today’s plan'
       : awaiting.length ? 'How did it go?'
       : upcoming.length ? 'Up next' : 'Let’s plan your week';
@@ -121,7 +121,7 @@ const script = String.raw`
     renderSessions($('summary-sessions'),primary,'',2);
     const prompt = $('next-step'); prompt.replaceChildren();
     if (revision() === null) return;
-    if (!goal) { prompt.textContent = 'Tell me your goal in chat. We’ll build a week around it.'; return; }
+    if (!goal) { prompt.textContent = ['card','auto'].includes(record(data.presentation).mode) ? 'What would you most like your training to help you achieve?' : 'Tell me your goal in chat. We’ll build a week around it.'; return; }
     const earlier = awaiting[0];
     if (earlier) {
       const match = array(record(data.evidence).activities).find(item => item.day === sessionDay(earlier) && item.sport === earlier.sport);
@@ -153,7 +153,7 @@ const script = String.raw`
     const today = array(brief.today).length ? array(brief.today) : all.filter(item => sessionDay(item) === currentDay);
     const upcoming = array(brief.upcoming).length ? array(brief.upcoming) : all.filter(item => sessionDay(item) > currentDay);
     renderSummary(today,upcoming,brief,saved);
-    $('next-step').hidden = ['card','auto'].includes(record(data.presentation).mode);
+    $('next-step').hidden = !$('next-step').textContent;
     $('review').hidden = proposals().length === 0;
     $('more-plan').hidden = revision() === null || (!record(saved.profile).primaryGoal && !all.length && !array(brief.awaitingFeedback).length && !array(saved.journal).length);
     $('today-card').hidden = today.length === 0;

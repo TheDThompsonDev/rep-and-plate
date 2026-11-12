@@ -71,13 +71,16 @@ describe('a new connection is a coach by default', () => {
     expect(tools.map(tool => tool.name)).toEqual(expect.arrayContaining(['get_coaching_day', 'import_records', 'propose_meal']));
     // Every result-bearing tool points to the fresh presentation contract.
     for (const tool of tools.filter(item => !['capabilities', 'get_action'].includes(item.name))) expect(tool.description, tool.name).toContain(spotToolNote);
-    expect(client.getInstructions()).toContain('Do not repeat');
+    expect(client.getInstructions()).toMatch(/do not repeat/i);
     const result = await client.callTool({ name: 'get_coaching_day', arguments: {} });
-    const view = result.structuredContent as { nextSteps: string[]; presentation: { mode: string; instruction: string } };
+    const view = result.structuredContent as { nextSteps: string[]; spot: unknown; presentation: { mode: string; instruction: string; questionOwner: string } };
     expect(view.nextSteps[0]).toContain('No primary goal');
     expect(character(result)).toEqual(spotNote('no_goal', day));
+    expect(view.spot).toEqual(character(result));
     expect(text(result)).not.toContain(spotLine('no_goal', day));
     expect(view.presentation.mode).toBe('auto');
+    expect(view.presentation.questionOwner).toBe('card');
+    expect(view.presentation.instruction).toContain('Do not add a follow-up question');
     expect(view.presentation.instruction).toContain('If no card is displayed');
   });
   it('changes Spot’s line with the moment', async () => {
@@ -99,7 +102,7 @@ describe('a connection without coaching still says something useful', () => {
     const view = result.structuredContent as { spot?: unknown; context: unknown; presentation: { instruction: string } };
     const card = result._meta?.repAndPlateView as { spot: { says: string } };
     expect(card.spot.says).toBeTruthy();
-    expect(view.spot).toBeUndefined();
+    expect(view.spot).toEqual(card.spot);
     expect(view.context).toBeTruthy();
     expect(text(result)).not.toContain(card.spot.says);
     expect(view.presentation.instruction).toContain('Answer the actual question');

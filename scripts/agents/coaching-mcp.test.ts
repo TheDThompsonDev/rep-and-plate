@@ -68,7 +68,9 @@ describe('coaching MCP registration', () => {
       const card = result._meta?.repAndPlateView as { spot: { says: string } };
       expect(view.presentation).toMatchObject({ mode: 'card' });
       expect(card.spot.says).toBeTruthy();
-      expect(JSON.stringify({ content: result.content, structuredContent: view })).not.toContain(card.spot.says);
+      expect(JSON.stringify(result.content)).not.toContain(card.spot.says);
+      expect(view.spot).toEqual(card.spot);
+      expect(view.presentation).toMatchObject({ questionOwner: 'card' });
       expect((result.content as { text: string }[])[0].text).toContain('Do not recap the card');
       expect((result.content as { text: string }[])[0].text).toContain('default nutrition targets');
     } finally { await connection.close(); }

@@ -1,7 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { Client, InMemoryTransport } from '@modelcontextprotocol/client';
 import { McpServer } from '@modelcontextprotocol/server';
 import { AgentService } from '../server/agents/service';
@@ -32,7 +33,7 @@ addEventListener('message',async event=>{
 });
 </script></body></html>`;
 
-async function fixture(page: Page, seeded = false) {
+async function fixture(page: Page, seeded = false, legacy = false) {
   const store = new SqliteAgentStore(':memory:');
   const service = new AgentService(store, () => Date.parse(`${day}T15:00:00Z`));
   const state = async () => (await service.manage('card-test', { operation: 'coaching.read', day }) as { state: CoachingState }).state;
@@ -64,9 +65,17 @@ async function fixture(page: Page, seeded = false) {
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await mcp.connect(serverTransport); await client.connect(clientTransport);
   // Reuse the exact resource a host could cache; only the public view changes between releases.
-  const cachedShell = (await client.readResource({ uri: COACHING_APP_URI })).contents[0] as { text: string };
+  const cachedShell = legacy ? { text: readFileSync(new URL('./fixtures/mcp/coaching-b34d29c.html', import.meta.url), 'utf8') } : (await client.readResource({ uri: COACHING_APP_URI })).contents[0] as { text: string };
+  if (legacy) expect(createHash('sha256').update(cachedShell.text).digest('hex')).toBe('c045f8ff1d97819fbb0e74d27800bc33cdcb94d2959f3a952a30e234cf7a6836');
   let viewHtml = coachingAppHtml;
   const viewRequests: string[] = [];
+  let oldPayload = false;
+  const toolResult = async (input: Parameters<typeof client.callTool>[0]) => {
+    const result = await client.callTool(input);
+    // Recreate the already-rendered bad response; metadata still contains Spot.
+    if (oldPayload && result.structuredContent) delete (result.structuredContent as Record<string, unknown>).spot;
+    return result;
+  };
   await page.route('https://repandplate.com/mcp/coaching.html*', async route => {
     viewRequests.push(route.request().url());
     await route.fulfill({ contentType: 'text/html', headers: { 'cache-control': 'no-store' }, body: viewHtml });
@@ -75,20 +84,21 @@ async function fixture(page: Page, seeded = false) {
     void (async () => {
       response.setHeader('Cache-Control', 'no-store');
       if (request.url === '/app') { response.setHeader('Content-Type', 'text/html'); response.end(cachedShell.text); return; }
-      if (request.url === '/read') { response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(await client.callTool({ name: 'get_coaching_day', arguments: { day } }))); return; }
+      if (request.url === '/read') { response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(await toolResult({ name: 'get_coaching_day', arguments: { day } }))); return; }
       if (request.url === '/call') {
         const chunks: Buffer[] = []; for await (const chunk of request) chunks.push(Buffer.from(chunk));
-        response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(await client.callTool(JSON.parse(Buffer.concat(chunks).toString())))); return;
+        response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(await toolResult(JSON.parse(Buffer.concat(chunks).toString())))); return;
       }
       response.setHeader('Content-Type', 'text/html'); response.end(host);
     })().catch(error => { response.statusCode = 500; response.end(String(error)); });
   });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-  const frame = page.frameLocator('#app').frameLocator('#view');
+  const frame = legacy ? page.frameLocator('#app') : page.frameLocator('#app').frameLocator('#view');
   return {
     state, save, propose, service, session, frame,
     cachedShell, viewRequests, setView: (html: string) => { viewHtml = html; },
+    setOldPayload: (value: boolean) => { oldPayload = value; },
     navigate: () => page.goto(url),
     open: async (query = '') => {
       await page.goto(url + query);
@@ -103,13 +113,31 @@ async function fixture(page: Page, seeded = false) {
   };
 }
 
-test('empty plan leaves the question to chat at narrow and wide widths', async ({ page }, info) => {
+test('the previously deployed cached card keeps Spot on the same connection', async ({ page }, info) => {
+  const f = await fixture(page, false, true);
+  try {
+    await page.setViewportSize({ width: 390, height: 844 });
+    f.setOldPayload(true);
+    await f.open();
+    await expect(f.frame.locator('#spot')).toBeHidden();
+    await expect(f.frame.getByRole('heading', { name: 'What are we training for?' })).toBeVisible();
+    f.setOldPayload(false);
+    await f.frame.getByRole('button', { name: 'Refresh plan' }).click();
+    await expect(f.frame.locator('#spot')).toBeVisible();
+    await expect(f.frame.locator('#spot-says')).toContainText('clipboard');
+    expect(f.viewRequests).toHaveLength(0);
+    expect((await f.state()).revision).toBe(0);
+    await page.locator('#app').screenshot({ path: info.outputPath('cached-card-restored.png') });
+  } finally { await f.close(); }
+});
+
+test('empty plan asks one question in the card at narrow and wide widths', async ({ page }, info) => {
   const f = await fixture(page);
   try {
     for (const width of [320, 390, 760]) {
       await page.setViewportSize({ width, height: 844 }); await f.open();
-      await expect(f.frame.getByRole('heading', { name: 'Let’s build your week' })).toBeVisible();
-      await expect(f.frame.locator('#next-step')).toBeHidden();
+      await expect(f.frame.getByRole('heading', { name: 'Nothing planned for today' })).toBeVisible();
+      await expect(f.frame.locator('#next-step')).toHaveText('What would you most like your training to help you achieve?');
       await expect(f.frame.locator('#more-plan')).toBeHidden();
       await expect(f.frame.getByText('0 completed', { exact: false })).toBeHidden();
       await expect(f.frame.locator('#notice')).toBeHidden();
@@ -181,8 +209,8 @@ test('an unavailable public view leaves a visible chat fallback', async ({ page 
   } finally { await f.close(); }
 });
 
-test('report, review, approve and refresh persist one actual outcome and shrink the card', async ({ page }, info) => {
-  const f = await fixture(page, true);
+for (const legacy of [false, true]) test('report, review, approve and refresh persist one actual outcome and shrink the ' + (legacy ? 'cached card' : 'current card'), async ({ page }, info) => {
+  const f = await fixture(page, true, legacy);
   try {
     await f.open();
     await expect(f.frame.getByRole('heading', { name: 'Today’s plan' })).toBeVisible();
