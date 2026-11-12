@@ -1,4 +1,5 @@
 import { previewPage } from './preview-page.ts';
+import { bareKey, CONNECTION_KEY } from './agents/key-format.ts';
 
 type Environment = Record<string, string | undefined>;
 const COOKIE = 'rp_preview';
@@ -58,7 +59,11 @@ export async function previewGate(request: Request, env: Environment, now = Date
   if (path.startsWith('/api/') && (
     (endpoint === '/api/cloud/config' && request.method === 'GET') ||
     request.method === 'OPTIONS' ||
-    /^Bearer [^\s]{1,8185}$/.test(request.headers.get('authorization') ?? '')
+    /^Bearer [^\s]{1,8185}$/.test(request.headers.get('authorization') ?? '') ||
+    // Claude chat sends a connection key in x-api-key (it reserves Authorization on sign-in
+    // connectors). Let it reach the two assistant endpoints only, and only if it looks like a key;
+    // the handler still verifies the key, the account and its quotas.
+    ((endpoint === '/api/agents/mcp' || endpoint === '/api/agents/v1') && CONNECTION_KEY.test(bareKey(request.headers.get('x-api-key') ?? '')))
   )) return null;
   if (read && (path === '/favicon.svg' || /^\/fonts\/(fonts\.css|font-[0-7]\.ttf)$/.test(path))) return null;
   if (path === '/robots.txt' && read) return new Response('User-agent: *\nDisallow: /\n', { headers: { ...headers, 'Content-Type': 'text/plain' } });

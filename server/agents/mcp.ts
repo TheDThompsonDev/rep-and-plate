@@ -3,6 +3,7 @@ import { createMcpHandler } from '@modelcontextprotocol/server';
 import type { AgentDependencies } from './http.ts';
 import { AgentError, AgentService } from './service.ts';
 import { createAgentMcpServer } from './mcp-server.ts';
+import { connectionKey } from './token.ts';
 import { BODY_LIMITS, readJsonBody } from '../routes.ts';
 
 /** Stateless MCP with the same token authorization, quotas and persistence as the agent API. */
@@ -23,9 +24,7 @@ export function createAgentMcpHandler(deps: AgentDependencies) {
         origin = local.origin;
       }
       if (req.headers.origin && req.headers.origin !== origin) throw new AgentError(403, 'ORIGIN', 'Request origin is not allowed.');
-      const authorization = req.headers.authorization;
-      if (!authorization?.startsWith('Bearer ') || authorization.length > 256) throw new AgentError(401, 'INVALID_TOKEN', 'Supply your connection token as a Bearer credential.');
-      const token = authorization.slice(7);
+      const token = connectionKey(req.headers);
       const owner = await service.tokenOwner(token);
       if (deps.active && !await deps.active(owner)) throw new AgentError(403, 'ACCOUNT_UNAVAILABLE', 'This account is unavailable.');
       if (deps.admit) {
