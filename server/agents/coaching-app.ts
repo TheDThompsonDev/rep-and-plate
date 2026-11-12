@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { spotBannerMarkup, spotBannerScript } from './spot-banner.ts';
 import { coachingAppStyle as style } from './coaching-style.ts';
 import { uiResourceUri } from './ui-resource.ts';
+import { appShell } from './app-shell.ts';
 
 export const LEGACY_COACHING_APP_URI = 'ui://rep-and-plate/coaching.html';
 export const COACHING_APP_MIME = 'text/html;profile=mcp-app';
@@ -48,7 +49,7 @@ const script = String.raw`
     if (reply.isError) { const error = record(record(reply.structuredContent).error); throw new Error(String(error.message || 'That action could not finish. Refresh the saved plan before retrying.')); }
     const operations = record(reply._meta).coachingOperations;
     if (Array.isArray(operations)) granted = new Set(operations);
-    const incoming = record(reply.structuredContent);
+    const incoming = record(record(reply._meta).repAndPlateView || reply.structuredContent);
     if (incoming.error) throw new Error(String(record(incoming.error).message || 'The action could not finish.'));
     const next = record(incoming.coaching || incoming);
     data = { ...data, ...next };
@@ -110,7 +111,7 @@ const script = String.raw`
     const noPlan = !goal && !today.length && !upcoming.length && !awaiting.length;
     $('summary').hidden = proposals().length > 0;
     $('summary-title').textContent = revision() === null ? 'Getting your coaching plan…'
-      : noPlan ? 'What are we training for?'
+      : noPlan ? (['card','auto'].includes(record(data.presentation).mode) ? 'Let’s build your week' : 'What are we training for?')
       : today.length ? 'Today’s plan'
       : awaiting.length ? 'How did it go?'
       : upcoming.length ? 'Up next' : 'Let’s plan your week';
@@ -152,6 +153,7 @@ const script = String.raw`
     const today = array(brief.today).length ? array(brief.today) : all.filter(item => sessionDay(item) === currentDay);
     const upcoming = array(brief.upcoming).length ? array(brief.upcoming) : all.filter(item => sessionDay(item) > currentDay);
     renderSummary(today,upcoming,brief,saved);
+    $('next-step').hidden = ['card','auto'].includes(record(data.presentation).mode);
     $('review').hidden = proposals().length === 0;
     $('more-plan').hidden = revision() === null || (!record(saved.profile).primaryGoal && !all.length && !array(brief.awaitingFeedback).length && !array(saved.journal).length);
     $('today-card').hidden = today.length === 0;
@@ -297,11 +299,6 @@ ${spotBannerMarkup}
 </details>
 <script>${script}</script></body></html>`;
 
-export const COACHING_APP_URI = uiResourceUri('coaching', coachingAppHtml);
-
-export const coachingAppResource = {
-  uri: COACHING_APP_URI,
-  mimeType: COACHING_APP_MIME,
-  text: coachingAppHtml,
-  _meta: { ui: { csp: { connectDomains: [], resourceDomains: [], frameDomains: [], baseUriDomains: [] }, permissions: {}, prefersBorder: true } },
-};
+export const coachingAppResource = appShell('coaching');
+export const COACHING_APP_URI = coachingAppResource.uri;
+export const COACHING_APP_ALIASES = [LEGACY_COACHING_APP_URI, 'ui://rep-and-plate/coaching-c045f8ff1d97819f.html', uiResourceUri('coaching', coachingAppHtml)];

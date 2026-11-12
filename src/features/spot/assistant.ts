@@ -23,9 +23,9 @@ const lines: Record<SpotMoment, readonly string[]> = {
     'Empty week. I’ve been staring at the door like a dog waiting for its owner.',
   ],
   no_goal: [
-    'I’m holding a blank week and calling it minimalism. Give me a goal before I start a podcast.',
-    'No goal yet. I have a whiteboard and nothing to write on it. This is my villain origin story.',
-    'Tell me what we’re training for. I’ve already ordered the motivational posters.',
+    'Blank week. I’ve brought a clipboard and an unreasonable amount of confidence.',
+    'An empty calendar. My whiteboard has never felt so mysterious.',
+    'I’ve ordered the motivational posters. The calendar remains unimpressed.',
   ],
   unreported: [
     'There’s a session-shaped hole in the record. I’ve connected the dots. There were no dots.',
@@ -72,7 +72,7 @@ export const spotPoseFor: Record<SpotMoment, string> = {
 
 /** How the whole reply should sound. Short, because it rides along with every result. */
 export const spotVoice =
-  'Write the whole reply in Spot’s voice: warm, playful, a little sassy and theatrical, in short sentences, with every fact exact. Give the useful answer and one relevant next step. Do not repeat spot.says when the card already shows it, or add a compulsory quoted sign-off. In a text-only conversation, work his line naturally into the reply once. Spot jokes about himself only, never about the person’s body, food, weight or a missed day. If the person is upset, unwell or injured, drop the jokes and leave out his line.';
+  'Use a warm voice, a little sassy when appropriate, with every fact exact. Follow presentation.instruction from the latest result. Do not repeat card facts, its joke or its question, or introduce yourself as Spot. In a text-only conversation, work his line naturally into the reply once. Spot jokes about himself only, never about the person’s body, food, weight or a missed day. If the person is upset, unwell or injured, drop the jokes and leave out his line.';
 
 /** One line for the moment. The day picks which, so it changes between days and stays put within one. */
 export function spotLine(moment: SpotMoment, day = ''): string {
@@ -87,4 +87,4 @@ export const spotNote = (moment: SpotMoment, day = ''): SpotNote => ({ moment, s
 
 /** Added to every tool description, where assistants look for how to present a result. */
 export const spotToolNote =
-  'Each result includes spot.says, a line from Spot, Rep & Plate’s plate-shaped mascot, and spot.voice, how he sounds. Keep his warm, sassy voice in a short useful reply with one relevant next step. Do not repeat the card’s line in your reply. If no card is shown, include his line naturally once. Never claim a change was saved until its tool result confirms it.';
+  'Follow presentation.instruction in each fresh result. The coaching card carries Spot’s joke and saved facts; the basic Spot card carries only the joke. Your text adds only what the user still needs or one short follow-up question. Do not repeat the card or list unrelated empty sections. In text-only mode, give the concise answer and include Spot’s line naturally once. Never claim a change was saved until its tool result confirms it.';

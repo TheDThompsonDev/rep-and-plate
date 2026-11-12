@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 
-const user = (text: string) => ({ messages: [{ role: 'user' as const, content: { type: 'text' as const, text } }] });
+const user = (text: string) => ({ messages: [{ role: 'user' as const, content: { type: 'text' as const, text: text + ' Follow the latest tool result’s presentation instruction. When an interactive coaching card already answers the request, let it carry those facts and Spot’s line; add only useful new information or one short follow-up instead of recapping it. For text-only results, give the concise answer in chat.' } }] });
 const optional = (description: string) => z.string().trim().max(500).optional().describe(description);
 
 /**

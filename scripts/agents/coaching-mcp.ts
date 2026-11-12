@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { coachingCommandSchema, coachingImportInputSchema } from '../../src/features/coaching/contracts.ts';
 import { registerCoachingPrompts } from './coaching-prompts.ts';
 import { daySchema, type AgentRequest } from '../../src/features/connections/contracts.ts';
-import { COACHING_APP_MIME, COACHING_APP_URI, LEGACY_COACHING_APP_URI, coachingAppResource } from '../../server/agents/coaching-app.ts';
+import { COACHING_APP_MIME, COACHING_APP_URI, COACHING_APP_ALIASES, coachingAppResource } from '../../server/agents/coaching-app.ts';
+import { presentationView } from '../../server/agents/presentation.ts';
 import { spotNote, spotToolNote, type SpotMoment } from '../../src/features/spot/assistant.ts';
 
 export type CoachingMcpCall = (request: AgentRequest) => Promise<CallToolResult>;
@@ -175,6 +176,7 @@ function dailyText(view: Row): string {
   if (view.error) return JSON.stringify(view, null, 2);
   const state = object(view.state), brief = object(view.brief);
   return JSON.stringify({
+    ...(view.presentation ? { presentation: view.presentation } : {}),
     ...(view.spot ? { spot: view.spot } : {}), ...(view.imported ? { imported: view.imported } : {}), ...(view.nextSteps ? { nextSteps: view.nextSteps } : {}),
     day: brief.day, revision: state.revision, profile: state.profile, activeMemories: state.memories,
     today: brief.today, upcoming: brief.upcoming, recentOutcomes: state.outcomes,
@@ -213,11 +215,13 @@ export function registerCoachingTools(server: McpServer, call: CoachingMcpCall, 
     let supplied = result.structuredContent;
     if (supplied === undefined) { try { supplied = JSON.parse(text) as Row; } catch { /* A plain error message is still useful. */ } }
     const view = supplied === undefined ? undefined : projectCoachingMcpResult(supplied);
-    const details = view ? dailyText(view) : text.slice(0, 12000);
-    return { ...result, ...(view ? { structuredContent: view } : {}), content: [{ type: 'text', text: `${explanation}\n${details}` }], _meta: { ...result._meta, coachingOperations: operations.filter(operation => operation.startsWith('coaching.')) } };
+    const presentation = view ? presentationView(view, result.isError ? false : coachingAppSupported(server.server.getClientCapabilities())) : undefined;
+    const details = presentation ? dailyText(presentation.modelView) : text.slice(0, 12000);
+    const status = result.isError ? 'The request failed. Use the error details; no successful write is confirmed.' : explanation;
+    return { ...result, ...(presentation ? { structuredContent: presentation.modelView } : {}), content: [{ type: 'text', text: `${presentation?.presentation.instruction || ''}\n${status}\n${details}`.trim() }], _meta: { ...result._meta, ...(presentation ? { repAndPlateView: presentation.cardView } : {}), coachingOperations: operations.filter(operation => operation.startsWith('coaching.')) } };
   };
 
-  if (supported !== false) for (const [name, uri] of [['rep-and-plate-coaching', COACHING_APP_URI], ['rep-and-plate-coaching-legacy', LEGACY_COACHING_APP_URI]]) server.registerResource(name, uri, {
+  if (supported !== false) for (const [index, uri] of [...new Set([COACHING_APP_URI, ...COACHING_APP_ALIASES])].entries()) server.registerResource('rep-and-plate-coaching-' + index, uri, {
     title: 'Rep & Plate coaching', description: 'Canonical coaching day, upcoming sessions, and reviewed change proposals.',
     mimeType: COACHING_APP_MIME,
     _meta: { ui: {} },

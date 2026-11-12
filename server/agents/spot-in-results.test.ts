@@ -22,7 +22,7 @@ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await c
 const owner = 'spot-owner';
 const day = '2026-11-11';
 
-async function connect(scopes: AgentScope[]) {
+async function connect(scopes: AgentScope[], cards = false) {
   const store = new SqliteAgentStore(':memory:'); cleanup.push(() => store.close());
   const service = new AgentService(store, () => Date.parse(`${day}T15:00:00Z`));
   const credential = await service.manage(owner, { operation: 'create', name: 'Coach', scopes, expiresInDays: 90 }) as { token: string };
@@ -31,12 +31,13 @@ async function connect(scopes: AgentScope[]) {
   const server = createServer((req, res) => { void handler(req, res); });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   cleanup.push(() => new Promise<void>(resolve => { server.closeAllConnections(); server.close(() => resolve()); }));
-  const client = new Client({ name: 'chat-like', version: '1.0.0' });
+  const client = new Client({ name: 'chat-like', version: '1.0.0' }, { capabilities: cards ? { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: ['text/html;profile=mcp-app'] } } } : {} });
   await client.connect(new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${(server.address() as AddressInfo).port}/api/agents/mcp`), { requestInit: { headers: { 'x-api-key': credential.token } } }));
   cleanup.push(() => client.close());
   return client;
 }
 const text = (result: { content?: unknown }) => (result.content as { text: string }[])[0].text;
+const character = (result: { _meta?: Record<string, unknown> }) => (result._meta?.repAndPlateView as { spot: { moment: string; says: string; voice: string } }).spot;
 
 describe('Spot for an outside assistant', () => {
   it('has a line for every moment, changes it between days and keeps it steady within one', () => {
@@ -68,30 +69,41 @@ describe('a new connection is a coach by default', () => {
     const client = await connect([...defaultConnectionScopes]);
     const tools = (await client.listTools()).tools;
     expect(tools.map(tool => tool.name)).toEqual(expect.arrayContaining(['get_coaching_day', 'import_records', 'propose_meal']));
-    // Every tool that returns a result tells the assistant to relay Spot's line.
+    // Every result-bearing tool points to the fresh presentation contract.
     for (const tool of tools.filter(item => !['capabilities', 'get_action'].includes(item.name))) expect(tool.description, tool.name).toContain(spotToolNote);
     expect(client.getInstructions()).toContain('Do not repeat');
     const result = await client.callTool({ name: 'get_coaching_day', arguments: {} });
-    const view = result.structuredContent as { nextSteps: string[]; spot: { moment: string; says: string; voice: string } };
+    const view = result.structuredContent as { nextSteps: string[]; presentation: { mode: string; instruction: string } };
     expect(view.nextSteps[0]).toContain('No primary goal');
-    expect(view.spot).toEqual(spotNote('no_goal', day));
-    // The line is in the text an assistant reads, and it comes first.
-    expect(text(result)).toContain(spotLine('no_goal', day));
-    expect(text(result).indexOf('"spot"')).toBeLessThan(text(result).indexOf('"nextSteps"'));
+    expect(character(result)).toEqual(spotNote('no_goal', day));
+    expect(text(result)).not.toContain(spotLine('no_goal', day));
+    expect(view.presentation.mode).toBe('auto');
+    expect(view.presentation.instruction).toContain('If no card is displayed');
   });
   it('changes Spot’s line with the moment', async () => {
     const client = await connect([...defaultConnectionScopes]);
     const setup = randomUUID();
     await client.callTool({ name: 'propose_coaching_change', arguments: { requestId: setup, baseRevision: 0, command: { type: 'setup', profile: { primaryGoal: 'Spring half marathon', priorities: ['running'], constraints: [], notes: '' }, reason: 'Chosen goal.' } } });
     const waiting = await client.callTool({ name: 'get_coaching_day', arguments: {} });
-    expect((waiting.structuredContent as { spot: { moment: string } }).spot.moment).toBe('waiting');
+    expect(character(waiting).moment).toBe('waiting');
     await client.callTool({ name: 'resolve_coaching_change', arguments: { proposalId: setup, status: 'accepted', confirmation: 'APPLY_REVIEWED_CHANGE' } });
     const imported = await client.callTool({ name: 'import_records', arguments: { confirmation: 'SAVE_REPORTED_RECORDS', activities: [{ source: 'strava', externalId: 'r1', day: '2026-11-10', sport: 'run', title: 'Easy run', minutes: 40 }] } });
-    expect((imported.structuredContent as { spot: { moment: string } }).spot.moment).toBe('imported');
+    expect(character(imported).moment).toBe('imported');
   });
 });
 
 describe('a connection without coaching still says something useful', () => {
+  it('keeps the basic card joke UI-only while still asking Claude to answer from saved facts', async () => {
+    const client = await connect(['nutrition:read', 'preferences:read'], true);
+    const result = await client.callTool({ name: 'read_context', arguments: {} });
+    const view = result.structuredContent as { spot?: unknown; context: unknown; presentation: { instruction: string } };
+    const card = result._meta?.repAndPlateView as { spot: { says: string } };
+    expect(card.spot.says).toBeTruthy();
+    expect(view.spot).toBeUndefined();
+    expect(view.context).toBeTruthy();
+    expect(text(result)).not.toContain(card.spot.says);
+    expect(view.presentation.instruction).toContain('Answer the actual question');
+  });
   it('reads records with what to raise next, how to get a coach, and Spot’s line', async () => {
     const client = await connect(['nutrition:read', 'pantry:read', 'preferences:read', 'meals:propose']);
     expect((await client.listTools()).tools.map(tool => tool.name).sort()).toEqual(['capabilities', 'get_action', 'propose_meal', 'read_context']);
@@ -102,9 +114,9 @@ describe('a connection without coaching still says something useful', () => {
     expect(view.nextSteps[0]).toContain('Nothing is logged for today');
     expect(view.nextSteps.join(' ')).toContain('app defaults');
     expect(view.nextSteps.at(-1)).toContain('create a connection with coaching turned on');
-    expect(view.spot.moment).toBe('blank');
-    expect(text(result)).toContain(spotLine('blank', day));
-    expect(text(result).startsWith('{"spot"')).toBe(true);
+    expect(character(result).moment).toBe('blank');
+    expect(text(result)).not.toContain(spotLine('blank', day));
+    expect(text(result)).toContain('Answer the actual question');
   });
   it('says where a drafted meal is waiting', async () => {
     const client = await connect(['nutrition:read', 'meals:propose']);
@@ -112,7 +124,7 @@ describe('a connection without coaching still says something useful', () => {
     const view = result.structuredContent as { nextSteps: string[]; spot: { moment: string }; action: { status: string } };
     expect(view.action.status).toBe('pending');
     expect(view.nextSteps[0]).toContain('Nothing is logged yet');
-    expect(view.spot.moment).toBe('meal_drafted');
+    expect(character(result).moment).toBe('meal_drafted');
   });
   it('does not add notes to an error, and counts logged meals when there are some', () => {
     expect(contextNotes({ context: { day, nutrition: { days: [{ day, meals: 2 }], goalsConfigured: true } } }, true)).toEqual({
