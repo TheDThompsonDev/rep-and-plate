@@ -3,18 +3,22 @@ import { presentationView } from './presentation.ts';
 
 describe('card and conversation responsibilities', () => {
   const view = { spot: { says: 'A clipboard and unreasonable confidence.' }, state: { revision: 7, profile: { primaryGoal: '' }, proposals: [] }, brief: { today: [{ title: 'Easy run', minutes: 20 }] } };
-  it('keeps the joke UI-only while preserving the facts and one suggested question', () => {
+  it('keeps the joke out of text and preserves structured data for cached cards', () => {
     const result = presentationView(view, true);
     expect(result.cardView.spot).toEqual(view.spot);
     expect(result.modelView.spot).toBeUndefined();
     expect(result.modelView.state).toEqual(view.state);
     expect(result.modelView.brief).toEqual(view.brief);
-    expect(result.presentation.suggestedReply).toBe('What would you most like your training to help you achieve?');
+    expect(result.structuredView.spot).toEqual(view.spot);
+    expect(result.presentation.questionOwner).toBe('card');
+    expect(result.presentation).not.toHaveProperty('suggestedReply');
+    expect(result.presentation.instruction).toContain('Do not add a follow-up question');
     expect(result.presentation.instruction).toContain('Do not recap the card');
   });
-  it('prioritizes an outstanding review over a second setup question', () => {
+  it('leaves an outstanding review in the card without adding a second question', () => {
     const result = presentationView({ ...view, state: { ...view.state, proposals: [{ status: 'pending' }] } }, true);
-    expect(result.presentation.suggestedReply).toContain('apply the change shown');
+    expect(result.presentation.questionOwner).toBe('card');
+    expect(result.presentation).not.toHaveProperty('suggestedReply');
   });
   it('retains Spot and complete facts for text-only consumers', () => {
     const result = presentationView(view, false);

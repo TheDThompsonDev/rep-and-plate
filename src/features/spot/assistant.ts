@@ -87,4 +87,4 @@ export const spotNote = (moment: SpotMoment, day = ''): SpotNote => ({ moment, s
 
 /** Added to every tool description, where assistants look for how to present a result. */
 export const spotToolNote =
-  'Follow presentation.instruction in each fresh result. The coaching card carries Spot’s joke and saved facts; the basic Spot card carries only the joke. Your text adds only what the user still needs or one short follow-up question. Do not repeat the card or list unrelated empty sections. In text-only mode, give the concise answer and include Spot’s line naturally once. Never claim a change was saved until its tool result confirms it.';
+  'Follow presentation.instruction in each fresh result. The coaching card carries Spot’s joke, saved facts and next question. Do not repeat the card or ask another question in chat. Add prose only for essential information missing from it. The basic Spot card carries only the joke, so answer the actual data question concisely. Do not list unrelated empty sections. In text-only mode, give the concise answer and include Spot’s line naturally once. Never claim a change was saved until its tool result confirms it.';

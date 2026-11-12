@@ -17,7 +17,7 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
   const capabilities = await client.request({ operation: 'capabilities' });
   const operations = Array.isArray(capabilities.operations) ? capabilities.operations.filter((value): value is string => typeof value === 'string') : [];
   const coaching = operations.some(operation => operation.startsWith('coaching.'));
-  const server = new McpServer({ name: 'rep-and-plate', version: '1.4.0', title: 'Rep & Plate' }, {
+  const server = new McpServer({ name: 'rep-and-plate', version: '1.4.1', title: 'Rep & Plate' }, {
     instructions: [
       spotCoachVoice,
       coaching
@@ -45,7 +45,7 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
     const added = notes(source);
     const value = { ...(added.spot ? { spot: added.spot } : {}), ...added, ...source };
     const presentation = presentationView(value, coachingAppSupported(server.server.getClientCapabilities()), 'spot');
-    return { content: [{ type: 'text' as const, text: (presentation.presentation.mode !== 'text' ? presentation.presentation.instruction + '\n' : '') + JSON.stringify(presentation.modelView) }], structuredContent: presentation.modelView, _meta: { repAndPlateView: presentation.cardView } };
+    return { content: [{ type: 'text' as const, text: (presentation.presentation.mode !== 'text' ? presentation.presentation.instruction + '\n' : '') + JSON.stringify(presentation.modelView) }], structuredContent: presentation.structuredView, _meta: { repAndPlateView: presentation.cardView } };
   };
   const read = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
   // Hosts that draw MCP Apps (Claude on web and desktop) show Spot's pose and line above the reply.

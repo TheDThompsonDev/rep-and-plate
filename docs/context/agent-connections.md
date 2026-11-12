@@ -20,6 +20,8 @@ Web and native approvals persist the meal and receipt before server acknowledgme
 
 ### Claude card delivery (2026-11-12)
 
+Follow-up correction: removing character data from structured results broke cached pre-shell cards. Structured UI data now retains Spot while card-mode text excludes his line. The coaching card owns the question across both versions, and a frozen deployed-HTML regression checks recovery through the same existing Refresh plan button. This supersedes the earlier question-in-prose design. See [compatibility recovery](../audits/2026-11-12-mcp-ux/compatibility-recovery.md).
+
 The user confirmed the compact Spot card in Claude, then reported duplicated card/prose and reconnect friction. The current follow-up gives the card UI-only character copy and Claude a fresh response policy with saved facts. A stable cached bridge loads two public static renderer pages afresh; routine renderer upgrades reuse the connection. Private APIs, scopes and reviewed writes retain their boundaries. Once-only discovery of the shell and live Claude prose remain distinct from local same-connection browser proof. See [delivery design and checks](../audits/2026-11-12-mcp-ux/conversation-and-upgrades.md); earlier hash-per-template evidence is historical.
 
 - `src/features/connections/context.test.ts`: privacy projection, real completed set loads, duplicate approval, undo/replay, dismissal, expiration and visible terminal conflicts.
