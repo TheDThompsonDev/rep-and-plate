@@ -118,7 +118,7 @@ test('the card renders when the host blocks all nested frames', async ({ page })
   const f = await fixture(page, false, false, true);
   try {
     await f.open();
-    await expect(f.frame.getByRole('heading', { name: 'Nothing planned for today' })).toBeVisible();
+    await expect(f.frame.getByRole('heading', { name: 'What are we training for?' })).toBeVisible();
     await expect(f.frame.locator('#spot')).toBeVisible();
     await expect(page.frameLocator('#app').locator('iframe')).toHaveCount(0);
   } finally { await f.close(); }
@@ -158,8 +158,8 @@ test('empty plan asks one question in the card at narrow and wide widths', async
   try {
     for (const width of [320, 390, 760]) {
       await page.setViewportSize({ width, height: 844 }); await f.open();
-      await expect(f.frame.getByRole('heading', { name: 'Nothing planned for today' })).toBeVisible();
-      await expect(f.frame.locator('#next-step')).toHaveText('What would you most like your training to help you achieve?');
+      await expect(f.frame.getByRole('heading', { name: 'What are we training for?' })).toBeVisible();
+      await expect(f.frame.locator('#next-step')).toHaveText('Tell me your goal in chat. We’ll build a week around it.');
       await expect(f.frame.locator('#more-plan')).toBeHidden();
       await expect(f.frame.getByText('0 completed', { exact: false })).toBeHidden();
       await expect(f.frame.locator('#notice')).toBeHidden();

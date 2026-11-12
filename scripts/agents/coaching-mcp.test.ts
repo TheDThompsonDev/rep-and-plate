@@ -1,4 +1,5 @@
 import { randomUUID, webcrypto, createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { Client } from '@modelcontextprotocol/client';
 import { InMemoryTransport, McpServer, type CallToolResult } from '@modelcontextprotocol/server';
 import { Window } from 'happy-dom';
@@ -56,6 +57,8 @@ describe('coaching MCP registration', () => {
       }
       expect(html).toContain('id="summary-title"');
       expect(html).not.toContain('<iframe');
+      expect(html).toBe(readFileSync(new URL('../../tests/fixtures/mcp/coaching-b34d29c.html', import.meta.url), 'utf8'));
+      expect(uri).toBe('ui://rep-and-plate/coaching-c045f8ff1d97819f.html');
       expect(uri).toMatch(/^ui:\/\/rep-and-plate\/coaching-[a-f0-9]{16}\.html$/);
       const legacy = await connection.client.readResource({ uri: 'ui://rep-and-plate/coaching.html' });
       expect(legacy.contents[0]).toMatchObject({ uri: 'ui://rep-and-plate/coaching.html', text: coachingAppResource.text });

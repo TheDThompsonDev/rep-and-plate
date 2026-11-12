@@ -158,7 +158,7 @@ describe('the server offers the Spot card', () => {
     cleanup.push(() => client.close());
     const tools = (await client.listTools()).tools;
     for (const name of ['read_context', 'propose_meal']) expect(tools.find(tool => tool.name === name)?._meta, name).toMatchObject({ ui: { resourceUri: SPOT_APP_URI }, 'ui/resourceUri': SPOT_APP_URI });
-    expect(SPOT_APP_URI).toMatch(/^ui:\/\/rep-and-plate\/spot-[a-f0-9]{16}\.html$/);
+    expect(SPOT_APP_URI).toBe('ui://rep-and-plate/spot-23b171e0d51b2450.html');
     const resource = await client.readResource({ uri: SPOT_APP_URI });
     expect((resource.contents[0] as { text: string }).text).toBe(spotAppResource.text);
     const legacy = await client.readResource({ uri: 'ui://rep-and-plate/spot.html' });
