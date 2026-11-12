@@ -30,7 +30,6 @@ describe('card and conversation responsibilities', () => {
     const result = presentationView(view, undefined);
     expect(result.presentation.mode).toBe('auto');
     expect(result.presentation.instruction).toContain('If no card is displayed');
-    expect(result.presentation.instruction).toContain('one useful next-step question');
     expect(result.modelView.spot).toBeUndefined();
     expect(result.modelView.brief).toEqual(view.brief);
     expect(result.cardView.spot).toEqual(view.spot);

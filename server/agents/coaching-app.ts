@@ -48,7 +48,7 @@ const script = String.raw`
     if (reply.isError) { const error = record(record(reply.structuredContent).error); throw new Error(String(error.message || 'That action could not finish. Refresh the saved plan before retrying.')); }
     const operations = record(reply._meta).coachingOperations;
     if (Array.isArray(operations)) granted = new Set(operations);
-    const incoming = record(record(reply._meta).repAndPlateView || reply.structuredContent);
+    const incoming = record(reply.structuredContent);
     if (incoming.error) throw new Error(String(record(incoming.error).message || 'The action could not finish.'));
     const next = record(incoming.coaching || incoming);
     data = { ...data, ...next };
@@ -110,7 +110,7 @@ const script = String.raw`
     const noPlan = !goal && !today.length && !upcoming.length && !awaiting.length;
     $('summary').hidden = proposals().length > 0;
     $('summary-title').textContent = revision() === null ? 'Getting your coaching plan…'
-      : noPlan ? (['card','auto'].includes(record(data.presentation).mode) ? 'Nothing planned for today' : 'What are we training for?')
+      : noPlan ? 'What are we training for?'
       : today.length ? 'Today’s plan'
       : awaiting.length ? 'How did it go?'
       : upcoming.length ? 'Up next' : 'Let’s plan your week';
@@ -120,7 +120,7 @@ const script = String.raw`
     renderSessions($('summary-sessions'),primary,'',2);
     const prompt = $('next-step'); prompt.replaceChildren();
     if (revision() === null) return;
-    if (!goal) { prompt.textContent = ['card','auto'].includes(record(data.presentation).mode) ? 'What would you most like your training to help you achieve?' : 'Tell me your goal in chat. We’ll build a week around it.'; return; }
+    if (!goal) { prompt.textContent = 'Tell me your goal in chat. We’ll build a week around it.'; return; }
     const earlier = awaiting[0];
     if (earlier) {
       const match = array(record(data.evidence).activities).find(item => item.day === sessionDay(earlier) && item.sport === earlier.sport);
@@ -152,7 +152,6 @@ const script = String.raw`
     const today = array(brief.today).length ? array(brief.today) : all.filter(item => sessionDay(item) === currentDay);
     const upcoming = array(brief.upcoming).length ? array(brief.upcoming) : all.filter(item => sessionDay(item) > currentDay);
     renderSummary(today,upcoming,brief,saved);
-    $('next-step').hidden = !$('next-step').textContent;
     $('review').hidden = proposals().length === 0;
     $('more-plan').hidden = revision() === null || (!record(saved.profile).primaryGoal && !all.length && !array(brief.awaitingFeedback).length && !array(saved.journal).length);
     $('today-card').hidden = today.length === 0;
@@ -299,8 +298,12 @@ ${spotBannerMarkup}
 <script>${script}</script></body></html>`;
 
 export const COACHING_APP_URI = uiResourceUri('coaching', coachingAppHtml);
+
 export const coachingAppResource = {
-  uri: COACHING_APP_URI, mimeType: COACHING_APP_MIME, text: coachingAppHtml,
+  uri: COACHING_APP_URI,
+  mimeType: COACHING_APP_MIME,
+  text: coachingAppHtml,
   _meta: { ui: { csp: { connectDomains: [], resourceDomains: [], frameDomains: [], baseUriDomains: [] }, permissions: {}, prefersBorder: true } },
 };
-export const COACHING_APP_ALIASES = [LEGACY_COACHING_APP_URI, 'ui://rep-and-plate/coaching-c045f8ff1d97819f.html', 'ui://rep-and-plate/coaching-shell-v1.html'];
+
+export const COACHING_APP_ALIASES = [LEGACY_COACHING_APP_URI, 'ui://rep-and-plate/coaching-8b02dc649c48005b.html', 'ui://rep-and-plate/coaching-shell-v1.html'];
