@@ -109,13 +109,19 @@ export function projectCoachingMcpResult(value: unknown): Row {
   if (selected.length < 5) selected.push(...older.slice(-(5 - selected.length)));
   const proposals = selected.map(proposal => proposalPreview(proposal, state.revision));
   const decisions = rows(state.journal).slice(-3).map(decisionSummary);
+  const awaitingFeedback = rows(weekly.unreported).filter(item => typeof item.day === 'string' && item.day < day)
+    .sort((a, b) => String(b.day).localeCompare(String(a.day))).slice(0, 1).map(item => fields(item, sessionFields));
   const result: Row = {
     state: {
       revision: state.revision, profile: fields(state.profile, profileFields), sessions, outcomes,
       memories: rows(state.memories).slice(0, 60).map(item => fields(item, memoryFields)),
       proposals, journal: decisions,
     },
-    brief: { day, today, upcoming, missingData: Array.isArray(brief.missingData) ? brief.missingData.slice(0, 10) : [] },
+    brief: {
+      day, today, upcoming,
+      awaitingFeedback,
+      missingData: Array.isArray(brief.missingData) ? brief.missingData.slice(0, 10) : [],
+    },
     weekly: {
       ...fields(weekly, ['startDay', 'endDay', 'plannedMinutes', 'completedActualMinutes', 'completedWithoutMinutes']),
       plannedSessions: rows(weekly.planned).length, completedSessions: rows(weekly.completed).length,
@@ -131,7 +137,7 @@ export function projectCoachingMcpResult(value: unknown): Row {
     : pending.length ? 'waiting'
     : !profile.primaryGoal && !allSessions.length ? 'no_goal'
     : outcomes.some(item => item.status === 'completed' && item.day === day) ? 'done'
-    : rows(weekly.unreported).length ? 'unreported'
+    : awaitingFeedback.length ? 'unreported'
     : today.length ? 'today'
     : 'organised';
   result.spot = spotNote(moment, day);

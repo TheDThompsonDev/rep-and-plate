@@ -20,7 +20,7 @@ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await c
 const moments: SpotMoment[] = ['blank', 'no_goal', 'unreported', 'today', 'done', 'organised', 'imported', 'meal_drafted', 'waiting'];
 
 /** Load a card as a host would and complete the MCP Apps handshake. */
-async function mount(html: string, protocolVersion = '2026-01-26') {
+async function mount(html: string, protocolVersion = '2026-01-26', hostContext = {}) {
   const win = new Window({ url: 'https://view.example/', settings: { enableJavaScriptEvaluation: true, suppressInsecureJavaScriptEnvironmentWarning: true, disableJavaScriptFileLoading: true, disableCSSFileLoading: true } });
   const posted: Record<string, unknown>[] = [];
   const host = { postMessage: (message: Record<string, unknown>) => posted.push(message) };
@@ -35,7 +35,7 @@ async function mount(html: string, protocolVersion = '2026-01-26') {
     win.dispatchEvent(event);
   };
   const init = posted.find(message => message.method === 'ui/initialize')!;
-  receive({ jsonrpc: '2.0', id: init.id, result: { protocolVersion, hostCapabilities: {} } });
+  receive({ jsonrpc: '2.0', id: init.id, result: { protocolVersion, hostCapabilities: {}, hostContext } });
   for (let i = 0; i < 3; i++) await Promise.resolve();
   cleanup.push(() => win.happyDOM.close());
   return { win, posted, receive };
@@ -99,6 +99,48 @@ describe('the coaching card', () => {
     receive({ jsonrpc: '2.0', method: 'ui/notifications/tool-result', params: { structuredContent: { state: { revision: 0 }, spot: spotNote('no_goal', '2026-11-12') } } });
     expect((win.document.getElementById('spot') as unknown as { hidden: boolean }).hidden).toBe(false);
     expect((win.document.getElementById('spot-pose') as unknown as { src: string }).src).toBe(spotPoseImages.planner);
+  });
+
+  it('makes an empty plan one useful question without an empty dashboard or stale-plan warning', async () => {
+    const { win, receive } = await mount(coachingAppHtml);
+    receive({ jsonrpc: '2.0', method: 'ui/notifications/tool-result', params: { structuredContent: {
+      state: { revision: 0, profile: { primaryGoal: '' }, sessions: [], proposals: [], journal: [] },
+      brief: { day: '2026-11-12', today: [], upcoming: [], missingData: ['No completed or skipped outcomes have been reported.'] },
+      weekly: { plannedSessions: 0, completedSessions: 0, observations: ['No actual outcomes were reported for this period.'] },
+      freshness: { stale: true, dataUpdatedAt: null }, spot: spotNote('no_goal', '2026-11-12'),
+    } } });
+    expect(win.document.getElementById('summary-title')?.textContent).toBe('What are we training for?');
+    expect(win.document.getElementById('next-step')?.textContent).toContain('Tell me your goal in chat');
+    expect(win.document.getElementById('summary')?.textContent).not.toMatch(/0 completed|out of date|No actual outcomes/);
+    expect((win.document.getElementById('more-plan') as unknown as { hidden: boolean }).hidden).toBe(true);
+    expect((win.document.getElementById('review') as unknown as { hidden: boolean }).hidden).toBe(true);
+    expect(win.document.body.textContent).not.toContain('Refresh before changing the plan');
+  });
+
+  it('shows the next useful question about a sourced activity without marking a session complete', async () => {
+    const { win, receive } = await mount(coachingAppHtml);
+    const yesterday = { id: 'earlier-run', title: 'Easy run', day: '2026-11-11', sport: 'run', minutes: 25 };
+    receive({ jsonrpc: '2.0', method: 'ui/notifications/tool-result', params: { structuredContent: {
+      state: { revision: 2, profile: { primaryGoal: 'A steady routine' }, sessions: [], outcomes: [] },
+      brief: { day: '2026-11-12', awaitingFeedback: [yesterday], today: [], upcoming: [] },
+      evidence: { activities: [{ source: 'strava', title: 'Morning run', day: '2026-11-11', sport: 'run', minutes: 25 }] },
+      nextSteps: ['Ask whether the imported record was this session before recording anything.'],
+      spot: spotNote('unreported', '2026-11-12'),
+    } } });
+    expect(win.document.getElementById('next-step')?.textContent).toContain('Was that your “Easy run”');
+    expect(win.document.getElementById('next-step')?.textContent).toContain('Strava');
+    expect(win.document.getElementById('summary')?.textContent).not.toContain('completed');
+    expect(win.document.getElementById('saved-state')).toBeNull();
+  });
+
+  it('uses the host theme for the palette and keeps the artwork small', async () => {
+    for (const html of [coachingAppHtml, spotAppHtml]) {
+      const { win, receive } = await mount(html, '2026-01-26', { theme: 'light' });
+      expect(win.document.documentElement.dataset.theme).toBe('light');
+      receive({ jsonrpc: '2.0', method: 'ui/notifications/host-context-changed', params: { theme: 'dark' } });
+      expect(win.document.documentElement.dataset.theme).toBe('dark');
+      expect(win.document.getElementById('spot-pose')?.getAttribute('width')).toBe('56');
+    }
   });
 });
 

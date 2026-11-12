@@ -49,14 +49,14 @@ describe('Spot for an outside assistant', () => {
     expect(acrossDays.size).toBeGreaterThan(1);
     expect(spotNote('done', day)).toEqual({ moment: 'done', says: spotLine('done', day), pose: 'proud', voice: spotVoice });
   });
-  it('asks for Spot’s line every time, keeps the joke on Spot, and says when to drop it', () => {
-    // "may" and "plain words first" were read as permission to skip Spot entirely.
-    expect(spotVoice).not.toMatch(/\bmay\b|plain words first/);
-    expect(spotVoice).toContain('End with spot.says, quoted and attributed');
+  it('keeps Spot’s voice without duplicating the card’s joke in every reply', () => {
+    // The compact card carries the line; the assistant should still sound like Spot.
+    expect(spotVoice).toContain('Do not repeat');
     expect(spotVoice).toContain('a little sassy');
     expect(spotVoice).toContain('never about the person’s body, food, weight or a missed day');
     expect(spotVoice).toContain('drop the jokes and leave out his line');
-    expect(spotToolNote).toContain('End your reply with it');
+    expect(spotToolNote).toContain('Do not repeat');
+    expect(spotVoice).not.toContain('End with spot.says, quoted and attributed');
   });
 });
 
@@ -70,7 +70,7 @@ describe('a new connection is a coach by default', () => {
     expect(tools.map(tool => tool.name)).toEqual(expect.arrayContaining(['get_coaching_day', 'import_records', 'propose_meal']));
     // Every tool that returns a result tells the assistant to relay Spot's line.
     for (const tool of tools.filter(item => !['capabilities', 'get_action'].includes(item.name))) expect(tool.description, tool.name).toContain(spotToolNote);
-    expect(client.getInstructions()).toContain('end your reply with it, quoted and attributed');
+    expect(client.getInstructions()).toContain('Do not repeat');
     const result = await client.callTool({ name: 'get_coaching_day', arguments: {} });
     const view = result.structuredContent as { nextSteps: string[]; spot: { moment: string; says: string; voice: string } };
     expect(view.nextSteps[0]).toContain('No primary goal');
