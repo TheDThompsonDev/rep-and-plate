@@ -47,7 +47,7 @@ describe('Spot for an outside assistant', () => {
     }
     const acrossDays = new Set(['2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13'].map(value => spotLine('today', value)));
     expect(acrossDays.size).toBeGreaterThan(1);
-    expect(spotNote('done', day)).toEqual({ moment: 'done', says: spotLine('done', day), voice: spotVoice });
+    expect(spotNote('done', day)).toEqual({ moment: 'done', says: spotLine('done', day), pose: 'proud', voice: spotVoice });
   });
   it('asks for Spot’s line every time, keeps the joke on Spot, and says when to drop it', () => {
     // "may" and "plain words first" were read as permission to skip Spot entirely.

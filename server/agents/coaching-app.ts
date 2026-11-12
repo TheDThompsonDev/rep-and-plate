@@ -1,17 +1,19 @@
 import { createHash } from 'node:crypto';
+import { spotBannerMarkup, spotBannerScript, spotBannerStyle } from './spot-banner.ts';
 
 export const COACHING_APP_URI = 'ui://rep-and-plate/coaching.html';
 export const COACHING_APP_MIME = 'text/html;profile=mcp-app';
 
 const style = String.raw`
 :root{color-scheme:light dark;--bg:#f5faf6;--surface:#fff;--ink:#173d31;--muted:#526e61;--line:#d5e5da;--accent:#006249;font-family:var(--font-sans,system-ui,sans-serif);font-size:14px;background:var(--bg);color:var(--ink)}*{box-sizing:border-box}body{margin:0;padding:18px}header,.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{font-size:21px;letter-spacing:-.5px;margin:2px 0}h2{font-size:16px;margin:0 0 10px}h3{font-size:14px;margin:0 0 7px}p{line-height:1.5;margin:7px 0}.eyebrow{font-size:10px;letter-spacing:1.5px;font-weight:800;color:var(--accent);margin:0}.muted,small{color:var(--muted)}.pill{font-size:11px;padding:5px 9px;border:1px solid var(--line);border-radius:99px}.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px;margin-top:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid>.card{margin-top:0}ul{padding-left:18px;margin:8px 0}li{line-height:1.5;margin:6px 0}button{border:1px solid var(--line);border-radius:10px;padding:10px 13px;min-height:42px;font:inherit;font-weight:600;background:var(--surface);color:var(--ink);cursor:pointer}button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #72b895;outline-offset:3px}label{display:grid;gap:5px;margin:10px 0;font-size:12px;font-weight:600}input,select,textarea{font:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);width:100%}textarea{min-height:74px;resize:vertical}pre{font:11px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:280px;overflow:auto}details{margin-top:10px}summary{cursor:pointer;min-height:32px;line-height:32px}#notice{padding:10px 0;min-height:34px;font-size:12px}.pending{border-left:4px solid #c39a2f}.approved{border-left:4px solid var(--accent)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.check{display:flex;gap:8px;align-items:flex-start;font-weight:400;line-height:1.5}.check input{width:auto;margin-top:4px}.beforeafter{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.beforeafter section{padding:10px;border:1px solid var(--line);border-radius:10px}#feedback[hidden]{display:none}.session{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;border-top:1px solid var(--line);padding-top:9px;margin-top:9px}.session:first-child{border-top:0;padding-top:0;margin-top:0}.session span{display:block}.session .muted{font-size:12px}.feedback-actions{margin-top:10px}.status{font-size:11px;text-transform:capitalize}@media(max-width:520px){body{padding:12px}.grid,.beforeafter{grid-template-columns:1fr}.card{padding:12px}}@media(prefers-color-scheme:dark){:root{--bg:#10231c;--surface:#182f25;--ink:#e5f3e9;--muted:#b1c9ba;--line:#385343;--accent:#86d3ac}button.primary{color:#10231c}}
-`;
+${spotBannerStyle}`;
 
 /** Static executable content only. Tool data enters exclusively through textContent. */
 const script = String.raw`
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
+  ${spotBannerScript}
   const pending = new Map(), undoRequests = new Map();
   let parentOrigin = null, initialized = false, hostTools = false, busy = false, disposed = false, resizeObserver = null;
   let data = {}, granted = new Set(), feedbackRequest = null;
@@ -96,6 +98,7 @@ const script = String.raw`
   }
   function render() {
     if (disposed) return;
+    renderSpot(data.spot);
     const saved = state(), brief = record(data.brief), currentDay = day();
     $('day').textContent = currentDay || 'Saved coaching plan';
     const fresh = record(data.freshness);
@@ -231,9 +234,10 @@ const script = String.raw`
 `;
 
 const hash = (value: string) => createHash('sha256').update(value).digest('base64');
-const csp = `default-src 'none'; script-src 'sha256-${hash(script)}'; style-src 'sha256-${hash(style)}'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'`;
+const csp = `default-src 'none'; script-src 'sha256-${hash(script)}'; style-src 'sha256-${hash(style)}'; img-src data:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'`;
 
 export const coachingAppHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="${csp}"><title>Your coaching day · Rep & Plate</title><style>${style}</style></head><body>
+${spotBannerMarkup}
 <header><div><p class="eyebrow">REP &amp; PLATE</p><h1>Your coaching day</h1><span id="day" class="muted"></span></div><button id="refresh" type="button" disabled>Refresh plan</button></header>
 <p id="freshness" class="muted"></p><span id="revision" class="pill"></span><p id="notice" role="status" aria-live="polite">Connecting to this host…</p>
 <div class="grid"><section class="card"><h2>Today</h2><div id="today"></div></section><section class="card"><h2>Upcoming</h2><div id="upcoming"></div></section></div>
