@@ -7,7 +7,7 @@ import { createAgentHandler } from './http.ts';
 import { AgentService } from './service.ts';
 import { SqliteAgentStore } from './sqlite.ts';
 import { contextNotes } from './mcp-server.ts';
-import { spotHow, spotLine, spotNote } from '../../src/features/spot/assistant.ts';
+import { spotLine, spotNote, spotToolNote, spotVoice } from '../../src/features/spot/assistant.ts';
 import { defaultConnectionScopes } from '../../src/features/connections/permissions.ts';
 import { initialState } from '../../src/domain.ts';
 import { buildAgentContext } from '../../src/features/connections/context.ts';
@@ -47,12 +47,16 @@ describe('Spot for an outside assistant', () => {
     }
     const acrossDays = new Set(['2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13'].map(value => spotLine('today', value)));
     expect(acrossDays.size).toBeGreaterThan(1);
-    expect(spotNote('done', day)).toEqual({ moment: 'done', line: spotLine('done', day), how: spotHow });
+    expect(spotNote('done', day)).toEqual({ moment: 'done', says: spotLine('done', day), voice: spotVoice });
   });
-  it('keeps the joke on Spot and says when to leave it out', () => {
-    expect(spotHow).toContain('plain words first');
-    expect(spotHow).toContain('never joke about the person’s body, food, weight or a missed day');
-    expect(spotHow).toContain('leave it out');
+  it('asks for Spot’s line every time, keeps the joke on Spot, and says when to drop it', () => {
+    // "may" and "plain words first" were read as permission to skip Spot entirely.
+    expect(spotVoice).not.toMatch(/\bmay\b|plain words first/);
+    expect(spotVoice).toContain('End with spot.says, quoted and attributed');
+    expect(spotVoice).toContain('a little sassy');
+    expect(spotVoice).toContain('never about the person’s body, food, weight or a missed day');
+    expect(spotVoice).toContain('drop the jokes and leave out his line');
+    expect(spotToolNote).toContain('End your reply with it');
   });
 });
 
@@ -62,13 +66,18 @@ describe('a new connection is a coach by default', () => {
   });
   it('gives the assistant the coaching day with next steps and Spot’s line', async () => {
     const client = await connect([...defaultConnectionScopes]);
-    expect((await client.listTools()).tools.map(tool => tool.name)).toEqual(expect.arrayContaining(['get_coaching_day', 'import_records', 'propose_meal']));
+    const tools = (await client.listTools()).tools;
+    expect(tools.map(tool => tool.name)).toEqual(expect.arrayContaining(['get_coaching_day', 'import_records', 'propose_meal']));
+    // Every tool that returns a result tells the assistant to relay Spot's line.
+    for (const tool of tools.filter(item => !['capabilities', 'get_action'].includes(item.name))) expect(tool.description, tool.name).toContain(spotToolNote);
+    expect(client.getInstructions()).toContain('end your reply with it, quoted and attributed');
     const result = await client.callTool({ name: 'get_coaching_day', arguments: {} });
-    const view = result.structuredContent as { nextSteps: string[]; spot: { moment: string; line: string; how: string } };
+    const view = result.structuredContent as { nextSteps: string[]; spot: { moment: string; says: string; voice: string } };
     expect(view.nextSteps[0]).toContain('No primary goal');
     expect(view.spot).toEqual(spotNote('no_goal', day));
-    // The line is in the text an assistant reads, not only in the structured form.
+    // The line is in the text an assistant reads, and it comes first.
     expect(text(result)).toContain(spotLine('no_goal', day));
+    expect(text(result).indexOf('"spot"')).toBeLessThan(text(result).indexOf('"nextSteps"'));
   });
   it('changes Spot’s line with the moment', async () => {
     const client = await connect([...defaultConnectionScopes]);
@@ -88,13 +97,14 @@ describe('a connection without coaching still says something useful', () => {
     expect((await client.listTools()).tools.map(tool => tool.name).sort()).toEqual(['capabilities', 'get_action', 'propose_meal', 'read_context']);
     expect(client.getInstructions()).toContain('no coaching access');
     const result = await client.callTool({ name: 'read_context', arguments: {} });
-    const view = result.structuredContent as { nextSteps: string[]; spot: { moment: string; line: string }; context: { day: string } };
+    const view = result.structuredContent as { nextSteps: string[]; spot: { moment: string; says: string }; context: { day: string } };
     expect(view.context.day).toBe(day);
     expect(view.nextSteps[0]).toContain('Nothing is logged for today');
     expect(view.nextSteps.join(' ')).toContain('app defaults');
     expect(view.nextSteps.at(-1)).toContain('create a connection with coaching turned on');
     expect(view.spot.moment).toBe('blank');
     expect(text(result)).toContain(spotLine('blank', day));
+    expect(text(result).startsWith('{"spot"')).toBe(true);
   });
   it('says where a drafted meal is waiting', async () => {
     const client = await connect(['nutrition:read', 'meals:propose']);

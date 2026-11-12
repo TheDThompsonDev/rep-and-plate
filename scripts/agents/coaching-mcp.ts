@@ -4,7 +4,7 @@ import { coachingCommandSchema, coachingImportInputSchema } from '../../src/feat
 import { registerCoachingPrompts } from './coaching-prompts.ts';
 import { daySchema, type AgentRequest } from '../../src/features/connections/contracts.ts';
 import { COACHING_APP_MIME, COACHING_APP_URI, coachingAppResource } from '../../server/agents/coaching-app.ts';
-import { spotNote, type SpotMoment } from '../../src/features/spot/assistant.ts';
+import { spotNote, spotToolNote, type SpotMoment } from '../../src/features/spot/assistant.ts';
 
 export type CoachingMcpCall = (request: AgentRequest) => Promise<CallToolResult>;
 
@@ -169,7 +169,7 @@ function dailyText(view: Row): string {
   if (view.error) return JSON.stringify(view, null, 2);
   const state = object(view.state), brief = object(view.brief);
   return JSON.stringify({
-    ...(view.imported ? { imported: view.imported } : {}), ...(view.nextSteps ? { nextSteps: view.nextSteps } : {}), ...(view.spot ? { spot: view.spot } : {}),
+    ...(view.spot ? { spot: view.spot } : {}), ...(view.imported ? { imported: view.imported } : {}), ...(view.nextSteps ? { nextSteps: view.nextSteps } : {}),
     day: brief.day, revision: state.revision, profile: state.profile, activeMemories: state.memories,
     today: brief.today, upcoming: brief.upcoming, recentOutcomes: state.outcomes,
     missingData: brief.missingData, recentDecisions: state.journal,
@@ -220,20 +220,20 @@ export function registerCoachingTools(server: McpServer, call: CoachingMcpCall, 
 
   if (operations.includes('coaching.read')) server.registerTool('get_coaching_day', {
     title: 'Your coaching day',
-    description: 'Start here, and use this whenever the user talks about their training, a workout they did, eating around training or how their week is going, even if they do not name Rep & Plate. Read the saved coaching plan, today/upcoming sessions, weekly brief, pending proposals, records brought in from other apps, and nextSteps: the most useful things to raise now, in priority order. The plan itself is always current. freshness describes only food and workouts recorded in the app, which are a saved snapshot and not a live device feed; read its summary before relying on them.',
+    description: spotToolNote + ' Start here, and use this whenever the user talks about their training, a workout they did, eating around training or how their week is going, even if they do not name Rep & Plate. Read the saved coaching plan, today/upcoming sessions, weekly brief, pending proposals, records brought in from other apps, and nextSteps: the most useful things to raise now, in priority order. The plan itself is always current. freshness describes only food and workouts recorded in the app, which are a saved snapshot and not a live device feed; read its summary before relying on them.',
     inputSchema: z.object({ day: daySchema.optional() }).strict(), annotations: read, ...ui,
   }, ({ day }) => invoke({ operation: 'coaching.read', ...(day ? { day } : {}) }, 'Saved coaching plan and next steps are shown below and are current. freshness covers app-recorded food and workouts only. Pending proposals have not been applied.'));
 
   if (operations.includes('coaching.propose')) server.registerTool('propose_coaching_change', {
     title: 'Review a coaching change',
-    description: 'Prepare a change with before/after details. This never applies it. Read the current revision first; use that baseRevision. Generate a UUID requestId once and reuse it with the identical command on retries. Present the proposal and obtain explicit user approval before resolving it.',
+    description: spotToolNote + ' Prepare a change with before/after details. This never applies it. Read the current revision first; use that baseRevision. Generate a UUID requestId once and reuse it with the identical command on retries. Present the proposal and obtain explicit user approval before resolving it.',
     inputSchema: z.object({ requestId: z.string().uuid(), baseRevision: z.number().int().nonnegative(), command: coachingCommandSchema }).strict(),
     annotations: propose, ...ui,
   }, ({ requestId, baseRevision, command }) => invoke({ operation: 'coaching.propose', requestId, baseRevision, command }, 'This is a proposed coaching change. It remains pending until explicitly approved.'));
 
   if (operations.includes('coaching.resolve')) server.registerTool('resolve_coaching_change', {
     title: 'Apply or dismiss a reviewed change',
-    description: 'Resolve a specific pending proposal. Applying requires the user to explicitly approve the displayed before/after change and confirmation="APPLY_REVIEWED_CHANGE". Never infer approval from a request to propose, plan, inspect or log feedback. Dismissal does not apply the proposal. Stale revisions must be read and reviewed again.',
+    description: spotToolNote + ' Resolve a specific pending proposal. Applying requires the user to explicitly approve the displayed before/after change and confirmation="APPLY_REVIEWED_CHANGE". Never infer approval from a request to propose, plan, inspect or log feedback. Dismissal does not apply the proposal. Stale revisions must be read and reviewed again.',
     inputSchema: z.object({ proposalId: z.string().uuid(), status: z.enum(['accepted', 'dismissed']), confirmation: z.literal('APPLY_REVIEWED_CHANGE').optional() }).strict().superRefine((value, context) => {
       if (value.status === 'accepted' && value.confirmation !== 'APPLY_REVIEWED_CHANGE') context.addIssue({ code: 'custom', path: ['confirmation'], message: 'Explicit approval of the reviewed change is required.' });
     }), annotations: mutate, ...appVisibility,
@@ -241,13 +241,13 @@ export function registerCoachingTools(server: McpServer, call: CoachingMcpCall, 
 
   if (operations.includes('coaching.undo')) server.registerTool('undo_coaching_change', {
     title: 'Undo a coaching change',
-    description: 'Undo a recorded coaching change only after the user explicitly requests undo of that entry. Read the latest revision first and pass it as baseRevision. Generate one UUID requestId and reuse it on identical retries. The service refuses unsafe undo when newer changes would be overwritten.',
+    description: spotToolNote + ' Undo a recorded coaching change only after the user explicitly requests undo of that entry. Read the latest revision first and pass it as baseRevision. Generate one UUID requestId and reuse it on identical retries. The service refuses unsafe undo when newer changes would be overwritten.',
     inputSchema: z.object({ requestId: z.string().uuid(), entryId: z.string().uuid(), baseRevision: z.number().int().nonnegative() }).strict(), annotations: mutate, ...appVisibility,
   }, ({ requestId, entryId, baseRevision }) => invoke({ operation: 'coaching.undo', requestId, entryId, baseRevision }, 'Guarded undo result. Consult the returned revision and history for the saved state.'));
 
   if (operations.includes('coaching.import')) server.registerTool('import_records', {
     title: 'Bring in records from other apps',
-    description: 'Save activities (runs, rides, lifts) and daily nutrition totals the user asked you to bring in from another app such as Strava, Coros, Garmin, Buff or MacroFactor, so everything lives in one place. Name the real source and use that app’s own identifier as externalId: saving the same record again updates it instead of duplicating it. Show the user a short summary first and call this once they agree, with confirmation="SAVE_REPORTED_RECORDS". These are records with a named source: this never changes the agreed plan, never marks a planned session done, and never writes the Rep & Plate food diary. Send only values the source actually reported; leave a field out when it is unknown, never estimate it. Use remove to take back a record saved by mistake.',
+    description: spotToolNote + ' Save activities (runs, rides, lifts) and daily nutrition totals the user asked you to bring in from another app such as Strava, Coros, Garmin, Buff or MacroFactor, so everything lives in one place. Name the real source and use that app’s own identifier as externalId: saving the same record again updates it instead of duplicating it. Show the user a short summary first and call this once they agree, with confirmation="SAVE_REPORTED_RECORDS". These are records with a named source: this never changes the agreed plan, never marks a planned session done, and never writes the Rep & Plate food diary. Send only values the source actually reported; leave a field out when it is unknown, never estimate it. Use remove to take back a record saved by mistake.',
     inputSchema: coachingImportInputSchema, annotations: propose, ...appVisibility,
   }, input => invoke({ operation: 'coaching.import', ...input }, 'Saved as reported records from the named apps. The agreed plan, session outcomes and food diary are unchanged. Counts are under imported.'));
 }
