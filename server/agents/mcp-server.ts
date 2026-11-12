@@ -5,7 +5,7 @@ import { registerCoachingTools } from '../../scripts/agents/coaching-mcp.ts';
 import { safeError } from '../../scripts/agents/client.ts';
 import { AgentError } from './service.ts';
 import { spotCoachVoice } from '../../src/features/spot/personality.ts';
-import { spotNote } from '../../src/features/spot/assistant.ts';
+import { spotNote, spotToolNote } from '../../src/features/spot/assistant.ts';
 
 export type AgentMcpClient = { request: (request: AgentRequest) => Promise<Record<string, unknown>> };
 
@@ -38,19 +38,20 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
   /** Add what to raise next and Spot's line to a successful result, in both the text and the structured form. */
   const withNotes = (result: Called, notes: (value: Record<string, unknown>) => Record<string, unknown>): Called => {
     if ('isError' in result && result.isError) return result;
-    const value = { ...notes(result.structuredContent as Record<string, unknown>), ...result.structuredContent };
+    const added = notes(result.structuredContent as Record<string, unknown>);
+    const value = { ...(added.spot ? { spot: added.spot } : {}), ...added, ...result.structuredContent };
     return { content: [{ type: 'text' as const, text: JSON.stringify(value) }], structuredContent: value };
   };
   const read = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
   server.registerTool('capabilities', { title: 'What this connection can do', description: 'Discover granted access and supported operations.', inputSchema: z.object({}).strict(), annotations: read }, () => call({ operation: 'capabilities' }));
   if (operations.includes('context.read')) server.registerTool('read_context', {
     title: 'Your Rep & Plate records',
-    description: 'Read permitted nutrition, pantry, preferences, activity and lifting evidence, with nextSteps: what is most useful to raise now. Use this whenever the user talks about what they ate, their food or their day. It is a saved snapshot, not a live device feed; missing data is unknown, never zero.',
+    description: spotToolNote + ' Read permitted nutrition, pantry, preferences, activity and lifting evidence, with nextSteps: what is most useful to raise now. Use this whenever the user talks about what they ate, their food or their day. It is a saved snapshot, not a live device feed; missing data is unknown, never zero.',
     inputSchema: z.object({}).strict(), annotations: read,
   }, async () => withNotes(await call({ operation: 'context.read' }), result => contextNotes(result, coaching)));
   if (operations.includes('meals.propose')) server.registerTool('propose_meal', {
     title: 'Suggest a meal to log',
-    description: 'Propose a meal log for food the user reports eating. This NEVER logs food: the user reviews it in Rep & Plate. Generate a UUID requestId once and reuse the identical request on retries. Not for future meal planning.',
+    description: spotToolNote + ' Propose a meal log for food the user reports eating. This NEVER logs food: the user reviews it in Rep & Plate. Generate a UUID requestId once and reuse the identical request on retries. Not for future meal planning.',
     inputSchema: z.object({ requestId: z.string().uuid(), meal: agentMealSchema }).strict(),
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   }, async ({ requestId, meal }) => withNotes(await call({ operation: 'meals.propose', requestId, meal }), () => ({
