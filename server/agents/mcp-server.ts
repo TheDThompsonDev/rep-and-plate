@@ -47,7 +47,8 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
   const read = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
   // Hosts that draw MCP Apps (Claude on web and desktop) show Spot's pose and line above the reply.
   const cards = coachingAppSupported(server.server.getClientCapabilities()) !== false;
-  const spotCard = cards ? { _meta: { ui: { resourceUri: SPOT_APP_URI, visibility: ['model', 'app'] } } } : {};
+  // The official MCP Apps helper also writes the legacy flat key, which some hosts still read.
+  const spotCard = cards ? { _meta: { ui: { resourceUri: SPOT_APP_URI, visibility: ['model', 'app'] }, 'ui/resourceUri': SPOT_APP_URI } } : {};
   if (cards && (operations.includes('context.read') || operations.includes('meals.propose'))) server.registerResource('rep-and-plate-spot', SPOT_APP_URI, {
     title: 'Spot', description: 'Spot\u2019s pose and line for the moment.', mimeType: SPOT_APP_MIME, _meta: { ui: {} },
   }, () => ({ contents: [spotAppResource] }));

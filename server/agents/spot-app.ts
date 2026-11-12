@@ -26,7 +26,8 @@ const script = String.raw`
     if (initializeId !== null && message.id === initializeId) {
       initializeId = null;
       const result = record(message.result);
-      if (message.error || result.protocolVersion !== '2026-01-26') return;
+      // Only text and a built-in image are shown, so any version the host speaks is enough.
+      if (message.error || typeof result.protocolVersion !== 'string') return;
       parentOrigin = event.origin; initialized = true;
       notify('ui/notifications/initialized', {});
       if (record(result.hostContext).theme) document.documentElement.style.colorScheme = result.hostContext.theme;

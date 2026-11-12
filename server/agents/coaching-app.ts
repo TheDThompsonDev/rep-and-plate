@@ -222,7 +222,7 @@ const script = String.raw`
   }
   request('ui/initialize',{appInfo:{name:'rep-and-plate-coaching',version:'1.0.0'},appCapabilities:{availableDisplayModes:['inline']},protocolVersion:'2026-01-26'},5000).then(result => {
     const initialization = record(result);
-    if (initialization.protocolVersion !== '2026-01-26') throw new Error('This host uses an unsupported MCP Apps version. Use the complete text tools.');
+    if (typeof initialization.protocolVersion !== 'string') throw new Error('This host did not complete the MCP Apps handshake. Use the complete text tools.');
     initialized = true; hostTools = !!record(initialization.hostCapabilities).serverTools;
     notify('ui/notifications/initialized',{});
     if (record(initialization.hostContext).theme) document.documentElement.style.colorScheme = initialization.hostContext.theme;
