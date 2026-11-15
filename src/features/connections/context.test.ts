@@ -21,6 +21,25 @@ describe('agent context and reviewed actions', () => {
     expect(agentContextSchema.safeParse({...fresh,nutrition:legacyNutrition}).success).toBe(true);
     expect(Object.keys(fresh.nutrition).sort()).toEqual(['days','goals','goalsConfigured']);
   });
+  it('leaves out days after the saved snapshot instead of reporting them as zero meals', () => {
+    const state = initialState();
+    state.meals = [{ id: 'm1', title: 'Oats', day: '2026-11-10', time: '8 AM', source: 'Typed', note: '', category: 'Breakfast', confidence: 'confirmed', calories: 300, protein: 12, carbs: 50, fat: 6 }];
+    const context = buildAgentContext(state, '2026-11-14', 'America/Chicago', '2026-11-11');
+    expect(context.day).toBe('2026-11-14');
+    expect(context.nutrition.days.map(item => item.day)).toEqual(['2026-11-08', '2026-11-09', '2026-11-10', '2026-11-11']);
+    expect(context.nutrition.days.find(item => item.day === '2026-11-10')?.meals).toBe(1);
+    expect(context.nutrition.recordedThrough).toBe('2026-11-11');
+    expect(agentContextSchema.safeParse(context).success).toBe(true);
+    // A snapshot from today (or a clock a little ahead) keeps the full window and adds nothing.
+    for (const through of ['2026-11-14', '2026-11-15']) {
+      const current = buildAgentContext(state, '2026-11-14', 'America/Chicago', through);
+      expect(current.nutrition.days).toHaveLength(7);
+      expect(current.nutrition).not.toHaveProperty('recordedThrough');
+    }
+    // Older than the whole window: no day is reported at all.
+    expect(buildAgentContext(state, '2026-11-14', 'UTC', '2026-10-01').nutrition.days).toEqual([]);
+    expect(() => buildAgentContext(state, '2026-11-14', 'UTC', 'yesterday')).toThrow();
+  });
   it('only projects allowed record fields, leaving chat and media private', () => {
     const state = initialState();
     state.messages.push({ id: 'private', role: 'user', text: 'PRIVATE MESSAGE', image: 'data:image/png;base64,PRIVATE', time: '12:30' });

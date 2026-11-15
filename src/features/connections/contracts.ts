@@ -25,7 +25,7 @@ const totals = z.object({ calories: z.number().finite().nonnegative(), protein: 
 export const agentContextSchema = z.object({
   day: daySchema,
   timezone: z.string().max(100),
-  nutrition: z.object({ days: z.array(z.object({ day: daySchema, meals: z.number().int().nonnegative(), totals }).strict()).max(7), goals: totals, goalsConfigured: z.boolean().optional().describe('Only true means the user explicitly chose these targets. Otherwise goals are compatibility defaults; describe recorded totals without target judgments.') }).strict(),
+  nutrition: z.object({ days: z.array(z.object({ day: daySchema, meals: z.number().int().nonnegative(), totals }).strict()).max(7), goals: totals, goalsConfigured: z.boolean().optional().describe('Only true means the user explicitly chose these targets. Otherwise goals are compatibility defaults; describe recorded totals without target judgments.'), recordedThrough: daySchema.optional().describe('The saved app snapshot ends on this day. Later days are left out because they are unknown, not zero.') }).strict(),
   pantry: z.array(z.object({ id: short, name: short, remainingServings: z.number().finite().nonnegative().nullable(), serving: short, needsReview: z.boolean() }).strict()).max(200),
   preferences: z.array(short).max(60),
   workouts: z.array(z.object({ title: short, finishedAt: z.string().max(60), exercises: z.array(z.object({ name: short, weightUnit: z.literal('lb'), sets: z.array(z.object({ reps: z.number().int().nonnegative(), weight: z.number().finite().nonnegative() }).strict()).max(100) }).strict()).max(50) }).strict()).max(10),
