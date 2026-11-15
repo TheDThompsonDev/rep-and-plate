@@ -5,6 +5,8 @@ import { AgentError, AgentService } from './service.ts';
 import type { AgentStore } from './store.ts';
 import { BODY_LIMITS } from '../routes.ts';
 import { createAgentMcpHandler } from './mcp.ts';
+import { protectedResourceMetadata, type McpOAuth } from './oauth.ts';
+import { RESOURCE_METADATA_PATH, WELL_KNOWN_RESOURCE_PATHS } from './oauth-paths.ts';
 
 export type AgentDependencies = {
   store: AgentStore;
@@ -15,12 +17,27 @@ export type AgentDependencies = {
   active?: (owner: string) => Promise<boolean>;
   snapshot?: (owner: string) => Promise<{ context: AgentContext; updatedAt: string; revision: number } | null>;
   now?: () => number;
+  /** Sign-in through Supabase Auth for the MCP endpoint. Absent: keys only, exactly as before. */
+  oauth?: McpOAuth;
 };
+/** RFC 9728 discovery for the MCP endpoint. Public: it names only the resource and Supabase's issuer. */
+function resourceMetadata(oauth: McpOAuth | undefined, req: IncomingMessage, res: ServerResponse) {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Content-Type', 'application/json');
+  if (!oauth) { res.statusCode = 404; res.end(JSON.stringify({ error: { code: 'NOT_FOUND', message: 'Sign-in is not enabled on this server.', retryable: false } })); return; }
+  if (req.method !== 'GET' && req.method !== 'HEAD') { res.statusCode = 405; res.setHeader('Allow', 'GET, HEAD'); res.end(); return; }
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.statusCode = 200;
+  res.end(req.method === 'HEAD' ? undefined : JSON.stringify(protectedResourceMetadata(oauth)));
+}
 export function createAgentHandler(deps: AgentDependencies) {
   const service = new AgentService(deps.store, deps.now, deps.snapshot);
   const mcp = createAgentMcpHandler(deps);
   return async (req: IncomingMessage, res: ServerResponse) => {
-    if ((req.url ?? '').split('?')[0] === '/api/agents/mcp') return mcp(req, res);
+    const requested = (req.url ?? '').split('?')[0];
+    if (requested === '/api/agents/mcp') return mcp(req, res);
+    if (requested === RESOURCE_METADATA_PATH || (WELL_KNOWN_RESOURCE_PATHS as readonly string[]).includes(requested)) return resourceMetadata(deps.oauth, req, res);
     let lease: string | undefined;
     const json = (status: number, body: unknown) => { res.statusCode = status; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(body)); };
     res.setHeader('Cache-Control', 'no-store');

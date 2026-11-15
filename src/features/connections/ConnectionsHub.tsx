@@ -5,20 +5,11 @@ import type { AppState } from '../../domain';
 import { browserConnections } from './browser';
 import { useConnections, type ApplyAgentAction } from './useConnections';
 import type { AgentScope } from './contracts';
-import { defaultConnectionScopes, toggleConnectionScope } from './permissions';
+import { connectionAccess, defaultConnectionScopes, toggleConnectionScope } from './permissions';
 import { connectionLifetimes, defaultLifetimeDays, expiryNotice, setupGuides, type SetupGuide } from './setup';
 import './connections.css';
 
-const access: { scope: AgentScope; title: string; detail: string }[] = [
-  { scope: 'nutrition:read', title: 'Nutrition & goals', detail: 'Seven days of recorded totals and your daily targets.' },
-  { scope: 'pantry:read', title: 'Pantry', detail: 'Available ingredients, serving sizes, and quantities.' },
-  { scope: 'preferences:read', title: 'Food preferences', detail: 'Restrictions, favorites, household size, and cooking needs.' },
-  { scope: 'workouts:read', title: 'Workout history', detail: 'Your ten most recent completed sessions.' },
-  { scope: 'activities:read', title: 'Recorded activities', detail: 'Recorded activity dates, durations and your notes. Missing activity stays unknown.' },
-  { scope: 'coaching:read', title: 'Coaching plan & memory', detail: 'Your agreed plan, priorities, feedback, explicit memories and decision history.' },
-  { scope: 'coaching:write', title: 'Change your coaching plan', detail: 'Prepare plan changes and save records from your other apps, each only after you say yes in your assistant. Includes feedback and memory changes.' },
-  { scope: 'meals:propose', title: 'Suggest meal records', detail: 'Send estimates for you to review before logging.' },
-];
+const access = connectionAccess;
 export default function ConnectionsHub({ state, onApply, open, onClose, onAccount }: { state: AppState; onApply: ApplyAgentAction; open: boolean; onClose: () => void; onAccount?: () => void }) {
   const model = useConnections(state, onApply, browserConnections, open);
   const [adding, setAdding] = useState(false);

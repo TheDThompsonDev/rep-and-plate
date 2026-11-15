@@ -78,6 +78,8 @@ export const manageRequestSchema = z.discriminatedUnion('operation', [
   z.object({ operation: z.literal('revoke'), connectionId: z.string().uuid() }).strict(),
   // Keeps the same access key working for longer, so the assistant never has to be set up again.
   z.object({ operation: z.literal('renew'), connectionId: z.string().uuid(), expiresInDays: lifetimeSchema }).strict(),
+  // Sent by the consent page when the person allows a signed-in assistant (Connect in Claude).
+  z.object({ operation: z.literal('oauth.connect'), clientId: z.string().uuid(), name: z.string().trim().min(1).max(80), scopes: z.array(scopeSchema).min(1).max(8) }).strict(),
   z.object({ operation: z.literal('publish'), context: agentContextSchema, dataUpdatedAt: z.string().datetime().nullable() }).strict(),
   z.object({ operation: z.literal('resolve'), actionId: z.string().uuid(), status: z.enum(['accepted', 'dismissed']) }).strict(),
   coachingReadRequest,

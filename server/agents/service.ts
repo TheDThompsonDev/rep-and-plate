@@ -4,7 +4,7 @@ import type { AgentStore, Document, StoredConnection } from './store.ts';
 import { agentRequestSchema, manageRequestSchema, type AgentScope } from '../../src/features/connections/contracts.ts';
 import { coachingStateSchema, type CoachingState } from '../../src/features/coaching/contracts.ts';
 import { CoachingError, emptyCoachingState, proposeCoaching, resolveCoaching, undoCoaching, importCoachingEvidence, coachingBrief, coachingWeeklyReview, coachingEvidenceView, coachingNextSteps } from '../../src/features/coaching/model.ts';
-import { expiryNextStep, RENEWABLE_AFTER_EXPIRY_DAYS } from '../../src/features/connections/setup.ts';
+import { expiryNextStep, MAX_LIFETIME_DAYS, RENEWABLE_AFTER_EXPIRY_DAYS } from '../../src/features/connections/setup.ts';
 import { ZodError } from 'zod';
 
 const DAY = 86_400_000;
@@ -40,9 +40,21 @@ export class AgentError extends Error {
   constructor(public status: number, public code: string, message: string, public retryable = false) { super(message); }
 }
 const error = (status: number, code: string, message: string): never => { throw new AgentError(status, code, message); };
-const publicConnection = ({ tokenHash: _hash, ...connection }: StoredConnection): AgentConnection => connection;
+const publicConnection = ({ tokenHash: _hash, oauthClientId: _client, ...connection }: StoredConnection): AgentConnection => connection;
 const hash = (value: string) => createHash('sha256').update(value).digest('hex');
-function authenticate(document: Document, token: string, now: number) {
+/**
+ * What an assistant proved: a connection key, or a Supabase sign-in for a registered client. A sign-in
+ * reaches the one connection its owner approved for that client on the consent page, and nothing else.
+ */
+export type AgentCredential = string | { oauthClientId: string };
+function authenticate(document: Document, credential: AgentCredential, now: number) {
+  if (typeof credential !== 'string') {
+    const connection = document.connections.find(c => c.oauthClientId === credential.oauthClientId && !c.revokedAt);
+    if (!connection || Date.parse(connection.expiresAt) <= now)
+      return error(401, 'INVALID_TOKEN', 'This sign-in is no longer connected to Rep & Plate. Connect again.');
+    return connection;
+  }
+  const token = credential;
   const connection = document.connections.find(c => c.id === token.split('.')[1]);
   if (!connection || connection.revokedAt || Date.parse(connection.expiresAt) <= now || !timingSafeEqual(Buffer.from(hash(token), 'hex'), Buffer.from(connection.tokenHash, 'hex')))
     return error(401, 'INVALID_TOKEN', 'This connection is expired, revoked, or invalid. Connect again.');
@@ -64,6 +76,11 @@ export class AgentService {
     const owner = await this.store.owner(token.split('.')[1]);
     if (!owner) return error(401, 'INVALID_TOKEN', 'This connection is invalid.');
     authenticate((await this.store.read(owner)).document, token, this.clock());
+    return owner;
+  }
+  /** The signed-in account, once it has an active connection for this client. */
+  async grantOwner(owner: string, oauthClientId: string) {
+    authenticate((await this.store.read(owner)).document, { oauthClientId }, this.clock());
     return owner;
   }
   private async update<T>(owner: string, operation: (document: Document, now: number) => T) {
@@ -150,6 +167,25 @@ export class AgentService {
           checkContentCapacity(document);
           return { connection: publicConnection(connection), token };
         }
+        case 'oauth.connect': {
+          // Called by the consent page, signed in as the person, just before it approves with Supabase.
+          // A second approval for the same client updates its permissions instead of adding a duplicate.
+          if (owner.startsWith('local:')) return error(409, 'HOSTED_ONLY', 'Signing in an assistant needs your hosted Rep & Plate account.');
+          const clientId = request.clientId.toLowerCase();
+          const existing = document.connections.find(c => c.oauthClientId === clientId && !c.revokedAt);
+          const expiresAt = new Date(now + MAX_LIFETIME_DAYS * DAY).toISOString();
+          if (existing) {
+            existing.name = request.name; existing.scopes = [...new Set(request.scopes)];
+            existing.expiresAt = new Date(Math.max(Date.parse(existing.expiresAt), Date.parse(expiresAt))).toISOString();
+            return { connection: publicConnection(existing), replaced: true };
+          }
+          if (document.connections.length >= 100) return error(409, 'CAPACITY', 'This profile has reached its connection limit (100).');
+          // No key exists for this connection: the stored hash is of a random value nobody holds.
+          const connection: StoredConnection = { id: randomUUID(), name: request.name, scopes: [...new Set(request.scopes)], createdAt: at, expiresAt, revokedAt: null, tokenHash: hash(randomBytes(32).toString('base64url')), oauthClientId: clientId };
+          document.connections.push(connection);
+          checkContentCapacity(document);
+          return { connection: publicConnection(connection), replaced: false };
+        }
         case 'publish': {
           if (request.dataUpdatedAt && Date.parse(request.dataUpdatedAt) > now + 60_000) return error(400, 'INVALID_TIMESTAMP', 'Data update time cannot be in the future. Check your device clock.');
           document.context = request.context; document.publishedAt = at; document.dataUpdatedAt = request.dataUpdatedAt;
@@ -183,7 +219,7 @@ export class AgentService {
       }
     });
   }
-  async execute(owner: string, token: string, request: AgentRequest) {
+  async execute(owner: string, token: AgentCredential, request: AgentRequest) {
     const validated = agentRequestSchema.safeParse(request);
     if (!validated.success) return error(400, 'INVALID_REQUEST', 'Request does not match its operation schema.');
     request = validated.data;

@@ -1,5 +1,6 @@
 import { previewPage } from './preview-page.ts';
 import { bareKey, CONNECTION_KEY } from './agents/key-format.ts';
+import { CONSENT_PATH, MCP_PATH, mcpOAuthEnabled, RESOURCE_METADATA_PATH, WELL_KNOWN_RESOURCE_PATHS } from './agents/oauth-paths.ts';
 
 type Environment = Record<string, string | undefined>;
 const COOKIE = 'rp_preview';
@@ -67,6 +68,12 @@ export async function previewGate(request: Request, env: Environment, now = Date
     // the handler still verifies the key, the account and its quotas.
     ((endpoint === '/api/agents/mcp' || endpoint === '/api/agents/v1') && CONNECTION_KEY.test(bareKey(request.headers.get('x-api-key') ?? '')))
   )) return null;
+  if (mcpOAuthEnabled(env)) {
+    // Connect in Claude: Claude's servers carry no invitation cookie. The discovery document is public,
+    // and the MCP endpoint answers an unauthenticated request with its own sign-in challenge.
+    if (read && (endpoint === RESOURCE_METADATA_PATH || (WELL_KNOWN_RESOURCE_PATHS as readonly string[]).includes(path))) return null;
+    if (endpoint === MCP_PATH) return null;
+  }
   if (read && (path === '/favicon.svg' || /^\/fonts\/(fonts\.css|font-[0-7]\.ttf)$/.test(path))) return null;
   if (path === '/robots.txt' && read) return new Response('User-agent: *\nDisallow: /\n', { headers: { ...headers, 'Content-Type': 'text/plain' } });
   const secure = url.protocol === 'https:';
@@ -116,6 +123,12 @@ export async function previewGate(request: Request, env: Environment, now = Date
     return new Response(null, { status: 303, headers: { ...headers, Location: '/', 'Set-Cookie': cookie(`${expires}.${await signature(code, expires)}`, secure) } });
   }
   const unlocked = await hasPreviewAccess(request.headers.get('cookie'), env, now);
+  // Supabase sends the person to the consent page from another site, and a SameSite=Strict invitation
+  // cookie is not sent on that arrival. Reloading once from this site sends it; a second miss gets the splash.
+  if (!unlocked && read && path === CONSENT_PATH && mcpOAuthEnabled(env) && request.headers.get('sec-fetch-site') === 'cross-site')
+    return new Response(`<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0"><title>Rep &amp; Plate</title><a href="${CONSENT_PATH}${url.search.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}">Continue to Rep &amp; Plate</a>`, {
+      status: 200, headers: { ...headers, 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'none'; base-uri 'none'; frame-ancestors 'none'" },
+    });
   if (path === '/preview' && read) return html('', 200, unlocked);
   if (unlocked) return null;
   if (path === '/api' || path.startsWith('/api/')) return Response.json({ error: 'This app is in private preview. Enter your invitation code on the website first.' }, { status: 401, headers });

@@ -10,3 +10,4 @@ dialog:has(> .connections-content) .modal-heading{position:sticky;top:-26px;z-in
 
 .connection-form-summary{font-size:13px;line-height:1.6;margin:6px 0 4px}.connection-advanced{margin:8px 0 4px}.connection-advanced>summary{cursor:pointer;padding:10px 0;font-weight:600;font-size:13px}.connection-advanced>label{display:grid;gap:7px;font-size:13px;font-weight:600;margin:13px 0}
 .connection-steps li.connection-step-important{background:#fff0e3;border-left:3px solid #ab5a36;border-radius:6px;padding:10px 12px;margin-left:-6px}
+.oauth-consent{padding:24px 16px 40px}.oauth-consent .connection-permission svg{flex:none;margin-top:2px;color:#367052}
