@@ -1,9 +1,10 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { createMcpHandler } from '@modelcontextprotocol/server';
 import type { AgentDependencies } from './http.ts';
-import { AgentError, AgentService } from './service.ts';
+import { AgentError, AgentService, type AgentCredential } from './service.ts';
 import { createAgentMcpServer } from './mcp-server.ts';
-import { connectionKey } from './token.ts';
+import { connectionKey, mcpCredential } from './token.ts';
+import { bearerChallenge } from './oauth.ts';
 import { BODY_LIMITS, readJsonBody } from '../routes.ts';
 
 /** Stateless MCP with the same token authorization, quotas and persistence as the agent API. */
@@ -24,8 +25,29 @@ export function createAgentMcpHandler(deps: AgentDependencies) {
         origin = local.origin;
       }
       if (req.headers.origin && req.headers.origin !== origin) throw new AgentError(403, 'ORIGIN', 'Request origin is not allowed.');
-      const token = connectionKey(req.headers);
-      const owner = await service.tokenOwner(token);
+      let credential: AgentCredential;
+      let owner: string;
+      if (!deps.oauth) {
+        credential = connectionKey(req.headers);
+        owner = await service.tokenOwner(credential);
+      } else {
+        const oauth = deps.oauth;
+        const presented = mcpCredential(req.headers);
+        if (presented.kind === 'key') {
+          // Keys behave exactly as without sign-in, including their own 401 for a bad key.
+          credential = presented.token;
+          owner = await service.tokenOwner(presented.token);
+        } else {
+          // Claude starts Connect only on a 401 that says where the sign-in details are.
+          const refuse = (error?: 'invalid_token') => { res.setHeader('WWW-Authenticate', bearerChallenge(oauth, error)); };
+          if (presented.kind === 'none') { refuse(); throw new AgentError(401, 'SIGN_IN', 'Connect Rep & Plate to sign in, or supply your connection key.'); }
+          const grant = await oauth.verify(presented.token);
+          if (!grant) { refuse('invalid_token'); throw new AgentError(401, 'INVALID_TOKEN', 'This sign-in expired or is not valid. Connect again.'); }
+          try { owner = await service.grantOwner(grant.owner, grant.clientId); }
+          catch (cause) { if (cause instanceof AgentError && cause.status === 401) refuse('invalid_token'); throw cause; }
+          credential = { oauthClientId: grant.clientId };
+        }
+      }
       if (deps.active && !await deps.active(owner)) throw new AgentError(403, 'ACCOUNT_UNAVAILABLE', 'This account is unavailable.');
       if (deps.admit) {
         const admission = await deps.admit(owner, false);
@@ -39,7 +61,7 @@ export function createAgentMcpHandler(deps: AgentDependencies) {
       endpoint = createMcpHandler(() => createAgentMcpServer({
         request: async request => {
           if (deps.active && !await deps.active(owner)) throw new AgentError(403, 'ACCOUNT_UNAVAILABLE', 'This account is unavailable.');
-          return await service.execute(owner, token, request) as Record<string, unknown>;
+          return await service.execute(owner, credential, request) as Record<string, unknown>;
         },
       }), { legacy: 'stateless' });
       const headers = new Headers();

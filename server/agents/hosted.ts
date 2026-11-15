@@ -4,6 +4,8 @@ import { buildAgentContext } from '../../src/features/connections/context.ts';
 import { betaServices } from '../beta-services.ts';
 import { createAgentHandler } from './http.ts';
 import { emptyDocument, type AgentStore, type Document } from './store.ts';
+import { mcpOAuth, supabaseGrantVerifier, supabaseIssuer } from './oauth.ts';
+import { mcpOAuthEnabled } from './oauth-paths.ts';
 
 export class SupabaseAgentStore implements AgentStore {
   constructor(private admin: SupabaseClient) {}
@@ -38,8 +40,12 @@ export function hostedAgentHandler(env: Record<string, string | undefined>) {
     global: { fetch: (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(10000) }) },
   });
   const store = new SupabaseAgentStore(admin);
+  // Connect in Claude: off until Supabase's OAuth server and dynamic registration are switched on.
+  const oauth = mcpOAuthEnabled(env)
+    ? mcpOAuth(beta.origin, beta.publicConfig.url, supabaseGrantVerifier(token => admin.auth.getClaims(token), supabaseIssuer(beta.publicConfig.url)))
+    : undefined;
   return createAgentHandler({
-    store, origin: beta.origin, authenticate: beta.authenticate, admit: agentAdmission(admin),
+    store, origin: beta.origin, authenticate: beta.authenticate, admit: agentAdmission(admin), oauth,
     snapshot: async owner => {
       const { data, error } = await admin.from('fuel_snapshots').select('state,revision,updated_at').eq('user_id', owner).maybeSingle();
       if (error) throw Error('AGENT_SNAPSHOT');

@@ -1,6 +1,89 @@
 # Plan: a Connect button instead of keys and headers
 
-Status: plan only. Nothing here is built. Written 2026-11-11.
+Status: written 2026-11-11. Phase 0 spike run 2026-11-14 on branch `spike/connect-oauth`: everything
+that can be checked without a deploy works; the Claude chat sign-in itself is blocked on two switches
+outside the spike (see [Spike result](#spike-result-2026-11-14)). Phases 1 and 2 are built behind
+`MCP_OAUTH=on`, which is off by default, so production behaves exactly as before.
+
+## Spike result (2026-11-14)
+
+**Verdict: works so far, blocked on the final check.** Every requirement Claude publishes is either met
+by Supabase Auth's OAuth server or built here, and a standard MCP client (the official MCP SDK client,
+which follows the same specification as Claude but is not Claude) completes Connect end to end against a
+stand-in server that applies Supabase's own rules.
+What is not proven is Claude chat itself against the real Supabase project. **Exact blocker:** the
+project's OAuth server is switched off (a live `GET https://<project>.supabase.co/.well-known/oauth-authorization-server/auth/v1`
+returns `404 {"error_code":"feature_disabled","msg":"OAuth server is disabled"}`, and its OpenID document
+has no `registration_endpoint`), and Claude chat only connects to a deployed HTTPS address it can reach
+from `160.79.104.0/21`. Turning on the OAuth server, changing Supabase settings and deploying were all
+out of scope for this spike. Supabase's local stack needs Docker, which this machine does not have.
+
+| Claude requirement | What Supabase Auth does (v2.197.0) | Result |
+| --- | --- | --- |
+| `401` + `WWW-Authenticate: Bearer resource_metadata="…"` | Ours | Built and tested |
+| RFC 9728 document, `resource` = MCP address, Supabase first | Ours | Built and tested |
+| RFC 8414 / OIDC metadata reachable | Serves both; RFC 8414 is `404` until the OAuth server is on | Blocked by the switch |
+| PKCE `S256` | Advertised and required | Fine |
+| Client identity | No Client ID Metadata Document flag, so Claude uses dynamic registration; `registration_endpoint` appears only when that switch is on | Needs the switch |
+| Claude apps redirect `https://claude.ai/api/mcp/auth_callback` | Registered by Claude itself, matched exactly | Fine |
+| Claude Code loopback on any port | Redirects are matched as exact strings (`isValidRedirectURI`) | **Risk, unverified.** Keys stay the Claude Code path |
+| Scopes | Refuses anything but `openid profile email phone offline_access` | Our metadata asks only for `email`; Rep & Plate's permissions live on the connection |
+| Token bound to this server | `aud` is `authenticated`; `resource` is checked but not put in the token | The binding is our lookup of the token's `client_id` |
+| Refresh rotation, `invalid_grant` | Documented as automatic; `offline_access` is advertised so Claude asks for it | Not exercised |
+| Signing keys | The project already publishes an ES256 key | Nothing to change; `getClaims` verifies locally |
+
+How it works now, with `MCP_OAUTH=on`:
+
+1. An MCP request with no credentials gets `401` and the challenge. Discovery is served at
+   `/api/agents/oauth-protected-resource`, and the two `/.well-known/oauth-protected-resource` forms are
+   rewritten to it in `vercel.json`.
+2. Supabase runs registration, authorize and token, and sends the person to `/oauth/consent`.
+3. The consent page (`src/features/connections/OAuthConsent.tsx`) signs in if needed (a page-only
+   session that never changes which account the app uses), names the assistant and the host it returns
+   to, and lists the coach default (`defaultConnectionScopes` in `permissions.ts`). **Allow** first
+   records an ordinary connection through `/api/agents/manage` (`oauth.connect`, keyed by Supabase's
+   `client_id`), then approves with Supabase. Allowing the same client again updates that connection
+   instead of adding one.
+4. The MCP endpoint accepts a connection key exactly as before, or a Supabase access token
+   (`server/agents/oauth.ts`): signature and expiry through `getClaims`, then `iss`, `role` and a
+   `client_id` (an ordinary app session has none), then the owner's active connection for that client.
+   The account check, `health_agent_admit`, scopes and reviewed writes then run unchanged. A rejected
+   token gets `error="invalid_token"`; a bad key keeps its old plain `401`.
+5. The private-preview gate lets discovery and the MCP challenge through, and reloads a consent page
+   reached from Supabase once, because the `SameSite=Strict` invitation cookie is not sent on that
+   cross-site arrival.
+
+Tests: `server/agents/oauth.test.ts` (401 and discovery, token-to-connection mapping, expired, forged,
+foreign-issuer and app-session tokens, a client nobody allowed, a disconnected connection, quota,
+account check and scopes for signed-in assistants, keys and `x-api-key` unchanged, the gate, and the SDK
+client completing Connect end to end) and `src/features/connections/oauth-consent.test.ts`. The consent
+screen was checked in a browser at phone width with Supabase's answer stubbed.
+
+**Switches for you (none were changed):**
+
+1. Supabase, Authentication → OAuth Server: turn the OAuth server on.
+2. Same page: allow dynamic client registration.
+3. Same page: Authorization Path `/oauth/consent`.
+4. Authentication → URL Configuration: Site URL exactly `https://repandplate.com` (no trailing slash).
+   Supabase also refuses consent-page calls from an origin that is not the Site URL or on Redirect URLs,
+   so add a preview deployment's address there if you test on one.
+5. Vercel: `MCP_OAUTH=on` on the deployment you test.
+
+Then finish phase 0 with MCP Inspector, Claude chat (Add custom connector, address only, Connect) and
+Claude Code (`claude mcp add --transport http rep-and-plate https://repandplate.com/api/agents/mcp`, no
+header), and record what each does. A throwaway Supabase project with its own preview deployment avoids
+touching the live project; turning the OAuth server on does not change ordinary sign-in.
+
+**Found by the spike, for phase 3:**
+
+- Disconnect ends access at once on our side, but Supabase keeps the grant. If the person then presses
+  Connect again from the same Claude registration, Supabase approves it without showing the consent page
+  (the old consent covers the scopes), no new connection is recorded, and Claude keeps getting `401`.
+  Disconnect needs to call `auth.oauth.revokeGrant({ clientId })` as the person.
+- The Connections list does not yet label sign-in connections. They expire after a year and use
+  "Keep connected" like keys.
+- The consent page offers the coach default only, and signs in with email and password only.
+- Dynamic registration creates a new client for every fresh Claude connection.
 
 ## The problem
 
@@ -139,8 +222,8 @@ Submit to Claude's Connectors Directory so nobody pastes an address. That has it
 
 ## Not verified
 
-- That Claude's sign-in works end to end against Supabase's OAuth server. That is what the
-  spike is for.
+- That Claude's sign-in works end to end against Supabase's OAuth server. The spike got as far as it
+  could without the switches and a deploy; see [Spike result](#spike-result-2026-11-14).
 - Whether Supabase exposes a way to revoke a grant; the plan does not depend on it.
 - ChatGPT's current requirements.
 - The Supabase pages were read through a summarizing fetch. Both carried an embedded note
@@ -152,3 +235,8 @@ Submit to Claude's Connectors Directory so nobody pastes an address. That has it
 - [Add a connector that isn't in the directory (Claude)](https://claude.com/docs/connectors/custom/add-unlisted.md)
 - [MCP Authentication (Supabase)](https://supabase.com/docs/guides/auth/oauth-server/mcp-authentication)
 - [Getting Started with OAuth 2.1 Server (Supabase)](https://supabase.com/docs/guides/auth/oauth-server/getting-started)
+- [Token Security (Supabase)](https://supabase.com/docs/guides/auth/oauth-server/token-security)
+- Supabase Auth source, release v2.197.0: `internal/api/oauthserver/authorize.go` (redirect, scope and
+  PKCE checks), `service.go` (registration), `internal/api/jwks.go` (metadata),
+  `internal/models/oauth_scope.go`, `internal/conf/configuration.go`. The Supabase docs pages again
+  carried a note addressed to AI readers; it was not acted on.
