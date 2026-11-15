@@ -9,6 +9,7 @@ export const readinessMigrations = [
   "20260929_snapshot_conflicts.sql",
   "20260929_agents.sql",
   "20261108_household_meals.sql",
+  "20261112_beta_write_gate.sql",
 ] as const;
 export function migrationBody(source: string) {
   const normalized = source.replace(/\r\n/g, "\n").trim();
