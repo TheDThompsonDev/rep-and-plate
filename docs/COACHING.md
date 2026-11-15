@@ -176,7 +176,10 @@ history. Long-term archival beyond those bounds is a separate extension.
 Health evidence has separate freshness from the agreed coaching plan. The local
 app publishes its currently loaded permitted evidence; hosted readers use the
 latest synchronized account snapshot. An unavailable source is absent/stale,
-not replaced with zero totals or older browser data. Activity context contains
+not replaced with zero totals or older browser data. A hosted read still ends
+its seven-day food window today, so when the snapshot was saved on an earlier
+day, `nutrition.recordedThrough` names that day and later days are left out
+rather than reported as zero meals. Activity context contains
 recorded dates, titles, durations and notes; it does not invent distance, pace,
 heart rate, readiness or calorie-burn allowances.
 

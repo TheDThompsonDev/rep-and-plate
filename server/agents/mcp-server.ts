@@ -81,17 +81,20 @@ export async function createAgentMcpServer(client: AgentMcpClient) {
 
 /** What an assistant should raise after reading saved records, so the reply is more than an inventory. */
 export function contextNotes(result: Record<string, unknown>, coaching: boolean): Record<string, unknown> {
-  const context = (result.context ?? {}) as { day?: string; nutrition?: { days?: { day: string; meals: number }[]; goalsConfigured?: boolean } };
+  const context = (result.context ?? {}) as { day?: string; nutrition?: { days?: { day: string; meals: number }[]; goalsConfigured?: boolean; recordedThrough?: string } };
   const day = context.day ?? '';
   const days = context.nutrition?.days ?? [];
   const today = days.find(item => item.day === day);
   const loggedDays = days.filter(item => item.meals > 0).length;
+  const recordedThrough = context.nutrition?.recordedThrough;
   const nextSteps: string[] = [];
   if (context.nutrition) {
-    if (!today?.meals) nextSteps.push('Nothing is logged for today. Ask what they have eaten so far, then draft each meal with propose_meal for them to review. Do not treat an empty day as not eating.');
+    if (recordedThrough && recordedThrough < day) nextSteps.push(`Food recorded in the Rep & Plate app is saved only through ${recordedThrough}. Days after that are unknown, not zero: ask what they have eaten instead of reading the gap as not eating, then draft each meal with propose_meal for them to review.`);
+    else if (!today?.meals) nextSteps.push('Nothing is logged for today. Ask what they have eaten so far, then draft each meal with propose_meal for them to review. Do not treat an empty day as not eating.');
     else nextSteps.push(`${today.meals} meal${today.meals === 1 ? ' is' : 's are'} logged today. Say what that adds up to, and ask if anything is missing.`);
     if (context.nutrition.goalsConfigured !== true) nextSteps.push('The targets shown are app defaults, not chosen by the user. Do not judge their intake against them; offer to help them pick real targets in Rep & Plate.');
   }
   if (!coaching) nextSteps.push('This connection has no coaching access, so there is no plan, daily check-in or records from other apps here. If the user wants a coach, tell them: in Rep & Plate open the account menu, choose Connect an assistant, and create a connection with coaching turned on.');
-  return { nextSteps: nextSteps.slice(0, 4), spot: spotNote(context.nutrition && loggedDays === 0 ? 'blank' : 'organised', day) };
+  // "Zero meals logged" needs at least one recorded day behind it.
+  return { nextSteps: nextSteps.slice(0, 4), spot: spotNote(context.nutrition && days.length > 0 && loggedDays === 0 ? 'blank' : 'organised', day) };
 }

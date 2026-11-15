@@ -136,4 +136,15 @@ describe('a connection without coaching still says something useful', () => {
     });
     expect(contextNotes({ context: { day } }, true).nextSteps).toEqual([]);
   });
+  it('treats days after the saved snapshot as unknown, not as an empty day', () => {
+    const notes = contextNotes({ context: { day: '2026-11-14', nutrition: { days: [{ day: '2026-11-11', meals: 2 }], goalsConfigured: true, recordedThrough: '2026-11-11' } } }, true);
+    const steps = notes.nextSteps as string[];
+    expect(steps).toHaveLength(1);
+    expect(steps[0]).toContain('saved only through 2026-11-11');
+    expect(steps[0]).toContain('unknown, not zero');
+    expect(steps[0]).not.toContain('Nothing is logged for today');
+    // With no recorded day at all, Spot does not claim zero meals were logged.
+    const nothing = contextNotes({ context: { day: '2026-11-14', nutrition: { days: [], goalsConfigured: true, recordedThrough: '2026-10-01' } } }, true);
+    expect(nothing.spot).toEqual(spotNote('organised', '2026-11-14'));
+  });
 });

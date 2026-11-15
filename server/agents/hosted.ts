@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { stateSchema } from '../../src/domain.ts';
+import { stateSchema, type AppState } from '../../src/domain.ts';
 import { buildAgentContext } from '../../src/features/connections/context.ts';
 import { betaServices } from '../beta-services.ts';
 import { createAgentHandler } from './http.ts';
@@ -46,11 +46,24 @@ export function hostedAgentHandler(env: Record<string, string | undefined>) {
       if (!data) return null;
       const state = stateSchema.parse(data.state);
       const stored = await store.read(owner);
-      let timezone = stored.document.context?.timezone ?? 'UTC';
-      let day: string;
-      try { day = new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
-      catch { timezone = 'UTC'; day = new Date().toISOString().slice(0, 10); }
-      return { context: buildAgentContext(state, day, timezone), revision: Number(data.revision), updatedAt: String(data.updated_at) };
+      const updatedAt = String(data.updated_at);
+      return { context: snapshotContext(state, updatedAt, stored.document.context?.timezone, new Date()), revision: Number(data.revision), updatedAt };
     },
   });
+}
+
+const localDay = (at: Date, timeZone: string) => new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(at);
+
+/**
+ * Today's context from the latest saved app snapshot. The window ends today, but the snapshot ends
+ * when it was saved: days after that are left out, not reported as zero meals.
+ */
+export function snapshotContext(state: AppState, updatedAt: string, storedTimezone: string | undefined, now: Date) {
+  let timezone = storedTimezone ?? 'UTC';
+  let day: string;
+  try { day = localDay(now, timezone); }
+  catch { timezone = 'UTC'; day = now.toISOString().slice(0, 10); }
+  const saved = new Date(updatedAt);
+  const recordedThrough = Number.isFinite(saved.getTime()) ? localDay(saved, timezone) : undefined;
+  return buildAgentContext(state, day, timezone, recordedThrough);
 }
