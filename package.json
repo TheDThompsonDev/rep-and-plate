@@ -29,9 +29,9 @@
   "license": "ISC",
   "description": "Rep & Plate: a calm, local fitness capture prototype",
   "dependencies": {
-    "@modelcontextprotocol/server": "^2.2.0",
+    "@modelcontextprotocol/server": "^2.4.0",
     "@supabase/supabase-js": "^2.117.2",
-    "@vercel/functions": "^3.9.9",
+    "@vercel/functions": "^3.11.2",
     "@zxing/browser": "^0.1.5",
     "@zxing/library": "^0.21.3",
     "dotenv": "^18.0.4",
@@ -41,11 +41,11 @@
     "react-dom": "^19.3.0",
     "react-markdown": "^10.1.0",
     "stream-json": "^3.7.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
-    "@modelcontextprotocol/client": "^2.2.0",
+    "@modelcontextprotocol/client": "^2.4.0",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
@@ -56,13 +56,13 @@
     "eslint": "^9.39.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.13.0",
-    "happy-dom": "^20.14.6",
+    "happy-dom": "^21.0.4",
     "postgres": "^3.4.9",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "^8.3.1",
-    "vitest": "^5.0.1"
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
   },
   "private": true,
   "engines": {

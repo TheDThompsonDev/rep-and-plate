@@ -170,6 +170,25 @@ async function verify() {
         (scope) =>
           scope`insert into storage.objects(bucket_id,name,owner_id) values('health-record-media',${mediaB},${b})`,
       );
+      // A signed-up account that was never approved: open sign-up must not grant cloud storage.
+      const outsider = randomUUID();
+      await tx`reset role`;
+      await tx`insert into auth.users(id) values(${outsider}::uuid)`;
+      await setRole("authenticated", outsider);
+      await expectDenied(
+        "Unapproved account cannot save a cloud snapshot",
+        (scope) =>
+          scope`select public.health_save_snapshot(${outsider}::uuid,'{"version":1,"fixture":"outsider"}'::jsonb,0)`,
+      );
+      await expectDenied(
+        "Unapproved account cannot upload record media",
+        (scope) =>
+          scope`insert into storage.objects(bucket_id,name,owner_id,metadata) values('health-record-media',${`${outsider}/${sha}.jpg`},${outsider},'{"size":128,"mimetype":"image/jpeg"}'::jsonb)`,
+      );
+      await expectDenied(
+        "Unapproved account cannot create a household",
+        (scope) => scope`select public.rp_household_create('Outsider')`,
+      );
       await setRole("authenticated", b);
       await insertMedia(mediaB);
       const visible =
