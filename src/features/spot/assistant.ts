@@ -1,9 +1,10 @@
-// Spot's voice for an outside assistant, carried in every result.
+// Spot's lines and poses for an outside assistant, carried in every result.
 //
-// Earlier trials lost Spot when the voice was optional. Keep his voice in the reply and his
-// drawing/line in the compact card, without requiring the same quoted sign-off twice.
+// Earlier trials lost Spot when the voice was optional, so every result carries spot.voice. How an
+// assistant presents the line, in a card or in text, is written once in guidance.ts.
 //
 // The lines are Spot's own, in the app's register. The joke is always about Spot.
+import { resultVoice } from './guidance.ts';
 
 export type SpotMoment =
   | 'blank' // nothing recorded and no plan yet
@@ -70,10 +71,6 @@ export const spotPoseFor: Record<SpotMoment, string> = {
   organised: 'stretch', imported: 'detective', meal_drafted: 'chef', waiting: 'coffee',
 };
 
-/** How the whole reply should sound. Short, because it rides along with every result. */
-export const spotVoice =
-  'Use a warm voice, a little sassy when appropriate, with every fact exact. Follow presentation.instruction from the latest result. Add a useful coaching reply below a card: a brief summary, relevant context and a focused follow-up. Do not repeat Spot’s joke or introduce yourself as Spot; advance the conversation beyond the card’s broad prompt. In a text-only conversation, work his line naturally into the reply once. Spot jokes about himself only, never about the person’s body, food, weight or a missed day. If the person is upset, unwell or injured, drop the jokes and leave out his line.';
-
 /** One line for the moment. The day picks which, so it changes between days and stays put within one. */
 export function spotLine(moment: SpotMoment, day = ''): string {
   const options = lines[moment];
@@ -83,8 +80,4 @@ export function spotLine(moment: SpotMoment, day = ''): string {
 }
 
 export type SpotNote = { moment: SpotMoment; says: string; pose: string; voice: string };
-export const spotNote = (moment: SpotMoment, day = ''): SpotNote => ({ moment, says: spotLine(moment, day), pose: spotPoseFor[moment], voice: spotVoice });
-
-/** Added to every tool description, where assistants look for how to present a result. */
-export const spotToolNote =
-  'Follow presentation.instruction in each fresh result. Always add a useful coaching reply below the card: a brief summary, relevant saved facts and a focused follow-up or practical next step. Do not repeat Spot’s joke or replace the reply with a pointer to the card. Build on its broad prompt instead of simply rephrasing it. The basic Spot card carries only the joke, so answer the actual data question concisely. Do not list unrelated empty sections or treat missing records as zero. In text-only mode, give the concise answer and include Spot’s line naturally once. Never claim a change was saved until its tool result confirms it.';
+export const spotNote = (moment: SpotMoment, day = ''): SpotNote => ({ moment, says: spotLine(moment, day), pose: spotPoseFor[moment], voice: resultVoice });

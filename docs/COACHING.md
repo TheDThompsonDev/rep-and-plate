@@ -84,12 +84,15 @@ Hosts that list MCP prompts offer these as one-tap commands:
 A prompt only starts the conversation. It never grants approval; every change
 still needs the user's explicit yes.
 
-The server instructions carry Spot's voice (`spotCoachVoice` in
-`src/features/spot/personality.ts`): useful answer first, at most one deadpan
-aside when the moment is light, no guilt or streak talk, no jokes about bodies,
-food or missed days, and none at all during errors or sensitive conversations.
-It is offered as the product's voice; the user's preferred tone wins, and a
-host may ignore server instructions altogether.
+Every rule an assistant reads about presenting a result and sounding like Spot
+is written once, in `src/features/spot/guidance.ts`. The server instructions
+carry Spot's voice (`serverVoice`): warm and lightly sassy with exact facts, no
+guilt or streak talk, no jokes about bodies, food or missed days, and none at
+all during distress or sensitive conversations. It is offered as the product's
+voice; the user's preferred tone wins, and a host may ignore server
+instructions altogether. Each result's `presentation.instruction` is the only
+place that says how to reply around a card or in text-only chat; tool
+descriptions, prompts and `spot.voice` point to it rather than restating it.
 
 Nothing here reaches out to the user. Reminders and scheduled check-ins depend
 on the assistant host; push notifications are not part of this slice.

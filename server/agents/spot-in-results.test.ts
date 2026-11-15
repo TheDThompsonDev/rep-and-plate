@@ -7,7 +7,8 @@ import { createAgentHandler } from './http.ts';
 import { AgentService } from './service.ts';
 import { SqliteAgentStore } from './sqlite.ts';
 import { contextNotes } from './mcp-server.ts';
-import { spotLine, spotNote, spotToolNote, spotVoice } from '../../src/features/spot/assistant.ts';
+import { spotLine, spotNote } from '../../src/features/spot/assistant.ts';
+import { followPresentation, resultVoice, serverVoice } from '../../src/features/spot/guidance.ts';
 import { defaultConnectionScopes } from '../../src/features/connections/permissions.ts';
 import { initialState } from '../../src/domain.ts';
 import { buildAgentContext } from '../../src/features/connections/context.ts';
@@ -48,16 +49,17 @@ describe('Spot for an outside assistant', () => {
     }
     const acrossDays = new Set(['2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13'].map(value => spotLine('today', value)));
     expect(acrossDays.size).toBeGreaterThan(1);
-    expect(spotNote('done', day)).toEqual({ moment: 'done', says: spotLine('done', day), pose: 'proud', voice: spotVoice });
+    expect(spotNote('done', day)).toEqual({ moment: 'done', says: spotLine('done', day), pose: 'proud', voice: resultVoice });
   });
   it('keeps Spot’s voice without duplicating the card’s joke in every reply', () => {
-    // The compact card carries the line; the assistant should still sound like Spot.
-    expect(spotVoice).toContain('Do not repeat');
-    expect(spotVoice).toContain('a little sassy');
-    expect(spotVoice).toContain('never about the person’s body, food, weight or a missed day');
-    expect(spotVoice).toContain('drop the jokes and leave out his line');
-    expect(spotToolNote).toContain('Do not repeat');
-    expect(spotVoice).not.toContain('End with spot.says, quoted and attributed');
+    // The compact card carries the line; the assistant should still sound like Spot. Where the line
+    // goes is decided per result by presentation.instruction, so the voice beside it defers to that.
+    expect(resultVoice).toContain(followPresentation);
+    expect(serverVoice).toContain('a little sassy');
+    expect(resultVoice).toContain('never about the person’s body, food, portions, weight, missed days or performance');
+    expect(resultVoice).toContain('drop the jokes and leave out his line');
+    expect(resultVoice).not.toMatch(/once|text-only/);
+    expect(resultVoice).not.toContain('End with spot.says, quoted and attributed');
   });
 });
 
@@ -69,9 +71,12 @@ describe('a new connection is a coach by default', () => {
     const client = await connect([...defaultConnectionScopes]);
     const tools = (await client.listTools()).tools;
     expect(tools.map(tool => tool.name)).toEqual(expect.arrayContaining(['get_coaching_day', 'import_records', 'propose_meal']));
-    // Every result-bearing tool points to the fresh presentation contract.
-    for (const tool of tools.filter(item => !['capabilities', 'get_action'].includes(item.name))) expect(tool.description, tool.name).toContain(spotToolNote);
-    expect(client.getInstructions()).toMatch(/do not repeat/i);
+    // Every result-bearing tool points to the fresh presentation contract, without restating it.
+    for (const tool of tools.filter(item => !['capabilities', 'get_action'].includes(item.name))) {
+      expect(tool.description?.startsWith(followPresentation), tool.name).toBe(true);
+      expect(tool.description, tool.name).not.toMatch(/Spot’s joke|Spot’s line|text-only|below the card/);
+    }
+    expect(client.getInstructions()).toContain(serverVoice);
     const result = await client.callTool({ name: 'get_coaching_day', arguments: {} });
     const view = result.structuredContent as { nextSteps: string[]; spot: unknown; presentation: { mode: string; instruction: string; questionOwner: string } };
     expect(view.nextSteps[0]).toContain('No primary goal');
@@ -82,6 +87,7 @@ describe('a new connection is a coach by default', () => {
     expect(view.presentation.questionOwner).toBe('assistant');
     expect(view.presentation.instruction).toContain('Always write a useful coaching reply below the card');
     expect(view.presentation.instruction).toContain('If no card is displayed');
+    expect(view.presentation.instruction).toContain('Do not repeat Spot’s joke');
   });
   it('changes Spot’s line with the moment', async () => {
     const client = await connect([...defaultConnectionScopes]);
